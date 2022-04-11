@@ -14,14 +14,22 @@ namespace Game.Fabros.Net.ClientServer
 {
     public class LeoContexts
     {
-        private readonly Action<LeoContexts, EcsWorld, EcsWorld, int, UserInput> applyInput;
+        public ComponentsPool Pool { get; }
+        /*
+         * позволяет сохранять в отдельный файл игровые данные и сравнивать состояния миров между собой
+        */
+        public SyncLog SyncLog { get; }
+        public List<UserInput> Inputs { get; private set; } = new List<UserInput>();
+        
+        
+        private readonly Action<EcsWorld, int, UserInput> applyInput;
         private readonly string hashDir;
         private readonly bool writeHashes;
 
-        private EcsWorld inputWorld;
+        //private EcsWorld inputWorld;
 
         public LeoContexts(string hashDir, ComponentsPool pool, SyncLog syncLog,
-            Action<LeoContexts, EcsWorld, EcsWorld, int, UserInput> applyInput)
+            Action<EcsWorld, int, UserInput> applyInput)
         {
             this.hashDir = hashDir;
             this.applyInput = applyInput;
@@ -35,16 +43,6 @@ namespace Game.Fabros.Net.ClientServer
 #endif
         }
 
-        //public EcsSystems Systems { get; private set; }
-        public ComponentsPool Pool { get; }
-
-
-        /*
-         * позволяет сохранять в отдельный файл игровые данные и сравнивать состояния миров между собой
-        */
-        public SyncLog SyncLog { get; }
-
-        public List<UserInput> Inputs { get; private set; } = new();
 
         public static void InitNewWorld(EcsWorld world, TickrateConfigComponent cfg)
         {
@@ -63,13 +61,11 @@ namespace Game.Fabros.Net.ClientServer
         public void Tick(EcsSystems systems, EcsWorld inputWorld, EcsWorld world, UserInput[] inputs, bool writeToLog)
         {
             //обновляем мир 1 раз
-            //Shared.Tick = GetCurrentTick(world).Value;
-            //Shared.Context = this;
-
+            
             var time = GetCurrentTick(world);
             if (writeToLog) SyncLog.WriteLine($"tick {time.Value} ->");
 
-            ApplyUserInput(inputWorld, world, inputs);
+            ProcessUserInput(inputWorld, world, inputs);
 
 
             //тик мира
@@ -120,7 +116,7 @@ namespace Game.Fabros.Net.ClientServer
             return world.GetUnique<TickrateConfigComponent>();
         }
 
-        public void ApplyUserInput(EcsWorld inputWorld, EcsWorld world, UserInput[] inputData = null)
+        public void ProcessUserInput(EcsWorld inputWorld, EcsWorld world, UserInput[] inputData = null)
         {
             if (inputData == null)
                 inputData = Inputs.ToArray();
@@ -140,7 +136,7 @@ namespace Game.Fabros.Net.ClientServer
                     continue;
                 if (input.time >= nextTick)
                     break;
-                applyInput(this, inputWorld, world, input.player, input);
+                applyInput(inputWorld, input.player, input);
             }
         }
     }

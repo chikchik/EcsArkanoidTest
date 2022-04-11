@@ -7,7 +7,7 @@ namespace Game.Fabros.Net.Client.Socket
 {
     public class UnitySocket
     {
-        private readonly List<Message> received = new();
+        private readonly List<Message> received = new List<Message>();
         private readonly WebSocket socket;
 
         public UnitySocket(WebSocket socket)

@@ -15,10 +15,9 @@ namespace Game.Client
 {
     public class UnityEcsClient : MonoBehaviour
     {
-        public Camera Camera;
-
         private NetClient client;
 
+        [Inject] private Camera camera;
         [Inject] private Global global;
         [Inject] private PlayerInput.PlayerInput playerInput;
         [Inject] private MainUI ui;
@@ -103,11 +102,11 @@ namespace Game.Client
                 return;
 
             var playerID = client.GetPlayerID();
-            var forward = Camera.transform.forward;
+            var forward = camera.transform.forward;
             forward.y = 0;
             forward.Normalize();
 
-            var right = Camera.transform.right;
+            var right = camera.transform.right;
             right.y = 0;
             right.Normalize();
 
@@ -117,7 +116,7 @@ namespace Game.Client
 
             if (playerInput.HasTouch)
             {
-                var ray = Camera.ScreenPointToRay(playerInput.TouchPosition);
+                var ray = camera.ScreenPointToRay(playerInput.TouchPosition);
                 var plane = new Plane(new Vector3(0, 1, 0), 0);
                 plane.Raycast(ray, out var dist);
 

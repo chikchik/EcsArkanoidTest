@@ -8,8 +8,7 @@ namespace Game.ClientServer
 {
     internal static class InputService
     {
-        public static void ApplyInput(LeoContexts leo, EcsWorld inputWorld, EcsWorld world,
-            int playerID, UserInput input)
+        public static void ApplyInput(EcsWorld inputWorld, int playerID, UserInput input)
         {
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAddComponent<InputPlayerComponent>(inputWorld).PlayerID = playerID;

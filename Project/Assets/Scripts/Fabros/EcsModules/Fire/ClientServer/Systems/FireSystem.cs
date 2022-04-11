@@ -10,7 +10,7 @@ namespace Game.Fabros.EcsModules.Fire.ClientServer.Systems
 {
     public class FireSystem : IEcsRunSystem
     {
-        private List<int> entities = new();
+        private List<int> entities = new List<int>();
 
         public void Run(EcsSystems systems)
         {

@@ -14,7 +14,7 @@ namespace Game.Ecs.ClientServer.Systems
     {
         private const int InteractionRadius = 3;
 
-        private readonly Dictionary<int, bool> isAnyCharacterInteractWith = new();
+        private readonly Dictionary<int, bool> isAnyCharacterInteractWith = new Dictionary<int, bool>();
 
         public void Run(EcsSystems systems)
         {
