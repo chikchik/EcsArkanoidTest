@@ -14,7 +14,6 @@ using Fabros.P2P;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.ClientServer;
-using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
 using Newtonsoft.Json;
@@ -91,17 +90,12 @@ namespace ConsoleApp
 
                 var pool = SystemsAndComponents.CreateComponentsPool();
 
-                var shared = new LeoSharedComponent();
-                shared.Pool = pool;
-
-
-
+    
                 //на сервере может быть tickrate отличный от клиента, например 20 вместо 60
                 //это надо учесть при симуляции
-                var config = new LeoConfigComponent { clientTickrate = 20, serverSyncStep = 1, serverTickrate = 20 };
+                var config = new TickrateConfigComponent { clientTickrate = 20, serverSyncStep = 1, serverTickrate = 20 };
 
                 world = WorldUtils.CreateWorld("main", pool);
-                world.AddUnique<LeoSharedComponent>() = shared;
 
                 inputWorld = new EcsWorld("input");
 
@@ -109,7 +103,7 @@ namespace ConsoleApp
 
                 systems = new EcsSystems(world);
                 systems.AddWorld(inputWorld, "input");
-                SystemsAndComponents.AddSystems(systems, false);
+                SystemsAndComponents.AddSystems(pool, systems, false);
 
                 leo = new LeoContexts(Config.TMP_HASHES_PATH, pool, 
                     new SyncLog(Config.SYNC_LOG_PATH), InputService.ApplyInput);
@@ -251,7 +245,7 @@ namespace ConsoleApp
 
             leo.Inputs.Add(packet.input);
                 
-            world.GetUniqueRef<LeoPendingInputComponent>().data = leo.Inputs.ToArray();
+            world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
             //var inputs = component.data.ToList();
             //component.data = inputs.ToArray();
 
@@ -267,7 +261,7 @@ namespace ConsoleApp
             var time = leo.GetCurrentTick(world);
             leo.FilterInputs(time);            
 
-            ref var component = ref world.GetUniqueRef<LeoPendingInputComponent>();
+            ref var component = ref world.GetUniqueRef<PendingInputComponent>();
          
             //leo.ApplyUserInput(world, component.data);
 

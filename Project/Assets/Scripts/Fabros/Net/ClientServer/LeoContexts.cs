@@ -46,11 +46,11 @@ namespace Game.Fabros.Net.ClientServer
 
         public List<UserInput> Inputs { get; private set; } = new();
 
-        public static void InitNewWorld(EcsWorld world, LeoConfigComponent cfg)
+        public static void InitNewWorld(EcsWorld world, TickrateConfigComponent cfg)
         {
             world.AddUnique(cfg);
             world.AddUnique<TickComponent>().Value = new Tick(0);
-            world.AddUnique<LeoPendingInputComponent>().data = new UserInput[0];
+            world.AddUnique<PendingInputComponent>().data = new UserInput[0];
         }
 
 
@@ -131,10 +131,10 @@ namespace Game.Fabros.Net.ClientServer
             return w.GetUnique<TickComponent>().Value + w.GetUnique<TickDeltaComponent>().Value;
         }
 
-        public LeoConfigComponent GetConfig(EcsWorld world)
+        public TickrateConfigComponent GetConfig(EcsWorld world)
         {
             //конфиг сервера
-            return world.GetUnique<LeoConfigComponent>();
+            return world.GetUnique<TickrateConfigComponent>();
         }
 
         public void ApplyUserInput(EcsWorld inputWorld, EcsWorld world, UserInput[] inputData = null)

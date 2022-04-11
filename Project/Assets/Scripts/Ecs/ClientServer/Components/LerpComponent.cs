@@ -3,8 +3,8 @@
 namespace Game.Ecs.ClientServer.Components
 {
     [Serializable]
-    public struct LeoPlayerComponent
+    public struct LerpComponent
     {
-        public int id;
+        public float value;
     }
 }

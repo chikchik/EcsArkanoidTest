@@ -4,7 +4,7 @@ using Game.Fabros.Net.ClientServer.Protocol;
 namespace Game.Ecs.ClientServer.Components
 {
     [Serializable]
-    public struct LeoPendingInputComponent
+    public struct PendingInputComponent
     {
         public UserInput[] data;
     }

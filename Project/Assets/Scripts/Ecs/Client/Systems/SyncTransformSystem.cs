@@ -14,12 +14,11 @@ namespace Game.Ecs.Client.Systems
             var filter = world
                 .Filter<TransformComponent>()
                 .Inc<PositionComponent>()
-                .Exc<StaticPositionComponent>()
                 .End();
 
             var poolTransform = world.GetPool<TransformComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
-            var poolLerp = world.GetPool<LeoLerpComponent>();
+            var poolLerp = world.GetPool<LerpComponent>();
 
             foreach (var entity in filter)
             {

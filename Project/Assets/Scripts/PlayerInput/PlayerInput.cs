@@ -6,7 +6,6 @@ namespace Game.PlayerInput
 {
     public abstract class PlayerInput : IInitializable, IDisposable, ITickable
     {
-        public abstract bool HasInteraction { get; }
         public abstract bool HasTouch { get; }
         public abstract Vector3 TouchPosition { get; }
         protected abstract float Horizontal { get; }

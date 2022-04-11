@@ -61,6 +61,16 @@ namespace Game.Client
             };
             
             client.Start();
+            
+            
+            ui.InteractionButton.onClick.AddListener(() =>
+            {
+                var input = new UserInput { 
+                    hasInteraction = true, 
+                    action = new UserInput.Action()};
+
+                client.AddUserInput(input);
+            });
         }
         
         private void Update()
@@ -69,10 +79,8 @@ namespace Game.Client
                 return;
 
             client.Update();
-
-            //проверям инпуты от нашего игрока, если был то шлем  на сервер и добавляем в общий список, которые выполняется чуть позже 
-            CheckInput(playerInput, client.GetContexts(), client.GetWorld(), client.GetContexts().Inputs,
-                client.GetPlayerID(), packet => { client.Input(packet); });
+ 
+            CheckInput();
         }
 
         private void OnDestroy()
@@ -86,29 +94,15 @@ namespace Game.Client
         }
 
 
-        public void CheckInput(PlayerInput.PlayerInput playerInput, LeoContexts Leo, EcsWorld world,
-            List<UserInput> pendingInputs, int playerID, Action<Packet> send = null)
+        public void CheckInput()
         {
-            /*
-             * внутриигровая логика, проверка ввода
-             * ввод игрока добавляется в pendingInputs лист и передается внутрь Action send
-             * на клиенте и сервере send обрабатывается по разному
-             * 
-             */
+            var tick = client.GetNextInputTick();
 
-            //эти расчеты имеют смысл когда на клиенте и сервере разный tickrate
-            //например 20 на сервере, 60 на клиенте
-            //тогда сервер за один свой апдейт прибавляет +60/20 = +3 тика
-            //клиент же по +1
-            //потому надо сделать snap значения ввода чтоб оно попало на корректный серверный тик 
-            var dt = Leo.GetConfig(world).clientTickrate / Leo.GetConfig(world).serverTickrate;
-            var a = Leo.GetCurrentTick(world).Value / dt + 1;
-            var tick = new Tick(a * dt);
-
-            var entity = BaseServices.GetUnitEntityByPlayerId(world, playerID);
+            var entity = BaseServices.GetUnitEntityByPlayerId(world, client.GetPlayerID());
             if (entity == -1)
                 return;
 
+            var playerID = client.GetPlayerID();
             var forward = Camera.transform.forward;
             forward.y = 0;
             forward.Normalize();
@@ -120,14 +114,6 @@ namespace Game.Client
             var moveDirection = playerInput.Movement;
             moveDirection = forward * moveDirection.z + right * moveDirection.x;
 
-            if (playerInput.HasInteraction)
-            {
-                var input = new UserInput
-                    {time = tick, player = playerID, hasInteraction = true, action = new UserInput.Action()};
-
-                pendingInputs.Add(input);
-                send?.Invoke(new Packet {input = input});
-            }
 
 
             if (playerInput.HasTouch)
@@ -146,8 +132,7 @@ namespace Game.Client
                     move = new UserInput.Move {value = point, moveType = UserInput.MoveType.MoveToPoint}
                 };
 
-                pendingInputs.Add(input);
-                send?.Invoke(new Packet {input = input});
+                client.AddUserInput(input);
                 return;
             }
 
@@ -156,8 +141,10 @@ namespace Game.Client
             if (moveDirection != lastDirection)
             {
                 if (entity.EntityHas<TargetPositionComponent>(world))
+                {
                     if (moveDirection.magnitude < 0.001f)
                         return;
+                }
 
                 var input = new UserInput
                 {
@@ -167,8 +154,7 @@ namespace Game.Client
                     move = new UserInput.Move {value = moveDirection, moveType = UserInput.MoveType.MoveToDirection}
                 };
 
-                pendingInputs.Add(input);
-                send?.Invoke(new Packet {input = input});
+                client.AddUserInput(input);
             }
         }
     }

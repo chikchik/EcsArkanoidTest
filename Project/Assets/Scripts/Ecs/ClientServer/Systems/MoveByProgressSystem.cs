@@ -14,7 +14,7 @@ namespace Game.Ecs.ClientServer.Systems
                 .Filter<PositionComponent>()
                 .Inc<MoveInfoComponent>()
                 .Inc<ProgressComponent>()
-                .Exc<LeoPlayerComponent>()
+                .Exc<PlayerComponent>()
                 .End();
             var poolPosition = world.GetPool<PositionComponent>();
             var poolMoveInfo = world.GetPool<MoveInfoComponent>();

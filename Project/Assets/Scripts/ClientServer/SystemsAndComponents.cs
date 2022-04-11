@@ -44,8 +44,8 @@ namespace Game.ClientServer
 #endif
 
             pool.AddComponent<MoveDirectionComponent>();
-            pool.AddComponent<LeoPlayerComponent>();
-            pool.AddComponent<LeoConfigComponent>();
+            pool.AddComponent<PlayerComponent>();
+            pool.AddComponent<TickrateConfigComponent>();
 
             TickModule.AddSerializableComponents(pool);
             GridModule.AddSerializableComponents(pool);
@@ -69,7 +69,6 @@ namespace Game.ClientServer
             pool.AddComponent<TargetPositionComponent>();
             pool.AddComponent<ProgressComponent>();
             pool.AddComponent<PositionComponent>();
-            pool.AddComponent<StaticPositionComponent>();
             pool.AddComponent<RadiusComponent>();
             pool.AddComponent<ResourceComponent>();
             pool.AddComponent<SpeedComponent>();
@@ -95,9 +94,8 @@ namespace Game.ClientServer
             return pool;
         }
 
-        public static void AddSystems(EcsSystems systems, bool client)
+        public static void AddSystems(ComponentsPool pool, EcsSystems systems, bool client)
         {
-            var world = systems.GetWorld();
 #if CLIENT
             void AddClient(IEcsSystem system)
             {
@@ -111,7 +109,7 @@ namespace Game.ClientServer
             
 
 #if SERVER
-            systems.Add(new CreateGameSystem());
+            systems.Add(new CreateGameSystem(pool));
             systems.Add(new SpawnBotSystem());
             systems.Add(new JoinPlayerSystem());
 #else
@@ -136,8 +134,9 @@ namespace Game.ClientServer
 
             // footprint
             systems.Add(new FootprintSystem());
+            
 #if CLIENT
-            if (client) systems.Add(new FootprintViewSystem());
+            AddClient(new FootprintViewSystem());
 #endif
 
 
@@ -189,7 +188,7 @@ namespace Game.ClientServer
             systems.Add(TickModule.GetSystems());
             
             
-            systems.Add(new EventsSystem<LeoPlayerComponent>());
+            systems.Add(new EventsSystem<PlayerComponent>());
             systems.Add(new EventsSystem<ButtonPushCompleted>());
             systems.Add(new EventsSystem<ObjectiveOpenedComponent>());
             systems.Add(new EventsSystem<ObjectiveCompletedComponent>());

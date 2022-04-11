@@ -79,7 +79,7 @@ namespace Game.Client
                 ref var headComponent = ref entity.EntityAddComponent<HeadComponent>(world);
                 headComponent.head = characterView.Head;
 
-                entity.EntityReplaceComponent<LeoLerpComponent>(world).value = 0.2f;
+                entity.EntityReplaceComponent<LerpComponent>(world).value = 0.2f;
             }
         }
 
@@ -223,7 +223,7 @@ namespace Game.Client
             {
                 var characterEntity = GetOrCreateGameEntity(view.gameObject);
 
-                ref var playerComponent = ref characterEntity.EntityAddComponent<LeoPlayerComponent>(world);
+                ref var playerComponent = ref characterEntity.EntityAddComponent<PlayerComponent>(world);
                 playerComponent.id = Random.Range(-9999, -1111);
 
                 //if (view.IsAICharacter) characterEntity.EntityAddComponent<AIPlayerComponent>(world);

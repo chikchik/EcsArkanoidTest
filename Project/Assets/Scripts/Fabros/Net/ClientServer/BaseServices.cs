@@ -9,10 +9,10 @@ namespace Game.Fabros.Net.ClientServer
     {
         public static int GetFreeUnitEntity(EcsWorld world)
         {
-            var filter = world.Filter<LeoPlayerComponent>().End();
+            var filter = world.Filter<PlayerComponent>().End();
             foreach (var entity in filter)
             {
-                var playerComponent = entity.EntityGetComponent<LeoPlayerComponent>(world);
+                var playerComponent = entity.EntityGetComponent<PlayerComponent>(world);
                 if (playerComponent.id == -1)
                     return entity;
             }
@@ -22,9 +22,9 @@ namespace Game.Fabros.Net.ClientServer
 
         public static int GetUnitEntityByPlayerId(EcsWorld world, int playerID)
         {
-            var poolPlayer = world.GetPool<LeoPlayerComponent>();
+            var poolPlayer = world.GetPool<PlayerComponent>();
 
-            var filter = world.Filter<LeoPlayerComponent>().End();
+            var filter = world.Filter<PlayerComponent>().End();
             foreach (var entity in filter)
                 if (poolPlayer.Get(entity).id == playerID)
                     return entity;

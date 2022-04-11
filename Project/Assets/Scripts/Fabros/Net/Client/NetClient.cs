@@ -11,7 +11,6 @@ using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.Client.Components;
 using Game.Fabros.Net.Client.Socket;
 using Game.Fabros.Net.ClientServer;
-using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Game.Utils;
 using Leopotam.EcsLite;
@@ -51,6 +50,15 @@ namespace Game.Fabros.Net.Client
         private float stepOffset = 0.001f;
 
 
+        
+        
+
+        public EcsWorld MainWorld => mainWorld; 
+        public LeoContexts Leo => leo;
+
+        public bool Connected { get; private set; }
+        
+        
         public NetClient(EcsWorld world)
         {
             Application.targetFrameRate = 60;
@@ -72,17 +80,10 @@ namespace Game.Fabros.Net.Client
             mainWorld = world;
             mainWorld.AddUnique<ClientWorldComponent>();
             mainWorld.AddUnique<MainPlayerIdComponent>().value = playerID;
-            mainWorld.SetEventsEnabled<LeoPlayerComponent>();
+            mainWorld.SetEventsEnabled<PlayerComponent>();
             
             
         }
-
-        public EcsWorld MainWorld => mainWorld; 
-
-        //важный класс который скорее всего можно взять как есть к себе
-        public LeoContexts Leo { get; private set; }
-
-        public bool Connected { get; private set; }
 
 
         private float lastUpdateTime { get; set; }
@@ -121,32 +122,25 @@ namespace Game.Fabros.Net.Client
             inputWorld = new EcsWorld("input");
             InitWorld(mainWorld);
 
-            var shared = new LeoSharedComponent();
-            shared.Context = leo;
-            shared.Log = leo.SyncLog;
-            shared.Pool = leo.Pool;
-            mainWorld.AddUnique(shared);
-            //shared.dt
-
             clientSystems = new EcsSystems(mainWorld);
             clientSystems.AddWorld(inputWorld, "input");
-            SystemsAndComponents.AddSystems(clientSystems, true);
+            SystemsAndComponents.AddSystems(leo.Pool, clientSystems, true);
 
             WorldUtils.ApplyDiff(leo.Pool, mainWorld, dif);
             
             mainWorld.AddUnique<TickDeltaComponent>() = new TickDeltaComponent
-                {Value = new TickDelta(1, mainWorld.GetUnique<LeoConfigComponent>().clientTickrate)};
+                {Value = new TickDelta(1, mainWorld.GetUnique<TickrateConfigComponent>().clientTickrate)};
             
             clientSystems.Init();
 
             
             serverWorld = WorldUtils.CopyWorld(leo.Pool, mainWorld);
             serverWorld.AddUnique<TickDeltaComponent>() = mainWorld.GetUnique<TickDeltaComponent>();
-            serverWorld.AddUnique(shared);
+            
             
             serverSystems = new EcsSystems(serverWorld);
             serverSystems.AddWorld(inputWorld, "input");
-            SystemsAndComponents.AddSystems(serverSystems, false);
+            SystemsAndComponents.AddSystems(leo.Pool, serverSystems, false);
             serverSystems.Init();
 
             Debug.Log($"world\n{LeoDebug.e2s(mainWorld)}");
@@ -284,6 +278,20 @@ namespace Game.Fabros.Net.Client
             return playerID;
         }
 
+        public Tick GetNextInputTick()
+        {
+            //эти расчеты имеют смысл когда на клиенте и сервере разный tickrate
+            //например 20 на сервере, 60 на клиенте
+            //тогда сервер за один свой апдейт прибавляет +60/20 = +3 тика
+            //клиент же по +1
+            //потому надо сделать snap значения ввода чтоб оно попало на корректный серверный тик
+            
+            var dt = Leo.GetConfig(mainWorld).clientTickrate / Leo.GetConfig(mainWorld).serverTickrate;
+            var a = Leo.GetCurrentTick(mainWorld).Value / dt + 1;
+            var tick = new Tick(a * dt);
+            return tick;
+        }
+
         public LeoContexts GetContexts()
         {
             return leo;
@@ -324,13 +332,20 @@ namespace Game.Fabros.Net.Client
             //stepOffset = 0;
         }
 
-        public void Input(Packet packet)
+        public void AddUserInput(UserInput input)
         {
+            var packet = new Packet
+            {
+                input = input
+            };
             packet.playerID = playerID;
-
+            
+            leo.Inputs.Add(input);
+            
             var body = JsonUtility.ToJson(packet);
             socket.Send(P2P.ADDR_SERVER, body);
-            if (packet.input != null) leo.SyncLog.WriteLine($"send input {packet.input.time}");
+            if (packet.input != null)
+                leo.SyncLog.WriteLine($"send input {packet.input.time}");
         }
 
 

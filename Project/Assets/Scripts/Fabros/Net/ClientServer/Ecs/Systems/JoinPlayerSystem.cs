@@ -29,7 +29,7 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
                 {
                     var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerID);
                     if (unitEntity != -1)
-                        unitEntity.EntityWithRef(world, (ref LeoPlayerComponent data) => { data.id = -1; });
+                        unitEntity.EntityWithRef(world, (ref PlayerComponent data) => { data.id = -1; });
                 }
                 else
                 {
@@ -39,7 +39,7 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
                     else
                         freeUnitEntity = UnitService.CreateUnitEntity(world);
                     
-                    freeUnitEntity.EntityReplace<LeoPlayerComponent>(world).id = playerID;
+                    freeUnitEntity.EntityReplace<PlayerComponent>(world).id = playerID;
                 }
             }
         }

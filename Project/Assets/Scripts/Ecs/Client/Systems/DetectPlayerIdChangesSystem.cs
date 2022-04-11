@@ -15,16 +15,16 @@ namespace Game.Ecs.Client.Systems
                 return;
 
             var filter = world
-                .Filter<LeoPlayerComponent>().IncChanges<LeoPlayerComponent>()
+                .Filter<PlayerComponent>().IncChanges<PlayerComponent>()
                 .End();
 
             var mainPlayerID = world.GetUnique<MainPlayerIdComponent>().value;
             foreach (var entity in filter)
-                if (entity.EntityGetComponent<LeoPlayerComponent>(world).id == mainPlayerID)
+                if (entity.EntityGetComponent<PlayerComponent>(world).id == mainPlayerID)
                 {
                     //replace потому что ClientPlayerComponent мог уже быть 
                     world.ReplaceUnique<ClientPlayerComponent>().entity = entity;
-                    entity.EntityReplaceComponent<LeoLerpComponent>(world).value = 1;
+                    entity.EntityReplaceComponent<LerpComponent>(world).value = 1;
                 }
         }
     }
