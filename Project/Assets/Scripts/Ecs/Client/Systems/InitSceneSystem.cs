@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Game.Client;
-using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Utils;
@@ -17,15 +16,15 @@ namespace Game.Ecs.Client.Systems
              которые уже могли быть уничтожены на сервере
              потому надо пройтись по серверным GameObjects и определить лишние на клиенте                 
              */
-            
+
             var world = systems.GetWorld();
-            
+
             var sceneWorld = new EcsWorld("fromScene");
             ClientServices.InitializeNewWorldFromScene(sceneWorld);
-            
+
             var poolSceneWorldObjects = sceneWorld.GetPool<GameObjectComponent>();
             var poolSceneWorldObjectNames = sceneWorld.GetPool<GameObjectNameComponent>();
-            
+
             var poolWorldObjectNames = world.GetPool<GameObjectNameComponent>();
 
             var sceneEntitiesByName = new Dictionary<string, GameObject>();
@@ -35,24 +34,18 @@ namespace Game.Ecs.Client.Systems
                 var name = poolSceneWorldObjectNames.Get(entity).Name;
                 sceneEntitiesByName[name] = poolSceneWorldObjects.Get(entity).GameObject;
             }
-            
+
             foreach (var entity in world.Filter<GameObjectNameComponent>().End())
-            {
                 sceneEntitiesByName.Remove(poolWorldObjectNames.Get(entity).Name);
-            }
-            
+
             /*
              * все кто остался в sceneEntitiesByName можно удалить со сцены
              */
-            
-            sceneEntitiesByName.Values.ForEach(go =>
-            {
-                GameObject.Destroy(go);
-            });
-            
-            
+
+            sceneEntitiesByName.Values.ForEach(go => { Object.Destroy(go); });
+
+
             ClientServices.LinkUnits(world);
-            
         }
     }
 }

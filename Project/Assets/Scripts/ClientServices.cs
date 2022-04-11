@@ -52,7 +52,6 @@ namespace Game.Client
 
                     if (entity.EntityHasComponent<CollectableComponent>(world))
                         ConfigureCollectableUnit(world, go, entity);
-                    continue;
                 }
             }
 

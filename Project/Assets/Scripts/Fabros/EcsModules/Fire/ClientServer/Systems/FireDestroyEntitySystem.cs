@@ -1,6 +1,4 @@
-﻿using Game.Ecs.ClientServer.Components;
-using Game.Ecs.ClientServer.Components.Objective;
-using Game.Fabros.EcsModules.Fire.ClientServer.Components;
+﻿using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Leopotam.EcsLite;
 
 namespace Game.Fabros.EcsModules.Fire.ClientServer.Systems

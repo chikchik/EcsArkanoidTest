@@ -37,10 +37,10 @@ namespace Game.Ecs.ClientServer.Systems
                 var speedComponent = poolSpeed.Get(entity);
 
                 var progress = progressComponent.progress + speedComponent.speed * deltaTime;
-                
+
                 if (progress >= 1f)
                     poolOpened.Add(entity);
-                
+
                 progressComponent.progress = Math.Clamp(progress, 0, 1);
             }
         }
@@ -53,7 +53,7 @@ namespace Game.Ecs.ClientServer.Systems
 
             for (var i = 0; i < buttonIds.Length; i++)
             {
-                 var buttonComponent = poolButton.Get(buttonIds[i]);
+                var buttonComponent = poolButton.Get(buttonIds[i]);
 
                 if (!buttonComponent.isActivated) return false;
             }

@@ -2,7 +2,6 @@
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Game.Ecs.ClientServer.Components;
-using Game.Ecs.ClientServer.Components.Events;
 using Leopotam.EcsLite;
 using UnityEngine;
 

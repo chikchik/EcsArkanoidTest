@@ -1,6 +1,5 @@
-using Fabros.Ecs;
-using Game.Client;
 using Game.PlayerInput;
+using Game.UI;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
@@ -20,14 +19,14 @@ namespace Game
             var world = new EcsWorld("mainWorld");
             Container.Bind<EcsWorld>().FromInstance(world).AsSingle();
 
-            var ui = FindObjectOfType<UI.MainUI>();
-            Container.Bind<UI.MainUI>().FromInstance(ui).AsSingle();
+            var ui = FindObjectOfType<MainUI>();
+            Container.Bind<MainUI>().FromInstance(ui).AsSingle();
             //Container.Bind<UnityEcsClient>().FromComponentsOn(GameObject.Find("Client")).AsSingle();
 
             InstallPlayerInput(ui);
         }
 
-        private void InstallPlayerInput(UI.MainUI mainUI)
+        private void InstallPlayerInput(MainUI mainUI)
         {
             if (Application.isEditor ||
                 Application.platform is RuntimePlatform.OSXPlayer or RuntimePlatform.WindowsPlayer)
@@ -41,7 +40,8 @@ namespace Game
                 mainUI.InteractionButton.gameObject.SetActive(true);
 
                 var joystick = Instantiate(joystickPrefab, mainUI.transform);
-                Container.BindInterfacesAndSelfTo<PlayerInput.PlayerInput>().FromInstance(new MobileInput(joystick, mainUI))
+                Container.BindInterfacesAndSelfTo<PlayerInput.PlayerInput>()
+                    .FromInstance(new MobileInput(joystick, mainUI))
                     .AsSingle();
             }
         }

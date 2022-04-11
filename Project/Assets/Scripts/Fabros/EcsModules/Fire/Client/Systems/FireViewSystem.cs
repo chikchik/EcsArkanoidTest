@@ -24,9 +24,7 @@ namespace Game.Fabros.EcsModules.Fire.Client.Systems
             foreach (var entity in filter)
             {
                 if (poolFireView.Has(entity))
-                {
                     continue;
-                }
 
                 var fireComponent = poolFire.Get(entity);
 

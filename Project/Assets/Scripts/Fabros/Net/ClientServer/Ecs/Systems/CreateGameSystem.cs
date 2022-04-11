@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using Fabros.Ecs;
 using Leopotam.EcsLite;
@@ -8,12 +7,13 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
 {
     public class CreateGameSystem : IEcsInitSystem
     {
-        private ComponentsPool pool;
+        private readonly ComponentsPool pool;
+
         public CreateGameSystem(ComponentsPool pool)
         {
             this.pool = pool;
         }
-        
+
         public void Init(EcsSystems systems)
         {
             var world = systems.GetWorld();

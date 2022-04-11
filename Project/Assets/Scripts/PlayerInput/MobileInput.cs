@@ -1,14 +1,15 @@
+using Game.UI;
 using UnityEngine;
 
 namespace Game.PlayerInput
 {
     public class MobileInput : PlayerInput
     {
-        private readonly Joystick  joystick;
-        private readonly UI.MainUI mainUI;
-        private          bool      hasInteraction;
+        private readonly Joystick joystick;
+        private readonly MainUI mainUI;
+        private bool hasInteraction;
 
-        public MobileInput(Joystick joystick, UI.MainUI mainUI)
+        public MobileInput(Joystick joystick, MainUI mainUI)
         {
             this.joystick = joystick;
             this.mainUI = mainUI;

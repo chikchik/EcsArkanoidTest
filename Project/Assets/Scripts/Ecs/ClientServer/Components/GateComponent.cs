@@ -6,7 +6,7 @@ namespace Game.Ecs.ClientServer.Components
     public struct GateComponent
     {
     }
-    
+
     [Serializable]
     public struct GateOpenedComponent
     {

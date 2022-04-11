@@ -8,6 +8,6 @@ namespace Game.Fabros.EcsModules.Fire.ClientServer.Components
         public float size;
         public float startTime;
         public float endTime;
-        public bool  destroyEntity;
+        public bool destroyEntity;
     }
 }

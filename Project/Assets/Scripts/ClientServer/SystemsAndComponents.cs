@@ -3,20 +3,16 @@ using Fabros.Ecs.Systems;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Tick;
-
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Inventory;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
-
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Systems;
-using Game.Fabros.Net.ClientServer.Ecs.Systems;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.ExtendedSystems;
-
 #if CLIENT
 using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
@@ -81,8 +77,8 @@ namespace Game.ClientServer
             pool.AddComponent<LifeTimeComponent>();
             pool.AddComponent<AIPlayerComponent>();
             pool.AddComponent<DestroyComponent>();
-            
-            
+
+
             pool.AddComponent<ObjectiveCompletedComponent>();
             pool.AddComponent<ObjectiveOpenedComponent>();
             pool.AddComponent<ObjectiveComponent>();
@@ -90,7 +86,7 @@ namespace Game.ClientServer
 
             pool.AddComponent<ButtonPushCompleted>();
             pool.AddComponent<GateOpenedComponent>();
-            
+
             return pool;
         }
 
@@ -106,7 +102,6 @@ namespace Game.ClientServer
             }
 #endif
 
-            
 
 #if SERVER
             systems.Add(new CreateGameSystem(pool));
@@ -115,7 +110,7 @@ namespace Game.ClientServer
 #else
             AddClient(new InitSceneSystem());
 #endif
-            
+
             systems.Add(new ApplyUserInputSystem());
 
 #if SERVER
@@ -134,7 +129,7 @@ namespace Game.ClientServer
 
             // footprint
             systems.Add(new FootprintSystem());
-            
+
 #if CLIENT
             AddClient(new FootprintViewSystem());
 #endif
@@ -186,8 +181,8 @@ namespace Game.ClientServer
 #endif
 
             systems.Add(TickModule.GetSystems());
-            
-            
+
+
             systems.Add(new EventsSystem<PlayerComponent>());
             systems.Add(new EventsSystem<ButtonPushCompleted>());
             systems.Add(new EventsSystem<ObjectiveOpenedComponent>());

@@ -7,7 +7,7 @@ namespace Game.Ecs.ClientServer.Components
     {
         public bool isActivated;
     }
-    
+
     [Serializable]
     public struct ButtonPushCompleted
     {

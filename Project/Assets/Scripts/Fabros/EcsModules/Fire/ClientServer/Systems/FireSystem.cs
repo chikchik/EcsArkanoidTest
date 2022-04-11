@@ -39,7 +39,7 @@ namespace Game.Fabros.EcsModules.Fire.ClientServer.Systems
                 {
                     if (fireComponent.destroyEntity)
                         entity.EntityAddComponent<BurnedOutComponent>(world);
-                       
+
                     //world.DelEntity(entity);
                     continue;
                 }

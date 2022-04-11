@@ -23,13 +23,13 @@ namespace Game.ClientServer
 
             return entities;
         }
-        
+
         public static List<int> GetNextObjectives(EcsWorld world, int prevObjectiveEntity)
         {
             var entities = new List<int>();
             var objectives = world.Filter<ObjectivePrevComponent>().End();
             var pool = world.GetPool<ObjectivePrevComponent>();
-            
+
             /*
              * находим задания которые открываются после prevObjectiveEntity
              */

@@ -1,10 +1,8 @@
 ﻿using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Base.Components;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Input;
 using Leopotam.EcsLite;
-using UnityEngine;
 
 namespace Game.Fabros.Net.ClientServer.Ecs.Systems
 {
@@ -38,7 +36,7 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
                         UnitService.ResetUnitEntity(world, freeUnitEntity);
                     else
                         freeUnitEntity = UnitService.CreateUnitEntity(world);
-                    
+
                     freeUnitEntity.EntityReplace<PlayerComponent>(world).id = playerID;
                 }
             }

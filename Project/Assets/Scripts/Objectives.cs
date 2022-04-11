@@ -1,27 +1,26 @@
 ﻿using Fabros.Ecs.Utils;
-using Game.ClientServer;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.UI;
 using Leopotam.EcsLite;
 using TMPro;
 using UnityEngine;
 
-public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyListener, EventsSystem<ObjectiveOpenedComponent>.IAnyListener 
+public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyListener,
+        EventsSystem<ObjectiveOpenedComponent>.IAnyListener
     //IAnyCompletedListener, IAnyOpenedListener
 {
-    private RectTransform verticalLayoutGroup;
-    private TextMeshProUGUI textPrefab;
-
-    private int objectivesListener;
+    private readonly int objectivesListener;
+    private readonly TextMeshProUGUI textPrefab;
+    private readonly RectTransform verticalLayoutGroup;
     private EcsWorld world;
-    
+
     public Objectives(MainUI ui, EcsWorld world)
     {
         this.world = world;
-        
+
         verticalLayoutGroup = ui.ObjectivesRectTransform;
-        objectivesListener = 0;// world.NewEntity();
-        
+        objectivesListener = 0; // world.NewEntity();
+
         objectivesListener.AddAnyListener<ObjectiveCompletedComponent>(world, this);
         objectivesListener.AddAnyListener<ObjectiveOpenedComponent>(world, this);
 
@@ -34,7 +33,7 @@ public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyListener
     {
         entity.EntityWith<UiObjectComponent>(world, data =>
         {
-            GameObject go = data.gameObject;
+            var go = data.gameObject;
             Object.Destroy(go);
             entity.EntityDel<UiObjectComponent>(world);
         });

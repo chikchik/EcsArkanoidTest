@@ -99,23 +99,6 @@ namespace Game.Fabros.Net.ClientServer
                 }
         }
 
-        /*
-    public void Init(EcsWorld world, LeoConfigComponent cfg)
-    {
-        TickEntity = world.NewEntity();
-        
-        //создаем пустой мир с 0 тиком 
-        world.GetPool<LeoTickComponent>().Add(TickEntity).time = new Tick(0);
-        world.GetPool<LeoConfigComponent>().Add(TickEntity) = cfg;
-
-    }*/
-
-
-        /*
-    public void InitFromRemoteWorld(EcsWorld world)
-    {
-    }*/
-
         public Tick GetCurrentTick(EcsWorld w)
         {
             return w.GetUnique<TickComponent>().Value;

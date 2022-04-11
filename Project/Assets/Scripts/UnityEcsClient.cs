@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Tick.Other;
+﻿using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.Client.Components;
 using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Protocol;
+using Game.UI;
 using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -20,13 +18,13 @@ namespace Game.Client
         public Camera Camera;
 
         private NetClient client;
-        
+
         [Inject] private Global global;
         [Inject] private PlayerInput.PlayerInput playerInput;
-        [Inject] private UI.MainUI ui;
+        [Inject] private MainUI ui;
         [Inject] private EcsWorld world;
 
-        void Start()
+        private void Start()
         {
             client = new NetClient(world);
 
@@ -40,7 +38,7 @@ namespace Game.Client
                 world.AddUnique<ClientViewComponent>() = viewComponent;
             };
 
-            client.LinkUnits = (world) => { ClientServices.LinkUnits(world); };
+            client.LinkUnits = world => { ClientServices.LinkUnits(world); };
 
             client.DeleteEntities = (world, entities) =>
             {
@@ -59,27 +57,29 @@ namespace Game.Client
                     }
                 });
             };
-            
+
             client.Start();
-            
-            
+
+
             ui.InteractionButton.onClick.AddListener(() =>
             {
-                var input = new UserInput { 
-                    hasInteraction = true, 
-                    action = new UserInput.Action()};
+                var input = new UserInput
+                {
+                    hasInteraction = true,
+                    action = new UserInput.Action()
+                };
 
                 client.AddUserInput(input);
             });
         }
-        
+
         private void Update()
         {
             if (!client.Connected)
                 return;
 
             client.Update();
- 
+
             CheckInput();
         }
 
@@ -115,7 +115,6 @@ namespace Game.Client
             moveDirection = forward * moveDirection.z + right * moveDirection.x;
 
 
-
             if (playerInput.HasTouch)
             {
                 var ray = Camera.ScreenPointToRay(playerInput.TouchPosition);
@@ -141,10 +140,8 @@ namespace Game.Client
             if (moveDirection != lastDirection)
             {
                 if (entity.EntityHas<TargetPositionComponent>(world))
-                {
                     if (moveDirection.magnitude < 0.001f)
                         return;
-                }
 
                 var input = new UserInput
                 {
