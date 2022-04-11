@@ -1,0 +1,81 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootNamespace>ServerApp</RootNamespace>
+		
+		<FabrosEcsPackage>..\..\module-ecs\FabrosEcsPackage</FabrosEcsPackage>
+		<Scripts>..\project\Assets\Scripts</Scripts>
+		
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DefineConstants>TRACE;SERVER</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DefineConstants>TRACE;SERVER</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(FabrosEcsPackage)\Fabros\Ecs\**\*.cs">
+			<Link>Fabros\Ecs\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(FabrosEcsPackage)\Leopotam\**\*.cs">
+			<Link>External\Leopotam\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(FabrosEcsPackage)\Fabros\P2P\**\*.cs">
+			<Link>Fabros\P2P\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<Compile Include="$(FabrosEcsPackage)\Fabros\EcsModules\**\*.cs">
+			<Link>External\Fabros\EcsModules\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<Compile Include="$(FabrosEcsPackage)\UnityEngine\**\*.cs">
+			<Link>External\UnityEngine\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(Scripts)\ClientServer\**\*.cs">
+			<Link>ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(Scripts)\Ecs\ClientServer\**\*.cs">
+			<Link>Ecs\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(Scripts)\Fabros\Net\ClientServer\**\*.cs">
+			<Link>FabrosX\Net\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(Scripts)\Fabros\EcsModules\Fire\ClientServer\**\*.cs">
+			<Link>FabrosX\EcsModules\Fire\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+
+</Project>
