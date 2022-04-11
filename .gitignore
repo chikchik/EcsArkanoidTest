@@ -11,7 +11,6 @@ project/client
 console/
 project/client.log
 project/sync.log
-*.txt
 client.log
 sync.log
 project/build/
