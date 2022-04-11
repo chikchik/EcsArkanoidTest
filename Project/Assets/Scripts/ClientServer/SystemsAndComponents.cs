@@ -11,6 +11,7 @@ using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Systems;
+using Game.Fabros.Net.ClientServer.Ecs.Systems;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.ExtendedSystems;
 #if CLIENT
