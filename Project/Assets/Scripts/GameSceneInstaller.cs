@@ -31,14 +31,11 @@ namespace Game
             if (Application.isEditor ||
                 Application.platform is RuntimePlatform.OSXPlayer or RuntimePlatform.WindowsPlayer)
             {
-                mainUI.InteractionButton.gameObject.SetActive(false);
                 Container.BindInterfacesAndSelfTo<PlayerInput.PlayerInput>().FromInstance(new DesktopInput())
                     .AsSingle();
             }
             else if (Application.platform is RuntimePlatform.Android or RuntimePlatform.IPhonePlayer)
             {
-                mainUI.InteractionButton.gameObject.SetActive(true);
-
                 var joystick = Instantiate(joystickPrefab, mainUI.transform);
                 Container.BindInterfacesAndSelfTo<PlayerInput.PlayerInput>()
                     .FromInstance(new MobileInput(joystick, mainUI))

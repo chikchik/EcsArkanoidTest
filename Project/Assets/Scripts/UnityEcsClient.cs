@@ -114,6 +114,7 @@ namespace Game.Client
             moveDirection = forward * moveDirection.z + right * moveDirection.x;
 
 
+            
             if (playerInput.HasTouch)
             {
                 var ray = camera.ScreenPointToRay(playerInput.TouchPosition);
