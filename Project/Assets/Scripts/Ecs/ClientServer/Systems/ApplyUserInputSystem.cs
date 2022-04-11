@@ -29,38 +29,35 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var inputEntity in filter)
             {
                 var playerID = poolInputPlayer.Get(inputEntity).PlayerID;
-                var worldEntity = BaseServices.GetUnitEntityByPlayerId(world, playerID);
+                var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerID);
 
-                if (worldEntity != -1)
+                if (unitEntity != -1)
                 {
                     if (poolInputMove.Has(inputEntity))
                     {
                         var inputMoveComponent = poolInputMove.Get(inputEntity);
 
-                        ref var dir = ref poolMoveDirection.GetRef(worldEntity).value;
+                        ref var dir = ref poolMoveDirection.GetRef(unitEntity).value;
                         dir = inputMoveComponent.Dir;
 
-                        worldEntity.EntityDel<TargetPositionComponent>(world);
+                        unitEntity.EntityDel<TargetPositionComponent>(world);
                     }
 
                     if (poolInputAction.Has(inputEntity))
                     {
                         var actionEntity = world.NewEntity();
-                        ref var eventComponent = ref actionEntity.EntityAddComponent<EventComponent>(world);
-                        eventComponent.playerID = playerID;
-
+                        actionEntity.EntityAddComponent<EventComponent>(world).playerID = playerID;
                         actionEntity.EntityAddComponent<InteractionEventComponent>(world);
-                        actionEntity.EntityAddComponent<PositionComponent>(world) =
-                            worldEntity.EntityGetComponent<PositionComponent>(world);
+                        //actionEntity.EntityAddComponent<PositionComponent>(world) = unitEntity.EntityGetComponent<PositionComponent>(world);
 
-                        worldEntity.EntityDel<TargetPositionComponent>(world);
+                        unitEntity.EntityDel<TargetPositionComponent>(world);
                     }
 
                     if (poolInputMoveTo.Has(inputEntity))
                     {
                         var inputMoveToPointComponent = poolInputMoveTo.Get(inputEntity);
 
-                        ref var targetPositionComponent = ref worldEntity.EntityReplace<TargetPositionComponent>(world);
+                        ref var targetPositionComponent = ref unitEntity.EntityReplace<TargetPositionComponent>(world);
                         targetPositionComponent.Value = inputMoveToPointComponent.Value;
                     }
                 }

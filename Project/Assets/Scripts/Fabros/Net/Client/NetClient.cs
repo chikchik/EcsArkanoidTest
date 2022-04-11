@@ -324,12 +324,14 @@ namespace Game.Fabros.Net.Client
 
         public void AddUserInput(UserInput input)
         {
+            input.time = GetNextInputTick();
+            input.player = playerID;
+            
             var packet = new Packet
             {
                 input = input
             };
             packet.playerID = playerID;
-
             Leo.Inputs.Add(input);
 
             var body = JsonUtility.ToJson(packet);

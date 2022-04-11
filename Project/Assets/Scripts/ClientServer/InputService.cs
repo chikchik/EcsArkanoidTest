@@ -23,7 +23,8 @@ namespace Game.ClientServer
                     inputEntity.EntityAddComponent<InputMoveToPointComponent>(inputWorld).Value = input.move.value;
             }
 
-            if (input.hasInteraction) inputEntity.EntityAddComponent<InputActionComponent>(inputWorld);
+            if (input.hasInteraction) 
+                inputEntity.EntityAddComponent<InputActionComponent>(inputWorld);
         }
     }
 }

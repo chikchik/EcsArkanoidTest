@@ -95,8 +95,6 @@ namespace Game.Client
 
         public void CheckInput()
         {
-            var tick = client.GetNextInputTick();
-
             var entity = BaseServices.GetUnitEntityByPlayerId(world, client.GetPlayerID());
             if (entity == -1)
                 return;
@@ -125,8 +123,6 @@ namespace Game.Client
 
                 var input = new UserInput
                 {
-                    time = tick,
-                    player = playerID,
                     hasMove = true,
                     move = new UserInput.Move {value = point, moveType = UserInput.MoveType.MoveToPoint}
                 };
@@ -145,8 +141,6 @@ namespace Game.Client
 
                 var input = new UserInput
                 {
-                    time = tick,
-                    player = playerID,
                     hasMove = true,
                     move = new UserInput.Move {value = moveDirection, moveType = UserInput.MoveType.MoveToDirection}
                 };

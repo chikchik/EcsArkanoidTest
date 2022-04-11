@@ -498,7 +498,7 @@
         },
         {
             "ComponentName": "RadiusComponent",
-            "ComponentID": 22,
+            "ComponentID": 21,
             "RemovedFromEntities": [],
             "Added": [
                 "{\"radius\":0.5}",
@@ -565,7 +565,7 @@
         },
         {
             "ComponentName": "ResourceComponent",
-            "ComponentID": 23,
+            "ComponentID": 22,
             "RemovedFromEntities": [],
             "Added": [
                 "{\"count\":1}",
@@ -606,7 +606,7 @@
         },
         {
             "ComponentName": "SpeedComponent",
-            "ComponentID": 24,
+            "ComponentID": 23,
             "RemovedFromEntities": [],
             "Added": [
                 "{\"speed\":3.0}",
@@ -620,7 +620,7 @@
                 "{\"speed\":0.20000000298023225}",
                 "{\"speed\":0.20000000298023225}",
                 "{\"speed\":0.20000000298023225}",
-                "{\"speed\":0.20000000298023225}"
+                "{\"speed\":1.0}"
             ],
             "AddedToEntities": [
                 18,

@@ -1,4 +1,5 @@
 using Fabros.Ecs.Utils;
+using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Leopotam.EcsLite;
@@ -14,7 +15,8 @@ namespace Game.Ecs.ClientServer.Systems
                 .Filter<InteractionEventComponent>()
                 .End();
 
-            foreach (var entity in filter) HandleBoxInteraction(world, entity);
+            foreach (var entity in filter) 
+                HandleBoxInteraction(world, entity);
         }
 
         private void HandleBoxInteraction(EcsWorld world, int actionEntity)
@@ -22,9 +24,11 @@ namespace Game.Ecs.ClientServer.Systems
             var filter = world
                 .Filter<BoxComponent>()
                 .Inc<InteractableComponent>()
+                .Exc<OpenedBoxComponent>()
                 .End();
 
             var poolBox = world.GetPool<BoxComponent>();
+            var poolBoxOpened = world.GetPool<OpenedBoxComponent>();
             var poolInteractable = world.GetPool<InteractableComponent>();
 
             foreach (var entity in filter)
@@ -32,24 +36,16 @@ namespace Game.Ecs.ClientServer.Systems
                 ref var interactableComponent = ref poolInteractable.GetRef(entity);
                 ref var boxComponent = ref poolBox.GetRef(entity);
 
-                if (!interactableComponent.canInteract || boxComponent.isOpened) continue;
+                if (!interactableComponent.canInteract) 
+                    continue;
 
-                boxComponent.isOpened = true;
+                poolBoxOpened.Add(entity);
                 interactableComponent.isInteractable = false;
 
                 world.DelEntity(actionEntity);
 
-                CreateObjectiveEvent(world, entity);
+                ObjectiveService.Triggered(world, entity);
             }
-        }
-
-        private void CreateObjectiveEvent(EcsWorld world, int entity)
-        {
-            var createObjectiveEventEntity = world.NewEntity();
-            ref var createObjectiveEventComponent =
-                ref createObjectiveEventEntity.EntityAddComponent<CreateObjectiveEventComponent>(world);
-
-            createObjectiveEventComponent.text = $"loot box {entity}";
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Game.Ecs.ClientServer.Systems
     {
         public void Run(EcsSystems systems)
         {
+            /*
             var world = systems.GetWorld();
             var filter = world
                 .Filter<InteractionEventComponent>()
@@ -27,7 +28,7 @@ namespace Game.Ecs.ClientServer.Systems
                     destroyEntity = true
                 };
                 fire.EntityAddComponent<PositionComponent>(world) = entity.EntityGetComponent<PositionComponent>(world);
-            }
+            }*/
         }
     }
 }

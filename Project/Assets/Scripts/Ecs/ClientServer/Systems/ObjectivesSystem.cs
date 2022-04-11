@@ -80,19 +80,7 @@ namespace Game.Ecs.ClientServer.Systems
 
             foreach (var entity in openedGatesFilter)
             {
-                var objectives = ObjectiveService.GetObjectivesByTarget(world, entity);
-                objectives.ForEach(objEntity =>
-                {
-                    if (!objEntity.EntityHas<ObjectiveCompletedComponent>(world))
-                        objEntity.EntityAdd<ObjectiveCompletedComponent>(world);
-
-                    var nextObjectives = ObjectiveService.GetNextObjectives(world, objEntity);
-                    nextObjectives.ForEach(objEntity =>
-                    {
-                        if (!objEntity.EntityHas<ObjectiveOpenedComponent>(world))
-                            objEntity.EntityAdd<ObjectiveOpenedComponent>(world);
-                    });
-                });
+                ObjectiveService.Triggered(world, entity);
             }
         }
     }

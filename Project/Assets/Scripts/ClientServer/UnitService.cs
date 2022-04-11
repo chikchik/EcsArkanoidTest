@@ -38,6 +38,8 @@ namespace Game.ClientServer
             ref var healthComponent = ref unitEntity.EntityGetRefComponent<HealthComponent>(world);
             healthComponent.maxHealth = 100;
             healthComponent.health = 50;
+            
+            unitEntity.EntityReplace<PositionComponent>(world).value = new Vector3(-1.5f, 0, 9f);
         }
     }
 }

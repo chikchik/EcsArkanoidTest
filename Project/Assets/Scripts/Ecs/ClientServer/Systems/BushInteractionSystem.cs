@@ -1,4 +1,5 @@
 using Fabros.Ecs.Utils;
+using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Leopotam.EcsLite;
@@ -29,11 +30,11 @@ namespace Game.Ecs.ClientServer.Systems
             var poolInteractable = world.GetPool<InteractableComponent>();
             var poolCollectable = world.GetPool<CollectableComponent>();
 
-            foreach (var entity in filter)
+            foreach (var bushEntity in filter)
             {
-                ref var interactableComponent = ref poolInteractable.GetRef(entity);
-                ref var bushComponent = ref poolBush.GetRef(entity);
-                ref var collectableComponent = ref poolCollectable.GetRef(entity);
+                ref var interactableComponent = ref poolInteractable.GetRef(bushEntity);
+                ref var bushComponent = ref poolBush.GetRef(bushEntity);
+                ref var collectableComponent = ref poolCollectable.GetRef(bushEntity);
 
                 if (!interactableComponent.canInteract || collectableComponent.isCollected) continue;
 
@@ -41,6 +42,7 @@ namespace Game.Ecs.ClientServer.Systems
                 interactableComponent.isInteractable = false;
 
                 // InventoryItemAddedEvent(world, bushComponent.name);
+                ObjectiveService.Triggered(world, bushEntity);
             }
         }
 
