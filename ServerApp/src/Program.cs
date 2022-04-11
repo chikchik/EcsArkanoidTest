@@ -112,7 +112,7 @@ namespace ConsoleApp
                 SystemsAndComponents.AddSystems(systems, false);
 
                 leo = new LeoContexts(Config.TMP_HASHES_PATH, pool, 
-                    new SyncLog(Config.SYNC_LOG_PATH), InputServices.ApplyInput);
+                    new SyncLog(Config.SYNC_LOG_PATH), InputService.ApplyInput);
                 /*
                 leo.WriteToConsole = (string str) =>
                 {
