@@ -146,7 +146,7 @@ namespace Game.ClientServer
             AddClient(new CollectableSystem());
 #endif
             // gates and buttons
-            systems.Add(new ButtonActivationSystem());
+            systems.Add(new ButtonsInteractionSystem());
             systems.Add(new GateSystem());
             systems.Add(new MoveByProgressSystem());
 
