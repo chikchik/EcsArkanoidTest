@@ -67,13 +67,18 @@ namespace Game.Ecs.ClientServer.Systems
             var result = new List<int>();
             world.GetNearestEntities(
                 unitEntity.EntityGet<PositionComponent>(world).value,
-                3, ref result, entity=> entity.EntityHas<InteractableComponent>(world));
+                1, ref result, entity=> entity.EntityHas<InteractableComponent>(world));
 
             if (result.Count > 0)
             {
                 var entity = result[0];
                 entity.EntityDel<InteractableComponent>(world);
                 ObjectiveService.Triggered(world, entity);
+
+                if (entity.EntityHas<CollectableComponent>(world))
+                {
+                    entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
+                }
             }
         }
     }

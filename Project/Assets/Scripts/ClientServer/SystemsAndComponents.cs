@@ -138,9 +138,8 @@ namespace Game.ClientServer
 #if CLIENT
             AddClient(new HighlightInteractableSystem());
 #endif
-            systems.Add(new BushInteractionSystem());
-            systems.Add(new BoxInteractionSystem());
-            systems.Add(new BurnInteractionSystem());
+            //systems.Add(new BushInteractionSystem());
+            //systems.Add(new BoxInteractionSystem());
 
 #if CLIENT
             AddClient(new CollectableSystem());
