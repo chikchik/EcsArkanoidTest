@@ -62,6 +62,18 @@ namespace Game.Ecs.ClientServer.Systems
             objEntity.EntityAdd<ObjectiveOpenedComponent>(world);
             objEntity.EntityAdd<ObjectiveDescriptionComponent>(world).text = "eat berries";
             objEntityA = objEntity;
+            
+            objEntity = world.NewEntity();
+            objEntity.EntityAdd<ObjectiveTargetComponent>(world).entity = GetTargetEntityByName("BushObj2");
+            objEntity.EntityAdd<ObjectivePrevComponent>(world).objectiveEntity = objEntityA;
+            objEntity.EntityAdd<ObjectiveDescriptionComponent>(world).text = "eat berries 2";
+            objEntityA = objEntity;
+            
+            objEntity = world.NewEntity();
+            objEntity.EntityAdd<ObjectiveTargetComponent>(world).entity = GetTargetEntityByName("BushObj3");
+            objEntity.EntityAdd<ObjectivePrevComponent>(world).objectiveEntity = objEntityA;
+            objEntity.EntityAdd<ObjectiveDescriptionComponent>(world).text = "eat berries 3";
+            objEntityA = objEntity;
 
 
             /*

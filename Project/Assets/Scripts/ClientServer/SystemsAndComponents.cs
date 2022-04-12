@@ -112,7 +112,7 @@ namespace Game.ClientServer
             AddClient(new InitSceneSystem());
 #endif
 
-            systems.Add(new ApplyUserInputSystem());
+            
 
 #if SERVER
             systems.Add(new AIPlayerSystem());
@@ -127,6 +127,7 @@ namespace Game.ClientServer
             AddClient(new AnimateCharacterSystem());
 #endif
             systems.Add(GridModule.GetSystems());
+            systems.Add(new ApplyUserInputSystem());
 
             // footprint
             systems.Add(new FootprintSystem());
