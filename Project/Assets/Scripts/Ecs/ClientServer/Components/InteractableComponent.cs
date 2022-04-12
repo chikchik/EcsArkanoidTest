@@ -5,7 +5,7 @@ namespace Game.Ecs.ClientServer.Components
     [Serializable]
     public struct InteractableComponent
     {
-        public bool isInteractable;
-        public bool canInteract;
+        //public bool isInteractable;
+        //public bool canInteract;
     }
 }

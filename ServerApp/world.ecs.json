@@ -145,7 +145,7 @@
             "ComponentID": 8,
             "RemovedFromEntities": [],
             "Added": [
-                "{\"isOpened\":false}"
+                "{}"
             ],
             "AddedToEntities": [
                 17
@@ -305,27 +305,27 @@
             "ComponentID": 16,
             "RemovedFromEntities": [],
             "Added": [
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}",
-                "{\"isInteractable\":true,\"canInteract\":false}"
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}",
+                "{}"
             ],
             "AddedToEntities": [
                 2,

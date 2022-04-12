@@ -11,6 +11,7 @@ namespace Game.Ecs.Client.Systems
 {
     public class HighlightInteractableSystem : IEcsRunSystem
     {
+        /*
         private const int HIGHLIGHT_RADIUS = 3;
 
         public void Run(EcsSystems systems)
@@ -61,6 +62,10 @@ namespace Game.Ecs.Client.Systems
                     break;
                 }
             }
+        }*/
+        public void Run(EcsSystems systems)
+        {
+            
         }
     }
 }

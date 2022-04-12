@@ -32,16 +32,14 @@ namespace Game.Ecs.ClientServer.Systems
 
             foreach (var bushEntity in filter)
             {
-                ref var interactableComponent = ref poolInteractable.GetRef(bushEntity);
-                ref var bushComponent = ref poolBush.GetRef(bushEntity);
+                //ref var bushComponent = ref poolBush.GetRef(bushEntity);
                 ref var collectableComponent = ref poolCollectable.GetRef(bushEntity);
 
-                if (!interactableComponent.canInteract || collectableComponent.isCollected) continue;
+                if (collectableComponent.isCollected) continue;
 
                 collectableComponent.isCollected = true;
-                interactableComponent.isInteractable = false;
-
-                // InventoryItemAddedEvent(world, bushComponent.name);
+                poolInteractable.Del(bushEntity);
+                
                 ObjectiveService.Triggered(world, bushEntity);
             }
         }

@@ -36,13 +36,10 @@ namespace Game.Ecs.ClientServer.Systems
                 ref var interactableComponent = ref poolInteractable.GetRef(entity);
                 ref var boxComponent = ref poolBox.GetRef(entity);
 
-                if (!interactableComponent.canInteract) 
-                    continue;
-
                 poolBoxOpened.Add(entity);
-                interactableComponent.isInteractable = false;
 
                 world.DelEntity(actionEntity);
+                poolInteractable.Del(entity);
 
                 ObjectiveService.Triggered(world, entity);
             }

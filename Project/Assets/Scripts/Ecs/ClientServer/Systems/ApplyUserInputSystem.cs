@@ -1,5 +1,8 @@
-﻿using Fabros.Ecs.Utils;
+﻿using System.Collections.Generic;
+using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
+using Fabros.EcsModules.Grid.Other;
+using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
@@ -45,12 +48,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                     if (poolInputAction.Has(inputEntity))
                     {
-                        var actionEntity = world.NewEntity();
-                        actionEntity.EntityAddComponent<EventComponent>(world).playerID = playerID;
-                        actionEntity.EntityAddComponent<InteractionEventComponent>(world);
-                        //actionEntity.EntityAddComponent<PositionComponent>(world) = unitEntity.EntityGetComponent<PositionComponent>(world);
-
-                        unitEntity.EntityDel<TargetPositionComponent>(world);
+                        Interract(world, unitEntity);
                     }
 
                     if (poolInputMoveTo.Has(inputEntity))
@@ -61,6 +59,21 @@ namespace Game.Ecs.ClientServer.Systems
                         targetPositionComponent.Value = inputMoveToPointComponent.Value;
                     }
                 }
+            }
+        }
+
+        public void Interract(EcsWorld world, int unitEntity)
+        {
+            var result = new List<int>();
+            world.GetNearestEntities(
+                unitEntity.EntityGet<PositionComponent>(world).value,
+                3, ref result, entity=> entity.EntityHas<InteractableComponent>(world));
+
+            if (result.Count > 0)
+            {
+                var entity = result[0];
+                entity.EntityDel<InteractableComponent>(world);
+                ObjectiveService.Triggered(world, entity);
             }
         }
     }

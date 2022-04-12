@@ -135,9 +135,6 @@ namespace Game.ClientServer
             AddClient(new FootprintViewSystem());
 #endif
 
-
-            // interaction
-            systems.Add(new InteractionSystem());
 #if CLIENT
             AddClient(new HighlightInteractableSystem());
 #endif

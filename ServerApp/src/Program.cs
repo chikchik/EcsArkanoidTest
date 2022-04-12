@@ -263,8 +263,6 @@ namespace ConsoleApp
 
             ref var component = ref world.GetUniqueRef<PendingInputComponent>();
          
-            //leo.ApplyUserInput(world, component.data);
-
             //обновляем мир 1 раз
             leo.Tick(systems, inputWorld, world, component.data, Config.SyncDataLogging);
         

@@ -124,9 +124,7 @@ namespace Game.Client
                 ref var positionComponent = ref bushEntity.EntityAdd<PositionComponent>(world);
                 positionComponent.value = view.transform.position;
 
-                ref var interactableComponent = ref bushEntity.EntityAdd<InteractableComponent>(world);
-                interactableComponent.isInteractable = true;
-                interactableComponent.canInteract = false;
+                bushEntity.EntityAdd<InteractableComponent>(world);
 
                 ref var radiusComponent = ref bushEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = view.transform.lossyScale.x / 2f;
@@ -154,9 +152,7 @@ namespace Game.Client
                 ref var positionComponent = ref boxEntity.EntityAdd<PositionComponent>(world);
                 positionComponent.value = position;
 
-                ref var interactableComponent = ref boxEntity.EntityAdd<InteractableComponent>(world);
-                interactableComponent.isInteractable = true;
-                interactableComponent.canInteract = false;
+                boxEntity.EntityAdd<InteractableComponent>(world);
 
                 ref var radiusComponent = ref boxEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = view.transform.lossyScale.x / 2f;
@@ -174,9 +170,8 @@ namespace Game.Client
                 ref var radiusComponent = ref buttonEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = view.transform.lossyScale.x / 2f;
 
-                ref var interactableComponent = ref buttonEntity.EntityAdd<InteractableComponent>(world);
-                interactableComponent.isInteractable = true;
-                interactableComponent.canInteract = false;
+                buttonEntity.EntityAdd<InteractableComponent>(world);
+                
 
                 ref var speedComponent = ref buttonEntity.EntityAddComponent<SpeedComponent>(world);
                 speedComponent.speed = view.speed;
