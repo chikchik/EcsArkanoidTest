@@ -8,7 +8,9 @@ using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Inventory;
 using Game.Ecs.ClientServer.Components.Objective;
+using Game.Ecs.ClientServer.Components.Physics;
 using Game.Ecs.ClientServer.Systems;
+using Game.Ecs.ClientServer.Systems.Physics;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Systems;
 using Game.Fabros.Net.ClientServer.Ecs.Systems;
@@ -87,6 +89,9 @@ namespace Game.ClientServer
 
             pool.AddComponent<ButtonPushCompleted>();
             pool.AddComponent<GateOpenedComponent>();
+            pool.AddComponent<RigidbodyDefinitionComponent>();
+            pool.AddComponent<RigidbodyComponent>();
+            pool.AddComponent<BoxColliderComponent>();
 
             return pool;
         }
@@ -111,9 +116,14 @@ namespace Game.ClientServer
 #else
             AddClient(new InitSceneSystem());
 #endif
-
             
-
+            //Physics
+            systems.Add(new InitPhysicsSystem());
+            systems.Add(new PopulatePhysicsWorldSystem());
+            systems.Add(new SyncPhysicsWorldSystem());
+            systems.Add(new UpdatePhysicsWorldSystem());
+            systems.Add(new SyncPhysicsPositionSystem());
+            
 #if SERVER
             systems.Add(new AIPlayerSystem());
 #endif

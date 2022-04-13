@@ -29,7 +29,9 @@
         26,
         27,
         28,
-        29
+        29,
+        30,
+        31
     ],
     "Groups": [
         {
@@ -105,7 +107,9 @@
                 "{\"Name\":\"Gate2 (4)\"}",
                 "{\"Name\":\"Gate2 (3)\"}",
                 "{\"Name\":\"Gate3\"}",
-                "{\"Name\":\"ChestWall\"}"
+                "{\"Name\":\"ChestWall\"}",
+                "{\"Name\":\"NavMeshGround\"}",
+                "{\"Name\":\"Rigidbody\"}"
             ],
             "AddedToEntities": [
                 2,
@@ -135,7 +139,9 @@
                 26,
                 27,
                 28,
-                29
+                29,
+                30,
+                31
             ],
             "Updated": [],
             "UpdatedEntities": []
@@ -461,7 +467,9 @@
                 "{\"value\":{\"x\":-10.5,\"y\":1.4299999475479127,\"z\":-26.25}}",
                 "{\"value\":{\"x\":-10.539999961853028,\"y\":1.4299999475479127,\"z\":-21.0}}",
                 "{\"value\":{\"x\":-10.729999542236329,\"y\":1.4299999475479127,\"z\":2.4700000286102297}}",
-                "{\"value\":{\"x\":-0.47999998927116396,\"y\":-0.07000000029802323,\"z\":2.140000104904175}}"
+                "{\"value\":{\"x\":-0.47999998927116396,\"y\":-0.07000000029802323,\"z\":2.140000104904175}}",
+                "{\"value\":{\"x\":2.180000066757202,\"y\":0.0,\"z\":0.0}}",
+                "{\"value\":{\"x\":0.0,\"y\":200.0,\"z\":10.0}}"
             ],
             "AddedToEntities": [
                 2,
@@ -491,7 +499,9 @@
                 26,
                 27,
                 28,
-                29
+                29,
+                30,
+                31
             ],
             "Updated": [],
             "UpdatedEntities": []
@@ -635,6 +645,36 @@
                 27,
                 28,
                 29
+            ],
+            "Updated": [],
+            "UpdatedEntities": []
+        },
+        {
+            "ComponentName": "RigidbodyDefinitionComponent",
+            "ComponentID": 37,
+            "RemovedFromEntities": [],
+            "Added": [
+                "{\"bodyType\":0,\"density\":1.0,\"friction\":0.30000001192092898,\"restitution\":0.0,\"restitutionThreshold\":0.5}",
+                "{\"bodyType\":2,\"density\":1.0,\"friction\":0.30000001192092898,\"restitution\":0.0,\"restitutionThreshold\":0.5}"
+            ],
+            "AddedToEntities": [
+                30,
+                31
+            ],
+            "Updated": [],
+            "UpdatedEntities": []
+        },
+        {
+            "ComponentName": "BoxColliderComponent",
+            "ComponentID": 39,
+            "RemovedFromEntities": [],
+            "Added": [
+                "{\"size\":{\"x\":70.0,\"y\":0.0820000022649765}}",
+                "{\"size\":{\"x\":1.0,\"y\":1.0}}"
+            ],
+            "AddedToEntities": [
+                30,
+                31
             ],
             "Updated": [],
             "UpdatedEntities": []

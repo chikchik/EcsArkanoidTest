@@ -4,7 +4,9 @@ using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Components.Physics;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
+using Game.Physics;
 using Game.Utils;
 using Game.View;
 using Leopotam.EcsLite;
@@ -232,6 +234,28 @@ namespace Game.Client
 
                 ref var speedComponent = ref characterEntity.EntityAddComponent<SpeedComponent>(world);
                 speedComponent.speed = 2f;
+            });
+            
+            forEachObject<Box2dRigidbody>(rigidBody =>
+            {
+                var rigidBodyEntity = GetOrCreateGameEntity(rigidBody.gameObject);
+
+                ref var positionComponent = ref rigidBodyEntity.EntityAddComponent<PositionComponent>(world);
+                positionComponent.value = rigidBody.transform.position;
+                
+                ref var rigidBodyDefinitionComponent = ref rigidBodyEntity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
+                rigidBodyDefinitionComponent.bodyType = rigidBody.bodyType;
+                rigidBodyDefinitionComponent.density = rigidBody.density;
+                rigidBodyDefinitionComponent.friction = rigidBody.friction;
+                rigidBodyDefinitionComponent.restitution = rigidBody.restitution;
+                rigidBodyDefinitionComponent.restitutionThreshold = rigidBody.restitutionThreshold;
+
+                var boxCollider = rigidBody.GetComponent<Box2dBoxCollider>();
+                if (boxCollider)
+                {
+                    ref var boxColliderComponent = ref rigidBodyEntity.EntityAddComponent<BoxColliderComponent>(world);
+                    boxColliderComponent.size = boxCollider.size;
+                }
             });
         }
     }
