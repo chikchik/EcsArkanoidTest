@@ -70,13 +70,8 @@ namespace Game.Fabros.Net.Client
             //генерируем случайный id игрока с которым нас будет ассоциировать сервер
             playerID = Random.Range(1000, 9999);
 
-            //создаем пустой мир
-            //mainWorld = WorldUtils.CreateWorld("current", leo.Pool);
-            //leo.Pool.SetupPools();
             MainWorld = world;
-            MainWorld.AddUnique<ClientWorldComponent>();
             MainWorld.AddUnique<MainPlayerIdComponent>().value = playerID;
-            MainWorld.SetEventsEnabled<PlayerComponent>();
         }
 
 
