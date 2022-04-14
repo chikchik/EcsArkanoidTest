@@ -45,7 +45,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 bodyReferenceComponent.bodyReference = bodyReference;
 
                 ref var rigidbodyComponent = ref entity.EntityAddComponent<RigidbodyComponent>(world);
-                rigidbodyComponent.position = positionComponent.value;
+                rigidbodyComponent.position = new Vector2(positionComponent.value.x, positionComponent.value.z);
             }
         }
     }

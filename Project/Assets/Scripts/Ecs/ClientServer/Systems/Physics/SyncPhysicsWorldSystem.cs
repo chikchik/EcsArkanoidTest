@@ -2,6 +2,7 @@ using Fabros.EcsModules.Base.Components;
 using Game.ClientServer.Physics;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
+using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Systems.Physics
 {
@@ -24,8 +25,8 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 var bodyReference = poolBodyReference.Get(entity).bodyReference;
                 var positionComponent = poolPosition.Get(entity);
                 ref var rigidBodyComponent = ref poolRigidbody.GetRef(entity);
-                rigidBodyComponent.position = positionComponent.value;
-                
+                rigidBodyComponent.position = new Vector2(positionComponent.value.x, positionComponent.value.z);
+
                 var bodyInfo = new BodyInfo
                 {
                     position = rigidBodyComponent.position,

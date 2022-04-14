@@ -81,24 +81,6 @@ namespace Game.Client
                 headComponent.head = characterView.Head;
 
                 entity.EntityReplaceComponent<LerpComponent>(world).value = 1.0f;
-                
-                var rigidBody = characterView.GetComponent<Box2dRigidbody>();
-                if (rigidBody)
-                {
-                    ref var rigidBodyDefinitionComponent = ref entity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
-                    rigidBodyDefinitionComponent.bodyType = rigidBody.bodyType;
-                    rigidBodyDefinitionComponent.density = rigidBody.density;
-                    rigidBodyDefinitionComponent.friction = rigidBody.friction;
-                    rigidBodyDefinitionComponent.restitution = rigidBody.restitution;
-                    rigidBodyDefinitionComponent.restitutionThreshold = rigidBody.restitutionThreshold;   
-                }
-
-                var boxCollider = characterView.GetComponent<Box2dBoxCollider>();
-                if (boxCollider)
-                {
-                    ref var boxColliderComponent = ref entity.EntityAddComponent<BoxColliderComponent>(world);
-                    boxColliderComponent.size = boxCollider.size;
-                }
             }
         }
 

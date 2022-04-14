@@ -23,7 +23,7 @@ namespace Game.ClientServer
         public static string url = $"wss://rts.oxygine.org/XsZubnMOTHC0JRDTS95S/{ROOM}";
         
         //Physics
-        public static Vector2 GRAVITY = new Vector2(0, -9.8f);
+        public static Vector2 GRAVITY = new Vector2(0, 0);
         public static int VELOCITY_ITERATIONS = 6;
         public static int POSITION_ITERATIONS = 2;
     }

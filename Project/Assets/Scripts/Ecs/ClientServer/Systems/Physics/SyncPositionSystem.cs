@@ -21,7 +21,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             {
                 var rigidbodyComponent = poolRigidbody.Get(entity);
                 ref var positionComponent = ref poolPosition.GetRef(entity);
-                var position = new Vector3(rigidbodyComponent.position.x, rigidbodyComponent.position.y, positionComponent.value.z);
+                var position = new Vector3(rigidbodyComponent.position.x, positionComponent.value.y, rigidbodyComponent.position.y);
                 
                 positionComponent.value = position;
             }
