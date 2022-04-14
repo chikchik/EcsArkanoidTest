@@ -1,3 +1,4 @@
+using Fabros.EcsModules.Base.Components;
 using Game.ClientServer.Physics;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
@@ -12,14 +13,19 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             var filter = world
                 .Filter<BodyReferenceComponent>()
                 .Inc<RigidbodyComponent>()
+                .Inc<PositionComponent>()
                 .End();
-            var bodyReferenceComponent = world.GetPool<BodyReferenceComponent>();
-            var poolRigidBodyComponent = world.GetPool<RigidbodyComponent>();
+            var poolBodyReference = world.GetPool<BodyReferenceComponent>();
+            var poolRigidbody = world.GetPool<RigidbodyComponent>();
+            var poolPosition = world.GetPool<PositionComponent>();
             
             foreach (var entity in filter)
             {
-                var bodyReference = bodyReferenceComponent.Get(entity).bodyReference;
-                var rigidBodyComponent = poolRigidBodyComponent.Get(entity);
+                var bodyReference = poolBodyReference.Get(entity).bodyReference;
+                var positionComponent = poolPosition.Get(entity);
+                ref var rigidBodyComponent = ref poolRigidbody.GetRef(entity);
+                rigidBodyComponent.position = positionComponent.value;
+                
                 var bodyInfo = new BodyInfo
                 {
                     position = rigidBodyComponent.position,

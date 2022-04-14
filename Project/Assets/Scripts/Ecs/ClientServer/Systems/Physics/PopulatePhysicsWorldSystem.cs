@@ -18,6 +18,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             var filter = world
                 .Filter<RigidbodyDefinitionComponent>()
                 .Inc<BoxColliderComponent>()
+                .Exc<BodyReferenceComponent>()
                 .Exc<RigidbodyComponent>()
                 .End();
             var poolRigidbodyDefinition = world.GetPool<RigidbodyDefinitionComponent>();
@@ -39,7 +40,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                     rigidbodyDefinitionComponent.friction,
                     rigidbodyDefinitionComponent.restitution,
                     rigidbodyDefinitionComponent.restitutionThreshold);
-
+                
                 ref var bodyReferenceComponent = ref entity.EntityAddComponent<BodyReferenceComponent>(world);
                 bodyReferenceComponent.bodyReference = bodyReference;
 

@@ -81,6 +81,24 @@ namespace Game.Client
                 headComponent.head = characterView.Head;
 
                 entity.EntityReplaceComponent<LerpComponent>(world).value = 1.0f;
+                
+                var rigidBody = characterView.GetComponent<Box2dRigidbody>();
+                if (rigidBody)
+                {
+                    ref var rigidBodyDefinitionComponent = ref entity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
+                    rigidBodyDefinitionComponent.bodyType = rigidBody.bodyType;
+                    rigidBodyDefinitionComponent.density = rigidBody.density;
+                    rigidBodyDefinitionComponent.friction = rigidBody.friction;
+                    rigidBodyDefinitionComponent.restitution = rigidBody.restitution;
+                    rigidBodyDefinitionComponent.restitutionThreshold = rigidBody.restitutionThreshold;   
+                }
+
+                var boxCollider = characterView.GetComponent<Box2dBoxCollider>();
+                if (boxCollider)
+                {
+                    ref var boxColliderComponent = ref entity.EntityAddComponent<BoxColliderComponent>(world);
+                    boxColliderComponent.size = boxCollider.size;
+                }
             }
         }
 
@@ -236,21 +254,25 @@ namespace Game.Client
                 speedComponent.speed = 2f;
             });
             
-            forEachObject<Box2dRigidbody>(rigidBody =>
+            forEachObject<CubeView>(cubeView =>
             {
-                var rigidBodyEntity = GetOrCreateGameEntity(rigidBody.gameObject);
+                var rigidBodyEntity = GetOrCreateGameEntity(cubeView.gameObject);
 
                 ref var positionComponent = ref rigidBodyEntity.EntityAddComponent<PositionComponent>(world);
-                positionComponent.value = rigidBody.transform.position;
-                
-                ref var rigidBodyDefinitionComponent = ref rigidBodyEntity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
-                rigidBodyDefinitionComponent.bodyType = rigidBody.bodyType;
-                rigidBodyDefinitionComponent.density = rigidBody.density;
-                rigidBodyDefinitionComponent.friction = rigidBody.friction;
-                rigidBodyDefinitionComponent.restitution = rigidBody.restitution;
-                rigidBodyDefinitionComponent.restitutionThreshold = rigidBody.restitutionThreshold;
+                positionComponent.value = cubeView.transform.position;
 
-                var boxCollider = rigidBody.GetComponent<Box2dBoxCollider>();
+                var rigidBody = cubeView.GetComponent<Box2dRigidbody>();
+                if (rigidBody)
+                {
+                    ref var rigidBodyDefinitionComponent = ref rigidBodyEntity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
+                    rigidBodyDefinitionComponent.bodyType = rigidBody.bodyType;
+                    rigidBodyDefinitionComponent.density = rigidBody.density;
+                    rigidBodyDefinitionComponent.friction = rigidBody.friction;
+                    rigidBodyDefinitionComponent.restitution = rigidBody.restitution;
+                    rigidBodyDefinitionComponent.restitutionThreshold = rigidBody.restitutionThreshold;   
+                }
+
+                var boxCollider = cubeView.GetComponent<Box2dBoxCollider>();
                 if (boxCollider)
                 {
                     ref var boxColliderComponent = ref rigidBodyEntity.EntityAddComponent<BoxColliderComponent>(world);

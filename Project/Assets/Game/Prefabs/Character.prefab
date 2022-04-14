@@ -1149,9 +1149,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2875743416662340765}
   - component: {fileID: 2333436472338061716}
-  - component: {fileID: 2333436472338061726}
   - component: {fileID: 2333436472338061713}
   - component: {fileID: 2333436472338061712}
+  - component: {fileID: 3223316743136462265}
+  - component: {fileID: 8094370615877283626}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -1195,21 +1196,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Head: {fileID: 5060814389359366176}
   Animator: {fileID: 2333436472338061713}
-  Agent: {fileID: 0}
-  AnimatorMove: {fileID: 0}
---- !u!65 &2333436472338061726
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3216522079988084263}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &2333436472338061713
 Animator:
   serializedVersion: 4
@@ -1353,6 +1339,36 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     AdjustForwAndSide: {x: 1, y: 0.75}
+--- !u!114 &3223316743136462265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3216522079988084263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59c0c4b67183f4985b572c1074f05b0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodyType: 2
+  density: 1
+  friction: 0.3
+  restitution: 0
+  restitutionThreshold: 0.5
+--- !u!114 &8094370615877283626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3216522079988084263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9395ecd6a0c3541ee98940bf364e70c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: {x: 1, y: 1}
 --- !u!1 &3269450778910946435
 GameObject:
   m_ObjectHideFlags: 0

@@ -4351,6 +4351,7 @@ GameObject:
   - component: {fileID: 1300422288}
   - component: {fileID: 1300422292}
   - component: {fileID: 1300422291}
+  - component: {fileID: 1300422293}
   m_Layer: 0
   m_Name: Rigidbody
   m_TagString: Untagged
@@ -4416,7 +4417,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1300422287}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 200, z: 10}
+  m_LocalPosition: {x: 0, y: 5, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4453,6 +4454,18 @@ MonoBehaviour:
   friction: 0.3
   restitution: 0
   restitutionThreshold: 0.5
+--- !u!114 &1300422293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300422287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b037cce56da74040ac3d4ed161e258b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1336984574
 GameObject:
   m_ObjectHideFlags: 0
@@ -4468,6 +4481,7 @@ GameObject:
   - component: {fileID: 1336984581}
   - component: {fileID: 1336984583}
   - component: {fileID: 1336984582}
+  - component: {fileID: 1336984584}
   m_Layer: 0
   m_Name: NavMeshGround
   m_TagString: Untagged
@@ -4612,6 +4626,18 @@ MonoBehaviour:
   friction: 0.3
   restitution: 0
   restitutionThreshold: 0.5
+--- !u!114 &1336984584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336984574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b037cce56da74040ac3d4ed161e258b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1361244436
 GameObject:
   m_ObjectHideFlags: 0
