@@ -93,7 +93,7 @@ namespace ConsoleApp
     
                 //на сервере может быть tickrate отличный от клиента, например 20 вместо 60
                 //это надо учесть при симуляции
-                var config = new TickrateConfigComponent { clientTickrate = 20, serverSyncStep = 1, serverTickrate = 20 };
+                var config = new TickrateConfigComponent { clientTickrate = 30, serverSyncStep = 1, serverTickrate = 30 };
 
                 world = WorldUtils.CreateWorld("main", pool);
 

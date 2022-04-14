@@ -22,9 +22,10 @@ namespace Game.Fabros.Net.Client
 {
     public class NetClient
     {
-        public Action<EcsWorld, int[]> DeleteEntities;
-        public Action<EcsWorld> InitWorld;
-        public Action<EcsWorld> LinkUnits;
+        public Action<EcsWorld, int[]> DeleteEntitiesAction;
+        public Action<EcsWorld> InitWorldAction;
+        public Action<EcsWorld> LinkUnitsAction;
+        public Action ConnectedAction;
 
 
         public EcsWorld MainWorld { get; }
@@ -110,7 +111,7 @@ namespace Game.Fabros.Net.Client
 
 
             InputWorld = new EcsWorld("input");
-            InitWorld(MainWorld);
+            InitWorldAction(MainWorld);
 
             clientSystems = new EcsSystems(MainWorld);
             clientSystems.AddWorld(InputWorld, "input");
@@ -139,6 +140,7 @@ namespace Game.Fabros.Net.Client
             Connected = true;
             Debug.Log("client started");
 
+            ConnectedAction?.Invoke();
             try
             {
                 while (true)
@@ -239,10 +241,10 @@ namespace Game.Fabros.Net.Client
                     var dif2 = WorldUtils.BuildDiff(Leo.Pool, MainWorld,
                         copyServerWorld);
 
-                    DeleteEntities(MainWorld, dif2.RemovedEntities);
+                    DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
                     WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif2);
                     //перепривязываем юнитов
-                    LinkUnits(MainWorld);
+                    LinkUnitsAction(MainWorld);
 
                     await UniTask.WaitForEndOfFrame();
                     //WorldMono.log.write($"got update from server, {leo.getTime(world)}");

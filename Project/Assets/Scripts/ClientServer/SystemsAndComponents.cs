@@ -87,6 +87,7 @@ namespace Game.ClientServer
 
             pool.AddComponent<ButtonPushCompleted>();
             pool.AddComponent<GateOpenedComponent>();
+            pool.AddComponent<LookDirectionComponent>();
 
             return pool;
         }
@@ -123,14 +124,15 @@ namespace Game.ClientServer
             systems.Add(new EntitiesLifeTimeSystem());
 
 #if CLIENT
-            AddClient(new RotateCharacterSystem());
+            //AddClient(new RotateCharacterSystem());
             AddClient(new AnimateCharacterSystem());
 #endif
             systems.Add(GridModule.GetSystems());
             systems.Add(new ApplyUserInputSystem());
 
-            // footprint
+#if SERVER
             systems.Add(new FootprintSystem());
+#endif
 
 #if CLIENT
             AddClient(new FootprintViewSystem());
@@ -151,8 +153,6 @@ namespace Game.ClientServer
             systems.Add(new MoveByProgressSystem());
 
 #if CLIENT
-            AddClient(new SyncTransformSystem());
-            AddClient(new CameraFollowSystem());
             AddClient(new UseInventoryItemSystem());
             AddClient(new DetectPlayerIdChangesSystem());
 #endif

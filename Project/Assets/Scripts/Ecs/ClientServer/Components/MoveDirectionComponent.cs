@@ -8,4 +8,10 @@ namespace Game.Ecs.ClientServer.Components
     {
         public Vector3 value;
     }
+    
+    [Serializable]
+    public struct LookDirectionComponent
+    {
+        public Vector3 value;
+    }
 }

@@ -69,7 +69,8 @@ namespace Game.Fabros.Net.ClientServer
 
 
             //тик мира
-            systems.Run(world);
+            systems.ChangeDefaultWorld(world);
+            systems.Run();
 
 
             if (!writeToLog)
