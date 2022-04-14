@@ -1,5 +1,6 @@
 ﻿using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
+using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.Client.Components;
 using Game.Fabros.Net.Client;
@@ -23,11 +24,25 @@ namespace Game.Client
         [Inject] private MainUI ui;
         [Inject] private EcsWorld world;
 
+        private EcsSystems viewSystems;
+
         private void Start()
         {
             client = new NetClient(world);
 
-            client.InitWorld = world =>
+            viewSystems = new EcsSystems(world);
+
+            viewSystems.Add(new SyncTransformSystem());
+            viewSystems.Add(new RotateCharacterSystem());
+            viewSystems.Add(new CameraFollowSystem());
+
+
+            client.ConnectedAction = () =>
+            {
+                viewSystems.Init();
+            };
+            
+            client.InitWorldAction = world =>
             {
                 var viewComponent = new ClientViewComponent();
                 viewComponent.Camera = Camera.main;
@@ -37,9 +52,9 @@ namespace Game.Client
                 world.AddUnique<ClientViewComponent>() = viewComponent;
             };
 
-            client.LinkUnits = world => { ClientServices.LinkUnits(world); };
+            client.LinkUnitsAction = world => { ClientServices.LinkUnits(world); };
 
-            client.DeleteEntities = (world, entities) =>
+            client.DeleteEntitiesAction = (world, entities) =>
             {
                 entities.ForEach(entity =>
                 {
@@ -78,8 +93,9 @@ namespace Game.Client
                 return;
 
             client.Update();
-
             CheckInput();
+            
+            viewSystems.Run();
         }
 
         private void OnDestroy()

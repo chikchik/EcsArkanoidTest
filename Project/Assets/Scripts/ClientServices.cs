@@ -80,7 +80,7 @@ namespace Game.Client
                 ref var headComponent = ref entity.EntityAddComponent<HeadComponent>(world);
                 headComponent.head = characterView.Head;
 
-                entity.EntityReplaceComponent<LerpComponent>(world).value = 0.2f;
+                entity.EntityReplaceComponent<LerpComponent>(world).value = 1.0f;
             }
         }
 

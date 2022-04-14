@@ -1,0 +1,10 @@
+diff a/Project/Assets/Scripts/ClientServer/SystemsAndComponents.cs b/Project/Assets/Scripts/ClientServer/SystemsAndComponents.cs	(rejected hunks)
+@@ -92,6 +92,8 @@ namespace Game.ClientServer
+             pool.AddComponent<RigidbodyDefinitionComponent>();
+             pool.AddComponent<RigidbodyComponent>();
+             pool.AddComponent<BoxColliderComponent>();
++            
++            pool.AddComponent<LookDirectionComponent>();
+ 
+             return pool;
+         }

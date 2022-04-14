@@ -18,6 +18,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolTargetPosition = world.GetPool<TargetPositionComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
+            var poolLookDirection = world.GetPool<LookDirectionComponent>();
 
             foreach (var entity in filter)
             {
@@ -34,6 +35,7 @@ namespace Game.Ecs.ClientServer.Systems
                 };
 
                 poolMoveDirection.GetRef(entity).value = moveDirection;
+                poolLookDirection.GetRef(entity).value = moveDirection;
 
                 if (distance < 0.1f) poolTargetPosition.Del(entity);
             }

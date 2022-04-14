@@ -27,6 +27,7 @@ namespace Game.Ecs.ClientServer.Systems
 
 
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
+            var poolLookDirection = world.GetPool<LookDirectionComponent>();
 
 
             foreach (var inputEntity in filter)
@@ -40,8 +41,8 @@ namespace Game.Ecs.ClientServer.Systems
                     {
                         var inputMoveComponent = poolInputMove.Get(inputEntity);
 
-                        ref var dir = ref poolMoveDirection.GetRef(unitEntity).value;
-                        dir = inputMoveComponent.Dir;
+                        poolMoveDirection.GetRef(unitEntity).value = inputMoveComponent.Dir;
+                        poolLookDirection.GetRef(unitEntity).value = inputMoveComponent.Dir;
 
                         unitEntity.EntityDel<TargetPositionComponent>(world);
                     }

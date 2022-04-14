@@ -16,7 +16,7 @@ namespace Game.Ecs.Client.Systems
             if (!world.HasUnique<ClientPlayerComponent>()) return;
 
             var poolTransform = world.GetPool<TransformComponent>();
-            var deltaTime = world.GetDeltaSeconds();
+            var deltaTime = Time.deltaTime;
 
             var clientPlayerComponent = world.GetUnique<ClientPlayerComponent>();
             var targetEntityTransform = poolTransform.GetRef(clientPlayerComponent.entity).transform;
