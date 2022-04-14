@@ -93,7 +93,7 @@ namespace Game.ClientServer
             pool.AddComponent<RigidbodyComponent>();
             pool.AddComponent<BoxColliderComponent>();
 
-            return pool;
+            return pool; 
         }
 
         public static void AddSystems(ComponentsPool pool, EcsSystems systems, bool client)
