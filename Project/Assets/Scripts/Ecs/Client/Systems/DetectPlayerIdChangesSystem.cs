@@ -20,12 +20,14 @@ namespace Game.Ecs.Client.Systems
 
             var mainPlayerID = world.GetUnique<MainPlayerIdComponent>().value;
             foreach (var entity in filter)
+            {
                 if (entity.EntityGetComponent<PlayerComponent>(world).id == mainPlayerID)
                 {
                     //replace потому что ClientPlayerComponent мог уже быть 
                     world.ReplaceUnique<ClientPlayerComponent>().entity = entity;
                     entity.EntityReplaceComponent<LerpComponent>(world).value = 1;
                 }
+            }
         }
     }
 }

@@ -192,8 +192,14 @@ namespace Game.Fabros.Net.Client
 
 
                     //if (leo.GetCurrentTick(serverWorld) < leo.GetCurrentTick(currentWorld))
+                    
                     if (delay != -999)
                     {
+                        if (Math.Abs(delay) > 5)
+                        {
+                            delay = Math.Sign(delay) * 5;
+                        }
+                        
                         var delayDir = delay - prevDelay;
 
                         if (delay >= 2) stepOffset = 0.001f * delay;

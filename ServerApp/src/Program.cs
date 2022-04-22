@@ -130,7 +130,7 @@ namespace ConsoleApp
                 SendWorldToClients();
 
 
-                Console.Write("loop");
+                Console.WriteLine("loop");
                 var next = DateTime.UtcNow;
                 var step = 1.0 / config.serverTickrate;
                 while (true)
