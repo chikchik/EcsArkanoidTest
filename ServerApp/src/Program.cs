@@ -23,8 +23,14 @@ namespace ConsoleApp
 
     class Client
     {
-        public int id;
-        public int delay;
+        public int ID;
+        public int Delay;
+        public ClientAddr Address;
+        public Client(int id)
+        {
+            this.ID = id;
+            Address = new ClientAddr(id.ToString());
+        }
     }
 
     class Program
@@ -82,7 +88,7 @@ namespace ConsoleApp
         {
             try
             {
-                var url = $"{Config.url}/{P2P.ADDR_SERVER}";
+                var url = $"{Config.url}/{P2P.ADDR_SERVER.AddressString}";
                 await socket.ConnectAsync(new Uri(url, UriKind.Absolute), new CancellationToken());
 
                 Console.WriteLine($"connected to host\n{url}");
@@ -163,27 +169,26 @@ namespace ConsoleApp
             string errAddr = "";
             if (P2P.CheckError(msgBytes, out errAddr))
             {
-                var client = clients.FirstOrDefault(client => client.id.ToString() == errAddr);
+                var client = clients.FirstOrDefault(client => client.ID.ToString() == errAddr);
                 if (client != null)
                 {
                     clients.Remove(client);
-                    Console.WriteLine($"removed client {client.id}");
-                    BaseServices.LeavePlayer(inputWorld, client.id);
+                    Console.WriteLine($"removed client {client.ID}");
+                    BaseServices.LeavePlayer(inputWorld, client.ID);
                 }
                 return;
             }
 
-            string str = Encoding.UTF8.GetString(msgBytes);
-            var packet = JsonConvert.DeserializeObject<Packet>(str);
+            var packet = P2P.ParseResponse<Packet>(msgBytes);
 
             if (packet.hasHello)
             {
-                var client = new Client { id = packet.playerID };
+                var client = new Client(packet.playerID);
 
                 Console.WriteLine($"got hello from client {packet.playerID}");
                 
 
-                SendAsync(new Packet { hello = new Hello(), hasHello = true }, client.id.ToString());
+                SendAsync(new Packet { hello = new Hello(), hasHello = true }, client.Address);
 
                 var emptyWorld = WorldUtils.CreateWorld("empty", leo.Pool);
                 SendInitialWorld(emptyWorld, client);
@@ -200,7 +205,7 @@ namespace ConsoleApp
 
         private void GotInput(Packet packet)
         {
-            Client client = clients.FirstOrDefault(client => client.id == packet.playerID);
+            Client client = clients.FirstOrDefault(client => client.ID == packet.playerID);
             if (client == null)
             {
                 if (!missingClients.Contains(packet.playerID)) 
@@ -214,8 +219,8 @@ namespace ConsoleApp
 
             if (!packet.isPing)
             {
-                Console.WriteLine($"got input from {client.id}, {packet.input.time} at {currentTick}");
-                leo.SyncLog.WriteLine($"got input from {client.id}, {packet.input.time} at {currentTick}");
+                Console.WriteLine($"got input from {client.ID}, {packet.input.time} at {currentTick}");
+                leo.SyncLog.WriteLine($"got input from {client.ID}, {packet.input.time} at {currentTick}");
             }
 
 
@@ -227,7 +232,7 @@ namespace ConsoleApp
             if (delay < 0)
             {
                 Console.WriteLine($"delay {delay}");
-                leo.SyncLog.WriteLine($"input from {client.id}, {packet.input.time} at {currentTick} too late {delay}");
+                leo.SyncLog.WriteLine($"input from {client.ID}, {packet.input.time} at {currentTick} too late {delay}");
 
                 packet.input.time = currentTick;
             }
@@ -250,9 +255,9 @@ namespace ConsoleApp
             //component.data = inputs.ToArray();
 
             if (packet.isPing)
-                client.delay = delay;
+                client.Delay = delay;
             else
-                client.delay = -999;
+                client.Delay = -999;
             //Debug.Log($"rtt player={client.playerID} {client.ping}");
         }
 
@@ -296,12 +301,12 @@ namespace ConsoleApp
                     WorldUpdate = new WorldUpdateProto
                     {
                         dif = dif,
-                        delay = client.delay
+                        delay = client.Delay
                     }
                 };
                 
-                SendAsync(packet, client.id.ToString());
-                client.delay = -999;
+                SendAsync(packet, client.Address);
+                client.Delay = -999;
             });
             
             
@@ -338,18 +343,14 @@ namespace ConsoleApp
                 }
             };
             
-            SendAsync(packet, client.id.ToString());
+            SendAsync(packet, client.Address);
             
-            Console.WriteLine($"initial world send to client {client.id}");
+            Console.WriteLine($"initial world send to client {client.ID}");
         }
 
-        private void SendAsync(Packet packet, string addr)
+        private void SendAsync(Packet packet, ClientAddr addr)
         {
-            var data = P2P.BuildRequest(addr, JsonConvert.SerializeObject(packet, Formatting.Indented));
-
-            //Console.WriteLine(data);
-
-            var bytes = System.Text.Encoding.UTF8.GetBytes(data);
+            var bytes = P2P.BuildRequest(addr, packet);
             socket.SendAsync(bytes, WebSocketMessageType.Text, true, new CancellationToken());            
         }
 

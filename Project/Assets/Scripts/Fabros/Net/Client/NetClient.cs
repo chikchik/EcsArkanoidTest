@@ -85,7 +85,7 @@ namespace Game.Fabros.Net.Client
             connection.OnConnected += () =>
             {
                 socket = connection.ExtractSocket();
-                AsyncMain(connection.response);
+                AsyncMain(connection.Response);
             };
             connection.Start();
         }
@@ -95,7 +95,7 @@ namespace Game.Fabros.Net.Client
             while (!packet.hasWelcomeFromServer)
             {
                 var msg = await socket.AsyncWaitMessage();
-                packet = WebSocketConnection.Packet2Message(msg);
+                packet = P2P.ParseResponse<Packet>(msg.buffer);
             }
 
             if (!Application.isPlaying)
@@ -141,7 +141,7 @@ namespace Game.Fabros.Net.Client
                 while (true)
                 {
                     var msg = await socket.AsyncWaitMessage();
-                    packet = WebSocketConnection.Packet2Message(msg);
+                    packet = P2P.ParseResponse<Packet>(msg.buffer);
 
                     if (!Application.isPlaying) throw new Exception("async next step for stopped application");
 
@@ -242,7 +242,8 @@ namespace Game.Fabros.Net.Client
                     var dif2 = WorldUtils.BuildDiff(Leo.Pool, MainWorld,
                         copyServerWorld);
 
-                    DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
+                    if (dif2.RemovedEntities != null)
+                        DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
                     WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif2);
                     //перепривязываем юнитов
                     LinkUnitsAction(MainWorld);
@@ -316,8 +317,8 @@ namespace Game.Fabros.Net.Client
                     packet.isPing = true;
                     packet.input.time = Leo.GetCurrentTick(MainWorld);
 
-                    var body = JsonUtility.ToJson(packet);
-                    socket.Send(P2P.ADDR_SERVER, body);
+                    var data = P2P.BuildRequest(P2P.ADDR_SERVER, packet);
+                    socket.Send(data);
                 }
             });
 
@@ -337,8 +338,7 @@ namespace Game.Fabros.Net.Client
             packet.playerID = playerID;
             Leo.Inputs.Add(input);
 
-            var body = JsonUtility.ToJson(packet);
-            socket.Send(P2P.ADDR_SERVER, body);
+            socket.Send( P2P.BuildRequest(P2P.ADDR_SERVER, packet));
             if (packet.input != null)
                 Leo.SyncLog.WriteLine($"send input {packet.input.time}");
         }

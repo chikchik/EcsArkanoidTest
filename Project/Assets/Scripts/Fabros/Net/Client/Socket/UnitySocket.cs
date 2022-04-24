@@ -28,10 +28,9 @@ namespace Game.Fabros.Net.Client.Socket
             }
         }
 
-        public void Send(string addr, string body)
+        public void Send(byte[] body)
         {
-            var str = P2P.BuildRequest(addr, body);
-            socket.Send(str);
+            socket.Send(body);
         }
 
         public Message PopMessage()

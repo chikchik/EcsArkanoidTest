@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 using BestHTTP.WebSocket;
 using Fabros.P2P;
@@ -11,25 +13,21 @@ namespace Game.Fabros.Net.Client.Socket
     {
         public delegate void Event();
 
-        public string addr;
-
-        public bool isDone;
-        public bool isError;
-        public bool isStarted;
-
-        public Packet request;
-        public Packet response;
-
+        public ClientAddr Address;
+        public bool IsDone;
+        public bool IsError;
+        public Packet Request;
+        public Packet Response;
+        public string Url;
+        
         private WebSocket socket;
 
-        public string url;
-
-        public WebSocketConnection(Packet request, string room, string id, string addr)
+        public WebSocketConnection(Packet request, string room, string id, ClientAddr address)
         {
-            this.addr = addr;
-            url = $"wss://rts.oxygine.org/XsZubnMOTHC0JRDTS95S/{room}/{id}";
+            this.Address = address;
+            Url = $"wss://rts.oxygine.org/XsZubnMOTHC0JRDTS95S/{room}/{id}";
             //url = $"ws://localhost:9096/XsZubnMOTHC0JRDTS95S/{room}/{id}";
-            this.request = request;
+            this.Request = request;
         }
 
         public event Event OnConnected;
@@ -39,30 +37,32 @@ namespace Game.Fabros.Net.Client.Socket
         {
             Debug.Log("ws opened");
 
-            socket.Send(P2P.BuildRequest(addr, JsonUtility.ToJson(request)));
+            socket.Send(P2P.BuildRequest(Address, Request));
 
-            if (addr == P2P.ADDR_BROADCAST)
+            if (Address == P2P.ADDR_BROADCAST)
+            {
                 //если мы на сервере, то не нужно ожидать какое-то входящее сообщение
                 Completed(false);
+            }
         }
 
         private void Completed(bool wasError)
         {
-            if (isDone)
+            if (IsDone)
             {
                 Debug.LogError("wtf? not possible");
                 return;
             }
 
-            isDone = true;
-            isError = wasError;
+            IsDone = true;
+            IsError = wasError;
 
             if (wasError)
                 Debug.Log("connection error");
 
             try
             {
-                if (isError)
+                if (IsError)
                     OnError?.Invoke();
                 else
                     OnConnected?.Invoke();
@@ -86,7 +86,7 @@ namespace Game.Fabros.Net.Client.Socket
                     return;
                 }
 
-                response = Packet2Message(data);
+                Response = P2P.ParseResponse<Packet>(data);
                 Completed(false);
             }
             catch (Exception e)
@@ -97,9 +97,12 @@ namespace Game.Fabros.Net.Client.Socket
 
         private void OnMessage(WebSocket ws, string str)
         {
+            throw new Exception("not implemented");
+            /*
             Debug.Log("onMessage " + str);
             response = JsonUtility.FromJson<Packet>(str);
             Completed(false);
+            */
         }
 
         private void onError(WebSocket w, Exception ex)
@@ -115,10 +118,9 @@ namespace Game.Fabros.Net.Client.Socket
 
         public void Start()
         {
-            Debug.Log($"Connection start {url}");
+            Debug.Log($"Connection start {Url}");
             //Server.prettyPrint("Connection request", request);
-            isStarted = true;
-            socket = new WebSocket(new Uri(url));
+            socket = new WebSocket(new Uri(Url));
             socket.OnOpen += OnOpen;
             socket.OnBinary += OnBinary;
             socket.OnError += onError;
@@ -140,17 +142,6 @@ namespace Game.Fabros.Net.Client.Socket
             Debug.Log("extractSocket");
             Unsubscribe();
             return new UnitySocket(socket);
-        }
-
-
-        public static Packet Packet2Message(UnitySocket.Message msg)
-        {
-            return JsonUtility.FromJson<Packet>(Encoding.UTF8.GetString(msg.buffer));
-        }
-
-        public static Packet Packet2Message(byte[] msg)
-        {
-            return JsonUtility.FromJson<Packet>(Encoding.UTF8.GetString(msg));
         }
     }
 }

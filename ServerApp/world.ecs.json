@@ -31,29 +31,43 @@
         28,
         29
     ],
+    "CreatedEntitiesGen": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+    ],
     "Groups": [
         {
             "ComponentName": "FlammableComponent",
-            "ComponentID": 6,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}",
-                "{\"Power\":3.0}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Fabros.EcsModules.Fire.ClientServer.Components.FlammableComponent",
+            "Components": "{\"data\":[{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0}]}",
+            "ChangedEntities": [
                 2,
                 3,
                 4,
@@ -70,44 +84,13 @@
                 15,
                 16
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "GameObjectNameComponent",
-            "ComponentID": 7,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"Name\":\"Bush (0)\"}",
-                "{\"Name\":\"Bush (14)\"}",
-                "{\"Name\":\"Bush (12)\"}",
-                "{\"Name\":\"BushObj3\"}",
-                "{\"Name\":\"Bush (10)\"}",
-                "{\"Name\":\"BushObj\"}",
-                "{\"Name\":\"Bush (9)\"}",
-                "{\"Name\":\"Bush (5)\"}",
-                "{\"Name\":\"BushObj2\"}",
-                "{\"Name\":\"Bush (7)\"}",
-                "{\"Name\":\"Bush (1)\"}",
-                "{\"Name\":\"Bush (2)\"}",
-                "{\"Name\":\"Bush (11)\"}",
-                "{\"Name\":\"Bush (13)\"}",
-                "{\"Name\":\"Bush (8)\"}",
-                "{\"Name\":\"Chest\"}",
-                "{\"Name\":\"Button1\"}",
-                "{\"Name\":\"Button3\"}",
-                "{\"Name\":\"Button2\"}",
-                "{\"Name\":\"Button4\"}",
-                "{\"Name\":\"Button5\"}",
-                "{\"Name\":\"Gate2\"}",
-                "{\"Name\":\"Gate1\"}",
-                "{\"Name\":\"Gate2 (2)\"}",
-                "{\"Name\":\"Gate2 (4)\"}",
-                "{\"Name\":\"Gate2 (3)\"}",
-                "{\"Name\":\"Gate3\"}",
-                "{\"Name\":\"ChestWall\"}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.GameObjectNameComponent",
+            "Components": "{\"data\":[{\"Name\":\"Bush (0)\"},{\"Name\":\"Bush (14)\"},{\"Name\":\"Bush (12)\"},{\"Name\":\"BushObj3\"},{\"Name\":\"Bush (10)\"},{\"Name\":\"BushObj\"},{\"Name\":\"Bush (9)\"},{\"Name\":\"Bush (5)\"},{\"Name\":\"BushObj2\"},{\"Name\":\"Bush (7)\"},{\"Name\":\"Bush (1)\"},{\"Name\":\"Bush (2)\"},{\"Name\":\"Bush (11)\"},{\"Name\":\"Bush (13)\"},{\"Name\":\"Bush (8)\"},{\"Name\":\"Chest\"},{\"Name\":\"Button1\"},{\"Name\":\"Button3\"},{\"Name\":\"Button2\"},{\"Name\":\"Button4\"},{\"Name\":\"Button5\"},{\"Name\":\"Gate2\"},{\"Name\":\"Gate1\"},{\"Name\":\"Gate2 (2)\"},{\"Name\":\"Gate2 (4)\"},{\"Name\":\"Gate2 (3)\"},{\"Name\":\"Gate3\"},{\"Name\":\"ChestWall\"}]}",
+            "ChangedEntities": [
                 2,
                 3,
                 4,
@@ -137,44 +120,22 @@
                 28,
                 29
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "BoxComponent",
-            "ComponentID": 8,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.BoxComponent",
+            "Components": "{\"data\":[{}]}",
+            "ChangedEntities": [
                 17
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "BushComponent",
-            "ComponentID": 9,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}",
-                "{\"name\":\"Berries\"}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.BushComponent",
+            "Components": "{\"data\":[{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"}]}",
+            "ChangedEntities": [
                 2,
                 3,
                 4,
@@ -191,44 +152,26 @@
                 15,
                 16
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "ButtonComponent",
-            "ComponentID": 10,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"isActivated\":false}",
-                "{\"isActivated\":false}",
-                "{\"isActivated\":false}",
-                "{\"isActivated\":false}",
-                "{\"isActivated\":false}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.ButtonComponent",
+            "Components": "{\"data\":[{\"isActivated\":false},{\"isActivated\":false},{\"isActivated\":false},{\"isActivated\":false},{\"isActivated\":false}]}",
+            "ChangedEntities": [
                 18,
                 19,
                 20,
                 21,
                 22
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "ButtonLinkComponent",
-            "ComponentID": 11,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"buttonIds\":[20]}",
-                "{\"buttonIds\":[18,19]}",
-                "{\"buttonIds\":[22,19]}",
-                "{\"buttonIds\":[22,19]}",
-                "{\"buttonIds\":[22,19]}",
-                "{\"buttonIds\":[21]}",
-                "{\"buttonIds\":[18]}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.ButtonLinkComponent",
+            "Components": "{\"data\":[{\"buttonIds\":[20]},{\"buttonIds\":[18,19]},{\"buttonIds\":[22,19]},{\"buttonIds\":[22,19]},{\"buttonIds\":[22,19]},{\"buttonIds\":[21]},{\"buttonIds\":[18]}]}",
+            "ChangedEntities": [
                 23,
                 24,
                 25,
@@ -237,23 +180,13 @@
                 28,
                 29
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "GateComponent",
-            "ComponentID": 13,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.GateComponent",
+            "Components": "{\"data\":[{},{},{},{},{},{},{}]}",
+            "ChangedEntities": [
                 23,
                 24,
                 25,
@@ -262,28 +195,13 @@
                 28,
                 29
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "MoveInfoComponent",
-            "ComponentID": 14,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"startPoint\":{\"x\":-3.5,\"y\":-0.03200000151991844,\"z\":5.389999866485596},\"endPoint\":{\"x\":-3.5,\"y\":-0.15199999511241914,\"z\":5.389999866485596}}",
-                "{\"startPoint\":{\"x\":-2.430000066757202,\"y\":-0.03200000151991844,\"z\":7.190000057220459},\"endPoint\":{\"x\":-2.430000066757202,\"y\":-0.15199999511241914,\"z\":7.190000057220459}}",
-                "{\"startPoint\":{\"x\":-1.840000033378601,\"y\":-0.03200000151991844,\"z\":-6.53000020980835},\"endPoint\":{\"x\":-1.840000033378601,\"y\":-0.15199999511241914,\"z\":-6.53000020980835}}",
-                "{\"startPoint\":{\"x\":-8.979999542236329,\"y\":-0.03200000151991844,\"z\":4.050000190734863},\"endPoint\":{\"x\":-8.979999542236329,\"y\":-0.15199999511241914,\"z\":4.050000190734863}}",
-                "{\"startPoint\":{\"x\":-28.84000015258789,\"y\":-0.03200000151991844,\"z\":17.93000030517578},\"endPoint\":{\"x\":-28.84000015258789,\"y\":-0.15199999511241914,\"z\":17.93000030517578}}",
-                "{\"startPoint\":{\"x\":7.369999885559082,\"y\":1.4299999475479127,\"z\":0.0},\"endPoint\":{\"x\":7.369999885559082,\"y\":-1.8700000047683716,\"z\":0.0}}",
-                "{\"startPoint\":{\"x\":-2.568000078201294,\"y\":1.4299999475479127,\"z\":-3.0139999389648439},\"endPoint\":{\"x\":-2.568000078201294,\"y\":-1.8700000047683716,\"z\":-3.0139999389648439}}",
-                "{\"startPoint\":{\"x\":-10.579999923706055,\"y\":1.4299999475479127,\"z\":-15.770000457763672},\"endPoint\":{\"x\":-10.579999923706055,\"y\":-1.8700000047683716,\"z\":-15.770000457763672}}",
-                "{\"startPoint\":{\"x\":-10.5,\"y\":1.4299999475479127,\"z\":-26.25},\"endPoint\":{\"x\":-10.5,\"y\":-1.8700000047683716,\"z\":-26.25}}",
-                "{\"startPoint\":{\"x\":-10.539999961853028,\"y\":1.4299999475479127,\"z\":-21.0},\"endPoint\":{\"x\":-10.539999961853028,\"y\":-1.8700000047683716,\"z\":-21.0}}",
-                "{\"startPoint\":{\"x\":-10.729999542236329,\"y\":1.4299999475479127,\"z\":2.4700000286102297},\"endPoint\":{\"x\":-10.729999542236329,\"y\":-1.8700000047683716,\"z\":2.4700000286102297}}",
-                "{\"startPoint\":{\"x\":-0.47999998927116396,\"y\":-0.07000000029802323,\"z\":2.140000104904175},\"endPoint\":{\"x\":-0.47999998927116396,\"y\":-1.7700001001358033,\"z\":2.140000104904175}}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.MoveInfoComponent",
+            "Components": "{\"data\":[{\"startPoint\":{\"x\":-3.5,\"y\":-0.03200000151991844,\"z\":5.389999866485596},\"endPoint\":{\"x\":-3.5,\"y\":-0.15199999511241914,\"z\":5.389999866485596}},{\"startPoint\":{\"x\":-2.430000066757202,\"y\":-0.03200000151991844,\"z\":7.190000057220459},\"endPoint\":{\"x\":-2.430000066757202,\"y\":-0.15199999511241914,\"z\":7.190000057220459}},{\"startPoint\":{\"x\":-1.840000033378601,\"y\":-0.03200000151991844,\"z\":-6.53000020980835},\"endPoint\":{\"x\":-1.840000033378601,\"y\":-0.15199999511241914,\"z\":-6.53000020980835}},{\"startPoint\":{\"x\":-8.979999542236329,\"y\":-0.03200000151991844,\"z\":4.050000190734863},\"endPoint\":{\"x\":-8.979999542236329,\"y\":-0.15199999511241914,\"z\":4.050000190734863}},{\"startPoint\":{\"x\":-28.84000015258789,\"y\":-0.03200000151991844,\"z\":17.93000030517578},\"endPoint\":{\"x\":-28.84000015258789,\"y\":-0.15199999511241914,\"z\":17.93000030517578}},{\"startPoint\":{\"x\":7.369999885559082,\"y\":1.4299999475479127,\"z\":0.0},\"endPoint\":{\"x\":7.369999885559082,\"y\":-1.8700000047683716,\"z\":0.0}},{\"startPoint\":{\"x\":-2.568000078201294,\"y\":1.4299999475479127,\"z\":-3.0139999389648439},\"endPoint\":{\"x\":-2.568000078201294,\"y\":-1.8700000047683716,\"z\":-3.0139999389648439}},{\"startPoint\":{\"x\":-10.579999923706055,\"y\":1.4299999475479127,\"z\":-15.770000457763672},\"endPoint\":{\"x\":-10.579999923706055,\"y\":-1.8700000047683716,\"z\":-15.770000457763672}},{\"startPoint\":{\"x\":-10.5,\"y\":1.4299999475479127,\"z\":-26.25},\"endPoint\":{\"x\":-10.5,\"y\":-1.8700000047683716,\"z\":-26.25}},{\"startPoint\":{\"x\":-10.539999961853028,\"y\":1.4299999475479127,\"z\":-21.0},\"endPoint\":{\"x\":-10.539999961853028,\"y\":-1.8700000047683716,\"z\":-21.0}},{\"startPoint\":{\"x\":-10.729999542236329,\"y\":1.4299999475479127,\"z\":2.4700000286102297},\"endPoint\":{\"x\":-10.729999542236329,\"y\":-1.8700000047683716,\"z\":2.4700000286102297}},{\"startPoint\":{\"x\":-0.47999998927116396,\"y\":-0.07000000029802323,\"z\":2.140000104904175},\"endPoint\":{\"x\":-0.47999998927116396,\"y\":-1.7700001001358033,\"z\":2.140000104904175}}]}",
+            "ChangedEntities": [
                 18,
                 19,
                 20,
@@ -297,37 +215,13 @@
                 28,
                 29
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "InteractableComponent",
-            "ComponentID": 16,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}",
-                "{}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.InteractableComponent",
+            "Components": "{\"data\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}",
+            "ChangedEntities": [
                 2,
                 3,
                 4,
@@ -350,31 +244,13 @@
                 21,
                 22
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "CollectableComponent",
-            "ComponentID": 17,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}",
-                "{\"isCollected\":false}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.CollectableComponent",
+            "Components": "{\"data\":[{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false}]}",
+            "ChangedEntities": [
                 2,
                 3,
                 4,
@@ -391,28 +267,13 @@
                 15,
                 16
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "ProgressComponent",
-            "ComponentID": 19,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}",
-                "{\"progress\":0.0}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.ProgressComponent",
+            "Components": "{\"data\":[{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0}]}",
+            "ChangedEntities": [
                 18,
                 19,
                 20,
@@ -426,44 +287,13 @@
                 28,
                 29
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "PositionComponent",
-            "ComponentID": 20,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"value\":{\"x\":2.872999906539917,\"y\":0.0,\"z\":2.61299991607666}}",
-                "{\"value\":{\"x\":-30.309999465942384,\"y\":0.0,\"z\":-7.509999752044678}}",
-                "{\"value\":{\"x\":-30.260000228881837,\"y\":0.0,\"z\":-4.809999465942383}}",
-                "{\"value\":{\"x\":-15.9399995803833,\"y\":0.0,\"z\":3.799999952316284}}",
-                "{\"value\":{\"x\":-23.219999313354493,\"y\":0.0,\"z\":-7.37999963760376}}",
-                "{\"value\":{\"x\":-0.5400000214576721,\"y\":0.0,\"z\":5.809999942779541}}",
-                "{\"value\":{\"x\":-23.290000915527345,\"y\":0.0,\"z\":-10.210000038146973}}",
-                "{\"value\":{\"x\":-0.40400001406669619,\"y\":0.0,\"z\":6.771999835968018}}",
-                "{\"value\":{\"x\":-13.760000228881836,\"y\":0.0,\"z\":3.8399999141693117}}",
-                "{\"value\":{\"x\":-23.389999389648439,\"y\":0.0,\"z\":-4.699999809265137}}",
-                "{\"value\":{\"x\":-3.4739999771118166,\"y\":-0.10729999840259552,\"z\":1.4700000286102296}}",
-                "{\"value\":{\"x\":2.9200000762939455,\"y\":0.0,\"z\":4.949999809265137}}",
-                "{\"value\":{\"x\":-28.079999923706056,\"y\":0.0,\"z\":-4.7699995040893559}}",
-                "{\"value\":{\"x\":-30.380001068115236,\"y\":0.0,\"z\":-10.34000015258789}}",
-                "{\"value\":{\"x\":-25.56999969482422,\"y\":0.0,\"z\":-4.739999771118164}}",
-                "{\"value\":{\"x\":-0.6071834564208984,\"y\":0.04673019051551819,\"z\":2.6399483680725099}}",
-                "{\"value\":{\"x\":-3.5,\"y\":-0.03200000151991844,\"z\":5.389999866485596}}",
-                "{\"value\":{\"x\":-2.430000066757202,\"y\":-0.03200000151991844,\"z\":7.190000057220459}}",
-                "{\"value\":{\"x\":-1.840000033378601,\"y\":-0.03200000151991844,\"z\":-6.53000020980835}}",
-                "{\"value\":{\"x\":-8.979999542236329,\"y\":-0.03200000151991844,\"z\":4.050000190734863}}",
-                "{\"value\":{\"x\":-28.84000015258789,\"y\":-0.03200000151991844,\"z\":17.93000030517578}}",
-                "{\"value\":{\"x\":7.369999885559082,\"y\":1.4299999475479127,\"z\":0.0}}",
-                "{\"value\":{\"x\":-2.568000078201294,\"y\":1.4299999475479127,\"z\":-3.0139999389648439}}",
-                "{\"value\":{\"x\":-10.579999923706055,\"y\":1.4299999475479127,\"z\":-15.770000457763672}}",
-                "{\"value\":{\"x\":-10.5,\"y\":1.4299999475479127,\"z\":-26.25}}",
-                "{\"value\":{\"x\":-10.539999961853028,\"y\":1.4299999475479127,\"z\":-21.0}}",
-                "{\"value\":{\"x\":-10.729999542236329,\"y\":1.4299999475479127,\"z\":2.4700000286102297}}",
-                "{\"value\":{\"x\":-0.47999998927116396,\"y\":-0.07000000029802323,\"z\":2.140000104904175}}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Fabros.EcsModules.Base.Components.PositionComponent",
+            "Components": "{\"data\":[{\"value\":{\"x\":2.872999906539917,\"y\":0.0,\"z\":2.61299991607666}},{\"value\":{\"x\":-30.309999465942384,\"y\":0.0,\"z\":-7.509999752044678}},{\"value\":{\"x\":-30.260000228881837,\"y\":0.0,\"z\":-4.809999465942383}},{\"value\":{\"x\":-15.9399995803833,\"y\":0.0,\"z\":3.799999952316284}},{\"value\":{\"x\":-23.219999313354493,\"y\":0.0,\"z\":-7.37999963760376}},{\"value\":{\"x\":-0.5400000214576721,\"y\":0.0,\"z\":5.809999942779541}},{\"value\":{\"x\":-23.290000915527345,\"y\":0.0,\"z\":-10.210000038146973}},{\"value\":{\"x\":-0.40400001406669619,\"y\":0.0,\"z\":6.771999835968018}},{\"value\":{\"x\":-13.760000228881836,\"y\":0.0,\"z\":3.8399999141693117}},{\"value\":{\"x\":-23.389999389648439,\"y\":0.0,\"z\":-4.699999809265137}},{\"value\":{\"x\":-3.4739999771118166,\"y\":-0.10729999840259552,\"z\":1.4700000286102296}},{\"value\":{\"x\":2.9200000762939455,\"y\":0.0,\"z\":4.949999809265137}},{\"value\":{\"x\":-28.079999923706056,\"y\":0.0,\"z\":-4.7699995040893559}},{\"value\":{\"x\":-30.380001068115236,\"y\":0.0,\"z\":-10.34000015258789}},{\"value\":{\"x\":-25.56999969482422,\"y\":0.0,\"z\":-4.739999771118164}},{\"value\":{\"x\":-0.6071834564208984,\"y\":0.04673019051551819,\"z\":2.6399483680725099}},{\"value\":{\"x\":-3.5,\"y\":-0.03200000151991844,\"z\":5.389999866485596}},{\"value\":{\"x\":-2.430000066757202,\"y\":-0.03200000151991844,\"z\":7.190000057220459}},{\"value\":{\"x\":-1.840000033378601,\"y\":-0.03200000151991844,\"z\":-6.53000020980835}},{\"value\":{\"x\":-8.979999542236329,\"y\":-0.03200000151991844,\"z\":4.050000190734863}},{\"value\":{\"x\":-28.84000015258789,\"y\":-0.03200000151991844,\"z\":17.93000030517578}},{\"value\":{\"x\":7.369999885559082,\"y\":1.4299999475479127,\"z\":0.0}},{\"value\":{\"x\":-2.568000078201294,\"y\":1.4299999475479127,\"z\":-3.0139999389648439}},{\"value\":{\"x\":-10.579999923706055,\"y\":1.4299999475479127,\"z\":-15.770000457763672}},{\"value\":{\"x\":-10.5,\"y\":1.4299999475479127,\"z\":-26.25}},{\"value\":{\"x\":-10.539999961853028,\"y\":1.4299999475479127,\"z\":-21.0}},{\"value\":{\"x\":-10.729999542236329,\"y\":1.4299999475479127,\"z\":2.4700000286102297}},{\"value\":{\"x\":-0.47999998927116396,\"y\":-0.07000000029802323,\"z\":2.140000104904175}}]}",
+            "ChangedEntities": [
                 2,
                 3,
                 4,
@@ -493,44 +323,13 @@
                 28,
                 29
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "RadiusComponent",
-            "ComponentID": 21,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"radius\":0.5}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.5}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.654699981212616}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.5000001192092896}",
-                "{\"radius\":0.4999999701976776}",
-                "{\"radius\":0.4469650089740753}",
-                "{\"radius\":0.4469650089740753}",
-                "{\"radius\":0.4469650089740753}",
-                "{\"radius\":0.4469650089740753}",
-                "{\"radius\":0.4469650089740753}",
-                "{\"radius\":1.0}",
-                "{\"radius\":1.0}",
-                "{\"radius\":1.0}",
-                "{\"radius\":1.0}",
-                "{\"radius\":1.0}",
-                "{\"radius\":1.0}",
-                "{\"radius\":1.0}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.RadiusComponent",
+            "Components": "{\"data\":[{\"radius\":0.5},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.654699981212616},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.4999999701976776},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0}]}",
+            "ChangedEntities": [
                 2,
                 3,
                 4,
@@ -560,31 +359,13 @@
                 28,
                 29
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "ResourceComponent",
-            "ComponentID": 22,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}",
-                "{\"count\":1}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.ResourceComponent",
+            "Components": "{\"data\":[{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1}]}",
+            "ChangedEntities": [
                 2,
                 3,
                 4,
@@ -601,28 +382,13 @@
                 15,
                 16
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         },
         {
             "ComponentName": "SpeedComponent",
-            "ComponentID": 23,
-            "RemovedFromEntities": [],
-            "Added": [
-                "{\"speed\":3.0}",
-                "{\"speed\":3.0}",
-                "{\"speed\":3.0}",
-                "{\"speed\":3.0}",
-                "{\"speed\":3.0}",
-                "{\"speed\":0.20000000298023225}",
-                "{\"speed\":0.20000000298023225}",
-                "{\"speed\":0.20000000298023225}",
-                "{\"speed\":0.20000000298023225}",
-                "{\"speed\":0.20000000298023225}",
-                "{\"speed\":0.20000000298023225}",
-                "{\"speed\":1.0}"
-            ],
-            "AddedToEntities": [
+            "FullComponentName": "Game.Ecs.ClientServer.Components.SpeedComponent",
+            "Components": "{\"data\":[{\"speed\":3.0},{\"speed\":3.0},{\"speed\":3.0},{\"speed\":3.0},{\"speed\":3.0},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":1.0}]}",
+            "ChangedEntities": [
                 18,
                 19,
                 20,
@@ -636,9 +402,7 @@
                 28,
                 29
             ],
-            "Updated": [],
-            "UpdatedEntities": []
+            "RemovedFromEntities": []
         }
-    ],
-    "Unique": []
+    ]
 }
