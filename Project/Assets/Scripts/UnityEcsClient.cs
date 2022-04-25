@@ -14,7 +14,7 @@ using Zenject;
 
 namespace Game.Client
 {
-    public class UnityEcsClient : MonoBehaviour
+    public class UnityEcsClient : MonoBehaviour, EventsSystem<FoodCollectedComponent>.IAnyListener
     {
         private NetClient client;
 
@@ -84,6 +84,9 @@ namespace Game.Client
 
                 client.AddUserInput(input);
             });
+
+            ui.FoodText.text = "";
+            0.AddAnyListener<FoodCollectedComponent>(world, this);
         }
 
         private void Update()
@@ -162,6 +165,18 @@ namespace Game.Client
 
                 client.AddUserInput(input);
             }
+        }
+
+        public void AnyChanged(EcsWorld world, int entity, FoodCollectedComponent data)
+        {
+            if (!world.HasUnique<ClientPlayerComponent>())
+                return;
+            
+            var unitEntity = world.GetUnique<ClientPlayerComponent>().entity;
+            if (unitEntity != entity)
+                return;
+
+            ui.FoodText.text = $"Food Collected {data.Value}";       
         }
     }
 }

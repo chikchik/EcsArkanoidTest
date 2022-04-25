@@ -59,6 +59,8 @@ namespace Game.ClientServer
             pool.AddComponent<UnitComponent>();
             pool.AddComponent<GateComponent>();
             pool.AddComponent<MoveInfoComponent>();
+            
+            pool.AddComponent<FoodCollectedComponent>();
 
             pool.AddComponent<HealthComponent>();
             pool.AddComponent<InteractableComponent>();
@@ -186,6 +188,7 @@ namespace Game.ClientServer
             systems.Add(new EventsSystem<ObjectiveOpenedComponent>());
             systems.Add(new EventsSystem<ObjectiveCompletedComponent>());
             systems.Add(new EventsSystem<GateOpenedComponent>());
+            systems.Add(new EventsSystem<FoodCollectedComponent>());
         }
     }
 }
