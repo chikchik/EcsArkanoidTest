@@ -62,6 +62,7 @@ namespace Game.Client
             viewSystems = new EcsSystems(world);
             viewSystems.Add(new SyncTransformSystem());
             viewSystems.Add(new RotateCharacterSystem());
+            viewSystems.Add(new RotateRigidbodySystem());
             viewSystems.Add(new CameraFollowSystem());
             
             viewSystems.Init();
