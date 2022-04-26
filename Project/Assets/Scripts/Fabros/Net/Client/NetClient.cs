@@ -70,13 +70,8 @@ namespace Game.Fabros.Net.Client
             //генерируем случайный id игрока с которым нас будет ассоциировать сервер
             playerID = Random.Range(1000, 9999);
 
-            //создаем пустой мир
-            //mainWorld = WorldUtils.CreateWorld("current", leo.Pool);
-            //leo.Pool.SetupPools();
             MainWorld = world;
-            MainWorld.AddUnique<ClientWorldComponent>();
             MainWorld.AddUnique<MainPlayerIdComponent>().value = playerID;
-            MainWorld.SetEventsEnabled<PlayerComponent>();
         }
 
 
@@ -90,7 +85,7 @@ namespace Game.Fabros.Net.Client
             connection.OnConnected += () =>
             {
                 socket = connection.ExtractSocket();
-                AsyncMain(connection.response);
+                AsyncMain(connection.Response);
             };
             connection.Start();
         }
@@ -100,7 +95,7 @@ namespace Game.Fabros.Net.Client
             while (!packet.hasWelcomeFromServer)
             {
                 var msg = await socket.AsyncWaitMessage();
-                packet = WebSocketConnection.Packet2Message(msg);
+                packet = P2P.ParseResponse<Packet>(msg.buffer);
             }
 
             if (!Application.isPlaying)
@@ -115,7 +110,7 @@ namespace Game.Fabros.Net.Client
 
             clientSystems = new EcsSystems(MainWorld);
             clientSystems.AddWorld(InputWorld, "input");
-            SystemsAndComponents.AddSystems(Leo.Pool, clientSystems, true);
+            SystemsAndComponents.AddSystems(Leo.Pool, clientSystems, true, false);
 
             WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif);
 
@@ -131,7 +126,7 @@ namespace Game.Fabros.Net.Client
 
             serverSystems = new EcsSystems(ServerWorld);
             serverSystems.AddWorld(InputWorld, "input");
-            SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false);
+            SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
             serverSystems.Init();
 
             Debug.Log($"world\n{LeoDebug.e2s(MainWorld)}");
@@ -146,7 +141,7 @@ namespace Game.Fabros.Net.Client
                 while (true)
                 {
                     var msg = await socket.AsyncWaitMessage();
-                    packet = WebSocketConnection.Packet2Message(msg);
+                    packet = P2P.ParseResponse<Packet>(msg.buffer);
 
                     if (!Application.isPlaying) throw new Exception("async next step for stopped application");
 
@@ -197,8 +192,14 @@ namespace Game.Fabros.Net.Client
 
 
                     //if (leo.GetCurrentTick(serverWorld) < leo.GetCurrentTick(currentWorld))
+                    
                     if (delay != -999)
                     {
+                        if (Math.Abs(delay) > 5)
+                        {
+                            delay = Math.Sign(delay) * 5;
+                        }
+                        
                         var delayDir = delay - prevDelay;
 
                         if (delay >= 2) stepOffset = 0.001f * delay;
@@ -241,7 +242,8 @@ namespace Game.Fabros.Net.Client
                     var dif2 = WorldUtils.BuildDiff(Leo.Pool, MainWorld,
                         copyServerWorld);
 
-                    DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
+                    if (dif2.RemovedEntities != null)
+                        DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
                     WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif2);
                     //перепривязываем юнитов
                     LinkUnitsAction(MainWorld);
@@ -315,8 +317,8 @@ namespace Game.Fabros.Net.Client
                     packet.isPing = true;
                     packet.input.time = Leo.GetCurrentTick(MainWorld);
 
-                    var body = JsonUtility.ToJson(packet);
-                    socket.Send(P2P.ADDR_SERVER, body);
+                    var data = P2P.BuildRequest(P2P.ADDR_SERVER, packet);
+                    socket.Send(data);
                 }
             });
 
@@ -336,8 +338,7 @@ namespace Game.Fabros.Net.Client
             packet.playerID = playerID;
             Leo.Inputs.Add(input);
 
-            var body = JsonUtility.ToJson(packet);
-            socket.Send(P2P.ADDR_SERVER, body);
+            socket.Send( P2P.BuildRequest(P2P.ADDR_SERVER, packet));
             if (packet.input != null)
                 Leo.SyncLog.WriteLine($"send input {packet.input.time}");
         }

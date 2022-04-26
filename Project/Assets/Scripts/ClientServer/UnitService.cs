@@ -19,7 +19,10 @@ namespace Game.ClientServer
             entity.EntityAddComponent<UnitComponent>(world);
             entity.EntityAddComponent<MoveDirectionComponent>(world);
             entity.EntityAddComponent<LookDirectionComponent>(world).value = new Vector3(1,0,0);
-            entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(0, 0, 9f);
+
+            entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(-1.5f, 0, 9f);
+            entity.EntityAddComponent<FoodCollectedComponent>(world).Value = 0;
+
 
             ref var radiusComponent = ref entity.EntityAddComponent<RadiusComponent>(world);
             radiusComponent.radius = 0.4f;

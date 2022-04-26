@@ -8,6 +8,10 @@ project/*.csproj
 project/*.sln
 project/client
 
+WsServer/build/
+WsServer/.idea/
+WsServer/.gradle/
+
 console/
 project/client.log
 project/sync.log

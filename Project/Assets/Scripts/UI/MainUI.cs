@@ -1,4 +1,5 @@
 ﻿using Game.View;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,5 +13,6 @@ namespace Game.UI
         public RectTransform ObjectivesRectTransform;
         public GridLayoutGroup InventoryGrid;
         public ConnectView Connect;
+        public TMP_Text FoodText;
     }
 }

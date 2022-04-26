@@ -74,6 +74,7 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 var entity = result[0];
                 entity.EntityDel<InteractableComponent>(world);
+                unitEntity.EntityReplace<FoodCollectedComponent>(world).Value += 1;
                 ObjectiveService.Triggered(world, entity);
 
                 if (entity.EntityHas<CollectableComponent>(world))

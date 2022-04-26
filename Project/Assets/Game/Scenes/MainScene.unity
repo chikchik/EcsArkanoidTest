@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18025592, g: 0.22567038, b: 0.3068796, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -849,6 +849,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 540484627}
+  - {fileID: 734306249}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1843,7 +1844,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &540484627
 Transform:
   m_ObjectHideFlags: 0
@@ -2354,6 +2355,50 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 718045653}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &734306248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 734306249}
+  - component: {fileID: 734306250}
+  m_Layer: 0
+  m_Name: Single
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &734306249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734306248}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.43, y: 0, z: 19.14}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 310098416}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &734306250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734306248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a40d8f6d3964305bf43266306f0b9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &750514430
 GameObject:
   m_ObjectHideFlags: 0
@@ -6209,6 +6254,7 @@ MonoBehaviour:
   ObjectivesRectTransform: {fileID: 548316197}
   InventoryGrid: {fileID: 1682273691}
   Connect: {fileID: 0}
+  FoodText: {fileID: 0}
 --- !u!1001 &1818387815
 PrefabInstance:
   m_ObjectHideFlags: 0

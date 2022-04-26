@@ -61,6 +61,8 @@ namespace Game.ClientServer
             pool.AddComponent<UnitComponent>();
             pool.AddComponent<GateComponent>();
             pool.AddComponent<MoveInfoComponent>();
+            
+            pool.AddComponent<FoodCollectedComponent>();
 
             pool.AddComponent<HealthComponent>();
             pool.AddComponent<InteractableComponent>();
@@ -97,7 +99,7 @@ namespace Game.ClientServer
             return pool; 
         }
 
-        public static void AddSystems(ComponentsPool pool, EcsSystems systems, bool client)
+        public static void AddSystems(ComponentsPool pool, EcsSystems systems, bool client, bool server)
         {
 #if CLIENT
             void AddClient(IEcsSystem system)
@@ -109,40 +111,49 @@ namespace Game.ClientServer
             }
 #endif
 
-
+            void AddServer(IEcsSystem system)
+            { 
+                //для сингл плеера нужны все игровые системы
+                if (server)
+                    systems.Add(system);
+            }
+       
+            
 #if SERVER
             systems.Add(new CreateGameSystem(pool));
-            systems.Add(new SpawnBotSystem());
-            systems.Add(new JoinPlayerSystem());
-#else
+#endif
+            
+            AddServer(new SpawnBotSystem());
+            AddServer(new JoinPlayerSystem());
+
+#if CLIENT
             AddClient(new InitSceneSystem());
 #endif
             
-            //Physics
-            systems.Add(new InitPhysicsSystem());
-            systems.Add(new PopulatePhysicsWorldSystem());
-            systems.Add(new SyncPhysicsWorldSystem());
-            systems.Add(new UpdatePhysicsWorldSystem());
-            systems.Add(new SyncPhysicsPositionSystem());
             
-#if SERVER
-            systems.Add(new AIPlayerSystem());
-#endif
+            AddServer(new InitPhysicsSystem());
+            AddServer(new PopulatePhysicsWorldSystem());
+            AddServer(new SyncPhysicsWorldSystem());
+            AddServer(new UpdatePhysicsWorldSystem());
+            AddServer(new SyncPhysicsPositionSystem());
+
+
+            AddServer(new AIPlayerSystem());
+
 
             systems.Add(new MoveToTargetPositionSystem());
             systems.Add(new MoveSystem());
             systems.Add(new EntitiesLifeTimeSystem());
 
 #if CLIENT
-            //AddClient(new RotateCharacterSystem());
             AddClient(new AnimateCharacterSystem());
 #endif
+            
             systems.Add(GridModule.GetSystems());
             systems.Add(new ApplyUserInputSystem());
 
-#if SERVER
-            systems.Add(new FootprintSystem());
-#endif
+
+            AddServer(new FootprintSystem());
 
 #if CLIENT
             AddClient(new FootprintViewSystem());
@@ -184,18 +195,16 @@ namespace Game.ClientServer
 
             systems.Add(new FireDestroyEntitySystem());
 
-#if SERVER
-            systems.Add(new ObjectivesSystem());
-#endif
+            AddServer(new ObjectivesSystem());
 
             systems.Add(TickModule.GetSystems());
-
 
             systems.Add(new EventsSystem<PlayerComponent>());
             systems.Add(new EventsSystem<ButtonPushCompleted>());
             systems.Add(new EventsSystem<ObjectiveOpenedComponent>());
             systems.Add(new EventsSystem<ObjectiveCompletedComponent>());
             systems.Add(new EventsSystem<GateOpenedComponent>());
+            systems.Add(new EventsSystem<FoodCollectedComponent>());
         }
     }
 }
