@@ -110,7 +110,7 @@ namespace Game.Fabros.Net.Client
 
             clientSystems = new EcsSystems(MainWorld);
             clientSystems.AddWorld(InputWorld, "input");
-            SystemsAndComponents.AddSystems(Leo.Pool, clientSystems, true);
+            SystemsAndComponents.AddSystems(Leo.Pool, clientSystems, true, false);
 
             WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif);
 
@@ -126,7 +126,7 @@ namespace Game.Fabros.Net.Client
 
             serverSystems = new EcsSystems(ServerWorld);
             serverSystems.AddWorld(InputWorld, "input");
-            SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false);
+            SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
             serverSystems.Init();
 
             Debug.Log($"world\n{LeoDebug.e2s(MainWorld)}");

@@ -66,8 +66,7 @@ namespace Game.Fabros.Net.ClientServer
             if (writeToLog) SyncLog.WriteLine($"tick {time.Value} ->");
 
             ProcessUserInput(inputWorld, world, inputs);
-
-
+            
             //тик мира
             systems.ChangeDefaultWorld(world);
             systems.Run();

@@ -1,4 +1,5 @@
-﻿using Fabros.Ecs.Utils;
+﻿using System;
+using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
@@ -86,7 +87,9 @@ namespace Game.Client
             });
 
             ui.FoodText.text = "";
-            0.AddAnyListener<FoodCollectedComponent>(world, this);
+
+            int globalListenerEntity = 0;
+            globalListenerEntity.AddAnyListener<FoodCollectedComponent>(world, this);
         }
 
         private void Update()
@@ -95,7 +98,11 @@ namespace Game.Client
                 return;
 
             client.Update();
-            CheckInput();
+            
+            var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, client.GetPlayerID());
+            CheckInput(world, 
+                unitEntity, playerInput, camera,
+                input => client.AddUserInput(input));
             
             viewSystems.Run();
         }
@@ -111,13 +118,12 @@ namespace Game.Client
         }
 
 
-        public void CheckInput()
+        public static void CheckInput(EcsWorld world, 
+            int unitEntity, 
+            PlayerInput.PlayerInput playerInput,
+            Camera camera, Action<UserInput> addUserInput
+            )
         {
-            var entity = BaseServices.GetUnitEntityByPlayerId(world, client.GetPlayerID());
-            if (entity == -1)
-                return;
-
-            var playerID = client.GetPlayerID();
             var forward = camera.transform.forward;
             forward.y = 0;
             forward.Normalize();
@@ -145,15 +151,15 @@ namespace Game.Client
                     move = new UserInput.Move {value = point, moveType = UserInput.MoveType.MoveToPoint}
                 };
 
-                client.AddUserInput(input);
+                addUserInput(input);
                 return;
             }
 
-            var lastDirection = entity.EntityGetComponent<MoveDirectionComponent>(world).value;
+            var lastDirection = unitEntity.EntityGetComponent<MoveDirectionComponent>(world).value;
 
             if (moveDirection != lastDirection)
             {
-                if (entity.EntityHas<TargetPositionComponent>(world))
+                if (unitEntity.EntityHas<TargetPositionComponent>(world))
                     if (moveDirection.magnitude < 0.001f)
                         return;
 
@@ -163,7 +169,7 @@ namespace Game.Client
                     move = new UserInput.Move {value = moveDirection, moveType = UserInput.MoveType.MoveToDirection}
                 };
 
-                client.AddUserInput(input);
+                addUserInput(input);
             }
         }
 
