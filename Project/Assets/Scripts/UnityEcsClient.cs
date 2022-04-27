@@ -35,6 +35,10 @@ namespace Game.Client
             viewSystems.Add(new SyncTransformSystem());
             viewSystems.Add(new RotateCharacterSystem());
             viewSystems.Add(new CameraFollowSystem());
+            
+#if UNITY_EDITOR
+            viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:false));
+#endif
 
 
             client.ConnectedAction = () =>
