@@ -34,6 +34,10 @@
 		</Compile>
 	</ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="$(FabrosEcsPackage)\Leopotam\ecslite-unityeditor\**\*.cs"></Compile>
+  </ItemGroup>
+
 	<ItemGroup>
 		<Compile Include="$(FabrosEcsPackage)\Fabros\P2P\**\*.cs">
 			<Link>Fabros\P2P\%(RecursiveDir)/%(FileName)%(Extension)</Link>

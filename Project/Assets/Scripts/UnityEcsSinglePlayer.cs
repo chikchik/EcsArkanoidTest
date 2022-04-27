@@ -54,7 +54,10 @@ namespace Game.Client
             unitEntity.EntityAdd<PlayerComponent>(world).id = 0;
             
             world.AddUnique(new ClientPlayerComponent{ entity = unitEntity});
-
+            
+#if UNITY_EDITOR
+            systems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:false));
+#endif
 
             SystemsAndComponents.AddSystems(null, systems, true, true);
             systems.Init();
