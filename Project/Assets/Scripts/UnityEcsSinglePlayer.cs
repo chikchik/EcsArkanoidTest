@@ -14,7 +14,7 @@ using Zenject;
 
 namespace Game.Client
 {
-    public class UnityEcsSinglePlayer: MonoBehaviour, EventsSystem<FoodCollectedComponent>.IAnyListener
+    public class UnityEcsSinglePlayer: MonoBehaviour, EventsSystem<FoodCollectedComponent>.IAnyComponentChangedListener
     {
         [Inject] private Camera camera;
         [Inject] private Global global;
@@ -98,7 +98,7 @@ namespace Game.Client
             systems.Run();
         }
         
-        public void AnyChanged(EcsWorld world, int entity, FoodCollectedComponent data)
+        public void OnAnyComponentChanged(EcsWorld world, int entity, FoodCollectedComponent data, bool added)
         {
             if (!world.HasUnique<ClientPlayerComponent>())
                 return;

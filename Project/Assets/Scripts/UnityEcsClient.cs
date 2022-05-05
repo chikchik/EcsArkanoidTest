@@ -15,7 +15,7 @@ using Zenject;
 
 namespace Game.Client
 {
-    public class UnityEcsClient : MonoBehaviour, EventsSystem<FoodCollectedComponent>.IAnyListener
+    public class UnityEcsClient : MonoBehaviour, EventsSystem<FoodCollectedComponent>.IAnyComponentChangedListener
     {
         private NetClient client;
 
@@ -173,7 +173,7 @@ namespace Game.Client
             }
         }
 
-        public void AnyChanged(EcsWorld world, int entity, FoodCollectedComponent data)
+        public void OnAnyComponentChanged(EcsWorld world, int entity, FoodCollectedComponent data, bool added)
         {
             if (!world.HasUnique<ClientPlayerComponent>())
                 return;

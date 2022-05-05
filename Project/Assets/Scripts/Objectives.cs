@@ -5,8 +5,8 @@ using Leopotam.EcsLite;
 using TMPro;
 using UnityEngine;
 
-public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyListener,
-        EventsSystem<ObjectiveOpenedComponent>.IAnyListener
+public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyComponentChangedListener,
+        EventsSystem<ObjectiveOpenedComponent>.IAnyComponentChangedListener
     //IAnyCompletedListener, IAnyOpenedListener
 {
     private readonly int objectivesListener;
@@ -28,8 +28,7 @@ public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyListener
         textPrefab.gameObject.SetActive(false);
     }
 
-
-    public void AnyChanged(EcsWorld world, int entity, ObjectiveCompletedComponent data)
+    public void OnAnyComponentChanged(EcsWorld world, int entity, ObjectiveCompletedComponent data, bool added)
     {
         entity.EntityWith<UiObjectComponent>(world, data =>
         {
@@ -39,7 +38,7 @@ public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyListener
         });
     }
 
-    public void AnyChanged(EcsWorld world, int entity, ObjectiveOpenedComponent data)
+    public void OnAnyComponentChanged(EcsWorld world, int entity, ObjectiveOpenedComponent data, bool added)
     {
         var text = Object.Instantiate(textPrefab, verticalLayoutGroup.transform);
         text.text = entity.EntityGet<ObjectiveDescriptionComponent>(world).text;
