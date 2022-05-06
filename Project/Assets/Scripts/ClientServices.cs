@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
+using Game.ClientServer.Physics;
+using Game.ClientServer.Physics.Components;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Physics;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
-using Game.Physics;
 using Game.Utils;
 using Game.View;
 using Leopotam.EcsLite;
@@ -240,27 +241,153 @@ namespace Game.Client
             {
                 var rigidBodyEntity = GetOrCreateGameEntity(cubeView.gameObject);
 
-                ref var positionComponent = ref rigidBodyEntity.EntityAddComponent<PositionComponent>(world);
-                positionComponent.value = cubeView.transform.position;
+                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, cubeView);
+                
+                var rigidBody = cubeView.GetComponent<Rigidbody2D>();
+                AddRbDefinitionComponentFromUnityRb(world, rigidBodyEntity, rigidBody);
 
-                var rigidBody = cubeView.GetComponent<Box2dRigidbody>();
-                if (rigidBody)
-                {
-                    ref var rigidBodyDefinitionComponent = ref rigidBodyEntity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
-                    rigidBodyDefinitionComponent.bodyType = rigidBody.bodyType;
-                    rigidBodyDefinitionComponent.density = rigidBody.density;
-                    rigidBodyDefinitionComponent.friction = rigidBody.friction;
-                    rigidBodyDefinitionComponent.restitution = rigidBody.restitution;
-                    rigidBodyDefinitionComponent.restitutionThreshold = rigidBody.restitutionThreshold;   
-                }
-
-                var boxCollider = cubeView.GetComponent<Box2dBoxCollider>();
+                var boxCollider = cubeView.GetComponent<BoxCollider2D>();
                 if (boxCollider)
                 {
                     ref var boxColliderComponent = ref rigidBodyEntity.EntityAddComponent<BoxColliderComponent>(world);
-                    boxColliderComponent.size = boxCollider.size;
+                    boxColliderComponent.size = cubeView.transform.lossyScale;
                 }
+
+                DeleteFromViewIfPlaying(cubeView.gameObject, boxCollider, rigidBody);
             });
+            
+            forEachObject<SphereView>(sphereView =>
+            {
+                var rigidBodyEntity = GetOrCreateGameEntity(sphereView.gameObject);
+
+                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, sphereView);
+                
+                var rigidBody = sphereView.GetComponent<Rigidbody2D>();
+                AddRbDefinitionComponentFromUnityRb(world, rigidBodyEntity, rigidBody);
+                
+                var circleCollider = sphereView.GetComponent<CircleCollider2D>();
+                if (circleCollider)
+                {
+                    ref var circleColliderComponent = ref rigidBodyEntity.EntityAddComponent<CircleColliderComponent>(world);
+                    circleColliderComponent.radius = sphereView.transform.lossyScale.x / 2;
+                }
+                
+                DeleteFromViewIfPlaying(sphereView.gameObject, circleCollider, rigidBody);
+            });
+            
+            forEachObject<PolygonView>(polygonView =>
+            {
+                var rigidBodyEntity = GetOrCreateGameEntity(polygonView.gameObject);
+
+                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, polygonView);
+
+                var rigidBody = polygonView.GetComponent<Rigidbody2D>();
+                AddRbDefinitionComponentFromUnityRb(world, rigidBodyEntity, rigidBody);
+                
+                var polygonCollider2D = polygonView.GetComponent<PolygonCollider2D>();
+                
+                if (polygonCollider2D)
+                {
+                    ref var polygonColliderComponent = ref rigidBodyEntity.EntityAddComponent<PolygonColliderComponent>(world);
+                    PhysicsShapeGroup2D physicsShapeGroup2D = new PhysicsShapeGroup2D();
+                    var shapes = polygonCollider2D.GetShapes(physicsShapeGroup2D);
+
+                    polygonColliderComponent.anchors = new int[shapes];
+                    polygonColliderComponent.vertices = new List<Vector2>();
+                    Debug.Log($"PolygonView {polygonColliderComponent.vertices}");
+                    var vertices = new List<Vector2>();
+                    for (int i = 0; i < shapes; i++)
+                    {
+                        physicsShapeGroup2D.GetShapeVertices(i, vertices);
+                        polygonColliderComponent.anchors[i] = vertices.Count - 1;
+                        foreach (var vector2 in vertices)
+                        {
+                            polygonColliderComponent.vertices.Add(vector2);
+                        }
+                    }
+                }
+                
+                DeleteFromViewIfPlaying(polygonView.gameObject, polygonCollider2D, rigidBody);
+            });
+            
+            forEachObject<ChainView>(staticWallView =>
+            {
+                var rigidBodyEntity = GetOrCreateGameEntity(staticWallView.gameObject);
+
+                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, staticWallView);
+
+                var rigidBody = staticWallView.GetComponent<Rigidbody2D>();
+                AddRbDefinitionComponentFromUnityRb(world, rigidBodyEntity, rigidBody);
+                
+                var polygonCollider2D = staticWallView.GetComponent<PolygonCollider2D>();
+                
+                if (polygonCollider2D)
+                {
+                    ref var chainColliderComponent =
+                        ref rigidBodyEntity.EntityAddComponent<ChainColliderComponent>(world);
+                    chainColliderComponent.points = polygonCollider2D.points;
+                }
+                
+                DeleteFromViewIfPlaying(staticWallView.gameObject, polygonCollider2D, rigidBody);
+            });
+
+            BodyType GetRBBodyType(RigidbodyType2D type2D)
+            {
+                switch (type2D)
+                {
+                    case RigidbodyType2D.Dynamic:
+                        return BodyType.Dynamic;
+                    case RigidbodyType2D.Kinematic:
+                        return BodyType.Kinematic;
+                    case RigidbodyType2D.Static:
+                        return BodyType.Static;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type2D), type2D, null);
+                }
+            }
+
+            void AddRbDefinitionComponentFromUnityRb(EcsWorld world, int rigidBodyEntity,
+                Rigidbody2D rigidBody)
+            {
+                
+                if (rigidBody)
+                {
+                    ref var rigidBodyDefinitionComponent =
+                        ref rigidBodyEntity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
+                    rigidBodyDefinitionComponent.bodyType = GetRBBodyType(rigidBody.bodyType);
+                    rigidBodyDefinitionComponent.density = 10f;
+                    var friction = 0f;
+                    var restitution = 0f;
+                    if (rigidBody.sharedMaterial)
+                    {
+                        friction = rigidBody.sharedMaterial.friction;
+                        restitution = rigidBody.sharedMaterial.bounciness;
+                    }
+
+                    rigidBodyDefinitionComponent.friction = friction;
+                    rigidBodyDefinitionComponent.restitution = restitution;
+                    rigidBodyDefinitionComponent.restitutionThreshold = 0.5f;
+                }
+            }
+            void DeleteFromViewIfPlaying(GameObject view, Collider2D collider2D,
+                Rigidbody2D rigidBody)
+            {
+                if (Application.IsPlaying(view))
+                {
+                    Object.DestroyImmediate(collider2D);
+                    Object.DestroyImmediate(rigidBody);
+                }
+            }
+            
+            void AddTransformComponentsToEntityFromView(EcsWorld world, int rigidBodyEntity,
+                MonoBehaviour view)
+            {
+                ref var positionComponent = ref rigidBodyEntity.EntityAddComponent<PositionComponent>(world);
+                positionComponent.value = view.transform.position;
+            
+                ref var rotationComponent = ref rigidBodyEntity.EntityAddComponent<RotationComponent>(world);
+                rotationComponent.value = -view.gameObject.transform.eulerAngles.y * Mathf.Deg2Rad;
+            }
         }
     }
 }

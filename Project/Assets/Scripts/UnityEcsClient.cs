@@ -38,7 +38,7 @@ namespace Game.Client
             viewSystems.Add(new CameraFollowSystem());
             
 #if UNITY_EDITOR
-            viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:false));
+            viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
 
 

@@ -25,3 +25,4 @@ ServerApp/obj/
 ServerApp/bin/
 ServerApp/.vs/
 *.userproperties
+ServerApp/.idea

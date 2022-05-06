@@ -23,8 +23,23 @@ namespace Game.ClientServer.Physics
         public static extern void DestroyWorld(IntPtr world);
 
         [DllImport(DllName)]
-        public static extern IntPtr CreateBody(IntPtr worldPtr, int bodyType, Vector2 position, Vector2 extents,
-            float angle, float density, float friction, float restitution, float restitutionThreshold);
+        public static extern IntPtr CreateBody(IntPtr worldPtr, int bodyType, Vector2 position, float angle);
+
+        [DllImport(DllName)]
+        public static extern void AddFixtureToBody(IntPtr body, IntPtr shape, float density,
+            float friction, float restitution, float restitutionThreshold);
+
+        [DllImport(DllName)]
+        public static extern IntPtr CreateCircleShape(float radius);
+        
+        [DllImport(DllName)]
+        public static extern IntPtr CreateBoxShape(Vector2 extents);
+
+        [DllImport(DllName)]
+        public static extern IntPtr CreatePolygonShape(Vector2[] vertices, int count);
+        
+        [DllImport(DllName)]
+        public static extern IntPtr CreateChainShape(Vector2[] vertices, int count);
 
         [DllImport(DllName)]
         public static extern void DestroyBody(IntPtr world, IntPtr body);

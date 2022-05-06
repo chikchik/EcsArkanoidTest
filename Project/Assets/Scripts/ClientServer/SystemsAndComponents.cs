@@ -3,6 +3,7 @@ using Fabros.Ecs.Systems;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Tick;
+using Game.ClientServer.Physics.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
@@ -95,6 +96,10 @@ namespace Game.ClientServer
             pool.AddComponent<RigidbodyDefinitionComponent>();
             pool.AddComponent<RigidbodyComponent>();
             pool.AddComponent<BoxColliderComponent>();
+            pool.AddComponent<CircleColliderComponent>();
+            pool.AddComponent<PolygonColliderComponent>();
+            pool.AddComponent<ChainColliderComponent>();
+            pool.AddComponent<RotationComponent>();
 
             return pool; 
         }
@@ -135,8 +140,6 @@ namespace Game.ClientServer
             AddServer(new PopulatePhysicsWorldSystem());
             AddServer(new SyncPhysicsWorldSystem());
             AddServer(new UpdatePhysicsWorldSystem());
-            AddServer(new SyncPhysicsPositionSystem());
-
 
             AddServer(new AIPlayerSystem());
 

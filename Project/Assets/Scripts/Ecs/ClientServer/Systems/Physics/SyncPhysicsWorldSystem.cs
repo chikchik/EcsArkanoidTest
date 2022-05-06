@@ -1,5 +1,7 @@
+using System;
 using Fabros.EcsModules.Base.Components;
 using Game.ClientServer.Physics;
+using Game.ClientServer.Physics.Components;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -19,21 +21,25 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             var poolBodyReference = world.GetPool<BodyReferenceComponent>();
             var poolRigidbody = world.GetPool<RigidbodyComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
+            var poolRotation = world.GetPool<RotationComponent>(); 
             
             foreach (var entity in filter)
             {
                 var bodyReference = poolBodyReference.Get(entity).bodyReference;
                 var positionComponent = poolPosition.Get(entity);
+                var rotationComponent = poolRotation.Get(entity);
                 ref var rigidBodyComponent = ref poolRigidbody.GetRef(entity);
-                rigidBodyComponent.position = new Vector2(positionComponent.value.x, positionComponent.value.z);
+                // rigidBodyComponent.position.x = positionComponent.value.x;
+                // rigidBodyComponent.position.y = positionComponent.value.z;
 
                 var bodyInfo = new BodyInfo
                 {
-                    position = rigidBodyComponent.position,
                     linearVelocity = rigidBodyComponent.linearVelocity,
                     angularVelocity = rigidBodyComponent.angularVelocity,
-                    angle = rigidBodyComponent.angle
+                    angle = rotationComponent.value
                 };
+                bodyInfo.position.x = positionComponent.value.x;
+                bodyInfo.position.y = positionComponent.value.z;
                 
                 Box2DPhysics.SetBodyInfo(bodyReference, bodyInfo);
             }
