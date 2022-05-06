@@ -25,4 +25,9 @@ ServerApp/obj/
 ServerApp/bin/
 ServerApp/.vs/
 *.userproperties
-ServerApp/.idea
+*.idea
+Box2DProject/*/build
+*.DS_Store
+*.vs
+*.vscode
+Box2DProject/box2d-unity-wrapper/out
