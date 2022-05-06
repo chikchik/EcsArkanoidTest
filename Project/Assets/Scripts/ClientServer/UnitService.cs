@@ -2,6 +2,7 @@
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Game.ClientServer.Physics;
+using Game.ClientServer.Physics.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
@@ -21,6 +22,7 @@ namespace Game.ClientServer
             entity.EntityAddComponent<LookDirectionComponent>(world).value = new Vector3(1,0,0);
 
             entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(-1.5f, 0, 9f);
+            entity.EntityAddComponent<RotationComponent>(world).value = 0f;
             entity.EntityAddComponent<FoodCollectedComponent>(world).Value = 0;
 
 
@@ -36,13 +38,13 @@ namespace Game.ClientServer
             
             ref var rigidBodyDefinitionComponent = ref entity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
             rigidBodyDefinitionComponent.bodyType = BodyType.Dynamic;
-            rigidBodyDefinitionComponent.density = 1f;
+            rigidBodyDefinitionComponent.density = 985f;
             rigidBodyDefinitionComponent.friction = 0.3f;
             rigidBodyDefinitionComponent.restitution = 0;
             rigidBodyDefinitionComponent.restitutionThreshold = 0.5f;   
 
             ref var boxColliderComponent = ref entity.EntityAddComponent<BoxColliderComponent>(world);
-            boxColliderComponent.size = new Vector2(1f, 1f);
+            boxColliderComponent.size = new Vector2(0.3f, 0.3f);
 
             Console.WriteLine($"GenerateUnitEntity {entity}");
 
