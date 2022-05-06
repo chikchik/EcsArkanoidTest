@@ -15,7 +15,7 @@ using Zenject;
 
 namespace Game.Client
 {
-    public class UnityEcsClient : MonoBehaviour, EventsSystem<FoodCollectedComponent>.IAnyListener
+    public class UnityEcsClient : MonoBehaviour, EventsSystem<FoodCollectedComponent>.IAnyComponentChangedListener
     {
         private NetClient client;
 
@@ -94,7 +94,7 @@ namespace Game.Client
             ui.FoodText.text = "";
 
             int globalListenerEntity = 0;
-            globalListenerEntity.AddAnyListener<FoodCollectedComponent>(world, this);
+            globalListenerEntity.AddAnyChangedListener<FoodCollectedComponent>(world, this);
         }
 
         private void Update()
@@ -129,6 +129,9 @@ namespace Game.Client
             Camera camera, Action<UserInput> addUserInput
             )
         {
+            if (unitEntity == -1 )
+                return;
+            
             var forward = camera.transform.forward;
             forward.y = 0;
             forward.Normalize();
@@ -178,7 +181,7 @@ namespace Game.Client
             }
         }
 
-        public void AnyChanged(EcsWorld world, int entity, FoodCollectedComponent data)
+        public void OnAnyComponentChanged(EcsWorld world, int entity, FoodCollectedComponent data, bool added)
         {
             if (!world.HasUnique<ClientPlayerComponent>())
                 return;

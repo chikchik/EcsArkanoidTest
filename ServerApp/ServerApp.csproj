@@ -29,14 +29,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="$(FabrosEcsPackage)\Leopotam\**\*.cs">
-			<Link>External\Leopotam\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		<Compile Include="$(FabrosEcsPackage)\Leopotam\ecslite\**\*.cs">
+			<Link>External\Leopotam\ecslite\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
 	</ItemGroup>
 
   <ItemGroup>
     <Compile Remove="$(FabrosEcsPackage)\Leopotam\ecslite-unityeditor\**\*.cs"></Compile>
   </ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(FabrosEcsPackage)\Leopotam\ecslite-extendedsystems\**\*.cs">
+			<Link>External\Leopotam\ecslite-extendedsystems\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+	
 
 	<ItemGroup>
 		<Compile Include="$(FabrosEcsPackage)\Fabros\P2P\**\*.cs">
