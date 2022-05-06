@@ -89,7 +89,7 @@ namespace Game.Client
             ui.FoodText.text = "";
 
             int globalListenerEntity = 0;
-            globalListenerEntity.AddAnyListener<FoodCollectedComponent>(world, this);
+            globalListenerEntity.AddAnyChangedListener<FoodCollectedComponent>(world, this);
         }
 
         private void Update()

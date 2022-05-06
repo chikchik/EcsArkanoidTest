@@ -21,8 +21,8 @@ public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyComponen
         verticalLayoutGroup = ui.ObjectivesRectTransform;
         objectivesListener = 0; // world.NewEntity();
 
-        objectivesListener.AddAnyListener<ObjectiveCompletedComponent>(world, this);
-        objectivesListener.AddAnyListener<ObjectiveOpenedComponent>(world, this);
+        objectivesListener.AddAnyChangedListener<ObjectiveCompletedComponent>(world, this);
+        objectivesListener.AddAnyChangedListener<ObjectiveOpenedComponent>(world, this);
 
         textPrefab = verticalLayoutGroup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         textPrefab.gameObject.SetActive(false);
