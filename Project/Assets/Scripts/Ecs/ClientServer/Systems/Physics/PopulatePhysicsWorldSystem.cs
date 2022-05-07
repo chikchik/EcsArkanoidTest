@@ -20,8 +20,8 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             var physicsWorld = world.GetUnique<PhysicsWorldComponent>();
             var filter = world
                 .Filter<RigidbodyDefinitionComponent>()
-                .Exc<BodyReferenceComponent>()
-                .Exc<RigidbodyComponent>()
+                .Exc<BodyCreatedComponent>()
+                //.Exc<RigidbodyComponent>()
                 .End();
 
             var poolRigidbodyDefinition = world.GetPool<RigidbodyDefinitionComponent>();
@@ -32,9 +32,13 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             var poolCircleCollider = world.GetPool<CircleColliderComponent>();
             var poolPolygonCollider = world.GetPool<PolygonColliderComponent>();
             var poolChainCollider = world.GetPool<ChainColliderComponent>();
+            
+            var poolBodyCreated = world.GetPool<BodyCreatedComponent>();
 
             foreach (var entity in filter)
             {
+                poolBodyCreated.Add(entity);
+                
                 var rigidbodyDefinitionComponent = poolRigidbodyDefinition.Get(entity);
                 var positionComponent = poolPositionComponent.Get(entity);
                 var bodyAngle = poolRotationComponent.Get(entity).value;
@@ -87,7 +91,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             ref var bodyReferenceComponent = ref entity.EntityAddComponent<BodyReferenceComponent>(world);
             bodyReferenceComponent.bodyReference = bodyReference;
 
-            ref var rigidbodyComponent = ref entity.EntityAddComponent<RigidbodyComponent>(world);
+            ref var rigidbodyComponent = ref entity.EntityReplace<RigidbodyComponent>(world);
             // rigidbodyComponent.position = new Vector2(positionComponent.value.x, positionComponent.value.z);
             // rigidbodyComponent.angle = angle;
         }

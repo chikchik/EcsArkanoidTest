@@ -93,6 +93,7 @@ namespace Game.ClientServer
             pool.AddComponent<ButtonPushCompleted>();
             pool.AddComponent<GateOpenedComponent>();
             pool.AddComponent<LookDirectionComponent>();
+            
             pool.AddComponent<RigidbodyDefinitionComponent>();
             pool.AddComponent<RigidbodyComponent>();
             pool.AddComponent<BoxColliderComponent>();
@@ -136,10 +137,10 @@ namespace Game.ClientServer
 #endif
             
             
-            AddServer(new InitPhysicsSystem());
-            AddServer(new PopulatePhysicsWorldSystem());
-            AddServer(new SyncPhysicsWorldSystem());
-            AddServer(new UpdatePhysicsWorldSystem());
+            systems.Add(new InitPhysicsSystem());
+            systems.Add(new PopulatePhysicsWorldSystem());
+            systems.Add(new SyncPhysicsWorldSystem());
+            systems.Add(new UpdatePhysicsWorldSystem());
 
             AddServer(new AIPlayerSystem());
 
