@@ -14,12 +14,14 @@ namespace Game.Ecs.ClientServer.Systems
                 .Filter<MoveDirectionComponent>()
                 .Inc<PositionComponent>()
                 .Inc<SpeedComponent>()
+                .Exc<PlayerComponent>()
+                .Exc<AIPlayerComponent>()
                 .End();
             var deltaTime = world.GetDeltaSeconds();
             var poolPosition = world.GetPool<PositionComponent>();
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
             var poolSpeed = world.GetPool<SpeedComponent>();
-
+            
             foreach (var entity in filter)
             {
                 ref var positionComponent = ref poolPosition.GetRef(entity);

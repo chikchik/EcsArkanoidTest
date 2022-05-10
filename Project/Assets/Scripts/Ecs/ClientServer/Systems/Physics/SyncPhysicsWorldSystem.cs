@@ -29,8 +29,6 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 var positionComponent = poolPosition.Get(entity);
                 var rotationComponent = poolRotation.Get(entity);
                 ref var rigidBodyComponent = ref poolRigidbody.GetRef(entity);
-                // rigidBodyComponent.position.x = positionComponent.value.x;
-                // rigidBodyComponent.position.y = positionComponent.value.z;
 
                 var bodyInfo = new BodyInfo
                 {

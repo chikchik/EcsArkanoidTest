@@ -42,7 +42,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 var rigidbodyDefinitionComponent = poolRigidbodyDefinition.Get(entity);
                 var positionComponent = poolPositionComponent.Get(entity);
                 var bodyAngle = poolRotationComponent.Get(entity).value;
-                var bodyReference = CreateBody(physicsWorld, rigidbodyDefinitionComponent, positionComponent);
+                var bodyReference = CreateBody(physicsWorld, rigidbodyDefinitionComponent, positionComponent, bodyAngle);
                 
                 IntPtr shape = IntPtr.Zero;
                 if (poolBoxCollider.Has(entity))
@@ -65,8 +65,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                     foreach (var anchor in anchors)
                     {
                         shapeVertices.Clear();
-                        for (int curIdx = index; index <= anchor + curIdx; index++)
-                        {
+                        for (int offset = index; index <= anchor + offset; index++)                        {
                             shapeVertices.Add(vertices[index]);
                         }
                         shape = Box2DPhysics.CreatePolygonShape(shapeVertices.ToArray(), shapeVertices.Count);
@@ -81,29 +80,26 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                     AddFixtureToBody(bodyReference, shape, rigidbodyDefinitionComponent);
                 }
                 
-                AddNewEntities(entity, world, bodyReference, positionComponent, bodyAngle);
+                AddNewEntities(entity, world, bodyReference);
             }
         }
 
-        private void AddNewEntities(int entity, EcsWorld world, IntPtr bodyReference,
-            PositionComponent positionComponent, float angle)
+        private void AddNewEntities(int entity, EcsWorld world, IntPtr bodyReference)
         {
             ref var bodyReferenceComponent = ref entity.EntityAddComponent<BodyReferenceComponent>(world);
             bodyReferenceComponent.bodyReference = bodyReference;
 
             ref var rigidbodyComponent = ref entity.EntityReplace<RigidbodyComponent>(world);
-            // rigidbodyComponent.position = new Vector2(positionComponent.value.x, positionComponent.value.z);
-            // rigidbodyComponent.angle = angle;
         }
 
         private IntPtr CreateBody(PhysicsWorldComponent physicsWorld, RigidbodyDefinitionComponent rigidbodyDefinitionComponent,
-            PositionComponent positionComponent)
+            PositionComponent positionComponent, float angle)
         {
             var bodyReference = Box2DPhysics.CreateBody(
                 physicsWorld.worldReference,
                 (int) rigidbodyDefinitionComponent.bodyType,
-                (Vector2) positionComponent.value,
-                0f);
+                new Vector2(positionComponent.value.x, positionComponent.value.z),
+                angle);
             return bodyReference;
         }
 

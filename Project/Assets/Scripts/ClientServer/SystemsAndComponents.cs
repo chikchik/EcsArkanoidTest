@@ -140,13 +140,15 @@ namespace Game.ClientServer
             systems.Add(new InitPhysicsSystem());
             systems.Add(new PopulatePhysicsWorldSystem());
             systems.Add(new SyncPhysicsWorldSystem());
-            systems.Add(new UpdatePhysicsWorldSystem());
 
             AddServer(new AIPlayerSystem());
 
-
             systems.Add(new MoveToTargetPositionSystem());
             systems.Add(new MoveSystem());
+            systems.Add(new UnitMoveSystem());
+            
+            systems.Add(new UpdatePhysicsWorldSystem());
+            
             systems.Add(new EntitiesLifeTimeSystem());
 
 #if CLIENT
