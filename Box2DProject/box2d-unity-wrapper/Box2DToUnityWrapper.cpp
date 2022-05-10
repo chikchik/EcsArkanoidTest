@@ -11,9 +11,6 @@ extern "C"
 {
     struct Vector2
     {
-        Vector2() : x(0), y(0) {}
-        Vector2(float xIn, float yIn) : x(xIn), y(yIn) {}
-
         public : float x;
         public : float y;
     };
@@ -116,11 +113,12 @@ extern "C"
 
     DllExport Vector2 GetPosition(b2Body* body)
     {
-        b2Vec2 position = body -> GetPosition();
+        const b2Vec2& position = body -> GetPosition();
 
-        Vector2 sharedPos;
-        sharedPos.x = position.x;
-        sharedPos.y = position.y;
+        Vector2 sharedPos {
+            position.x,
+            position.y
+        };
 
         return sharedPos;
     }
@@ -146,19 +144,28 @@ extern "C"
         body -> SetTransform(position, angle);
     }
 
-    DllExport Vector2 GetLinearVelocity(b2Body* body)
-    {
-        b2Vec2 linearVelocity = body -> GetLinearVelocity();
-
-        return Vector2(linearVelocity.x, linearVelocity.y);
-    }
-
     DllExport void SetLinearVelocity(b2Body* body, Vector2 linearVelocity)
     {
         b2Vec2 bLinearVelocity(linearVelocity.x, linearVelocity.y);
 
         body -> SetLinearVelocity(bLinearVelocity);
+    }
 
+    DllExport void SetAngularVelocity(b2Body* body, float angularVelocity)
+    {
+        body -> SetAngularVelocity(angularVelocity);
+    }
+
+    DllExport Vector2 GetLinearVelocity(b2Body* body)
+    {
+        const b2Vec2 linearVelocity =  body -> GetLinearVelocity();
+
+        struct Vector2 vec {
+            linearVelocity.x,
+            linearVelocity.y
+        };
+
+        return vec;
     }
 
     DllExport float GetAngularVelocity(b2Body* body)
@@ -166,9 +173,44 @@ extern "C"
         return  body -> GetAngularVelocity();
     }
 
-    DllExport void SetAngularVelocity(b2Body* body, float angularVelocity)
+    DllExport void ApplyForce(b2Body* body, Vector2 force, Vector2 point)
     {
-        body -> SetAngularVelocity(angularVelocity);
+        b2Vec2 bForce(force.x, force.y);
+        b2Vec2 bPoint(point.x, point.y);
+
+        body -> ApplyForce(bForce, bPoint, true);
+    }
+
+    DllExport void ApplyForceToCenter(b2Body* body, Vector2 force)
+    {
+        b2Vec2 bForce(force.x, force.y);
+
+        body -> ApplyForceToCenter(bForce, true);
+    }
+
+    DllExport void ApplyLinearImpulse(b2Body* body, Vector2 force, Vector2 point)
+    {
+        b2Vec2 bForce(force.x, force.y);
+        b2Vec2 bPoint(point.x, point.y);
+
+        body -> ApplyLinearImpulse(bForce, bPoint, true);
+    }
+
+    DllExport void ApplyLinearImpulseToCenter(b2Body* body, Vector2 force)
+    {
+        b2Vec2 bForce(force.x, force.y);
+
+        body -> ApplyLinearImpulseToCenter(bForce, true);
+    }
+
+    DllExport void SetEnabled(b2Body* body, bool flag)
+    {
+        body -> SetEnabled(flag);
+    }
+
+    DllExport bool IsEnabled(b2Body* body)
+    {
+        return body -> IsEnabled();
     }
 
     DllExport BodyInfo GetBodyInfo(b2Body* body)
@@ -188,14 +230,6 @@ extern "C"
         SetPosition(body, bodyInfo.position);
         SetLinearVelocity(body, bodyInfo.linearVelocity);
         SetAngularVelocity(body, bodyInfo.angularVelocity);
-    }
-
-    DllExport void ApplyForce(b2Body* body, Vector2 force, Vector2 point)
-    {
-        b2Vec2 bForce(force.x, force.y);
-        b2Vec2 bPoint(point.x, point.y);
-
-        body -> ApplyForce(bForce, bPoint, true);
     }
 
     DllExport bool RayCast(b2World* world, Vector2 origin, Vector2 direction, float distance)

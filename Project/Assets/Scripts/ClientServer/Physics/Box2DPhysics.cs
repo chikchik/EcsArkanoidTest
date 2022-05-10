@@ -76,8 +76,23 @@ namespace Game.ClientServer.Physics
 
         [DllImport(DllName)]
         public static extern void ApplyForce(IntPtr body, Vector2 force, Vector2 point);
+        
+        [DllImport(DllName)]
+        public static extern void ApplyForceToCenter(IntPtr body, Vector2 force);
+        
+        [DllImport(DllName)]
+        public static extern void ApplyLinearImpulse(IntPtr body, Vector2 force, Vector2 point);
+        
+        [DllImport(DllName)]
+        public static extern void ApplyLinearImpulseToCenter(IntPtr body, Vector2 force);
 
         [DllImport(DllName)]
         public static extern bool RayCast(IntPtr world, Vector2 origin, Vector2 direction, float distance);
+
+        [DllImport(DllName)]
+        public static extern void SetEnabled(IntPtr body, bool flag);
+
+        [DllImport(DllName)]
+        public static extern bool IsEnabled(IntPtr body);
     }
 }
