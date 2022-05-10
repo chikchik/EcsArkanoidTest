@@ -1,4 +1,6 @@
-﻿using Fabros.Ecs.Utils;
+﻿using Fabros.Ecs;
+using Fabros.Ecs.Utils;
+using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.UI;
 using Leopotam.EcsLite;
@@ -9,21 +11,23 @@ public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyComponen
         EventsSystem<ObjectiveOpenedComponent>.IAnyComponentChangedListener
     //IAnyCompletedListener, IAnyOpenedListener
 {
-    private readonly int objectivesListener;
+    //private readonly int objectivesListener;
     private readonly TextMeshProUGUI textPrefab;
     private readonly RectTransform verticalLayoutGroup;
     private EcsWorld world;
+    private LocalEntity objectivesListener;
 
     public Objectives(MainUI ui, EcsWorld world)
     {
         this.world = world;
 
         verticalLayoutGroup = ui.ObjectivesRectTransform;
-        objectivesListener = 0; // world.NewEntity();
+
+        objectivesListener = world.NewLocalEntity();
 
         objectivesListener.AddAnyChangedListener<ObjectiveCompletedComponent>(world, this);
         objectivesListener.AddAnyChangedListener<ObjectiveOpenedComponent>(world, this);
-
+        
         textPrefab = verticalLayoutGroup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         textPrefab.gameObject.SetActive(false);
     }

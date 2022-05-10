@@ -160,6 +160,10 @@ namespace Game.Fabros.Net.Client
                     {
                         if (!MainWorld.IsEntityAliveInternal(entity))
                             return;
+                        
+                        if (entity.EntityHas<LocalEntityComponent>(MainWorld))
+                            return;
+                        
                         if (entity.EntityHasComponent<GameObjectComponent>(MainWorld))
                         {
                             var go = entity.EntityGetComponent<GameObjectComponent>(MainWorld).GameObject;
