@@ -26,6 +26,8 @@ namespace Game.Ecs.Client.Systems
                     //replace потому что ClientPlayerComponent мог уже быть 
                     world.ReplaceUnique<ClientPlayerComponent>().entity = entity;
                     entity.EntityReplaceComponent<LerpComponent>(world).value = 1;
+                    entity.EntityAdd<IsMainPlayerComponent>(world);
+                    entity.EntityReplace<AnimationStateComponent>(world).id = "happy";
                 }
             }
         }

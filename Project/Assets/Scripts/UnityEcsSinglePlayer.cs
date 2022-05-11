@@ -52,7 +52,7 @@ namespace Game.Client
             });
 
             unitEntity = UnitService.CreateUnitEntity(world);
-            unitEntity.EntityAdd<PlayerComponent>(world).id = 0;
+            
             
             world.AddUnique(new ClientPlayerComponent{ entity = unitEntity});
 
@@ -66,6 +66,9 @@ namespace Game.Client
             viewSystems.Add(new CameraFollowSystem());
             
             viewSystems.Init();
+            
+            world.AddUnique(new MainPlayerIdComponent{value = 1});
+            unitEntity.EntityAdd<PlayerComponent>(world).id = 1;
             
             
             ui.InteractionButton.onClick.AddListener(() =>
@@ -89,7 +92,7 @@ namespace Game.Client
         {
             UnityEcsClient.CheckInput(world, unitEntity, playerInput, camera, input =>
             {
-                InputService.ApplyInput(inputWorld, 0, input);
+                InputService.ApplyInput(inputWorld, 1, input);
             });
             viewSystems.Run();
         }
