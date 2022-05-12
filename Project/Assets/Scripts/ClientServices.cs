@@ -244,7 +244,9 @@ namespace Game.Client
                 AddTransformComponentsToEntityFromView(world, rigidBodyEntity, cubeView);
                 
                 var rigidBody = cubeView.GetComponent<Rigidbody2D>();
-                AddRbDefinitionComponentFromUnityRb(world, rigidBodyEntity, rigidBody);
+
+                cubeView.TryGetComponent(out Box2dPhysicsExtend rigidbodyExtend);
+                AddRbDefinitionComponentFromUnityRb(world, rigidBodyEntity, rigidBody, rigidbodyExtend);
 
                 var boxCollider = cubeView.GetComponent<BoxCollider2D>();
                 if (boxCollider)
@@ -347,27 +349,39 @@ namespace Game.Client
             }
 
             void AddRbDefinitionComponentFromUnityRb(EcsWorld world, int rigidBodyEntity,
-                Rigidbody2D rigidBody)
+                Rigidbody2D rigidBody, Box2dPhysicsExtend rigidbodyExtend = null)
             {
-                
-                if (rigidBody)
-                {
-                    ref var rigidBodyDefinitionComponent =
-                        ref rigidBodyEntity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
-                    rigidBodyDefinitionComponent.bodyType = GetRBBodyType(rigidBody.bodyType);
-                    rigidBodyDefinitionComponent.density = 10f;
-                    var friction = 0f;
-                    var restitution = 0f;
-                    if (rigidBody.sharedMaterial)
-                    {
-                        friction = rigidBody.sharedMaterial.friction;
-                        restitution = rigidBody.sharedMaterial.bounciness;
-                    }
+                if (!rigidBody) return;
 
-                    rigidBodyDefinitionComponent.friction = friction;
-                    rigidBodyDefinitionComponent.restitution = restitution;
-                    rigidBodyDefinitionComponent.restitutionThreshold = 0.5f;
+                float density = 1f;
+                float restitutionThreshold = 0.5f;
+                float linearDamping = 2.0f;
+                float angularDamping = 5.0f;
+                if (rigidbodyExtend)
+                {
+                    density = rigidbodyExtend.Density;
+                    restitutionThreshold = rigidbodyExtend.RestitutionThreshold;
+                    linearDamping = rigidbodyExtend.LinearDamping;
+                    angularDamping = rigidbodyExtend.AngularDamping;
                 }
+                
+                ref var rigidBodyDefinitionComponent =
+                    ref rigidBodyEntity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
+                rigidBodyDefinitionComponent.bodyType = GetRBBodyType(rigidBody.bodyType);
+                rigidBodyDefinitionComponent.density = density;
+                var friction = 0f;
+                var restitution = 0f;
+                if (rigidBody.sharedMaterial)
+                {
+                    friction = rigidBody.sharedMaterial.friction;
+                    restitution = rigidBody.sharedMaterial.bounciness;
+                }
+
+                rigidBodyDefinitionComponent.friction = friction;
+                rigidBodyDefinitionComponent.restitution = restitution;
+                rigidBodyDefinitionComponent.restitutionThreshold = restitutionThreshold;
+                rigidBodyDefinitionComponent.linearDamping = linearDamping;
+                rigidBodyDefinitionComponent.angularDamping = angularDamping;
             }
             void DeleteFromViewIfPlaying(GameObject view, Collider2D collider2D,
                 Rigidbody2D rigidBody)

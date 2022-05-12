@@ -92,7 +92,7 @@ extern "C"
         return shape;
     }
 
-    DllExport void AddFixtureToBody(b2Body* body, b2Shape* shape, float density, float friction, float restitution, float restitutionThreshold)
+    DllExport void AddFixtureToBody(b2Body* body, b2Shape* shape, float density, float friction, float restitution, float restitutionThreshold, bool isTrigger)
     {
         b2FixtureDef fixtureDef;
         fixtureDef.shape = shape;
@@ -100,10 +100,30 @@ extern "C"
         fixtureDef.friction = friction;
         fixtureDef.restitution = restitution;
         fixtureDef.restitutionThreshold = restitutionThreshold;
+        fixtureDef.isSensor = isTrigger;
 
         body -> CreateFixture(&fixtureDef);
-        body -> SetLinearDamping(2.0f);
         b2Free(shape);
+    }
+
+    DllExport float GetLinearDamping(b2Body* body)
+    {
+        return body -> GetLinearDamping();
+    }
+
+    DllExport float GetAngularDamping(b2Body* body)
+    {
+        return body -> GetAngularDamping();
+    }
+
+    DllExport void SetLinearDamping(b2Body* body, float val)
+    {
+        body -> SetLinearDamping(val);
+    }
+
+    DllExport void SetAngularDamping(b2Body* body, float val)
+    {
+        body -> SetAngularDamping(val);
     }
 
     DllExport void DestroyBody(b2World* world, b2Body* body)
@@ -230,6 +250,11 @@ extern "C"
         SetPosition(body, bodyInfo.position);
         SetLinearVelocity(body, bodyInfo.linearVelocity);
         SetAngularVelocity(body, bodyInfo.angularVelocity);
+    }
+
+    DllExport void SetBullet(b2Body* body, bool flag)
+    {
+        body -> SetBullet(flag);
     }
 
     DllExport bool RayCast(b2World* world, Vector2 origin, Vector2 direction, float distance)

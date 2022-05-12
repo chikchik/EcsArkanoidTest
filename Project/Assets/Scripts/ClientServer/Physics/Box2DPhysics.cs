@@ -27,7 +27,7 @@ namespace Game.ClientServer.Physics
 
         [DllImport(DllName)]
         public static extern void AddFixtureToBody(IntPtr body, IntPtr shape, float density,
-            float friction, float restitution, float restitutionThreshold);
+            float friction, float restitution, float restitutionThreshold, bool isTrigger);
 
         [DllImport(DllName)]
         public static extern IntPtr CreateCircleShape(float radius);
@@ -94,5 +94,20 @@ namespace Game.ClientServer.Physics
 
         [DllImport(DllName)]
         public static extern bool IsEnabled(IntPtr body);
+        
+        [DllImport(DllName)]
+        public static extern void SetBullet(IntPtr body, bool flag);
+        
+        [DllImport(DllName)]
+        public static extern float GetLinearDamping(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern float GetAngularDamping(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern void SetLinearDamping(IntPtr body, float val);
+
+        [DllImport(DllName)]
+        public static extern void SetAngularDamping(IntPtr body, float val);
     }
 }

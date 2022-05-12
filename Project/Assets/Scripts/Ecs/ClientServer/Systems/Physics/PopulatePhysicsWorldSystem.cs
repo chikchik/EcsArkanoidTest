@@ -21,7 +21,6 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             var filter = world
                 .Filter<RigidbodyDefinitionComponent>()
                 .Exc<BodyCreatedComponent>()
-                //.Exc<RigidbodyComponent>()
                 .End();
 
             var poolRigidbodyDefinition = world.GetPool<RigidbodyDefinitionComponent>();
@@ -42,13 +41,15 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 var rigidbodyDefinitionComponent = poolRigidbodyDefinition.Get(entity);
                 var positionComponent = poolPositionComponent.Get(entity);
                 var bodyAngle = poolRotationComponent.Get(entity).value;
-                var bodyReference = CreateBody(physicsWorld, rigidbodyDefinitionComponent, positionComponent, bodyAngle);
+                var bodyReference = CreateBody(physicsWorld, rigidbodyDefinitionComponent,
+                    positionComponent, bodyAngle, entity);
                 
                 IntPtr shape = IntPtr.Zero;
                 if (poolBoxCollider.Has(entity))
                 {
                     shape = Box2DPhysics.CreateBoxShape(poolBoxCollider.Get(entity).size / 2f);
                     AddFixtureToBody(bodyReference, shape, rigidbodyDefinitionComponent);
+                    Box2DPhysics.SetAngularDamping(bodyReference, rigidbodyDefinitionComponent.angularDamping);
                 }
                 else if (poolCircleCollider.Has(entity))
                 {
@@ -65,7 +66,8 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                     foreach (var anchor in anchors)
                     {
                         shapeVertices.Clear();
-                        for (int offset = index; index <= anchor + offset; index++)                        {
+                        for (int offset = index; index <= anchor + offset; index++)
+                        {
                             shapeVertices.Add(vertices[index]);
                         }
                         shape = Box2DPhysics.CreatePolygonShape(shapeVertices.ToArray(), shapeVertices.Count);
@@ -80,6 +82,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                     AddFixtureToBody(bodyReference, shape, rigidbodyDefinitionComponent);
                 }
                 
+                Box2DPhysics.SetLinearDamping(bodyReference, rigidbodyDefinitionComponent.linearDamping);
                 AddNewEntities(entity, world, bodyReference);
             }
         }
@@ -93,25 +96,27 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         }
 
         private IntPtr CreateBody(PhysicsWorldComponent physicsWorld, RigidbodyDefinitionComponent rigidbodyDefinitionComponent,
-            PositionComponent positionComponent, float angle)
+            PositionComponent positionComponent, float angle, int entity)
         {
             var bodyReference = Box2DPhysics.CreateBody(
                 physicsWorld.worldReference,
                 (int) rigidbodyDefinitionComponent.bodyType,
                 new Vector2(positionComponent.value.x, positionComponent.value.z),
-                angle);
+                angle,
+                entity);
             return bodyReference;
         }
 
         private void AddFixtureToBody(IntPtr bodyReference, IntPtr shape,
-            RigidbodyDefinitionComponent rigidbodyDefinitionComponent)
+            RigidbodyDefinitionComponent rigidbodyDefinitionComponent, bool isTrigger = false)
         {
             if (shape == IntPtr.Zero) return;
             Box2DPhysics.AddFixtureToBody(bodyReference, shape,
                 rigidbodyDefinitionComponent.density,
                 rigidbodyDefinitionComponent.friction,
                 rigidbodyDefinitionComponent.restitution,
-                rigidbodyDefinitionComponent.restitutionThreshold);
+                rigidbodyDefinitionComponent.restitutionThreshold,
+                isTrigger);
         }
     }
 }

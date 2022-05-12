@@ -10,5 +10,7 @@ namespace Game.Ecs.ClientServer.Components.Physics
         public float friction;
         public float restitution;
         public float restitutionThreshold;
+        public float linearDamping;
+        public float angularDamping;
     }
 }
