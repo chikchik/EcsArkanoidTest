@@ -81,7 +81,8 @@ namespace Game.Fabros.Net.Client
             //особой важности не имеет после подкл к сокету вызывается asyncmain
             var hello = new Packet {hello = new Hello {text = "hello"}, playerID = playerID, hasHello = true};
 
-            var connection = new WebSocketConnection(hello, Config.ROOM, playerID.ToString(), P2P.ADDR_SERVER);
+            var url = $"{Config.url}/{playerID}";
+            var connection = new WebSocketConnection(hello, url, P2P.ADDR_SERVER);
             connection.OnConnected += () =>
             {
                 socket = connection.ExtractSocket();

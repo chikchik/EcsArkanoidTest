@@ -19,6 +19,6 @@ namespace Game.ClientServer
 #endif
 
         public static string ROOM = $"sandbox_{P2P.GetDevRoom()}";
-        public static string url = $"wss://rts.oxygine.org/XsZubnMOTHC0JRDTS95S/{ROOM}";
+        public static string url = $"wss://dev1.ecs.fbpub.net/XsZubnMOTHC0JRDTS95S/{ROOM}";
     }
 }
