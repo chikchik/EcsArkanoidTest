@@ -1,4 +1,3 @@
-using System;
 using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
@@ -7,12 +6,6 @@ using UnityEngine;
 
 namespace Game.Ecs.Client.Systems
 {
-    [Serializable]
-    public struct AnimationStateComponent
-    {
-        public string id;
-    } 
-    
     public class AnimateCharacterSystem : IEcsRunSystem
     {
         public void Run(EcsSystems systems)

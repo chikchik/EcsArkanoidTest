@@ -90,7 +90,6 @@ namespace Game.ClientServer
             pool.AddComponent<ButtonPushCompleted>();
             pool.AddComponent<GateOpenedComponent>();
             pool.AddComponent<LookDirectionComponent>();
-            pool.AddComponent<AnimationStateComponent>();
 
             return pool;
         }
@@ -196,7 +195,9 @@ namespace Game.ClientServer
             systems.Add(new EventsSystem<ObjectiveCompletedComponent>());
             systems.Add(new EventsSystem<GateOpenedComponent>());
             systems.Add(new EventsSystem<FoodCollectedComponent>());
+#if CLIENT
             systems.Add(new EventsSystem<AnimationStateComponent>());
+#endif
         }
     }
 }
