@@ -45,6 +45,7 @@ namespace Game.Ecs.ClientServer.Systems
                         poolLookDirection.GetRef(unitEntity).value = inputMoveComponent.Dir;
 
                         unitEntity.EntityDel<TargetPositionComponent>(world);
+
                     }
 
                     if (poolInputAction.Has(inputEntity))

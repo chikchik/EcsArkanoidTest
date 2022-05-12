@@ -195,8 +195,10 @@ namespace Game.ClientServer
             systems.Add(new EventsSystem<ObjectiveCompletedComponent>());
             systems.Add(new EventsSystem<GateOpenedComponent>());
             systems.Add(new EventsSystem<FoodCollectedComponent>());
+            
 #if CLIENT
             systems.Add(new EventsSystem<AnimationStateComponent>());
+            systems.Add(new EventsSystem<MovingComponent>());
 #endif
         }
     }

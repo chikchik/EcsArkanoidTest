@@ -45,5 +45,10 @@ namespace Game.ClientServer
             
             unitEntity.EntityReplace<PositionComponent>(world).value = new Vector3(-1.5f, 0, 9f);
         }
+
+        public static void MoveUnit(EcsWorld world, int entity)
+        {
+            
+        }
     }
 }
