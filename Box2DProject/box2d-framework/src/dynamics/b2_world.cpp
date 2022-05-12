@@ -107,6 +107,11 @@ void b2World::SetContactListener(b2ContactListener* listener)
 	m_contactManager.m_contactListener = listener;
 }
 
+b2ContactListener* b2World::GetContactListener()
+{
+	return m_contactManager.m_contactListener;
+}
+
 void b2World::SetDebugDraw(b2Draw* debugDraw)
 {
 	m_debugDraw = debugDraw;

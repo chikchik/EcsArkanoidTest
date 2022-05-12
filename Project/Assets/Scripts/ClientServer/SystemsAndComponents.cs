@@ -101,10 +101,15 @@ namespace Game.ClientServer
             pool.AddComponent<PolygonColliderComponent>();
             pool.AddComponent<ChainColliderComponent>();
             pool.AddComponent<RotationComponent>();
+            
+            pool.AddComponent<BeginContactComponent>();
+            pool.AddComponent<EndContactComponent>();
+            pool.AddComponent<PreSolveComponent>();
+            pool.AddComponent<PostSolveComponent>();
 
             return pool; 
         }
-
+        
         public static void AddSystems(ComponentsPool pool, EcsSystems systems, bool client, bool server)
         {
 #if CLIENT
@@ -147,8 +152,12 @@ namespace Game.ClientServer
             systems.Add(new MoveSystem());
             systems.Add(new UnitMoveSystem());
             
-            systems.Add(new UpdatePhysicsWorldSystem());
             
+            systems.DelHere<BeginContactComponent>();
+            systems.DelHere<EndContactComponent>();
+            systems.DelHere<PreSolveComponent>();
+            systems.DelHere<PostSolveComponent>();
+            systems.Add(new UpdatePhysicsWorldSystem());
             systems.Add(new EntitiesLifeTimeSystem());
 
 #if CLIENT

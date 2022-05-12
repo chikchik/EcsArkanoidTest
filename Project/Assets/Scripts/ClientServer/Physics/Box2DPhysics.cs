@@ -11,7 +11,7 @@ namespace Game.ClientServer.Physics
 #else
         private const string DllName = "libbox2d";
 #endif
-
+        
         [DllImport(DllName)]
         public static extern IntPtr UpdateWorld(IntPtr world, float timeStep, int velocityIterations,
             int positionIterations);
@@ -23,7 +23,7 @@ namespace Game.ClientServer.Physics
         public static extern void DestroyWorld(IntPtr world);
 
         [DllImport(DllName)]
-        public static extern IntPtr CreateBody(IntPtr worldPtr, int bodyType, Vector2 position, float angle);
+        public static extern IntPtr CreateBody(IntPtr worldPtr, int bodyType, Vector2 position, float angle, int entity);
 
         [DllImport(DllName)]
         public static extern void AddFixtureToBody(IntPtr body, IntPtr shape, float density,
@@ -109,5 +109,20 @@ namespace Game.ClientServer.Physics
 
         [DllImport(DllName)]
         public static extern void SetAngularDamping(IntPtr body, float val);
+
+
+        public delegate void CallbackDelegate(CollisionCallbackData callbackData);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
+        public static extern void SetBeginContactCallback(IntPtr worldPtr, CallbackDelegate callback);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
+        public static extern void SetEndContactCallback(IntPtr worldPtr, CallbackDelegate callback);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
+        public static extern void SetPreSolveCallback(IntPtr worldPtr, CallbackDelegate callback);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
+        public static extern void SetPostSolveCallback(IntPtr worldPtr, CallbackDelegate callback);
     }
 }

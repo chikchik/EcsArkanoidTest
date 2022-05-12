@@ -7,21 +7,160 @@
     #define DllExport __attribute__((visibility("default")))
 #endif
 
+struct Vector2
+{
+    public : float x;
+    public : float y;
+};
+
+struct BodyInfo
+{
+    public : Vector2 position;
+    public : Vector2 linearVelocity;
+    public : float angularVelocity;
+    public : float angle;
+};
+
+struct CollisionCallbackData
+{
+    public : b2World* physicsWorld;
+    public : int entityA;
+    public : int entityB;
+
+    public : Vector2 velA;
+    public : Vector2 velB;
+
+    public : Vector2 contactPoints[b2_maxManifoldPoints];
+    public : int32 contactPointCount;
+
+    public : Vector2 normal;
+};
+
+typedef void (__stdcall * Callback)(CollisionCallbackData);
+
+class MyContactListener : public b2ContactListener
+{
+    private:
+
+    b2World* m_world = NULL;
+
+    void GetEntityContacts(CollisionCallbackData* data, b2Contact* contact)
+    {
+        data->entityA = (int)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
+        data->entityB = (int)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
+
+        b2WorldManifold worldManifold;
+        contact -> GetWorldManifold(&worldManifold);
+
+        GetContactVelocity(data, &worldManifold, contact);
+
+        GetNormal(data, &worldManifold);
+
+        GetContactPoints(data, &worldManifold);
+    }
+
+    void GetContactVelocity(CollisionCallbackData* data, b2WorldManifold* worldManifold, b2Contact* contact)
+    {
+        b2Vec2 v1 = contact->GetFixtureA()->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold->points[0]);
+        
+        Vector2 vec1 {
+            v1.x,
+            v1.y
+        };
+
+        data->velA = vec1;
+
+        b2Vec2 v2 = contact->GetFixtureB()->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold->points[0]);
+        
+        Vector2 vec2 {
+            v2.x,
+            v2.y
+        };
+
+        data->velB = vec2;
+    }
+
+    void GetContactPoints(CollisionCallbackData* data, b2WorldManifold* worldManifold)
+    {
+        size_t length = (sizeof(worldManifold->points)/sizeof(*worldManifold->points));
+        memcpy(data->contactPoints, worldManifold->points, length * sizeof(Vector2));
+    }
+
+    void GetNormal(CollisionCallbackData* data, b2WorldManifold* worldManifold)
+    {
+        Vector2 vec2 {
+            worldManifold->normal.x,
+            worldManifold->normal.y
+        };
+        data->normal = vec2;
+    }
+
+    void BeginContact(b2Contact* contact)
+    {
+        if (m_callbackBeginContact == NULL) return;
+
+        CollisionCallbackData data;
+        GetEntityContacts(&data, contact);
+
+        m_callbackBeginContact(data);
+    }
+
+    void EndContact(b2Contact* contact)
+    {
+        if (m_callbackEndContact == NULL) return;
+        CollisionCallbackData data;
+        GetEntityContacts(&data, contact);
+        m_callbackEndContact(data);
+    }
+
+    void PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
+    {
+        if (m_callbackPreSolve == NULL) return;
+        CollisionCallbackData data;
+        GetEntityContacts(&data, contact);
+        m_callbackPreSolve(data);
+    }
+
+    void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
+    {
+        if (m_callbackPostSolve == NULL) return;
+        CollisionCallbackData data;
+        GetEntityContacts(&data, contact);
+        m_callbackPostSolve(data);
+    }
+
+    public:
+
+    MyContactListener(b2World* world) : m_world(world) {};
+
+    Callback m_callbackBeginContact = NULL;
+    Callback m_callbackEndContact = NULL;
+    Callback m_callbackPreSolve = NULL;
+    Callback m_callbackPostSolve = NULL;
+};
+
 extern "C"
 {
-    struct Vector2
+    DllExport void SetBeginContactCallback(b2World* world, Callback callback)
     {
-        public : float x;
-        public : float y;
-    };
+        ((MyContactListener*)world -> GetContactListener()) -> m_callbackBeginContact = callback;
+    }
 
-    struct BodyInfo
+    DllExport void SetEndContactCallback(b2World* world, Callback callback)
     {
-        public : Vector2 position;
-        public : Vector2 linearVelocity;
-        public : float angularVelocity;
-        public : float angle;
-    };
+        ((MyContactListener*)world -> GetContactListener()) -> m_callbackEndContact = callback;
+    }
+
+    DllExport void SetPreSolveCallback(b2World* world, Callback callback)
+    {
+        ((MyContactListener*)world -> GetContactListener()) -> m_callbackPreSolve = callback;
+    }
+
+    DllExport void SetPostSolveCallback(b2World* world, Callback callback)
+    {
+        ((MyContactListener*)world -> GetContactListener()) -> m_callbackPostSolve = callback;
+    }
+
 
     DllExport b2World* UpdateWorld(b2World* world, float timeStep, int velocityIterations, int positionIterations)
     {
@@ -35,21 +174,27 @@ extern "C"
         b2Vec2 bGravity(gravity.x, gravity.y);
         b2World* world = new b2World(bGravity);
 
+        MyContactListener* myContactListener = new MyContactListener(world);
+
+        world -> SetContactListener(myContactListener);
+
         return world;
     }
 
     DllExport void DestroyWorld(b2World* world)
     {
+        delete world -> GetContactListener();
         delete world;
         world = nullptr;
     }
 
-    DllExport b2Body* CreateBody(b2World* world, int bodyType, Vector2 position, float angle)
+    DllExport b2Body* CreateBody(b2World* world, int bodyType, Vector2 position, float angle, int entity)
     {
         b2BodyDef bodyDef;
         bodyDef.type = (b2BodyType)bodyType;
         bodyDef.position.Set(position.x, position.y);
         bodyDef.angle = angle;
+        bodyDef.userData.pointer = entity;
 
         b2Body* body = world -> CreateBody(&bodyDef);
         body -> SetFixedRotation(false);

@@ -66,6 +66,9 @@ public:
 	/// remain in scope.
 	void SetContactListener(b2ContactListener* listener);
 
+	/// Return a pointer to a contact event listener.
+	b2ContactListener* b2World::GetContactListener();
+
 	/// Register a routine for debug drawing. The debug draw functions are called
 	/// inside with b2World::DebugDraw method. The debug draw object is owned
 	/// by you and must remain in scope.
