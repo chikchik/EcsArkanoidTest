@@ -12,6 +12,7 @@ namespace Game.Ecs.ClientServer.Systems
         {
             var world = systems.GetWorld();
 
+            return;
             var botEntity = UnitService.CreateUnitEntity(world);
             botEntity.EntityAddComponent<AIPlayerComponent>(world);
 

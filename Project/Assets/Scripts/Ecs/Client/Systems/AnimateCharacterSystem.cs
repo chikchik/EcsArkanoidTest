@@ -45,6 +45,7 @@ namespace Game.Ecs.Client.Systems
                // animatorComponent.animator.SetTrigger(state);
             }
             
+            
             filter = world.FilterAdded<MovingComponent>().End();
 
             foreach (var entity in filter)

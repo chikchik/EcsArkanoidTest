@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Game.Ecs.Client.Components;
@@ -225,12 +226,22 @@ namespace Game.Client
                 characterEntity.EntityAddComponent<MoveDirectionComponent>(world);
                 characterEntity.EntityAddComponent<PositionComponent>(world);
 
+                
+                //characterEntity.EntityAddComponent<AverageSpeedComponent>(world).value = clip.averageSpeed;
+
                 ref var radiusComponent = ref characterEntity.EntityAddComponent<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
 
                 ref var speedComponent = ref characterEntity.EntityAddComponent<SpeedComponent>(world);
                 speedComponent.speed = 2f;
             });
+            
+            var unit = Object.FindObjectOfType<Global>().characterPrefab;
+            
+            var clips = unit.Animator.runtimeAnimatorController.animationClips;
+            var clip = clips.First(clip => clip.name == "Walking");
+
+            world.AddUnique<AverageSpeedComponent>().value = clip.averageSpeed;
         }
     }
 }

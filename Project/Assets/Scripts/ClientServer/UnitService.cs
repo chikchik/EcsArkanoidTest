@@ -32,6 +32,8 @@ namespace Game.ClientServer
             ref var speedComponent = ref entity.EntityAddComponent<SpeedComponent>(world);
             speedComponent.speed = 2f;
 
+            entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();
+            
             Console.WriteLine($"GenerateUnitEntity {entity}");
 
             return entity;

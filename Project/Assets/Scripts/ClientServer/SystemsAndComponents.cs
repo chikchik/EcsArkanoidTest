@@ -90,6 +90,8 @@ namespace Game.ClientServer
             pool.AddComponent<ButtonPushCompleted>();
             pool.AddComponent<GateOpenedComponent>();
             pool.AddComponent<LookDirectionComponent>();
+            
+            pool.AddComponent<AverageSpeedComponent>();
 
             return pool;
         }
