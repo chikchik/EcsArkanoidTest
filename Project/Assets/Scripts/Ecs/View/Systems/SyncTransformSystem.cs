@@ -27,7 +27,10 @@ namespace Game.Ecs.Client.Systems
                 var lerp = poolLerp.Has(entity) ? poolLerp.Get(entity).value : 1f;
                 lerp *= Time.deltaTime * 10;
                 
-                transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
+                //transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
+                //transform.position = targetPosition;
+
+                //poolPosition.GetRef(entity).value = transform.position;
             }
         }
     }

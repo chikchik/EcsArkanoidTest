@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Animator: {fileID: 2924215761749898580}
+  rootMotion: {fileID: 1080324603059262338}
   test: 0
 --- !u!65 &2333436472338061726
 BoxCollider:
@@ -129,7 +130,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: ybot@Breathing Idle
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2871682877832710789, guid: 32e16e64a87d03d449ffe3f441649a53, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 32e16e64a87d03d449ffe3f441649a53, type: 3}
 --- !u!95 &2924215761749898580 stripped
 Animator:
@@ -137,6 +139,24 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 942619144412026909}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8448500863181190548 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8659227859175845257, guid: 32e16e64a87d03d449ffe3f441649a53,
+    type: 3}
+  m_PrefabInstance: {fileID: 942619144412026909}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1080324603059262338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8448500863181190548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98e0982285bc4d4d8c428942806d72bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &9112130500424544046 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8313664116634416947, guid: 32e16e64a87d03d449ffe3f441649a53,

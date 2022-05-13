@@ -1,6 +1,7 @@
 ﻿using System;
 using Fabros.Ecs;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
@@ -9,6 +10,7 @@ using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Game.UI;
+using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
@@ -112,6 +114,16 @@ namespace Game.Client
                 return;
 
             ui.FoodText.text = $"Food Collected {data.Value}";       
+        }
+
+        public void OnDrawGizmos()
+        {
+            if (!Application.isPlaying)
+                return;
+            
+            var pos = unitEntity.EntityGet<PositionComponent>(world).value;
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(pos.WithY(1), 0.3f);
         }
     }
 }
