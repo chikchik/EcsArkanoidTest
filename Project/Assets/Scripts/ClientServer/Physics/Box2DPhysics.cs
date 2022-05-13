@@ -86,8 +86,9 @@ namespace Game.ClientServer.Physics
         [DllImport(DllName)]
         public static extern void ApplyLinearImpulseToCenter(IntPtr body, Vector2 force);
 
-        [DllImport(DllName)]
-        public static extern bool RayCast(IntPtr world, Vector2 origin, Vector2 direction, float distance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool RayCastClosest(IntPtr world, Vector2 origin, Vector2 direction,
+            ref RaycastOutputReturnType hit, float distance, UInt16 layerMask = 0);
 
         [DllImport(DllName)]
         public static extern void SetEnabled(IntPtr body, bool flag);

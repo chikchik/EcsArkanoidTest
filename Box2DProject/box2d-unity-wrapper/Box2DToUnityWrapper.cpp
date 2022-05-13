@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <vector>
 #include "box2d/headers/box2d.h"
 
 #ifdef _WIN32
@@ -7,17 +8,25 @@
     #define DllExport __attribute__((visibility("default")))
 #endif
 
+struct Vector2
+{
+    public : float x;
+    public : float y;
+};
+
+struct RaycastOutputReturnType
+{
+    public : b2Body* body;
+    public : Vector2 normal;
+    public : Vector2 point;
+    public : float fraction;
+};
+
 struct B2FilterReturnType
 {
     public : uint16 categoryBits;
     public : uint16 maskBits;
     public : int16 groupIndex;
-};
-
-struct Vector2
-{
-    public : float x;
-    public : float y;
 };
 
 struct BodyInfo
@@ -41,6 +50,63 @@ struct CollisionCallbackData
     public : int32 contactPointCount;
 
     public : Vector2 normal;
+};
+
+Vector2 GetUnityVectorFromB2d(const b2Vec2 &b2vec);
+
+class RayCastClosestCallback : public b2RayCastCallback
+{
+public:
+    RaycastOutputReturnType m_hit;
+    uint16 m_layerMask;
+    bool m_isHit = false;
+
+    RayCastClosestCallback(uint16 layerMask)
+    {
+        m_layerMask = layerMask;
+    }
+    
+    float ReportFixture (b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction)
+    {
+        b2Filter filter = fixture->GetFilterData();
+        
+        if ((m_layerMask & filter.maskBits) != 0) return 1;
+
+        m_hit.body = fixture->GetBody();
+        m_hit.normal = GetUnityVectorFromB2d(normal);
+        m_hit.point = GetUnityVectorFromB2d(point);
+        m_hit.fraction = fraction;
+        m_isHit = true;
+
+        return fraction;
+    }
+};
+
+class RayCastAnyCallback : public b2RayCastCallback
+{
+public:
+    float ReportFixture (b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction)
+    {
+        return 0.0f;
+    }
+};
+
+class RayCastMultipleCallback : public b2RayCastCallback {
+public:
+    std::vector<RaycastOutputReturnType> foundBodies;
+    
+    float ReportFixture (b2Fixture *fixture,
+        const b2Vec2 &point, const b2Vec2 &normal, float fraction) {
+        RaycastOutputReturnType m_hit;
+        m_hit.body = fixture->GetBody();
+        m_hit.normal = GetUnityVectorFromB2d(normal);
+        m_hit.point = GetUnityVectorFromB2d(point);
+        m_hit.fraction = fraction;
+
+        foundBodies.push_back(m_hit);
+
+        return 1.0f;
+    }
 };
 
 typedef void (__stdcall * Callback)(CollisionCallbackData);
@@ -145,6 +211,16 @@ class MyContactListener : public b2ContactListener
     Callback m_callbackPreSolve = NULL;
     Callback m_callbackPostSolve = NULL;
 };
+
+Vector2 GetUnityVectorFromB2d(const b2Vec2 &b2vec)
+{
+    Vector2 vec
+    {
+        b2vec.x,
+        b2vec.y
+    };
+    return vec;
+}
 
 extern "C"
 {
@@ -425,27 +501,26 @@ extern "C"
         return filterResult;
     }
 
-    DllExport bool RayCast(b2World* world, Vector2 origin, Vector2 direction, float distance)
+    DllExport bool RayCastClosest(b2World* world, Vector2 origin, Vector2 direction,
+        RaycastOutputReturnType* hit, float distance, uint16 layerMask)
     {
         b2Vec2 position(origin.x, origin.y);
-        b2RayCastOutput output;
         
         b2RayCastInput ray;
         ray.p1.Set(position.x, position.y);
         ray.p2.Set(position.x + direction.x * distance, position.y + direction.y * distance);
         ray.maxFraction = distance;
 
-        for (b2Body* body = world -> GetBodyList(); body; body = body -> GetNext())
-        {
-            b2Fixture fixture = body -> GetFixtureList()[0];
-            bool hit = fixture.RayCast(&output, ray, 0);
+        RayCastClosestCallback callback(layerMask);
+        world -> RayCast(&callback, ray.p1, ray.p2);
 
-            if(hit)
-            {
-                return true;
-            } 
-        }
+        if (!callback.m_isHit) return false;
 
-        return false;
+        hit -> body = callback.m_hit.body;
+        hit -> normal = callback.m_hit.normal;
+        hit -> point = callback.m_hit.point;
+        hit -> fraction = callback.m_hit.fraction;
+
+        return true;
     }
 }
