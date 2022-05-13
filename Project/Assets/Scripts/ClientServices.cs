@@ -246,9 +246,9 @@ namespace Game.Client
                 var rigidBody = cubeView.GetComponent<Rigidbody2D>();
 
                 cubeView.TryGetComponent(out Box2dPhysicsExtend rigidbodyExtend);
-                AddRbDefinitionComponentFromUnityRb(world, rigidBodyEntity, rigidBody, rigidbodyExtend);
-
                 var boxCollider = cubeView.GetComponent<BoxCollider2D>();
+                
+                AddRbDefinitionComponentFromUnity(world, rigidBodyEntity, rigidBody, boxCollider, rigidbodyExtend);
                 if (boxCollider)
                 {
                     ref var boxColliderComponent = ref rigidBodyEntity.EntityAddComponent<BoxColliderComponent>(world);
@@ -265,9 +265,10 @@ namespace Game.Client
                 AddTransformComponentsToEntityFromView(world, rigidBodyEntity, sphereView);
                 
                 var rigidBody = sphereView.GetComponent<Rigidbody2D>();
-                AddRbDefinitionComponentFromUnityRb(world, rigidBodyEntity, rigidBody);
+                
                 
                 var circleCollider = sphereView.GetComponent<CircleCollider2D>();
+                AddRbDefinitionComponentFromUnity(world, rigidBodyEntity, rigidBody, circleCollider);
                 if (circleCollider)
                 {
                     ref var circleColliderComponent = ref rigidBodyEntity.EntityAddComponent<CircleColliderComponent>(world);
@@ -284,19 +285,18 @@ namespace Game.Client
                 AddTransformComponentsToEntityFromView(world, rigidBodyEntity, polygonView);
 
                 var rigidBody = polygonView.GetComponent<Rigidbody2D>();
-                AddRbDefinitionComponentFromUnityRb(world, rigidBodyEntity, rigidBody);
+                
                 
                 var polygonCollider2D = polygonView.GetComponent<PolygonCollider2D>();
-                
+                AddRbDefinitionComponentFromUnity(world, rigidBodyEntity, rigidBody, polygonCollider2D);
                 if (polygonCollider2D)
                 {
                     ref var polygonColliderComponent = ref rigidBodyEntity.EntityAddComponent<PolygonColliderComponent>(world);
                     PhysicsShapeGroup2D physicsShapeGroup2D = new PhysicsShapeGroup2D();
                     var shapes = polygonCollider2D.GetShapes(physicsShapeGroup2D);
 
-                    polygonColliderComponent.anchors = new int[shapes];
-                    polygonColliderComponent.vertices = new List<Vector2>();
-                    Debug.Log($"PolygonView {polygonColliderComponent.vertices}");
+                    polygonColliderComponent.Anchors = new int[shapes];
+                    polygonColliderComponent.Vertices = new List<Vector2>();
                     var vertices = new List<Vector2>();
                     for (int i = 0; i < shapes; i++)
                     {
@@ -319,9 +319,9 @@ namespace Game.Client
                 AddTransformComponentsToEntityFromView(world, rigidBodyEntity, staticWallView);
 
                 var rigidBody = staticWallView.GetComponent<Rigidbody2D>();
-                AddRbDefinitionComponentFromUnityRb(world, rigidBodyEntity, rigidBody);
-                
                 var polygonCollider2D = staticWallView.GetComponent<PolygonCollider2D>();
+                
+                AddRbDefinitionComponentFromUnity(world, rigidBodyEntity, rigidBody, polygonCollider2D);
                 
                 if (polygonCollider2D)
                 {
@@ -347,41 +347,30 @@ namespace Game.Client
                         throw new ArgumentOutOfRangeException(nameof(type2D), type2D, null);
                 }
             }
-
-            void AddRbDefinitionComponentFromUnityRb(EcsWorld world, int rigidBodyEntity,
-                Rigidbody2D rigidBody, Box2dPhysicsExtend rigidbodyExtend = null)
+            
+            void AddRbDefinitionComponentFromUnity(EcsWorld world, int rigidBodyEntity,
+                Rigidbody2D rigidBody, Collider2D collider, Box2dPhysicsExtend rigidbodyExtend = null)
             {
                 if (!rigidBody) return;
-
-                float density = 1f;
-                float restitutionThreshold = 0.5f;
-                float linearDamping = 2.0f;
-                float angularDamping = 5.0f;
+                ref var rigidBodyDefinitionComponent =
+                        ref rigidBodyEntity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
+                
                 if (rigidbodyExtend)
                 {
-                    density = rigidbodyExtend.Density;
-                    restitutionThreshold = rigidbodyExtend.RestitutionThreshold;
-                    linearDamping = rigidbodyExtend.LinearDamping;
-                    angularDamping = rigidbodyExtend.AngularDamping;
+                    rigidBodyDefinitionComponent.density = rigidbodyExtend.Density;
+                    rigidBodyDefinitionComponent.restitutionThreshold = rigidbodyExtend.RestitutionThreshold;
+                    rigidBodyDefinitionComponent.linearDamping = rigidbodyExtend.LinearDamping;
+                    rigidBodyDefinitionComponent.angularDamping = rigidbodyExtend.AngularDamping;
                 }
                 
-                ref var rigidBodyDefinitionComponent =
-                    ref rigidBodyEntity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
                 rigidBodyDefinitionComponent.bodyType = GetRBBodyType(rigidBody.bodyType);
-                rigidBodyDefinitionComponent.density = density;
-                var friction = 0f;
-                var restitution = 0f;
                 if (rigidBody.sharedMaterial)
                 {
-                    friction = rigidBody.sharedMaterial.friction;
-                    restitution = rigidBody.sharedMaterial.bounciness;
+                    rigidBodyDefinitionComponent.friction = rigidBody.sharedMaterial.friction;
+                    rigidBodyDefinitionComponent.restitution = rigidBody.sharedMaterial.bounciness;
                 }
 
-                rigidBodyDefinitionComponent.friction = friction;
-                rigidBodyDefinitionComponent.restitution = restitution;
-                rigidBodyDefinitionComponent.restitutionThreshold = restitutionThreshold;
-                rigidBodyDefinitionComponent.linearDamping = linearDamping;
-                rigidBodyDefinitionComponent.angularDamping = angularDamping;
+                rigidBodyDefinitionComponent.IsTrigger = collider.isTrigger;
             }
             void DeleteFromViewIfPlaying(GameObject view, Collider2D collider2D,
                 Rigidbody2D rigidBody)

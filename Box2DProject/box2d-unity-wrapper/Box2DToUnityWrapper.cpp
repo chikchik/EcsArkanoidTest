@@ -7,6 +7,13 @@
     #define DllExport __attribute__((visibility("default")))
 #endif
 
+struct B2FilterReturnType
+{
+    public : uint16 categoryBits;
+    public : uint16 maskBits;
+    public : int16 groupIndex;
+};
+
 struct Vector2
 {
     public : float x;
@@ -237,7 +244,8 @@ extern "C"
         return shape;
     }
 
-    DllExport void AddFixtureToBody(b2Body* body, b2Shape* shape, float density, float friction, float restitution, float restitutionThreshold, bool isTrigger)
+    DllExport void AddFixtureToBody(b2Body* body, b2Shape* shape, float density, float friction, float restitution,
+        float restitutionThreshold, bool isTrigger, b2Filter filter)
     {
         b2FixtureDef fixtureDef;
         fixtureDef.shape = shape;
@@ -246,6 +254,7 @@ extern "C"
         fixtureDef.restitution = restitution;
         fixtureDef.restitutionThreshold = restitutionThreshold;
         fixtureDef.isSensor = isTrigger;
+        fixtureDef.filter = filter;
 
         body -> CreateFixture(&fixtureDef);
         b2Free(shape);
@@ -400,6 +409,20 @@ extern "C"
     DllExport void SetBullet(b2Body* body, bool flag)
     {
         body -> SetBullet(flag);
+    }
+
+    DllExport B2FilterReturnType GetBodyFixturesFilterData(b2Body* body)
+    {
+        b2Fixture fixture = body -> GetFixtureList()[0];
+        b2Filter filter = fixture.GetFilterData();
+        B2FilterReturnType filterResult
+        {
+            filterResult.categoryBits = filter.categoryBits,
+            filterResult.maskBits = filter.maskBits,
+            filterResult.groupIndex = filter.groupIndex
+        };
+        
+        return filterResult;
     }
 
     DllExport bool RayCast(b2World* world, Vector2 origin, Vector2 direction, float distance)

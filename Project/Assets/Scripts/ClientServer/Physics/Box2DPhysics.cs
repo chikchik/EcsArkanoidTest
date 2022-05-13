@@ -27,7 +27,7 @@ namespace Game.ClientServer.Physics
 
         [DllImport(DllName)]
         public static extern void AddFixtureToBody(IntPtr body, IntPtr shape, float density,
-            float friction, float restitution, float restitutionThreshold, bool isTrigger);
+            float friction, float restitution, float restitutionThreshold, bool isTrigger, B2Filter filter);
 
         [DllImport(DllName)]
         public static extern IntPtr CreateCircleShape(float radius);
@@ -110,7 +110,6 @@ namespace Game.ClientServer.Physics
         [DllImport(DllName)]
         public static extern void SetAngularDamping(IntPtr body, float val);
 
-
         public delegate void CallbackDelegate(CollisionCallbackData callbackData);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
@@ -124,5 +123,9 @@ namespace Game.ClientServer.Physics
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern void SetPostSolveCallback(IntPtr worldPtr, CallbackDelegate callback);
+
+        [DllImport(DllName)]
+        public static extern B2Filter GetBodyFixturesFilterData(IntPtr body);
+        
     }
 }

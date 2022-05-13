@@ -108,15 +108,22 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         }
 
         private void AddFixtureToBody(IntPtr bodyReference, IntPtr shape,
-            RigidbodyDefinitionComponent rigidbodyDefinitionComponent, bool isTrigger = false)
+            RigidbodyDefinitionComponent rigidbodyDefinitionComponent)
         {
             if (shape == IntPtr.Zero) return;
+
+            B2Filter filter;
+            filter.CategoryBits = rigidbodyDefinitionComponent.CategoryBits;
+            filter.MaskBits = rigidbodyDefinitionComponent.MaskBits;
+            filter.GroupIndex = rigidbodyDefinitionComponent.GroupIndex;
+            
             Box2DPhysics.AddFixtureToBody(bodyReference, shape,
                 rigidbodyDefinitionComponent.density,
                 rigidbodyDefinitionComponent.friction,
                 rigidbodyDefinitionComponent.restitution,
                 rigidbodyDefinitionComponent.restitutionThreshold,
-                isTrigger);
+                rigidbodyDefinitionComponent.IsTrigger,
+                filter);
         }
     }
 }
