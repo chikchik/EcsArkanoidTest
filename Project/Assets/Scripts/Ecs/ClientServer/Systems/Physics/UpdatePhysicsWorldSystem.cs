@@ -20,7 +20,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             var deltaTime = world.GetUnique<TickDeltaComponent>().Value.Seconds;
 
             Box2DPhysics.UpdateWorld(
-                physicsWorld.worldReference, 
+                physicsWorld.WorldReference, 
                 deltaTime, 
                 Config.POSITION_ITERATIONS, 
                 Config.VELOCITY_ITERATIONS);
@@ -38,16 +38,16 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             
             foreach (var entity in filter)
             {
-                var bodyReference = bodyReferenceComponent.Get(entity).bodyReference;
+                var bodyReference = bodyReferenceComponent.Get(entity).BodyReference;
                 var bodyInfo = Box2DPhysics.GetBodyInfo(bodyReference);
                 ref var positionComponent = ref poolPosition.GetRef(entity);
                 ref var rotationComponent = ref poolRotation.GetRef(entity);
                 ref var rigidBodyComponent = ref poolRigidBodyComponent.GetRef(entity);
-                positionComponent.value.x = bodyInfo.position.x;
-                positionComponent.value.z = bodyInfo.position.y;
-                rigidBodyComponent.linearVelocity = bodyInfo.linearVelocity;
-                rigidBodyComponent.angularVelocity = bodyInfo.angularVelocity;
-                rotationComponent.value = bodyInfo.angle;
+                positionComponent.value.x = bodyInfo.Position.x;
+                positionComponent.value.z = bodyInfo.Position.y;
+                rigidBodyComponent.LinearVelocity = bodyInfo.LinearVelocity;
+                rigidBodyComponent.AngularVelocity = bodyInfo.AngularVelocity;
+                rotationComponent.value = bodyInfo.Angle;
             }
         }
     }

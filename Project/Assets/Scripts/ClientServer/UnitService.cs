@@ -37,14 +37,14 @@ namespace Game.ClientServer
             speedComponent.speed = 2f;
             
             ref var rigidBodyDefinitionComponent = ref entity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
-            rigidBodyDefinitionComponent.bodyType = BodyType.Dynamic;
-            rigidBodyDefinitionComponent.density = 985f;
-            rigidBodyDefinitionComponent.friction = 0.3f;
-            rigidBodyDefinitionComponent.restitution = 0;
-            rigidBodyDefinitionComponent.restitutionThreshold = 0.5f;   
+            rigidBodyDefinitionComponent.BodyType = BodyType.Dynamic;
+            rigidBodyDefinitionComponent.Density = 985f;
+            rigidBodyDefinitionComponent.Friction = 0.3f;
+            rigidBodyDefinitionComponent.Restitution = 0;
+            rigidBodyDefinitionComponent.RestitutionThreshold = 0.5f;   
 
             ref var boxColliderComponent = ref entity.EntityAddComponent<BoxColliderComponent>(world);
-            boxColliderComponent.size = new Vector2(0.3f, 0.3f);
+            boxColliderComponent.Size = new Vector2(0.3f, 0.3f);
 
             Console.WriteLine($"GenerateUnitEntity {entity}");
 

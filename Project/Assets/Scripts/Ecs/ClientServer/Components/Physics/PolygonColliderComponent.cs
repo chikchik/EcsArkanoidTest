@@ -6,7 +6,7 @@ namespace Game.Ecs.ClientServer.Components.Physics
     [System.Serializable]
     public struct PolygonColliderComponent
     {
-        public int[] anchors;
-        public List<Vector2> vertices;
+        public int[] Anchors;
+        public List<Vector2> Vertices;
     }
 }

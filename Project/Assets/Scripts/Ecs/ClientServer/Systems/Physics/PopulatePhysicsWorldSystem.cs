@@ -47,19 +47,19 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 IntPtr shape = IntPtr.Zero;
                 if (poolBoxCollider.Has(entity))
                 {
-                    shape = Box2DPhysics.CreateBoxShape(poolBoxCollider.Get(entity).size / 2f);
+                    shape = Box2DPhysics.CreateBoxShape(poolBoxCollider.Get(entity).Size / 2f);
                     AddFixtureToBody(bodyReference, shape, rigidbodyDefinitionComponent);
-                    Box2DPhysics.SetAngularDamping(bodyReference, rigidbodyDefinitionComponent.angularDamping);
+                    Box2DPhysics.SetAngularDamping(bodyReference, rigidbodyDefinitionComponent.AngularDamping);
                 }
                 else if (poolCircleCollider.Has(entity))
                 {
-                    shape = Box2DPhysics.CreateCircleShape(poolCircleCollider.Get(entity).radius);
+                    shape = Box2DPhysics.CreateCircleShape(poolCircleCollider.Get(entity).Radius);
                     AddFixtureToBody(bodyReference, shape, rigidbodyDefinitionComponent);
                 }
                 else if (poolPolygonCollider.Has(entity))
                 {
-                    var vertices = poolPolygonCollider.Get(entity).vertices;
-                    var anchors = poolPolygonCollider.Get(entity).anchors;
+                    var vertices = poolPolygonCollider.Get(entity).Vertices;
+                    var anchors = poolPolygonCollider.Get(entity).Anchors;
 
                     int index = 0;
                     List<Vector2> shapeVertices = new List<Vector2>();
@@ -76,13 +76,13 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 }
                 else if (poolChainCollider.Has(entity))
                 {
-                    var vertices = poolChainCollider.Get(entity).points;
+                    var vertices = poolChainCollider.Get(entity).Points;
                     
                     shape = Box2DPhysics.CreateChainShape(vertices, vertices.Length);
                     AddFixtureToBody(bodyReference, shape, rigidbodyDefinitionComponent);
                 }
                 
-                Box2DPhysics.SetLinearDamping(bodyReference, rigidbodyDefinitionComponent.linearDamping);
+                Box2DPhysics.SetLinearDamping(bodyReference, rigidbodyDefinitionComponent.LinearDamping);
                 AddNewEntities(entity, world, bodyReference);
             }
         }
@@ -90,7 +90,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         private void AddNewEntities(int entity, EcsWorld world, IntPtr bodyReference)
         {
             ref var bodyReferenceComponent = ref entity.EntityAddComponent<BodyReferenceComponent>(world);
-            bodyReferenceComponent.bodyReference = bodyReference;
+            bodyReferenceComponent.BodyReference = bodyReference;
 
             ref var rigidbodyComponent = ref entity.EntityReplace<RigidbodyComponent>(world);
         }
@@ -99,8 +99,8 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             PositionComponent positionComponent, float angle, int entity)
         {
             var bodyReference = Box2DPhysics.CreateBody(
-                physicsWorld.worldReference,
-                (int) rigidbodyDefinitionComponent.bodyType,
+                physicsWorld.WorldReference,
+                (int) rigidbodyDefinitionComponent.BodyType,
                 new Vector2(positionComponent.value.x, positionComponent.value.z),
                 angle,
                 entity);
@@ -118,10 +118,10 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             filter.GroupIndex = rigidbodyDefinitionComponent.GroupIndex;
             
             Box2DPhysics.AddFixtureToBody(bodyReference, shape,
-                rigidbodyDefinitionComponent.density,
-                rigidbodyDefinitionComponent.friction,
-                rigidbodyDefinitionComponent.restitution,
-                rigidbodyDefinitionComponent.restitutionThreshold,
+                rigidbodyDefinitionComponent.Density,
+                rigidbodyDefinitionComponent.Friction,
+                rigidbodyDefinitionComponent.Restitution,
+                rigidbodyDefinitionComponent.RestitutionThreshold,
                 rigidbodyDefinitionComponent.IsTrigger,
                 filter);
         }

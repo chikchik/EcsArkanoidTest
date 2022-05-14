@@ -25,19 +25,19 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             
             foreach (var entity in filter)
             {
-                var bodyReference = poolBodyReference.Get(entity).bodyReference;
+                var bodyReference = poolBodyReference.Get(entity).BodyReference;
                 var positionComponent = poolPosition.Get(entity);
                 var rotationComponent = poolRotation.Get(entity);
                 ref var rigidBodyComponent = ref poolRigidbody.GetRef(entity);
 
                 var bodyInfo = new BodyInfo
                 {
-                    linearVelocity = rigidBodyComponent.linearVelocity,
-                    angularVelocity = rigidBodyComponent.angularVelocity,
-                    angle = rotationComponent.value
+                    LinearVelocity = rigidBodyComponent.LinearVelocity,
+                    AngularVelocity = rigidBodyComponent.AngularVelocity,
+                    Angle = rotationComponent.value
                 };
-                bodyInfo.position.x = positionComponent.value.x;
-                bodyInfo.position.y = positionComponent.value.z;
+                bodyInfo.Position.x = positionComponent.value.x;
+                bodyInfo.Position.y = positionComponent.value.z;
                 
                 Box2DPhysics.SetBodyInfo(bodyReference, bodyInfo);
             }

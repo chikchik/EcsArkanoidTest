@@ -30,7 +30,7 @@ namespace Game.Ecs.ClientServer.Systems
         private void SetLinearVelToBody(int entity, EcsPool<BodyReferenceComponent> poolBodyReference,
             EcsPool<MoveDirectionComponent> poolMoveDirection, EcsPool<SpeedComponent> poolSpeed)
         {
-            var bodyReference = poolBodyReference.Get(entity).bodyReference;
+            var bodyReference = poolBodyReference.Get(entity).BodyReference;
             var moveDirectionComponent = poolMoveDirection.Get(entity);
             var speedComponent = poolSpeed.Get(entity);
 

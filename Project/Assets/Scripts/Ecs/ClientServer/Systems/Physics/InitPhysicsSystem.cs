@@ -26,17 +26,17 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             if (!_ecsWorld.HasUnique<PhysicsWorldComponent>())
             {
                 ref var physicsWorldComponent = ref _ecsWorld.AddUnique<PhysicsWorldComponent>();
-                physicsWorldComponent.worldReference = Box2DPhysics.CreateWorld(Config.GRAVITY);
+                physicsWorldComponent.WorldReference = Box2DPhysics.CreateWorld(Config.GRAVITY);
                 
                 _cbkBeginContactDelegate = SetBeginContactCallback;
                 _cbkEndContactDelegate = SetEndContactCallback;
                 _cbkPostSolveDelegate = SetPreSolveCallback;
                 _cbkPreSolveDelegate = SetPostSolveCallback;
                 
-                Box2DPhysics.SetBeginContactCallback(physicsWorldComponent.worldReference, _cbkBeginContactDelegate);
-                Box2DPhysics.SetEndContactCallback(physicsWorldComponent.worldReference, _cbkEndContactDelegate);
-                Box2DPhysics.SetPostSolveCallback(physicsWorldComponent.worldReference, _cbkPostSolveDelegate);
-                Box2DPhysics.SetPreSolveCallback(physicsWorldComponent.worldReference, _cbkPreSolveDelegate);
+                Box2DPhysics.SetBeginContactCallback(physicsWorldComponent.WorldReference, _cbkBeginContactDelegate);
+                Box2DPhysics.SetEndContactCallback(physicsWorldComponent.WorldReference, _cbkEndContactDelegate);
+                Box2DPhysics.SetPostSolveCallback(physicsWorldComponent.WorldReference, _cbkPostSolveDelegate);
+                Box2DPhysics.SetPreSolveCallback(physicsWorldComponent.WorldReference, _cbkPreSolveDelegate);
             }
         }
         

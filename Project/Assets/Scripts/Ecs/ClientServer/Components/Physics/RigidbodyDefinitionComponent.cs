@@ -7,13 +7,13 @@ namespace Game.Ecs.ClientServer.Components.Physics
     [System.Serializable]
     public struct RigidbodyDefinitionComponent : IEcsAutoReset<RigidbodyDefinitionComponent>
     {
-        public BodyType bodyType;
-        public float density;
-        public float friction;
-        public float restitution;
-        public float restitutionThreshold;
-        public float linearDamping;
-        public float angularDamping;
+        public BodyType BodyType;
+        public float Density;
+        public float Friction;
+        public float Restitution;
+        public float RestitutionThreshold;
+        public float LinearDamping;
+        public float AngularDamping;
         public UInt16 CategoryBits;
         public UInt16 MaskBits;
         public Int16 GroupIndex;
@@ -21,13 +21,13 @@ namespace Game.Ecs.ClientServer.Components.Physics
         
         public void AutoReset(ref RigidbodyDefinitionComponent c)
         {
-            c.bodyType = BodyType.Static;
-            c.density = 1f;
-            c.restitutionThreshold = 0.5f;
-            c.linearDamping = 2.0f;
-            c.angularDamping = 5.0f;
-            c.friction = 0f;
-            c.restitution = 0f;
+            c.BodyType = BodyType.Static;
+            c.Density = 1f;
+            c.RestitutionThreshold = 0.5f;
+            c.LinearDamping = 2.0f;
+            c.AngularDamping = 5.0f;
+            c.Friction = 0f;
+            c.Restitution = 0f;
             c.CategoryBits = 0x0001;
             c.MaskBits = 0x0001;
             c.GroupIndex = 0;

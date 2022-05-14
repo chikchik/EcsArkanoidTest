@@ -252,7 +252,7 @@ namespace Game.Client
                 if (boxCollider)
                 {
                     ref var boxColliderComponent = ref rigidBodyEntity.EntityAddComponent<BoxColliderComponent>(world);
-                    boxColliderComponent.size = cubeView.transform.lossyScale;
+                    boxColliderComponent.Size = cubeView.transform.lossyScale;
                 }
 
                 DeleteFromViewIfPlaying(cubeView.gameObject, boxCollider, rigidBody);
@@ -272,7 +272,7 @@ namespace Game.Client
                 if (circleCollider)
                 {
                     ref var circleColliderComponent = ref rigidBodyEntity.EntityAddComponent<CircleColliderComponent>(world);
-                    circleColliderComponent.radius = sphereView.transform.lossyScale.x / 2;
+                    circleColliderComponent.Radius = sphereView.transform.lossyScale.x / 2;
                 }
                 
                 DeleteFromViewIfPlaying(sphereView.gameObject, circleCollider, rigidBody);
@@ -301,10 +301,10 @@ namespace Game.Client
                     for (int i = 0; i < shapes; i++)
                     {
                         physicsShapeGroup2D.GetShapeVertices(i, vertices);
-                        polygonColliderComponent.anchors[i] = vertices.Count - 1;
+                        polygonColliderComponent.Anchors[i] = vertices.Count - 1;
                         foreach (var vector2 in vertices)
                         {
-                            polygonColliderComponent.vertices.Add(vector2);
+                            polygonColliderComponent.Vertices.Add(vector2);
                         }
                     }
                 }
@@ -327,7 +327,7 @@ namespace Game.Client
                 {
                     ref var chainColliderComponent =
                         ref rigidBodyEntity.EntityAddComponent<ChainColliderComponent>(world);
-                    chainColliderComponent.points = polygonCollider2D.points;
+                    chainColliderComponent.Points = polygonCollider2D.points;
                 }
                 
                 DeleteFromViewIfPlaying(staticWallView.gameObject, polygonCollider2D, rigidBody);
@@ -357,17 +357,17 @@ namespace Game.Client
                 
                 if (rigidbodyExtend)
                 {
-                    rigidBodyDefinitionComponent.density = rigidbodyExtend.Density;
-                    rigidBodyDefinitionComponent.restitutionThreshold = rigidbodyExtend.RestitutionThreshold;
-                    rigidBodyDefinitionComponent.linearDamping = rigidbodyExtend.LinearDamping;
-                    rigidBodyDefinitionComponent.angularDamping = rigidbodyExtend.AngularDamping;
+                    rigidBodyDefinitionComponent.Density = rigidbodyExtend.Density;
+                    rigidBodyDefinitionComponent.RestitutionThreshold = rigidbodyExtend.RestitutionThreshold;
+                    rigidBodyDefinitionComponent.LinearDamping = rigidbodyExtend.LinearDamping;
+                    rigidBodyDefinitionComponent.AngularDamping = rigidbodyExtend.AngularDamping;
                 }
                 
-                rigidBodyDefinitionComponent.bodyType = GetRBBodyType(rigidBody.bodyType);
+                rigidBodyDefinitionComponent.BodyType = GetRBBodyType(rigidBody.bodyType);
                 if (rigidBody.sharedMaterial)
                 {
-                    rigidBodyDefinitionComponent.friction = rigidBody.sharedMaterial.friction;
-                    rigidBodyDefinitionComponent.restitution = rigidBody.sharedMaterial.bounciness;
+                    rigidBodyDefinitionComponent.Friction = rigidBody.sharedMaterial.friction;
+                    rigidBodyDefinitionComponent.Restitution = rigidBody.sharedMaterial.bounciness;
                 }
 
                 rigidBodyDefinitionComponent.IsTrigger = collider.isTrigger;
