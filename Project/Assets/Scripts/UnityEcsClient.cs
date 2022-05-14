@@ -1,6 +1,7 @@
 ﻿using System;
 using Fabros.Ecs;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Base.Components;
 using Game.Ecs.Client.Components;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
@@ -118,6 +119,13 @@ namespace Game.Client
             client.OnGUI();
         }
 
+        private void OnDrawGizmos()
+        {
+            if (!Application.isPlaying)
+                return;
+            DebugDraw.Draw(world);
+        }
+
 
         public static void CheckInput(EcsWorld world, 
             int unitEntity, 
@@ -140,7 +148,6 @@ namespace Game.Client
             moveDirection = forward * moveDirection.z + right * moveDirection.x;
 
 
-            
             if (playerInput.HasTouch)
             {
                 var ray = camera.ScreenPointToRay(playerInput.TouchPosition);

@@ -76,6 +76,9 @@ namespace Game.Client
                 ref var animatorComponent = ref entity.EntityAddComponent<AnimatorComponent>(world);
                 animatorComponent.animator = characterView.Animator;
 
+                var position = entity.EntityGet<PositionComponent>(world).value;
+                entity.EntityAdd<RootMotionComponent>(world).Position = position; 
+
 
                 entity.EntityReplaceComponent<LerpComponent>(world).value = 1.0f;
             }

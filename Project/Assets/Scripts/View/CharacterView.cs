@@ -1,6 +1,5 @@
 using System;
 using Game.Utils;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 
 namespace Game.View
@@ -72,7 +71,7 @@ namespace Game.View
 
         public void OnDrawGizmos()
         {
-            Gizmos.DrawWireSphere(transform.position.WithY(1f), 0.3f);
+            Gizmos.DrawWireSphere(transform.position.WithY(1f), 0.1f);
             //Gizmos.color = Color.red;
             //Gizmos.DrawWireSphere(Animator.transform.position.WithY(1f) - Animator.deltaPosition, 0.3f);
         }

@@ -44,11 +44,12 @@ namespace Game.Ecs.ClientServer.Systems
                 }
 
                 var speedComponent = poolSpeed.Get(buttonEntity);
-                ref var progressComponent = ref poolProgress.GetRef(buttonEntity);
+                var progressComponent = poolProgress.Get(buttonEntity);
                 
                 var direction = pressed ? 1f : -1f;
                 var progress = progressComponent.progress + speedComponent.speed * deltaTime * direction;
-                progressComponent.progress = Math.Clamp(progress, 0, 1);
+                
+                poolProgress.ReplaceIfChanged(buttonEntity, new ProgressComponent{progress = Math.Clamp(progress, 0, 1)});
             }
         }
     }

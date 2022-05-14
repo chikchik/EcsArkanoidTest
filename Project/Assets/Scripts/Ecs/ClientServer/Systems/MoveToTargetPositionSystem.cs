@@ -24,7 +24,7 @@ namespace Game.Ecs.ClientServer.Systems
 
             foreach (var entity in filter)
             {
-                ref var targetPositionComponent = ref poolTargetPosition.GetRef(entity);
+                var targetPositionComponent = poolTargetPosition.Get(entity);
                 var positionComponent = poolPosition.Get(entity);
 
                 var direction = targetPositionComponent.Value - positionComponent.value;

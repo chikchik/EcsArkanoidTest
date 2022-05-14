@@ -1,7 +1,6 @@
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Other;
-using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -31,17 +30,17 @@ namespace Game.Ecs.ClientServer.Systems
 
             foreach (var entity in filter)
             {
-                ref var positionComponent = ref poolPosition.GetRef(entity);
                 var moveDirectionComponent = poolMoveDirection.Get(entity);
                 var speedComponent = poolSpeed.Get(entity);
 
                 var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).value.magnitude;
                 //var dir = moveDirectionComponent.value * deltaTime * speedComponent.speed;
                 var dir = moveDirectionComponent.value * deltaTime * speed;//speedComponent.speed;
-                positionComponent.value += dir;
-                
-                if (dir.magnitude > 0)
+                if (dir.sqrMagnitude > 0)
+                {
+                    poolPosition.GetRef(entity).value += dir;
                     poolMoving.Replace(entity, new MovingComponent());
+                }
                 else
                     poolMoving.Del(entity);
 

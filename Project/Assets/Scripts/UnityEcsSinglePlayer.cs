@@ -1,7 +1,6 @@
 ﻿using System;
 using Fabros.Ecs;
 using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
@@ -89,7 +88,7 @@ namespace Game.Client
             var globalListenerEntity = world.NewLocalEntity();
             globalListenerEntity.AddAnyChangedListener<FoodCollectedComponent>(world, this);
         }
-
+        
         public void Update()
         {
             UnityEcsClient.CheckInput(world, unitEntity, playerInput, camera, input =>
@@ -120,10 +119,8 @@ namespace Game.Client
         {
             if (!Application.isPlaying)
                 return;
-            
-            var pos = unitEntity.EntityGet<PositionComponent>(world).value;
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(pos.WithY(1), 0.3f);
+        
+            DebugDraw.Draw(world);
         }
     }
 }

@@ -22,14 +22,13 @@ namespace Game.Ecs.ClientServer.Systems
 
             foreach (var entity in filter)
             {
-                ref var positionComponent = ref poolPosition.GetRef(entity);
                 var moveInfoComponent = poolMoveInfo.Get(entity);
                 var progressComponent = poolProgress.Get(entity);
 
-                positionComponent.value = Vector3.Lerp(
+                poolPosition.ReplaceIfChanged(entity, new PositionComponent{value = Vector3.Lerp(
                     moveInfoComponent.startPoint,
                     moveInfoComponent.endPoint,
-                    progressComponent.progress);
+                    progressComponent.progress)});
             }
         }
     }

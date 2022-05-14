@@ -1,4 +1,5 @@
 ﻿using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Base.Components;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Protocol;
@@ -25,6 +26,11 @@ namespace Game.ClientServer
 
             if (input.hasInteraction) 
                 inputEntity.EntityAddComponent<InputActionComponent>(inputWorld);
+
+            if (input.hasUnitPos)
+            {
+                inputEntity.EntityAdd<PositionComponent>(inputWorld).value = input.unitPos;
+            }
         }
     }
 }

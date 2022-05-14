@@ -313,7 +313,7 @@ namespace Game.Fabros.Net.Client
                 Leo.Tick(clientSystems, InputWorld, MainWorld, Leo.Inputs.ToArray(), Config.SyncDataLogging);
 
 
-                if (Leo.GetCurrentTick(MainWorld).Value % 5 == 0)
+               // if (Leo.GetCurrentTick(MainWorld).Value % 5 == 0)
                 {
                     //ping
                     var packet = new Packet();
@@ -321,6 +321,13 @@ namespace Game.Fabros.Net.Client
                     packet.input = new UserInput();
                     packet.isPing = true;
                     packet.input.time = Leo.GetCurrentTick(MainWorld);
+                    if (MainWorld.HasUnique<RootMotionComponent>())
+                    {
+                        packet.input.player = playerID;
+                        packet.input.hasUnitPos = true;
+                        packet.input.unitPos = MainWorld.GetUnique<RootMotionComponent>().Position;
+                    }
+
 
                     var data = P2P.BuildRequest(P2P.ADDR_SERVER, packet);
                     socket.Send(data);
@@ -400,6 +407,11 @@ namespace Game.Fabros.Net.Client
 
             //WorldMono.OnGui(currentWorld);
             GUILayout.EndVertical();
+        }
+
+        public void OnDrawGizmos()
+        {
+            
         }
     }
 }

@@ -26,14 +26,14 @@ namespace Game.Ecs.ClientServer.Systems
 
             foreach (var entity in filter)
             {
-                var gateComponent = poolGate.Get(entity);
+                //var gateComponent = poolGate.Get(entity);
                 if (poolOpened.Has(entity))
                     continue;
 
                 if (!CanOpenGate(entity, poolButtonLink, poolButton))
                     continue;
 
-                ref var progressComponent = ref poolProgress.GetRef(entity);
+                var progressComponent = poolProgress.Get(entity);
                 var speedComponent = poolSpeed.Get(entity);
 
                 var progress = progressComponent.progress + speedComponent.speed * deltaTime;
@@ -41,7 +41,7 @@ namespace Game.Ecs.ClientServer.Systems
                 if (progress >= 1f)
                     poolOpened.Add(entity);
 
-                progressComponent.progress = Math.Clamp(progress, 0, 1);
+                poolProgress.ReplaceIfChanged(entity, new ProgressComponent{progress = Math.Clamp(progress, 0, 1)});
             }
         }
 
@@ -49,7 +49,7 @@ namespace Game.Ecs.ClientServer.Systems
             EcsPool<ButtonLinkComponent> poolButtonLick,
             EcsPool<ButtonComponent> poolButton)
         {
-            var buttonIds = poolButtonLick.GetRef(gateEntity).buttonIds;
+            var buttonIds = poolButtonLick.Get(gateEntity).buttonIds;
 
             for (var i = 0; i < buttonIds.Length; i++)
             {

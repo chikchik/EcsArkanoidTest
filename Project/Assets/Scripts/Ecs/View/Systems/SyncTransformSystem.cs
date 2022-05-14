@@ -19,10 +19,12 @@ namespace Game.Ecs.Client.Systems
             var poolTransform = world.GetPool<TransformComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
             var poolLerp = world.GetPool<LerpComponent>();
+            var poolAverage = world.GetPool<AverageSpeedComponent>();
+            var poolMainPlayer = world.GetPool<IsMainPlayerComponent>();
 
             foreach (var entity in filter)
             {
-                var transform = poolTransform.GetRef(entity).transform;
+                var transform = poolTransform.Get(entity).transform;
                 var targetPosition = poolPosition.Get(entity).value;
                 var lerp = poolLerp.Has(entity) ? poolLerp.Get(entity).value : 1f;
                 lerp *= Time.deltaTime * 10;
@@ -30,7 +32,21 @@ namespace Game.Ecs.Client.Systems
                 //transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
                 //transform.position = targetPosition;
 
-                //poolPosition.GetRef(entity).value = transform.position;
+                if (poolAverage.Has(entity))
+                {
+                    //poolPosition.GetRef(entity).value = transform.position;
+
+                    if (poolMainPlayer.Has(entity))
+                    {
+                        world.ReplaceUnique(new RootMotionComponent {Position = transform.position});
+                    }
+                    
+                }
+                else
+                {
+                    transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
+                    //transform.position = targetPosition;
+                }
             }
         }
     }
