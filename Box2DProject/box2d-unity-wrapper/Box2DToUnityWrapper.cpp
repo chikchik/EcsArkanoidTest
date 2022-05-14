@@ -264,6 +264,11 @@ extern "C"
         return world;
     }
 
+    DllExport b2World* GetWorldFromBody(b2Body* body)
+    {
+        return body -> GetWorld();
+    }
+
     DllExport void DestroyWorld(b2World* world)
     {
         delete world -> GetContactListener();
@@ -283,6 +288,11 @@ extern "C"
         body -> SetFixedRotation(false);
 
         return body;
+    }
+
+    DllExport int GetEntityFromBody(b2Body* body)
+    {
+        return (int)body -> GetUserData().pointer;
     }
 
     DllExport b2Shape* CreateChainShape(Vector2 vertices[], int count)
@@ -501,7 +511,7 @@ extern "C"
         return filterResult;
     }
 
-    DllExport bool RayCastClosest(b2World* world, Vector2 origin, Vector2 direction,
+    DllExport bool RayCast(b2World* world, Vector2 origin, Vector2 direction,
         RaycastOutputReturnType* hit, float distance, uint16 layerMask)
     {
         b2Vec2 position(origin.x, origin.y);

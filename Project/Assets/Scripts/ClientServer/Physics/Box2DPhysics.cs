@@ -11,7 +11,8 @@ namespace Game.ClientServer.Physics
 #else
         private const string DllName = "libbox2d";
 #endif
-        
+        public delegate void CallbackDelegate(CollisionCallbackData callbackData);
+
         [DllImport(DllName)]
         public static extern IntPtr UpdateWorld(IntPtr world, float timeStep, int velocityIterations,
             int positionIterations);
@@ -87,7 +88,7 @@ namespace Game.ClientServer.Physics
         public static extern void ApplyLinearImpulseToCenter(IntPtr body, Vector2 force);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool RayCastClosest(IntPtr world, Vector2 origin, Vector2 direction,
+        public static extern bool RayCast(IntPtr world, Vector2 origin, Vector2 direction,
             ref RaycastOutputReturnType hit, float distance, UInt16 layerMask = 0);
 
         [DllImport(DllName)]
@@ -110,9 +111,7 @@ namespace Game.ClientServer.Physics
 
         [DllImport(DllName)]
         public static extern void SetAngularDamping(IntPtr body, float val);
-
-        public delegate void CallbackDelegate(CollisionCallbackData callbackData);
-
+        
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern void SetBeginContactCallback(IntPtr worldPtr, CallbackDelegate callback);
 
@@ -127,6 +126,6 @@ namespace Game.ClientServer.Physics
 
         [DllImport(DllName)]
         public static extern B2Filter GetBodyFixturesFilterData(IntPtr body);
-        
+
     }
 }
