@@ -134,6 +134,10 @@ namespace Game.ClientServer
             systems.Add(new CreateGameSystem(pool));
 #endif
             
+#if CLIENT
+            AddClient(new DetectPlayerIdChangesSystem());
+#endif
+            
             AddServer(new SpawnBotSystem());
             AddServer(new JoinPlayerSystem());
 
@@ -190,7 +194,6 @@ namespace Game.ClientServer
 
 #if CLIENT
             AddClient(new UseInventoryItemSystem());
-            AddClient(new DetectPlayerIdChangesSystem());
 #endif
 
             systems.Add(new AddInventoryItemSystem());
@@ -220,6 +223,9 @@ namespace Game.ClientServer
             systems.Add(new EventsSystem<ObjectiveCompletedComponent>());
             systems.Add(new EventsSystem<GateOpenedComponent>());
             systems.Add(new EventsSystem<FoodCollectedComponent>());
+#if CLIENT
+            systems.Add(new EventsSystem<AnimationStateComponent>());
+#endif
         }
     }
 }

@@ -20,11 +20,12 @@ namespace Game.ClientServer
 #endif
 
         public static string ROOM = $"sandbox_{P2P.GetDevRoom()}";
-        public static string url = $"wss://rts.oxygine.org/XsZubnMOTHC0JRDTS95S/{ROOM}";
         
         //Physics
         public static Vector2 GRAVITY = new Vector2(0, 0);
         public static int VELOCITY_ITERATIONS = 6;
         public static int POSITION_ITERATIONS = 2;
+
+        public static string url = $"wss://dev1.ecs.fbpub.net/XsZubnMOTHC0JRDTS95S/{ROOM}";
     }
 }

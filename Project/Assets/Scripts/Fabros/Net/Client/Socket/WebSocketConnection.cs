@@ -22,11 +22,10 @@ namespace Game.Fabros.Net.Client.Socket
         
         private WebSocket socket;
 
-        public WebSocketConnection(Packet request, string room, string id, ClientAddr address)
+        public WebSocketConnection(Packet request, string url, ClientAddr address)
         {
             this.Address = address;
-            Url = $"wss://rts.oxygine.org/XsZubnMOTHC0JRDTS95S/{room}/{id}";
-            //url = $"ws://localhost:9096/XsZubnMOTHC0JRDTS95S/{room}/{id}";
+            this.Url = url;
             this.Request = request;
         }
 

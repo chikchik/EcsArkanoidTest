@@ -78,8 +78,6 @@ namespace Game.Client
                 ref var animatorComponent = ref entity.EntityAddComponent<AnimatorComponent>(world);
                 animatorComponent.animator = characterView.Animator;
 
-                ref var headComponent = ref entity.EntityAddComponent<HeadComponent>(world);
-                headComponent.head = characterView.Head;
 
                 entity.EntityReplaceComponent<LerpComponent>(world).value = 1.0f;
             }

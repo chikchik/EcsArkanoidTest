@@ -1,4 +1,5 @@
 ﻿using System;
+using Fabros.Ecs;
 using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
 using Game.Ecs.Client.Systems;
@@ -93,7 +94,7 @@ namespace Game.Client
 
             ui.FoodText.text = "";
 
-            int globalListenerEntity = 0;
+            var globalListenerEntity = world.NewLocalEntity();
             globalListenerEntity.AddAnyChangedListener<FoodCollectedComponent>(world, this);
         }
 

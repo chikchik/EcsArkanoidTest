@@ -3,6 +3,7 @@ using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Game.ClientServer.Physics;
 using Game.ClientServer.Physics.Components;
+using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
@@ -24,6 +25,7 @@ namespace Game.ClientServer
             entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(-1.5f, 0, 9f);
             entity.EntityAddComponent<RotationComponent>(world).value = 0f;
             entity.EntityAddComponent<FoodCollectedComponent>(world).Value = 0;
+            entity.EntityAddComponent<AnimationStateComponent>(world).id = "angry";
 
 
             ref var radiusComponent = ref entity.EntityAddComponent<RadiusComponent>(world);
