@@ -69,7 +69,7 @@ namespace Game.Client
 
                 ref var component = ref entity.EntityAddComponent<GameObjectComponent>(world);
                 component.GameObject = characterView.gameObject;
-
+                
                 ref var transformComponent = ref entity.EntityAddComponent<TransformComponent>(world);
                 transformComponent.transform = characterView.transform;
 
@@ -77,10 +77,11 @@ namespace Game.Client
                 animatorComponent.animator = characterView.Animator;
 
                 var position = entity.EntityGet<PositionComponent>(world).value;
-                entity.EntityAdd<RootMotionComponent>(world).Position = position; 
+                entity.EntityAdd<RootMotionComponent>(world).Position = position;
 
+                transformComponent.transform.position = position;
 
-                entity.EntityReplaceComponent<LerpComponent>(world).value = 1.0f;
+                entity.EntityReplaceComponent<LerpComponent>(world).value = 0.5f;
             }
         }
 
@@ -244,7 +245,7 @@ namespace Game.Client
             var clips = unit.Animator.runtimeAnimatorController.animationClips;
             var clip = clips.First(clip => clip.name == "Walking");
 
-            world.AddUnique<AverageSpeedComponent>().value = clip.averageSpeed;
+            world.AddUnique<AverageSpeedComponent>().value = new Vector3(0, 0, 1.77f); //clip.averageSpeed;
         }
     }
 }

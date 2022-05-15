@@ -26,8 +26,7 @@ namespace Game.Ecs.Client.Systems
             {
                 var transform = poolTransform.Get(entity).transform;
                 var targetPosition = poolPosition.Get(entity).value;
-                var lerp = poolLerp.Has(entity) ? poolLerp.Get(entity).value : 1f;
-                lerp *= Time.deltaTime * 10;
+                var lerp = poolLerp.GetNullable(entity)?.value ?? 1f;
                 
                 //transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
                 //transform.position = targetPosition;
@@ -36,11 +35,20 @@ namespace Game.Ecs.Client.Systems
                 {
                     //poolPosition.GetRef(entity).value = transform.position;
 
+                    var position = transform.position;
+
                     if (poolMainPlayer.Has(entity))
                     {
                         world.ReplaceUnique(new RootMotionComponent {Position = transform.position});
                     }
-                    
+                    else
+                    {
+                        var err = position - targetPosition;
+                        if (err.magnitude > 0.1f)
+                        {
+                            transform.position = Vector3.Lerp(transform.position, targetPosition, lerp / 5);
+                        }
+                    }
                 }
                 else
                 {
