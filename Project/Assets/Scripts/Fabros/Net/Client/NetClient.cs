@@ -141,50 +141,57 @@ namespace Game.Fabros.Net.Client
             {
                 while (true)
                 {
-                    var msg = await socket.AsyncWaitMessage();
-                    packet = P2P.ParseResponse<Packet>(msg.buffer);
-
-                    if (!Application.isPlaying) throw new Exception("async next step for stopped application");
-
-                    stats.diffSize = msg.buffer.Length;
-
-                    //if (Input.GetKey(KeyCode.A))
-                    //     break;
-
-                    dif = packet.WorldUpdate.dif;
-
-                    /*
-                 * если клиент создал сам entity с такими же id, то их надо удалить прежде чем применять dif
-                 * иначе может получиться так, что останется висеть какой-то чужой view component 
-                 */
-                    dif.CreatedEntities.ForEach(entity =>
+                    int delay = 0;
+                    while (true)
                     {
-                        if (!MainWorld.IsEntityAliveInternal(entity))
-                            return;
+                        var msg = socket.PopMessage();
+                        if (msg == null)
+                            break;
                         
-                        if (entity.EntityHas<LocalEntityComponent>(MainWorld))
-                            return;
-                        
-                        if (entity.EntityHasComponent<GameObjectComponent>(MainWorld))
+                        packet = P2P.ParseResponse<Packet>(msg.buffer);
+
+                        if (!Application.isPlaying) throw new Exception("async next step for stopped application");
+
+                        stats.diffSize = msg.buffer.Length;
+
+                        //if (Input.GetKey(KeyCode.A))
+                        //     break;
+
+                        dif = packet.WorldUpdate.dif;
+
+                        /*
+                         * если клиент создал сам entity с такими же id, то их надо удалить прежде чем применять dif
+                         * иначе может получиться так, что останется висеть какой-то чужой view component 
+                         */
+                        dif.CreatedEntities.ForEach(entity =>
                         {
-                            var go = entity.EntityGetComponent<GameObjectComponent>(MainWorld).GameObject;
-                            Object.Destroy(go);
-                        }
+                            if (!MainWorld.IsEntityAliveInternal(entity))
+                                return;
 
-                        if (entity.EntityHasComponent<FireViewComponent>(MainWorld))
-                        {
-                            var go = entity.EntityGetComponent<FireViewComponent>(MainWorld).view.gameObject;
-                            Object.Destroy(go);
-                        }
+                            if (entity.EntityHas<LocalEntityComponent>(MainWorld))
+                                return;
 
-                        MainWorld.DelEntity(entity);
-                    });
+                            if (entity.EntityHasComponent<GameObjectComponent>(MainWorld))
+                            {
+                                var go = entity.EntityGetComponent<GameObjectComponent>(MainWorld).GameObject;
+                                Object.Destroy(go);
+                            }
+
+                            if (entity.EntityHasComponent<FireViewComponent>(MainWorld))
+                            {
+                                var go = entity.EntityGetComponent<FireViewComponent>(MainWorld).view.gameObject;
+                                Object.Destroy(go);
+                            }
+
+                            MainWorld.DelEntity(entity);
+                        });
 
 
-                    var delay = packet.WorldUpdate.delay;
+                        delay = packet.WorldUpdate.delay;
 
-                    //применяем diff к прошлому миру полученному от сервера
-                    WorldUtils.ApplyDiff(Leo.Pool, ServerWorld, dif);
+                        //применяем diff к прошлому миру полученному от сервера
+                        WorldUtils.ApplyDiff(Leo.Pool, ServerWorld, dif);
+                    }
 
                     //Debug.Log($"world\n{LeoDebug.e2s(serverWorld)}");
 
