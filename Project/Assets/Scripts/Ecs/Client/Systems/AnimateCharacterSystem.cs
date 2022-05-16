@@ -45,6 +45,14 @@ namespace Game.Ecs.Client.Systems
                // animatorComponent.animator.SetTrigger(state);
             }
             
+             
+            filter = world.Filter<FoodCollectedComponent>().IncChanges<FoodCollectedComponent>().End();
+
+            foreach (var entity in filter)
+            {
+                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("gather", 0.1f);
+            }
+            
             
             filter = world.FilterAdded<MovingComponent>().End();
 
@@ -59,6 +67,8 @@ namespace Game.Ecs.Client.Systems
             {
                 poolAnimator.Get(entity).animator.CrossFadeInFixedTime("idle", 0.1f);
             }
+            
+           
         }
     }
 }

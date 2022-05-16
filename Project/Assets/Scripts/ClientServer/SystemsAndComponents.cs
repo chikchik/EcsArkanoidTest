@@ -138,10 +138,7 @@ namespace Game.ClientServer
             systems.Add(new MoveSystem());
             systems.Add(new EntitiesLifeTimeSystem());
 
-#if CLIENT
-            AddClient(new AnimateCharacterSystem());
-#endif
-            
+
             systems.Add(GridModule.GetSystems());
             systems.Add(new ApplyUserInputSystem());
 
@@ -150,9 +147,6 @@ namespace Game.ClientServer
 
 #if CLIENT
             AddClient(new FootprintViewSystem());
-#endif
-
-#if CLIENT
             AddClient(new HighlightInteractableSystem());
 #endif
             //systems.Add(new BushInteractionSystem());
@@ -190,6 +184,11 @@ namespace Game.ClientServer
             AddServer(new ObjectivesSystem());
 
             systems.Add(TickModule.GetSystems());
+            
+#if CLIENT
+            AddClient(new AnimateCharacterSystem());
+#endif
+
 
             systems.Add(new EventsSystem<PlayerComponent>());
             systems.Add(new EventsSystem<ButtonPushCompleted>());
