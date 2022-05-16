@@ -207,14 +207,8 @@ namespace Game.Fabros.Net.Client
                     
                     if (delay != -999)
                     {
-                        if (Math.Abs(delay) > 5)
-                        {
-                            delay = Math.Sign(delay) * 5;
-                        }
-                        
-                        var delayDir = delay - prevDelay;
-
-                        if (delay >= 2) stepOffset = 0.001f * delay;
+                        if (delay >= 2) 
+                            stepOffset = 0.001f * delay;
 
                         if (delay < 0)
                         {
@@ -236,10 +230,11 @@ namespace Game.Fabros.Net.Client
 
                     var serverTick = Leo.GetCurrentTick(copyServerWorld);
                     var clientTick = Leo.GetCurrentTick(MainWorld);
+                    
                     while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
                     {
                         Leo.Tick(serverSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), false);
-                        if (iterations > 50)
+                        if (iterations > 500)
                         {
                             Debug.LogWarning(
                                 $"too much iterations {serverTick} -> {clientTick}, {clientTick - serverTick}");
@@ -316,6 +311,10 @@ namespace Game.Fabros.Net.Client
 
             Tick(deltaTime, () =>
             {
+                //если давно ничего не приходило от сервера, то и обновлять игру уже нет смысла
+                if (Leo.GetCurrentTick(MainWorld).Value > stats.lastReceivedServerTick + 200)
+                    return;
+                    
                 //leo.ApplyUserInput(world);
                 Leo.Tick(clientSystems, InputWorld, MainWorld, Leo.Inputs.ToArray(), Config.SyncDataLogging);
 
@@ -327,7 +326,10 @@ namespace Game.Fabros.Net.Client
                     packet.playerID = playerID;
                     packet.input = new UserInput();
                     packet.isPing = true;
+                    
+                    //packet.input.time = Leo.GetCurrentTick(ServerWorld) + prevDelay;
                     packet.input.time = Leo.GetCurrentTick(MainWorld);
+                    
                     if (MainWorld.HasUnique<RootMotionComponent>())
                     {
                         packet.input.player = playerID;
