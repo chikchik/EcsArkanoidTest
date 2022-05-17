@@ -21,6 +21,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             var filter = world
                 .Filter<RigidbodyDefinitionComponent>()
                 .Exc<BodyCreatedComponent>()
+                .Inc<RotationComponent>()
                 .End();
 
             var poolRigidbodyDefinition = world.GetPool<RigidbodyDefinitionComponent>();

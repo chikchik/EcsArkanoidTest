@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Game.ClientServer.Physics;
 using Game.ClientServer.Physics.Components;
 using Game.Ecs.Client.Components;
+using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Physics;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
@@ -71,15 +73,19 @@ namespace Game.Client
 
                 ref var component = ref entity.EntityAddComponent<GameObjectComponent>(world);
                 component.GameObject = characterView.gameObject;
-
+                
                 ref var transformComponent = ref entity.EntityAddComponent<TransformComponent>(world);
                 transformComponent.transform = characterView.transform;
 
                 ref var animatorComponent = ref entity.EntityAddComponent<AnimatorComponent>(world);
                 animatorComponent.animator = characterView.Animator;
 
+                var position = entity.EntityGet<PositionComponent>(world).value;
+                entity.EntityAdd<RootMotionComponent>(world).Position = position;
 
-                entity.EntityReplaceComponent<LerpComponent>(world).value = 1.0f;
+                transformComponent.transform.position = position;
+
+                entity.EntityReplaceComponent<LerpComponent>(world).value = 0.5f;
             }
         }
 
@@ -227,6 +233,9 @@ namespace Game.Client
 
                 characterEntity.EntityAddComponent<MoveDirectionComponent>(world);
                 characterEntity.EntityAddComponent<PositionComponent>(world);
+
+                
+                //characterEntity.EntityAddComponent<AverageSpeedComponent>(world).value = clip.averageSpeed;
 
                 ref var radiusComponent = ref characterEntity.EntityAddComponent<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
@@ -389,6 +398,13 @@ namespace Game.Client
                 ref var rotationComponent = ref rigidBodyEntity.EntityAddComponent<RotationComponent>(world);
                 rotationComponent.value = -view.gameObject.transform.eulerAngles.y * Mathf.Deg2Rad;
             }
+            var unit = Object.FindObjectOfType<Global>().characterPrefab;
+            
+            var clips = unit.Animator.runtimeAnimatorController.animationClips;
+            var clip = clips.First(clip => clip.name == "Walking");
+            //todo calculate exact speed
+
+            world.AddUnique<AverageSpeedComponent>().Value = 1.77f; //clip.averageSpeed;
         }
     }
 }

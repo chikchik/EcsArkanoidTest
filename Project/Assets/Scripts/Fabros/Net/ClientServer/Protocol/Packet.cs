@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Game.Fabros.Net.ClientServer.Protocol
 {

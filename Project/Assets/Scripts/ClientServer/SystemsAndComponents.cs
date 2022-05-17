@@ -107,7 +107,10 @@ namespace Game.ClientServer
             pool.AddComponent<EndContactComponent>();
             pool.AddComponent<PreSolveComponent>();
             pool.AddComponent<PostSolveComponent>();
-            return pool; 
+            
+            pool.AddComponent<AverageSpeedComponent>();
+
+            return pool;
         }
         
         public static void AddSystems(ComponentsPool pool, EcsSystems systems, bool client, bool server)
@@ -179,9 +182,6 @@ namespace Game.ClientServer
 
 #if CLIENT
             AddClient(new FootprintViewSystem());
-#endif
-
-#if CLIENT
             AddClient(new HighlightInteractableSystem());
 #endif
             //systems.Add(new BushInteractionSystem());
@@ -219,6 +219,11 @@ namespace Game.ClientServer
             AddServer(new ObjectivesSystem());
 
             systems.Add(TickModule.GetSystems());
+            
+#if CLIENT
+            AddClient(new AnimateCharacterSystem());
+#endif
+
 
             systems.Add(new EventsSystem<PlayerComponent>());
             systems.Add(new EventsSystem<ButtonPushCompleted>());
@@ -226,8 +231,10 @@ namespace Game.ClientServer
             systems.Add(new EventsSystem<ObjectiveCompletedComponent>());
             systems.Add(new EventsSystem<GateOpenedComponent>());
             systems.Add(new EventsSystem<FoodCollectedComponent>());
+            
 #if CLIENT
             systems.Add(new EventsSystem<AnimationStateComponent>());
+            systems.Add(new EventsSystem<MovingComponent>());
 #endif
         }
     }

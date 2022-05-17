@@ -19,9 +19,9 @@ namespace Game.Ecs.Client.Systems
             var deltaTime = Time.deltaTime;
 
             var clientPlayerComponent = world.GetUnique<ClientPlayerComponent>();
-            var targetEntityTransform = poolTransform.GetRef(clientPlayerComponent.entity).transform;
+            var targetEntityTransform = poolTransform.Get(clientPlayerComponent.entity).transform;
             var targetPosition = targetEntityTransform.position + CameraOffset;
-            var camera = world.GetUniqueRef<ClientViewComponent>().Camera;
+            var camera = world.GetUnique<ClientViewComponent>().Camera;
 
             camera.transform.position = Vector3.Lerp(
                 camera.transform.position,

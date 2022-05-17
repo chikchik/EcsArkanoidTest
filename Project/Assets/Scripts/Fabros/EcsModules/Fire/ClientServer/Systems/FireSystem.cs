@@ -32,7 +32,7 @@ namespace Game.Fabros.EcsModules.Fire.ClientServer.Systems
             foreach (var entity in filter)
             {
                 var pos = poolPosition.Get(entity).value;
-                ref var fireComponent = ref poolFire.GetRef(entity);
+                var fireComponent = poolFire.Get(entity);
 
 
                 if (fireComponent.endTime < time)

@@ -9,6 +9,7 @@ using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Game.UI;
+using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
@@ -91,7 +92,7 @@ namespace Game.Client
             var globalListenerEntity = world.NewLocalEntity();
             globalListenerEntity.AddAnyChangedListener<FoodCollectedComponent>(world, this);
         }
-
+        
         public void Update()
         {
             UnityEcsClient.CheckInput(world, unitEntity, playerInput, camera, input =>
@@ -116,6 +117,14 @@ namespace Game.Client
                 return;
 
             ui.FoodText.text = $"Food Collected {data.Value}";       
+        }
+
+        public void OnDrawGizmos()
+        {
+            if (!Application.isPlaying)
+                return;
+        
+            DebugDraw.Draw(world);
         }
     }
 }

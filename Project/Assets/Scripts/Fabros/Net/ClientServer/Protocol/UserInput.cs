@@ -33,5 +33,8 @@ namespace Game.Fabros.Net.ClientServer.Protocol
             public Vector3 value;
             public MoveType moveType;
         }
+
+        public bool hasUnitPos;
+        public Vector3 unitPos;
     }
 }

@@ -24,10 +24,13 @@ namespace Game.Ecs.ClientServer.Systems
             var poolInputMoveTo = inputWorld.GetPool<InputMoveToPointComponent>();
             var poolInputPlayer = inputWorld.GetPool<InputPlayerComponent>();
             var poolInputAction = inputWorld.GetPool<InputActionComponent>();
+            var poolPosition = inputWorld.GetPool<PositionComponent>();
 
 
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
             var poolLookDirection = world.GetPool<LookDirectionComponent>();
+            
+            
 
 
             foreach (var inputEntity in filter)
@@ -45,19 +48,26 @@ namespace Game.Ecs.ClientServer.Systems
                         poolLookDirection.GetRef(unitEntity).value = inputMoveComponent.Dir;
 
                         unitEntity.EntityDel<TargetPositionComponent>(world);
+
                     }
 
                     if (poolInputAction.Has(inputEntity))
                     {
                         Interract(world, unitEntity);
-                    }
-
+                    } 
+ 
                     if (poolInputMoveTo.Has(inputEntity))
                     {
                         var inputMoveToPointComponent = poolInputMoveTo.Get(inputEntity);
 
                         ref var targetPositionComponent = ref unitEntity.EntityReplace<TargetPositionComponent>(world);
                         targetPositionComponent.Value = inputMoveToPointComponent.Value;
+                    }
+
+                    if (poolPosition.Has(inputEntity))
+                    {
+                        var pos = poolPosition.Get(inputEntity).value; 
+                        unitEntity.EntityReplace<PositionComponent>(world).value = pos;
                     }
                 }
             }

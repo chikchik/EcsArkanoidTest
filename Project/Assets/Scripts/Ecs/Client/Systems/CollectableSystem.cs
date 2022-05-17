@@ -18,8 +18,8 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filter)
             {
-                ref var collectableComponent = ref poolCollectable.GetRef(entity);
-                ref var collectableTargetComponent = ref poolCollectableTarget.GetRef(entity);
+                var collectableComponent = poolCollectable.Get(entity);
+                var collectableTargetComponent = poolCollectableTarget.Get(entity);
 
                 collectableTargetComponent.targetObject.SetActive(!collectableComponent.isCollected);
             }

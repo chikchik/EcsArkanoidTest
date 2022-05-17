@@ -31,3 +31,4 @@ Box2DProject/*/build
 *.vs
 *.vscode
 Box2DProject/box2d-unity-wrapper/out
+Project/ProjectSettings/RiderScriptEditorPersistedState.asset
