@@ -21,7 +21,7 @@ namespace Game.Ecs.ClientServer.Components.Physics
         
         public void AutoReset(ref RigidbodyDefinitionComponent c)
         {
-            c.BodyType = BodyType.Static;
+            c.BodyType = BodyType.Dynamic;
             c.Density = 1f;
             c.RestitutionThreshold = 0.5f;
             c.LinearDamping = 2.0f;
