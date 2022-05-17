@@ -391,7 +391,7 @@
         },
         {
             "ComponentName": "AverageSpeedComponent",
-            "Components": "{\"data\":[{\"value\":{\"x\":0.0,\"y\":0.0,\"z\":1.7699999809265137}}]}",
+            "Components": "{\"data\":[{\"Value\":1.7699999809265137}]}",
             "ChangedEntities": [
                 0
             ],

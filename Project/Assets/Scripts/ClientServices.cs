@@ -4,6 +4,7 @@ using System.Linq;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Game.Ecs.Client.Components;
+using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Utils;
@@ -244,8 +245,9 @@ namespace Game.Client
             
             var clips = unit.Animator.runtimeAnimatorController.animationClips;
             var clip = clips.First(clip => clip.name == "Walking");
+            //todo calculate exact speed
 
-            world.AddUnique<AverageSpeedComponent>().value = new Vector3(0, 0, 1.77f); //clip.averageSpeed;
+            world.AddUnique<AverageSpeedComponent>().Value = 1.77f; //clip.averageSpeed;
         }
     }
 }

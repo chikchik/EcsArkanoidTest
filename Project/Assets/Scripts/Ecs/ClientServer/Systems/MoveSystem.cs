@@ -1,6 +1,7 @@
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Other;
+using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace Game.Ecs.ClientServer.Systems
                 var moveDirectionComponent = poolMoveDirection.Get(entity);
                 var speedComponent = poolSpeed.Get(entity);
 
-                var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).value.magnitude;
+                var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).Value;
                 //var dir = moveDirectionComponent.value * deltaTime * speedComponent.speed;
                 var dir = moveDirectionComponent.value * deltaTime * speed;//speedComponent.speed;
                 if (dir.sqrMagnitude > 0)
