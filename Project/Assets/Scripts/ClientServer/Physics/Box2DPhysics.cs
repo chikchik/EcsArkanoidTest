@@ -12,6 +12,17 @@ namespace Game.ClientServer.Physics
         private const string DllName = "libbox2d";
 #endif
         public delegate void CallbackDelegate(CollisionCallbackData callbackData);
+        public delegate void DrawDbgCircleCallback(Vector2 center, float radius, Box2dColor color);
+        public delegate void DrawDbgSegmentCallback(Vector2 v1, Vector2 v2, Box2dColor color);
+        public delegate void DrawDbgTransformCallback(Vector2 v, Vector2 angle, Box2dColor color);
+        
+        public delegate void DrawDbgPolygonCallback(
+            [MarshalAs(UnmanagedType.LPArray, SizeConst = 10)] [Out] Vector2[] v,
+            Int32 vCount, Box2dColor color);
+        
+        public delegate void DrawDbgSolidPolygonCallback(
+            [MarshalAs(UnmanagedType.LPArray, SizeConst = 10)] [Out] Vector2[] v,
+            Int32 vCount, Box2dColor color);
 
         [DllImport(DllName)]
         public static extern IntPtr UpdateWorld(IntPtr world, float timeStep, int velocityIterations,
@@ -126,6 +137,15 @@ namespace Game.ClientServer.Physics
 
         [DllImport(DllName)]
         public static extern B2Filter GetBodyFixturesFilterData(IntPtr body);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
+        public static extern void SetDebugDraw(IntPtr world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
+            DrawDbgSegmentCallback drawSegment, DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon, 
+                DrawDbgSolidPolygonCallback drawSolidPolygon);
+
+
+        [DllImport(DllName)]
+        public static extern void DebugDraw(IntPtr world);
 
     }
 }

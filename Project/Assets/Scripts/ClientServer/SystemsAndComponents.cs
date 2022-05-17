@@ -18,6 +18,7 @@ using Game.Fabros.Net.ClientServer.Ecs.Systems;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.ExtendedSystems;
 #if CLIENT
+using Game.Ecs.Client.Physics;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
 using Game.Fabros.EcsModules.Fire.Client.Systems;
@@ -106,7 +107,6 @@ namespace Game.ClientServer
             pool.AddComponent<EndContactComponent>();
             pool.AddComponent<PreSolveComponent>();
             pool.AddComponent<PostSolveComponent>();
-
             return pool; 
         }
         
@@ -147,6 +147,9 @@ namespace Game.ClientServer
             
             
             systems.Add(new InitPhysicsSystem());
+#if CLIENT
+            systems.Add(new InitBox2dDebug());
+#endif
             systems.Add(new PopulatePhysicsWorldSystem());
             systems.Add(new SyncPhysicsWorldSystem());
 
@@ -163,7 +166,7 @@ namespace Game.ClientServer
             systems.DelHere<PostSolveComponent>();
             systems.Add(new UpdatePhysicsWorldSystem());
             systems.Add(new EntitiesLifeTimeSystem());
-
+            
 #if CLIENT
             AddClient(new AnimateCharacterSystem());
 #endif

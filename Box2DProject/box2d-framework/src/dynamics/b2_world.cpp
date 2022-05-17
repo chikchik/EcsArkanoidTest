@@ -73,6 +73,7 @@ b2World::b2World(const b2Vec2& gravity)
 
 b2World::~b2World()
 {
+	delete m_debugDraw;
 	// Some shapes allocate using b2Alloc.
 	b2Body* b = m_bodyList;
 	while (b)

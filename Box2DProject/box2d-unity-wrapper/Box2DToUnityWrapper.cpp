@@ -52,6 +52,14 @@ struct CollisionCallbackData
     public : Vector2 normal;
 };
 
+struct Box2dColor
+{
+    public : float r;
+    public : float g;
+    public : float b;
+    public : float a;
+};
+
 Vector2 GetUnityVectorFromB2d(const b2Vec2 &b2vec);
 
 class RayCastClosestCallback : public b2RayCastCallback
@@ -110,6 +118,181 @@ public:
 };
 
 typedef void (__stdcall * Callback)(CollisionCallbackData);
+typedef void (__stdcall * DrawDbgCircleCallback)(Vector2, float, Box2dColor);
+typedef void (__stdcall * DrawDbgSegmentCallback)(Vector2, Vector2, Box2dColor);
+typedef void (__stdcall * DrawDbgTransformCallback)(Vector2, Vector2, Box2dColor);
+typedef void (__stdcall * DrawDbgPolygonCallback)(Vector2[b2_maxPolygonVertices], int32, Box2dColor);
+
+class MyDebugDraw : public b2Draw
+{
+    private:
+    DrawDbgCircleCallback m_drawCircle;
+    DrawDbgCircleCallback m_drawPoint;
+    DrawDbgSegmentCallback m_drawSegment;
+    DrawDbgTransformCallback m_drawTransform;
+    DrawDbgPolygonCallback m_drawPolygon;
+    DrawDbgPolygonCallback m_drawSolidPolygon;
+
+    public:
+
+    MyDebugDraw(DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
+        DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon, DrawDbgPolygonCallback drawSolidPolygon)
+    {
+        m_drawCircle = drawCircle;
+        m_drawPoint = drawPoint;
+        m_drawSegment = drawSegment;
+        m_drawTransform = drawTransform;
+        m_drawPolygon = drawPolygon;
+        m_drawSolidPolygon = drawSolidPolygon;
+
+        SetFlags(e_shapeBit | e_jointBit | e_aabbBit | e_pairBit | e_centerOfMassBit);
+    }
+
+    void DrawPolygon (const b2Vec2 *vertices, int32 vertexCount, const b2Color &color)
+    {
+        Vector2 vS[b2_maxPolygonVertices];
+
+        for (int i = 0; i < vertexCount; i++) {
+            Vector2 v1
+            {
+                vertices[i].x,
+                vertices[i].y
+            };
+            vS[i] = v1;
+        }
+
+        Box2dColor c
+        {
+            color.r,
+            color.g,
+            color.b,
+            color.a
+        };
+
+        m_drawPolygon(vS, vertexCount, c);
+    }
+    void DrawSolidPolygon (const b2Vec2 *vertices, int32 vertexCount, const b2Color &color)
+    {
+        Vector2 vS[b2_maxPolygonVertices];
+
+        for (int i = 0; i < vertexCount; i++) {
+            Vector2 v1
+            {
+                vertices[i].x,
+                vertices[i].y
+            };
+            vS[i] = v1;
+        }
+
+        Box2dColor c
+        {
+            color.r,
+            color.g,
+            color.b,
+            color.a
+        };
+
+        m_drawSolidPolygon(vS, vertexCount, c);
+    }
+
+    void DrawCircle (const b2Vec2 &center, float radius, const b2Color &color)
+    {
+
+    }
+
+    void DrawSolidCircle (const b2Vec2 &center, float radius, const b2Vec2 &axis, const b2Color &color)
+    {
+        Vector2 cen
+        {
+            center.x,
+            center.y
+        };
+
+        Box2dColor c
+        {
+            color.r,
+            color.g,
+            color.b,
+            color.a
+        };
+        m_drawCircle(cen, radius, c);
+    }
+    void DrawSegment (const b2Vec2 &p1, const b2Vec2 &p2, const b2Color &color)
+    {
+        Vector2 v1
+        {
+            p1.x,
+            p1.y
+        };
+
+        Vector2 v2
+        {
+            p2.x,
+            p2.y
+        };
+
+        Box2dColor c
+        {
+            color.r,
+            color.g,
+            color.b,
+            color.a
+        };
+        m_drawSegment(v1, v2, c);
+    }
+    void DrawTransform (const b2Transform &xf)
+    {
+        Vector2 v
+        {
+            xf.p.x,
+            xf.p.y
+        };
+        Vector2 r
+        {
+            xf.q.GetXAxis().x,
+            xf.q.GetXAxis().y
+        };
+        Vector2 u
+        {
+            xf.q.GetYAxis().x,
+            xf.q.GetYAxis().y
+        };
+
+        Box2dColor cG
+        {
+            0,
+            1,
+            0,
+            1
+        };
+
+        Box2dColor cR
+        {
+            1,
+            0,
+            0,
+            1
+        };
+        m_drawTransform(v, r, cG);
+        m_drawTransform(v, u, cR);
+    }
+    void DrawPoint (const b2Vec2 &p, float size, const b2Color &color)
+    {
+        Vector2 cen
+        {
+            p.x,
+            p.y
+        };
+        Box2dColor c
+        {
+            color.r,
+            color.g,
+            color.b,
+            color.a
+        };
+        m_drawCircle(cen, size, c);
+    }
+};
 
 class MyContactListener : public b2ContactListener
 {
@@ -244,6 +427,21 @@ extern "C"
         ((MyContactListener*)world -> GetContactListener()) -> m_callbackPostSolve = callback;
     }
 
+    DllExport void SetDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
+        DrawDbgSegmentCallback drawSegment, DrawDbgTransformCallback drawTransform,
+        DrawDbgPolygonCallback drawPolygon, DrawDbgPolygonCallback drawSolidPolygon)
+    {
+        MyDebugDraw* dbgDraw = new MyDebugDraw(drawCircle, drawPoint, drawSegment, drawTransform,
+            drawPolygon, drawSolidPolygon);
+
+        world -> SetDebugDraw(dbgDraw);
+    }
+
+    DllExport void DebugDraw(b2World* world)
+    {
+        if (world != NULL)
+            world -> DebugDraw();
+    }
 
     DllExport b2World* UpdateWorld(b2World* world, float timeStep, int velocityIterations, int positionIterations)
     {
