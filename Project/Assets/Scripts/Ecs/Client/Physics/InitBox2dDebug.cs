@@ -10,11 +10,11 @@ namespace Game.Ecs.Client.Physics
     public class InitBox2dDebug : IEcsInitSystem
     {
         private Box2DPhysics.DrawDbgCircleCallback _circleCallback;
-        private Box2DPhysics.DrawDbgCircleCallback _circlePoint;
+        private Box2DPhysics.DrawDbgCircleCallback _pointCallback;
         private Box2DPhysics.DrawDbgSegmentCallback _segmentCallback;
         private Box2DPhysics.DrawDbgTransformCallback _transformCallback;
         private Box2DPhysics.DrawDbgPolygonCallback _polygonCallback;
-        private Box2DPhysics.DrawDbgSolidPolygonCallback _solidPolygonCallback;
+
         public void Init(EcsSystems systems)
         {
             var world = systems.GetWorld();
@@ -23,13 +23,17 @@ namespace Game.Ecs.Client.Physics
             var physicsWorld = world.GetUnique<PhysicsWorldComponent>().WorldReference;
 
             _circleCallback = DrawCircle;
-            _circlePoint = DrawPoint;
+            _pointCallback = DrawPoint;
             _segmentCallback = DrawSegment;
             _transformCallback = DrawTransform;
             _polygonCallback = DrawPolygon;
-            _solidPolygonCallback = DrawPolygon;
-            Box2DPhysics.SetDebugDraw(physicsWorld, _circleCallback, _circlePoint, _segmentCallback,
-                _transformCallback, _polygonCallback, _solidPolygonCallback);
+            Box2DPhysics.SetDebugDraw(physicsWorld, _circleCallback, _pointCallback, _segmentCallback,
+                _transformCallback, _polygonCallback);
+
+            var box2dDebugDrawFlags = (UInt32) (Box2dDebugDrawFlags.ShapeBit | Box2dDebugDrawFlags.JointBit |
+                                                Box2dDebugDrawFlags.AabbBit | Box2dDebugDrawFlags.PairBit |
+                                                Box2dDebugDrawFlags.CenterOfMassBit | Box2dDebugDrawFlags.ContactBit);
+            Box2DPhysics.SetFlagsForDebugDraw(physicsWorld, box2dDebugDrawFlags);
         }
         
         void DrawPolygon(Vector2[] v, Int32 vCount, Box2dColor color)
@@ -55,7 +59,7 @@ namespace Game.Ecs.Client.Physics
         void DrawPoint(Vector2 center, float radius, Box2dColor color)
         {
             Gizmos.color = new Color(color.R, color.Q, color.B, color.A);
-            Gizmos.DrawSphere(new Vector3(center.x, radius, center.y), 2f);
+            Gizmos.DrawSphere(new Vector3(center.x, radius, center.y), 0.1f);
         }
         
         void DrawSegment(Vector2 v1, Vector2 v2, Box2dColor color)

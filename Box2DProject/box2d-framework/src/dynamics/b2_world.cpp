@@ -113,6 +113,11 @@ b2ContactListener* b2World::GetContactListener()
 	return m_contactManager.m_contactListener;
 }
 
+b2Draw* b2World::GetDebugDraw()
+{
+	return m_debugDraw;
+}
+
 void b2World::SetDebugDraw(b2Draw* debugDraw)
 {
 	m_debugDraw = debugDraw;
@@ -1176,6 +1181,20 @@ void b2World::DebugDraw()
 			b2Vec2 cB = fixtureB->GetAABB(indexB).GetCenter();
 
 			m_debugDraw->DrawSegment(cA, cB, color);
+		}
+	}
+
+	if (flags & b2Draw::e_contactBit)
+	{
+		b2Color color(0.3f, 0.95f, 0.3f);
+		for (b2Contact* c = m_contactManager.m_contactList; c; c = c->GetNext())
+		{
+			b2WorldManifold worldManifold;
+			c -> GetWorldManifold(&worldManifold);
+			
+
+			m_debugDraw->DrawPoint(worldManifold.points[0], 2.0f, color);
+			m_debugDraw->DrawPoint(worldManifold.points[1], 2.0f, color);
 		}
 	}
 

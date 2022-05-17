@@ -129,6 +129,9 @@ public:
 	/// @param point2 the ray ending point
 	void RayCast(b2RayCastCallback* callback, const b2Vec2& point1, const b2Vec2& point2) const;
 
+	/// Get the world debugDraw
+	b2Draw* b2World::GetDebugDraw();
+
 	/// Get the world body list. With the returned body, use b2Body::GetNext to get
 	/// the next body in the world list. A nullptr body indicates the end of the list.
 	/// @return the head of the world body list.

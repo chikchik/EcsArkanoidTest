@@ -131,21 +131,17 @@ class MyDebugDraw : public b2Draw
     DrawDbgSegmentCallback m_drawSegment;
     DrawDbgTransformCallback m_drawTransform;
     DrawDbgPolygonCallback m_drawPolygon;
-    DrawDbgPolygonCallback m_drawSolidPolygon;
 
     public:
 
     MyDebugDraw(DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
-        DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon, DrawDbgPolygonCallback drawSolidPolygon)
+        DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon)
     {
         m_drawCircle = drawCircle;
         m_drawPoint = drawPoint;
         m_drawSegment = drawSegment;
         m_drawTransform = drawTransform;
         m_drawPolygon = drawPolygon;
-        m_drawSolidPolygon = drawSolidPolygon;
-
-        SetFlags(e_shapeBit | e_jointBit | e_aabbBit | e_pairBit | e_centerOfMassBit);
     }
 
     void DrawPolygon (const b2Vec2 *vertices, int32 vertexCount, const b2Color &color)
@@ -173,34 +169,10 @@ class MyDebugDraw : public b2Draw
     }
     void DrawSolidPolygon (const b2Vec2 *vertices, int32 vertexCount, const b2Color &color)
     {
-        Vector2 vS[b2_maxPolygonVertices];
-
-        for (int i = 0; i < vertexCount; i++) {
-            Vector2 v1
-            {
-                vertices[i].x,
-                vertices[i].y
-            };
-            vS[i] = v1;
-        }
-
-        Box2dColor c
-        {
-            color.r,
-            color.g,
-            color.b,
-            color.a
-        };
-
-        m_drawSolidPolygon(vS, vertexCount, c);
+        DrawPolygon(vertices, vertexCount, color);
     }
 
     void DrawCircle (const b2Vec2 &center, float radius, const b2Color &color)
-    {
-
-    }
-
-    void DrawSolidCircle (const b2Vec2 &center, float radius, const b2Vec2 &axis, const b2Color &color)
     {
         Vector2 cen
         {
@@ -216,6 +188,11 @@ class MyDebugDraw : public b2Draw
             color.a
         };
         m_drawCircle(cen, radius, c);
+    }
+
+    void DrawSolidCircle (const b2Vec2 &center, float radius, const b2Vec2 &axis, const b2Color &color)
+    {
+        DrawCircle(center, radius, color);
     }
     void DrawSegment (const b2Vec2 &p1, const b2Vec2 &p2, const b2Color &color)
     {
@@ -290,7 +267,7 @@ class MyDebugDraw : public b2Draw
             color.b,
             color.a
         };
-        m_drawCircle(cen, size, c);
+        m_drawPoint(cen, size, c);
     }
 };
 
@@ -428,11 +405,9 @@ extern "C"
     }
 
     DllExport void SetDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
-        DrawDbgSegmentCallback drawSegment, DrawDbgTransformCallback drawTransform,
-        DrawDbgPolygonCallback drawPolygon, DrawDbgPolygonCallback drawSolidPolygon)
+        DrawDbgSegmentCallback drawSegment, DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon)
     {
-        MyDebugDraw* dbgDraw = new MyDebugDraw(drawCircle, drawPoint, drawSegment, drawTransform,
-            drawPolygon, drawSolidPolygon);
+        MyDebugDraw* dbgDraw = new MyDebugDraw(drawCircle, drawPoint, drawSegment, drawTransform, drawPolygon);
 
         world -> SetDebugDraw(dbgDraw);
     }
@@ -441,6 +416,11 @@ extern "C"
     {
         if (world != NULL)
             world -> DebugDraw();
+    }
+
+    DllExport void SetFlagsForDebugDraw(b2World* world, uint32 mask)
+    {
+        world -> GetDebugDraw() -> SetFlags(mask);
     }
 
     DllExport b2World* UpdateWorld(b2World* world, float timeStep, int velocityIterations, int positionIterations)
