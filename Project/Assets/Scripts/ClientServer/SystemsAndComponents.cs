@@ -103,10 +103,10 @@ namespace Game.ClientServer
             pool.AddComponent<ChainColliderComponent>();
             pool.AddComponent<RotationComponent>();
             
-            pool.AddComponent<BeginContactComponent>();
-            pool.AddComponent<EndContactComponent>();
-            pool.AddComponent<PreSolveComponent>();
-            pool.AddComponent<PostSolveComponent>();
+            //pool.AddComponent<BeginContactComponent>();
+            //pool.AddComponent<EndContactComponent>();
+            //pool.AddComponent<PreSolveComponent>();
+            //pool.AddComponent<PostSolveComponent>();
             
             pool.AddComponent<AverageSpeedComponent>();
 
@@ -167,6 +167,7 @@ namespace Game.ClientServer
             systems.DelHere<EndContactComponent>();
             systems.DelHere<PreSolveComponent>();
             systems.DelHere<PostSolveComponent>();
+            
             systems.Add(new UpdatePhysicsWorldSystem());
             systems.Add(new EntitiesLifeTimeSystem());
             
