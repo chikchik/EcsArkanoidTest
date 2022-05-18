@@ -97,6 +97,10 @@ namespace Game.Client
         {
             UnityEcsClient.CheckInput(world, unitEntity, playerInput, camera, input =>
             {
+                //todo, dublicated code
+                input.hasUnitPos = true;
+                input.unitPos = world.GetUnique<RootMotionComponent>().Position;
+                
                 InputService.ApplyInput(inputWorld, 1, input);
             });
             viewSystems.Run();

@@ -21,7 +21,7 @@ namespace Game.Ecs.ClientServer.Systems
                 .Filter<MoveDirectionComponent>()
                 .Inc<PositionComponent>()
                 .Inc<SpeedComponent>()
-                .Exc<PlayerComponent>()
+                .Inc<AverageSpeedComponent>()
                 .Exc<AIPlayerComponent>()
                 .End();
             var deltaTime = world.GetDeltaSeconds();
