@@ -4,6 +4,7 @@ using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Game.ClientServer.Physics;
 using Game.ClientServer.Physics.Components;
+using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -20,8 +21,8 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             var physicsWorld = world.GetUnique<PhysicsWorldComponent>();
             var filter = world
                 .Filter<RigidbodyDefinitionComponent>()
-                .Exc<BodyCreatedComponent>()
                 .Inc<RotationComponent>()
+                .Exc<BodyCreatedComponent>()
                 .End();
 
             var poolRigidbodyDefinition = world.GetPool<RigidbodyDefinitionComponent>();
@@ -81,6 +82,10 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                     
                     shape = Box2DPhysics.CreateChainShape(vertices, vertices.Length);
                     AddFixtureToBody(bodyReference, shape, rigidbodyDefinitionComponent);
+                }
+                else
+                {
+                    throw new Exception("missing collider");
                 }
                 
                 Box2DPhysics.SetLinearDamping(bodyReference, rigidbodyDefinitionComponent.LinearDamping);
