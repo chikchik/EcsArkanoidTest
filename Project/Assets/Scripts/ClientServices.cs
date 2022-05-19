@@ -89,7 +89,7 @@ namespace Game.Client
             }
         }
 
-        private static void forEachObject<T>(Action<T> fn) where T : MonoBehaviour
+        private static void forEachObject<T>(Action<T> fn) where T : Component//it is UNITY Mono Component
         {
             var items = Object.FindObjectsOfType<T>();
             items.ForEach(fn);
@@ -244,15 +244,95 @@ namespace Game.Client
                 speedComponent.speed = 2f;
             });
             
+            forEachObject<Collider2D>(collider =>
+            {
+                var go = collider.gameObject;
+                var rigidBody = go.GetComponent<Rigidbody2D>();
+                if (!rigidBody) 
+                    return;
+                
+                var entity = GetOrCreateGameEntity(collider.gameObject);
+
+                entity.EntityReplace<PositionComponent>(world).value = go.transform.position;
+                entity.EntityReplace<RotationComponent>(world).value = - go.transform.eulerAngles.y * Mathf.Deg2Rad;
+
+                ref var rigidBodyDefinitionComponent =
+                    ref entity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
+                
+                if (go.TryGetComponent(out Box2dPhysicsExtend rigidbodyExtend))
+                {
+                    rigidBodyDefinitionComponent.Density = rigidbodyExtend.Density;
+                    rigidBodyDefinitionComponent.RestitutionThreshold = rigidbodyExtend.RestitutionThreshold;
+                    rigidBodyDefinitionComponent.LinearDamping = rigidbodyExtend.LinearDamping;
+                    rigidBodyDefinitionComponent.AngularDamping = rigidbodyExtend.AngularDamping;
+                }
+
+                var type = rigidBody.bodyType;
+                var b2Type = BodyType.Static;
+                if (type == RigidbodyType2D.Dynamic)
+                    b2Type = BodyType.Dynamic;
+                else if (type == RigidbodyType2D.Kinematic)
+                    b2Type = BodyType.Kinematic;
+
+                rigidBodyDefinitionComponent.BodyType = b2Type;
+                var material = rigidBody.sharedMaterial;
+                if (material)
+                {
+                    rigidBodyDefinitionComponent.Friction = material.friction;
+                    var sharedMaterialBounciness = rigidBodyDefinitionComponent.Restitution = material.bounciness;
+                }
+
+                rigidBodyDefinitionComponent.IsTrigger = collider.isTrigger;
+                
+                
+                if (collider is BoxCollider2D)
+                {
+                    ref var boxColliderComponent = ref entity.EntityAddComponent<BoxColliderComponent>(world);
+                    boxColliderComponent.Size = go.transform.lossyScale;
+                }
+
+                if (collider is CircleCollider2D)
+                {
+                    ref var circleColliderComponent = ref entity.EntityAddComponent<CircleColliderComponent>(world);
+                    circleColliderComponent.Radius = collider.transform.lossyScale.x / 2;
+                }
+
+                if (collider is PolygonCollider2D)
+                {
+                    ref var polygonColliderComponent = ref entity.EntityAddComponent<PolygonColliderComponent>(world);
+                    PhysicsShapeGroup2D physicsShapeGroup2D = new PhysicsShapeGroup2D();
+                    var shapes = collider.GetShapes(physicsShapeGroup2D);
+
+                    polygonColliderComponent.Anchors = new int[shapes];
+                    polygonColliderComponent.Vertices = new List<Vector2>();
+                    var vertices = new List<Vector2>();
+                    for (int i = 0; i < shapes; i++)
+                    {
+                        physicsShapeGroup2D.GetShapeVertices(i, vertices);
+                        polygonColliderComponent.Anchors[i] = vertices.Count - 1;
+                        foreach (var vector2 in vertices)
+                        {
+                            polygonColliderComponent.Vertices.Add(vector2);
+                        }
+                    }
+                }
+                
+                
+
+                DeleteFromViewIfPlaying(go.gameObject, collider, rigidBody);
+            });
+            
+            /*
             forEachObject<CubeView>(cubeView =>
             {
                 var rigidBodyEntity = GetOrCreateGameEntity(cubeView.gameObject);
 
-                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, cubeView);
+                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, cubeView.transform);
                 
                 var rigidBody = cubeView.GetComponent<Rigidbody2D>();
 
                 cubeView.TryGetComponent(out Box2dPhysicsExtend rigidbodyExtend);
+                
                 var boxCollider = cubeView.GetComponent<BoxCollider2D>();
                 
                 AddRbDefinitionComponentFromUnity(world, rigidBodyEntity, rigidBody, boxCollider, rigidbodyExtend);
@@ -265,11 +345,14 @@ namespace Game.Client
                 DeleteFromViewIfPlaying(cubeView.gameObject, boxCollider, rigidBody);
             });
             
+            
+            
+            /*
             forEachObject<SphereView>(sphereView =>
             {
                 var rigidBodyEntity = GetOrCreateGameEntity(sphereView.gameObject);
 
-                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, sphereView);
+                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, sphereView.transform);
                 
                 var rigidBody = sphereView.GetComponent<Rigidbody2D>();
                 
@@ -289,7 +372,7 @@ namespace Game.Client
             {
                 var rigidBodyEntity = GetOrCreateGameEntity(polygonView.gameObject);
 
-                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, polygonView);
+                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, polygonView.transform);
 
                 var rigidBody = polygonView.GetComponent<Rigidbody2D>();
                 
@@ -323,7 +406,7 @@ namespace Game.Client
             {
                 var rigidBodyEntity = GetOrCreateGameEntity(staticWallView.gameObject);
 
-                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, staticWallView);
+                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, staticWallView.transform);
 
                 var rigidBody = staticWallView.GetComponent<Rigidbody2D>();
                 var polygonCollider2D = staticWallView.GetComponent<PolygonCollider2D>();
@@ -338,47 +421,8 @@ namespace Game.Client
                 }
                 
                 DeleteFromViewIfPlaying(staticWallView.gameObject, polygonCollider2D, rigidBody);
-            });
+            });*/
 
-            BodyType GetRBBodyType(RigidbodyType2D type2D)
-            {
-                switch (type2D)
-                {
-                    case RigidbodyType2D.Dynamic:
-                        return BodyType.Dynamic;
-                    case RigidbodyType2D.Kinematic:
-                        return BodyType.Kinematic;
-                    case RigidbodyType2D.Static:
-                        return BodyType.Static;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type2D), type2D, null);
-                }
-            }
-            
-            void AddRbDefinitionComponentFromUnity(EcsWorld world, int rigidBodyEntity,
-                Rigidbody2D rigidBody, Collider2D collider, Box2dPhysicsExtend rigidbodyExtend = null)
-            {
-                if (!rigidBody) return;
-                ref var rigidBodyDefinitionComponent =
-                        ref rigidBodyEntity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
-                
-                if (rigidbodyExtend)
-                {
-                    rigidBodyDefinitionComponent.Density = rigidbodyExtend.Density;
-                    rigidBodyDefinitionComponent.RestitutionThreshold = rigidbodyExtend.RestitutionThreshold;
-                    rigidBodyDefinitionComponent.LinearDamping = rigidbodyExtend.LinearDamping;
-                    rigidBodyDefinitionComponent.AngularDamping = rigidbodyExtend.AngularDamping;
-                }
-                
-                rigidBodyDefinitionComponent.BodyType = GetRBBodyType(rigidBody.bodyType);
-                if (rigidBody.sharedMaterial)
-                {
-                    rigidBodyDefinitionComponent.Friction = rigidBody.sharedMaterial.friction;
-                    rigidBodyDefinitionComponent.Restitution = rigidBody.sharedMaterial.bounciness;
-                }
-
-                rigidBodyDefinitionComponent.IsTrigger = collider.isTrigger;
-            }
             void DeleteFromViewIfPlaying(GameObject view, Collider2D collider2D,
                 Rigidbody2D rigidBody)
             {
@@ -389,15 +433,6 @@ namespace Game.Client
                 }
             }
             
-            void AddTransformComponentsToEntityFromView(EcsWorld world, int rigidBodyEntity,
-                MonoBehaviour view)
-            {
-                ref var positionComponent = ref rigidBodyEntity.EntityAddComponent<PositionComponent>(world);
-                positionComponent.value = view.transform.position;
-            
-                ref var rotationComponent = ref rigidBodyEntity.EntityAddComponent<RotationComponent>(world);
-                rotationComponent.value = -view.gameObject.transform.eulerAngles.y * Mathf.Deg2Rad;
-            }
             var unit = Object.FindObjectOfType<Global>().characterPrefab;
             
             var clips = unit.Animator.runtimeAnimatorController.animationClips;
