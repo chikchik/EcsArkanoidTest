@@ -37,13 +37,10 @@ struct CollisionCallbackData
     public : b2World* physicsWorld;
     public : int entityA;
     public : int entityB;
-
     public : Vector2 velA;
     public : Vector2 velB;
-
     public : Vector2 contactPoints[b2_maxManifoldPoints];
     public : int32 contactPointCount;
-
     public : Vector2 normal;
 };
 
