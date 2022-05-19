@@ -108,6 +108,7 @@ namespace Game.Fabros.Net.Client
             
             if (delay != -999)
             {
+                Debug.Log($"delay {delay}");
                 if (delay >= 2) 
                     stepOffset = 0.001f * delay;
 
@@ -214,6 +215,12 @@ namespace Game.Fabros.Net.Client
             Debug.Log("client started");
 
             ConnectedAction?.Invoke();
+
+            lastUpdateTime = Time.realtimeSinceStartup;
+            
+           // for (int i = 0; i < 300; ++i)
+            //    Leo.Tick(clientSystems, InputWorld, MainWorld, Leo.Inputs.ToArray(), Config.SyncDataLogging);
+            
             try
             {
                 while (true)
@@ -403,7 +410,7 @@ namespace Game.Fabros.Net.Client
                 if (lastUpdateTime + deltaTime > tm)
                     break;
 
-                if (iteration > 100)
+                if (iteration > 200)
                 {
                     Debug.LogWarning("too much iterations");
                     break;

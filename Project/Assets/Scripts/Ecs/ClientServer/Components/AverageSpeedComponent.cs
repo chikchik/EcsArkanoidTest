@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Ecs.Client.Systems
+namespace Game.Ecs.ClientServer.Components
 {
     [System.Serializable]
     public struct AverageSpeedComponent
