@@ -130,6 +130,7 @@ namespace Game.Fabros.Net.Client
             
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
             copyServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
+       
             
             var copyServerSystems = new EcsSystems(copyServerWorld);
             copyServerSystems.AddWorld(InputWorld, "input");
@@ -153,6 +154,8 @@ namespace Game.Fabros.Net.Client
 
                 iterations++;
             }
+            
+            copyServerSystems.Destroy();
 
             Leo.SyncLog.WriteLine("sync end\n");
 
