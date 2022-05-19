@@ -21,12 +21,16 @@ namespace Game.Ecs.Client.Systems
             var poolLerp = world.GetPool<LerpComponent>();
             var poolAverage = world.GetPool<AverageSpeedComponent>();
             var poolMainPlayer = world.GetPool<IsMainPlayerComponent>();
+            
+            var dt = Time.deltaTime;
+            var lerpScale = 12;
 
             foreach (var entity in filter)
             {
                 var transform = poolTransform.Get(entity).transform;
                 var targetPosition = poolPosition.Get(entity).value;
                 var lerp = poolLerp.GetNullable(entity)?.value ?? 1f;
+                lerp *= lerpScale;
                 
                 //transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
                 //transform.position = targetPosition;
@@ -46,13 +50,13 @@ namespace Game.Ecs.Client.Systems
                         var err = position - targetPosition;
                         if (err.magnitude > 0.1f)
                         {
-                            transform.position = Vector3.Lerp(transform.position, targetPosition, lerp / 5);
+                            transform.position = Vector3.Lerp(transform.position, targetPosition, lerp * dt);
                         }
                     }
                 }
                 else
                 {
-                    transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
+                    transform.position = Vector3.Lerp(transform.position, targetPosition, lerp * dt);
                     //transform.position = targetPosition;
                 }
             }
