@@ -279,7 +279,7 @@ namespace Game.Client
                 if (material)
                 {
                     rigidBodyDefinitionComponent.Friction = material.friction;
-                    var sharedMaterialBounciness = rigidBodyDefinitionComponent.Restitution = material.bounciness;
+                    rigidBodyDefinitionComponent.Restitution = material.bounciness;
                 }
 
                 rigidBodyDefinitionComponent.IsTrigger = collider.isTrigger;
@@ -317,121 +317,12 @@ namespace Game.Client
                     }
                 }
                 
-                
-
-                DeleteFromViewIfPlaying(go.gameObject, collider, rigidBody);
-            });
-            
-            /*
-            forEachObject<CubeView>(cubeView =>
-            {
-                var rigidBodyEntity = GetOrCreateGameEntity(cubeView.gameObject);
-
-                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, cubeView.transform);
-                
-                var rigidBody = cubeView.GetComponent<Rigidbody2D>();
-
-                cubeView.TryGetComponent(out Box2dPhysicsExtend rigidbodyExtend);
-                
-                var boxCollider = cubeView.GetComponent<BoxCollider2D>();
-                
-                AddRbDefinitionComponentFromUnity(world, rigidBodyEntity, rigidBody, boxCollider, rigidbodyExtend);
-                if (boxCollider)
+                if (Application.isPlaying)
                 {
-                    ref var boxColliderComponent = ref rigidBodyEntity.EntityAddComponent<BoxColliderComponent>(world);
-                    boxColliderComponent.Size = cubeView.transform.lossyScale;
-                }
-
-                DeleteFromViewIfPlaying(cubeView.gameObject, boxCollider, rigidBody);
-            });
-            
-            
-            
-            /*
-            forEachObject<SphereView>(sphereView =>
-            {
-                var rigidBodyEntity = GetOrCreateGameEntity(sphereView.gameObject);
-
-                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, sphereView.transform);
-                
-                var rigidBody = sphereView.GetComponent<Rigidbody2D>();
-                
-                
-                var circleCollider = sphereView.GetComponent<CircleCollider2D>();
-                AddRbDefinitionComponentFromUnity(world, rigidBodyEntity, rigidBody, circleCollider);
-                if (circleCollider)
-                {
-                    ref var circleColliderComponent = ref rigidBodyEntity.EntityAddComponent<CircleColliderComponent>(world);
-                    circleColliderComponent.Radius = sphereView.transform.lossyScale.x / 2;
-                }
-                
-                DeleteFromViewIfPlaying(sphereView.gameObject, circleCollider, rigidBody);
-            });
-            
-            forEachObject<PolygonView>(polygonView =>
-            {
-                var rigidBodyEntity = GetOrCreateGameEntity(polygonView.gameObject);
-
-                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, polygonView.transform);
-
-                var rigidBody = polygonView.GetComponent<Rigidbody2D>();
-                
-                
-                var polygonCollider2D = polygonView.GetComponent<PolygonCollider2D>();
-                AddRbDefinitionComponentFromUnity(world, rigidBodyEntity, rigidBody, polygonCollider2D);
-                if (polygonCollider2D)
-                {
-                    ref var polygonColliderComponent = ref rigidBodyEntity.EntityAddComponent<PolygonColliderComponent>(world);
-                    PhysicsShapeGroup2D physicsShapeGroup2D = new PhysicsShapeGroup2D();
-                    var shapes = polygonCollider2D.GetShapes(physicsShapeGroup2D);
-
-                    polygonColliderComponent.Anchors = new int[shapes];
-                    polygonColliderComponent.Vertices = new List<Vector2>();
-                    var vertices = new List<Vector2>();
-                    for (int i = 0; i < shapes; i++)
-                    {
-                        physicsShapeGroup2D.GetShapeVertices(i, vertices);
-                        polygonColliderComponent.Anchors[i] = vertices.Count - 1;
-                        foreach (var vector2 in vertices)
-                        {
-                            polygonColliderComponent.Vertices.Add(vector2);
-                        }
-                    }
-                }
-                
-                DeleteFromViewIfPlaying(polygonView.gameObject, polygonCollider2D, rigidBody);
-            });
-            
-            forEachObject<ChainView>(staticWallView =>
-            {
-                var rigidBodyEntity = GetOrCreateGameEntity(staticWallView.gameObject);
-
-                AddTransformComponentsToEntityFromView(world, rigidBodyEntity, staticWallView.transform);
-
-                var rigidBody = staticWallView.GetComponent<Rigidbody2D>();
-                var polygonCollider2D = staticWallView.GetComponent<PolygonCollider2D>();
-                
-                AddRbDefinitionComponentFromUnity(world, rigidBodyEntity, rigidBody, polygonCollider2D);
-                
-                if (polygonCollider2D)
-                {
-                    ref var chainColliderComponent =
-                        ref rigidBodyEntity.EntityAddComponent<ChainColliderComponent>(world);
-                    chainColliderComponent.Points = polygonCollider2D.points;
-                }
-                
-                DeleteFromViewIfPlaying(staticWallView.gameObject, polygonCollider2D, rigidBody);
-            });*/
-
-            void DeleteFromViewIfPlaying(GameObject view, Collider2D collider2D,
-                Rigidbody2D rigidBody)
-            {
-                if (Application.IsPlaying(view))
-                {
-                    Object.DestroyImmediate(collider2D);
+                    Object.DestroyImmediate(collider);
                     Object.DestroyImmediate(rigidBody);
                 }
-            }
+            });
             
             var unit = Object.FindObjectOfType<Global>().characterPrefab;
             
