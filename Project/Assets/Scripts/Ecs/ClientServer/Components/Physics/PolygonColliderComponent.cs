@@ -7,6 +7,6 @@ namespace Game.Ecs.ClientServer.Components.Physics
     public struct PolygonColliderComponent
     {
         public int[] Anchors;
-        public List<Vector2> Vertices;
+        public List<Vector2> Vertices;//todo, refactor to array[]
     }
 }
