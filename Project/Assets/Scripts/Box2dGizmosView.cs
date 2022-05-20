@@ -8,6 +8,7 @@ using Zenject;
 
 namespace Game
 {
+    //todo convert to EcsSystem
     public class Box2dGizmosView : MonoBehaviour
     {
         [Inject] private EcsWorld _ecsWorld = null;

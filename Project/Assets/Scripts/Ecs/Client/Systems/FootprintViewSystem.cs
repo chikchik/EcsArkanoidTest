@@ -52,7 +52,8 @@ namespace Game.Ecs.Client.Systems
             ref var transformComponent = ref entity.EntityAddComponent<TransformComponent>(world);
             transformComponent.transform = gameObjectComponent.GameObject.transform;
             transformComponent.transform.position = entity.EntityGetComponent<PositionComponent>(world).value;
-            transformComponent.transform.forward = footprintComponent.direction;
+            if (footprintComponent.direction.magnitude > 0.9f)
+                transformComponent.transform.forward = footprintComponent.direction;
         }
     }
 }

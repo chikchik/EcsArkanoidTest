@@ -5,6 +5,7 @@ using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Grid.Other;
 using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
 
 namespace Game.Ecs.ClientServer.Systems
@@ -25,23 +26,19 @@ namespace Game.Ecs.ClientServer.Systems
             var poolUnit = world.GetPool<UnitComponent>();
             var poolButton = world.GetPool<ButtonComponent>();
             var poolSpeed = world.GetPool<SpeedComponent>();
+            var poolBody = world.GetPool<RigidbodyComponent>();
+            
             var deltaTime = world.GetDeltaSeconds();
 
 
             foreach (var buttonEntity in filter)
             {
                 var pos = buttonEntity.EntityGet<PositionComponent>(world).value;
-                world.GetNearestEntities(pos, 0.5f, ref entities, entity => poolUnit.Has(entity));
+                world.GetNearestEntities(pos, 0.5f, ref entities, entity => poolUnit.Has(entity) || poolBody.Has(entity));
 
-                var buttonComponent = poolButton.Get(buttonEntity);
                 
                 var pressed = entities.Count > 0;
-
-                if (buttonComponent.isActivated != pressed)
-                {
-                    //используем GetRef только если действительно что-то изменилось у кнопки
-                    poolButton.GetRef(buttonEntity).isActivated = pressed;
-                }
+                poolButton.ReplaceIfChanged(buttonEntity, new ButtonComponent{isActivated = pressed});
 
                 var speedComponent = poolSpeed.Get(buttonEntity);
                 var progressComponent = poolProgress.Get(buttonEntity);

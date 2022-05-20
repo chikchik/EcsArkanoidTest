@@ -243,6 +243,8 @@ namespace Game.Client
             
             forEachObject<Collider2D>(collider =>
             {
+                if (!collider.enabled)
+                    return;
                 var entity = GetOrCreateGameEntity(collider.gameObject);
                 ClientBox2DServices.CreateBody(world, entity, collider);
             });
