@@ -49,20 +49,20 @@ namespace Game.Ecs.Client.Systems
             }
             
             
-            filter = world.FilterAdded<MovingComponent>().End();
+            filter = world.Filter<UnitComponent>().IncAdded<MovingComponent>().End();
 
             foreach (var entity in filter)
             {
                 poolAnimator.Get(entity).animator.CrossFadeInFixedTime("walking", 0.05f);
             }
             
-            filter = world.FilterRemoved<MovingComponent>().End();
+            filter = world.Filter<UnitComponent>().IncRemoved<MovingComponent>().End();
             foreach (var entity in filter)
             {
                 poolAnimator.Get(entity).animator.CrossFadeInFixedTime("idle", 0.1f);
             }
 
-            filter = world.FilterAdded<PushingComponent>().End();
+            filter = world.Filter<UnitComponent>().IncRemoved<PushingComponent>().End();
             foreach (var entity in filter)
             {
                 poolAnimator.Get(entity).animator.CrossFadeInFixedTime("kicking", 0.05f);

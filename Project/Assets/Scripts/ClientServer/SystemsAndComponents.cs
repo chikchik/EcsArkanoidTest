@@ -103,6 +103,10 @@ namespace Game.ClientServer
             pool.AddComponent<ChainColliderComponent>();
             pool.AddComponent<RotationComponent>();
             
+            pool.AddComponent<MoveSimpleDirectionComponent>();
+            pool.AddComponent<DestroyWhenTimeIsOutComponent>();
+            pool.AddComponent<TimeComponent>();
+            
             //pool.AddComponent<BeginContactComponent>();
             //pool.AddComponent<EndContactComponent>();
             //pool.AddComponent<PreSolveComponent>();
@@ -141,7 +145,7 @@ namespace Game.ClientServer
             AddClient(new DetectPlayerIdChangesSystem());
 #endif
             
-            AddServer(new SpawnBotSystem());
+            //AddServer(new SpawnBotSystem());
             AddServer(new JoinPlayerSystem());
 
 #if CLIENT
@@ -160,6 +164,7 @@ namespace Game.ClientServer
 
             systems.Add(new MoveToTargetPositionSystem());
             systems.Add(new MoveSystem());
+            systems.Add(new SimpleMoveSystem());
             systems.Add(new UnitMoveSystem());
             
             
@@ -179,7 +184,7 @@ namespace Game.ClientServer
             systems.Add(new ApplyUserInputSystem());
 
 
-            AddServer(new FootprintSystem());
+            //AddServer(new FootprintSystem());
 
 #if CLIENT
             AddClient(new FootprintViewSystem());

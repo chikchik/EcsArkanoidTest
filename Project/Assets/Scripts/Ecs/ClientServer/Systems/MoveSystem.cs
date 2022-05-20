@@ -50,10 +50,6 @@ namespace Game.Ecs.ClientServer.Systems
                 }
                 else
                     poolMoving.Del(entity);
-
-               // var animator = entity.EntityGet<AnimatorComponent>(world).animator;
-              //  var clip = animator.GetCurrentAnimatorClipInfo(0)[0].clip;
-                //var speed = clip.averageSpeed;
             }
         }
     }

@@ -3,6 +3,8 @@ using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Grid.Other;
 using Game.ClientServer;
+using Game.ClientServer.Physics;
+using Game.ClientServer.Physics.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
@@ -107,6 +109,23 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 //var entity = result[0];
                 unitEntity.EntityAdd<PushingComponent>(world);
+                var kickEntity = world.NewEntity();
+                ref var rb = ref kickEntity.EntityAdd<RigidbodyDefinitionComponent>(world);
+                
+                rb.BodyType = BodyType.Kinematic;
+                rb.Density = 985f;
+                rb.Friction = 0.3f;
+                rb.Restitution = 0;
+                rb.RestitutionThreshold = 0.5f;   
+
+                ref var collider = ref kickEntity.EntityAddComponent<CircleColliderComponent>(world);
+                collider.Radius = 0.3f;
+
+                kickEntity.EntityAdd<PositionComponent>(world).value = position;
+                kickEntity.EntityAdd<RotationComponent>(world);
+
+                var lookDir = unitEntity.EntityGet<LookDirectionComponent>(world).value;
+                kickEntity.EntityAdd<TargetPositionComponent>(world).Value = position + lookDir*3;
             }
 
         }

@@ -13,7 +13,6 @@ namespace Game.Ecs.ClientServer.Systems
             var filter = world
                 .Filter<TargetPositionComponent>()
                 .Inc<PositionComponent>()
-                .Inc<MoveDirectionComponent>()
                 .End();
             
             var poolTargetPosition = world.GetPool<TargetPositionComponent>();
@@ -36,16 +35,18 @@ namespace Game.Ecs.ClientServer.Systems
                     z = direction.normalized.z
                 };
 
-                poolMoveDirection.GetRef(entity).value = moveDirection;
-                poolLookDirection.GetRef(entity).value = moveDirection;
+                if (poolLookDirection.Has(entity))
+                    poolLookDirection.GetRef(entity).value = moveDirection;
 
                 if (distance < 0.1f)
                 {
                     poolTargetPosition.Del(entity);
                     poolMoving.Del(entity);
+                    poolMoveDirection.Del(entity);
                 }
                 else
                 {
+                    poolMoveDirection.Replace(entity).value = moveDirection;
                     poolMoving.Replace(entity, new MovingComponent());
                 }
             }
