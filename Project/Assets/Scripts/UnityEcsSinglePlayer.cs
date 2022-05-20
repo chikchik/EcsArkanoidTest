@@ -30,6 +30,7 @@ namespace Game.Client
         private EcsSystems viewSystems;
 
         private int unitEntity;
+        private int playerId = 1;
 
         public void Start()
         {
@@ -72,8 +73,8 @@ namespace Game.Client
             
             viewSystems.Init();
             
-            world.AddUnique(new MainPlayerIdComponent{value = 1});
-            unitEntity.EntityAdd<PlayerComponent>(world).id = 1;
+            world.AddUnique(new MainPlayerIdComponent{value = playerId});
+            unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
             
             
             ui.InteractionButton.onClick.AddListener(() =>
@@ -84,7 +85,7 @@ namespace Game.Client
                     action = new UserInput.Action()
                 };
 
-                InputService.ApplyInput(inputWorld, 0, input);
+                InputService.ApplyInput(inputWorld, playerId, input);
             });
 
             ui.FoodText.text = "";
@@ -101,7 +102,7 @@ namespace Game.Client
                 input.hasUnitPos = true;
                 input.unitPos = world.GetUnique<RootMotionComponent>().Position;
                 
-                InputService.ApplyInput(inputWorld, 1, input);
+                InputService.ApplyInput(inputWorld, playerId, input);
             });
             viewSystems.Run();
         }

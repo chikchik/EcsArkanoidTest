@@ -6,6 +6,7 @@ using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
+using Game.Ecs.ClientServer.Components.Physics;
 using Game.Fabros.Net.ClientServer;
 using Leopotam.EcsLite;
 
@@ -76,13 +77,16 @@ namespace Game.Ecs.ClientServer.Systems
         public void Interract(EcsWorld world, int unitEntity)
         {
             var result = new List<int>();
+            var position = unitEntity.EntityGet<PositionComponent>(world).value;
+            
             world.GetNearestEntities(
-                unitEntity.EntityGet<PositionComponent>(world).value,
+                position,
                 1, ref result, entity=> entity.EntityHas<InteractableComponent>(world));
 
             if (result.Count > 0)
             {
                 var entity = result[0];
+                
                 entity.EntityDel<InteractableComponent>(world);
                 unitEntity.EntityReplace<FoodCollectedComponent>(world).Value += 1;
                 ObjectiveService.Triggered(world, entity);
@@ -91,7 +95,20 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
                 }
+                
+                return;
             }
+            
+            world.GetNearestEntities(
+                position,
+                1, ref result, entity=> entity.EntityHas<RigidbodyComponent>(world));
+
+            if (result.Count > 0)
+            {
+                //var entity = result[0];
+                unitEntity.EntityAdd<PushingComponent>(world);
+            }
+
         }
     }
 }

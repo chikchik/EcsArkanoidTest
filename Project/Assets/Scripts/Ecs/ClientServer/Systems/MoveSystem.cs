@@ -12,6 +12,11 @@ namespace Game.Ecs.ClientServer.Systems
     {
     }
 
+    public struct PushingComponent
+    {
+    }
+
+    
     public class MoveSystem : IEcsRunSystem
     {
         public void Run(EcsSystems systems)

@@ -38,19 +38,14 @@ namespace Game.Ecs.Client.Systems
 
             filter = world.Filter<AnimationStateComponent>().IncChanges<AnimationStateComponent>().End();
 
-            foreach (var entity in filter)
-            {
-                var state = entity.EntityGet<AnimationStateComponent>(world).id;
-                var animatorComponent = poolAnimator.Get(entity);
-               // animatorComponent.animator.SetTrigger(state);
-            }
-            
+
              
             filter = world.Filter<FoodCollectedComponent>().IncChanges<FoodCollectedComponent>().End();
 
             foreach (var entity in filter)
             {
-                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("gather", 0.1f);
+                var animator = poolAnimator.Get(entity).animator;
+                animator.CrossFadeInFixedTime("gather", 0.1f);
             }
             
             
@@ -62,13 +57,16 @@ namespace Game.Ecs.Client.Systems
             }
             
             filter = world.FilterRemoved<MovingComponent>().End();
-
             foreach (var entity in filter)
             {
                 poolAnimator.Get(entity).animator.CrossFadeInFixedTime("idle", 0.1f);
             }
-            
-           
+
+            filter = world.FilterAdded<PushingComponent>().End();
+            foreach (var entity in filter)
+            {
+                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("kicking", 0.05f);
+            }
         }
     }
 }

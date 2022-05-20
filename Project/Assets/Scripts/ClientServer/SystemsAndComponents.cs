@@ -232,6 +232,7 @@ namespace Game.ClientServer
             systems.Add(new EventsSystem<ObjectiveCompletedComponent>());
             systems.Add(new EventsSystem<GateOpenedComponent>());
             systems.Add(new EventsSystem<FoodCollectedComponent>());
+            systems.Add(new EventsSystem<PushingComponent>());
             
 #if CLIENT
             systems.Add(new EventsSystem<AnimationStateComponent>());
