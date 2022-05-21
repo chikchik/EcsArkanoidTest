@@ -49,7 +49,7 @@ namespace Game.Fabros.EcsModules.Fire.ClientServer.Systems
                 if (dur < 0.25f)
                     continue;
 
-                world.GetNearestEntities(pos, 1f, ref entities, entity => !poolFire.Has(entity) && poolFlammable.Has(entity));
+                world.GetNearestEntities(entity, pos, 1f, ref entities, entity => !poolFire.Has(entity) && poolFlammable.Has(entity));
 
                 if (entities.Count == 0)
                     continue;

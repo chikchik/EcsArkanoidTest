@@ -22,9 +22,13 @@ namespace Game.Ecs.ClientServer.Systems
             var poolPosition = world.GetPool<PositionComponent>();
             var poolMoveDirection = world.GetPool<MoveSimpleDirectionComponent>();
             var poolTime = world.GetPool<TimeComponent>();
+            var poolStartTime = world.GetPool<StartSimpleMoveAtComponent>();
             
             foreach (var entity in filter)
             {
+                var startTime = poolStartTime.Get(entity).Time;
+                if (startTime > world.GetTime())
+                    continue;
                 var time = poolTime.Get(entity).time;
                 if (time > world.GetTime())
                 {

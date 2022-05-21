@@ -104,6 +104,12 @@ namespace Game.Client
                 
                 InputService.ApplyInput(inputWorld, playerId, input);
             });
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                var input = new UserInput{player = playerId, hasInteraction = true};
+                InputService.ApplyInput(inputWorld, playerId, input);
+            }
             viewSystems.Run();
         }
 

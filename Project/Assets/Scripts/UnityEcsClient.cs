@@ -138,7 +138,7 @@ namespace Game.Client
             Camera camera, Action<UserInput> addUserInput
             )
         {
-            if (unitEntity == -1 )
+            if (unitEntity == -1)
                 return;
             
             var forward = camera.transform.forward;

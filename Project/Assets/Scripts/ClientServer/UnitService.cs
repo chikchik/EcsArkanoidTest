@@ -42,7 +42,7 @@ namespace Game.ClientServer
             speedComponent.speed = 2f;
             
             ref var rigidBodyDefinitionComponent = ref entity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
-            rigidBodyDefinitionComponent.BodyType = BodyType.Dynamic;
+            rigidBodyDefinitionComponent.BodyType = BodyType.Kinematic;
             rigidBodyDefinitionComponent.Density = 985f;
             rigidBodyDefinitionComponent.Friction = 0.3f;
             rigidBodyDefinitionComponent.Restitution = 0;

@@ -31,6 +31,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 .Inc<PositionComponent>()
                 .Inc<RotationComponent>()
                 .End();
+            
             var bodyReferenceComponent = world.GetPool<BodyReferenceComponent>();
             var poolRigidBodyComponent = world.GetPool<RigidbodyComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
@@ -40,14 +41,20 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             {
                 var bodyReference = bodyReferenceComponent.Get(entity).BodyReference;
                 var bodyInfo = Box2DPhysics.GetBodyInfo(bodyReference);
-                ref var positionComponent = ref poolPosition.GetRef(entity);
-                ref var rotationComponent = ref poolRotation.GetRef(entity);
+                
                 ref var rigidBodyComponent = ref poolRigidBodyComponent.GetRef(entity);
-                positionComponent.value.x = bodyInfo.Position.x;
-                positionComponent.value.z = bodyInfo.Position.y;
-                rigidBodyComponent.LinearVelocity = bodyInfo.LinearVelocity;
-                rigidBodyComponent.AngularVelocity = bodyInfo.AngularVelocity;
-                rotationComponent.value = bodyInfo.Angle;
+                if (rigidBodyComponent.BodyType == BodyType.Dynamic)
+                {
+
+                    ref var positionComponent = ref poolPosition.GetRef(entity);
+                    ref var rotationComponent = ref poolRotation.GetRef(entity);
+
+                    positionComponent.value.x = bodyInfo.Position.x;
+                    positionComponent.value.z = bodyInfo.Position.y;
+                    rigidBodyComponent.LinearVelocity = bodyInfo.LinearVelocity;
+                    rigidBodyComponent.AngularVelocity = bodyInfo.AngularVelocity;
+                    rotationComponent.value = bodyInfo.Angle;
+                }
             }
         }
     }

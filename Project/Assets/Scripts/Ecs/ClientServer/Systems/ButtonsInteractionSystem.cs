@@ -34,7 +34,7 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var buttonEntity in filter)
             {
                 var pos = buttonEntity.EntityGet<PositionComponent>(world).value;
-                world.GetNearestEntities(pos, 0.5f, ref entities, entity => poolUnit.Has(entity) || poolBody.Has(entity));
+                world.GetNearestEntities(buttonEntity, pos, 0.5f, ref entities, entity => poolUnit.Has(entity) || poolBody.Has(entity));
 
                 
                 var pressed = entities.Count > 0;

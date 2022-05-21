@@ -2,6 +2,7 @@
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Grid.Other;
+using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.ClientServer.Physics;
 using Game.ClientServer.Physics.Components;
@@ -11,6 +12,7 @@ using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Physics;
 using Game.Fabros.Net.ClientServer;
 using Leopotam.EcsLite;
+using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Systems
 {
@@ -48,7 +50,8 @@ namespace Game.Ecs.ClientServer.Systems
                         var inputMoveComponent = poolInputMove.Get(inputEntity);
 
                         poolMoveDirection.GetRef(unitEntity).value = inputMoveComponent.Dir;
-                        poolLookDirection.GetRef(unitEntity).value = inputMoveComponent.Dir;
+                        if (inputMoveComponent.Dir.magnitude > 0)
+                            poolLookDirection.GetRef(unitEntity).value = inputMoveComponent.Dir;
 
                         unitEntity.EntityDel<TargetPositionComponent>(world);
 
@@ -81,7 +84,7 @@ namespace Game.Ecs.ClientServer.Systems
             var result = new List<int>();
             var position = unitEntity.EntityGet<PositionComponent>(world).value;
             
-            world.GetNearestEntities(
+            world.GetNearestEntities(unitEntity,
                 position,
                 1, ref result, entity=> entity.EntityHas<InteractableComponent>(world));
 
@@ -102,12 +105,14 @@ namespace Game.Ecs.ClientServer.Systems
             }
             
             world.GetNearestEntities(
+                unitEntity,
                 position,
                 1, ref result, entity=> entity.EntityHas<RigidbodyComponent>(world));
 
-            if (result.Count > 0)
+            //if (result.Count > 0)
             {
                 //var entity = result[0];
+                
                 unitEntity.EntityAdd<PushingComponent>(world);
                 var kickEntity = world.NewEntity();
                 ref var rb = ref kickEntity.EntityAdd<RigidbodyDefinitionComponent>(world);
@@ -119,13 +124,17 @@ namespace Game.Ecs.ClientServer.Systems
                 rb.RestitutionThreshold = 0.5f;   
 
                 ref var collider = ref kickEntity.EntityAddComponent<CircleColliderComponent>(world);
-                collider.Radius = 0.3f;
+                collider.Radius = 0.1f;
 
                 kickEntity.EntityAdd<PositionComponent>(world).value = position;
                 kickEntity.EntityAdd<RotationComponent>(world);
 
-                var lookDir = unitEntity.EntityGet<LookDirectionComponent>(world).value;
-                kickEntity.EntityAdd<TargetPositionComponent>(world).Value = position + lookDir*3;
+                var lookDir = unitEntity.EntityGet<LookDirectionComponent>(world).value.normalized;
+                kickEntity.EntityAdd<StartSimpleMoveAtComponent>(world).Time = world.GetTime() + 1f;
+                var dir = lookDir * 12;
+                kickEntity.EntityAdd<MoveSimpleDirectionComponent>(world).value = dir;
+                kickEntity.EntityAdd<DestroyWhenTimeIsOutComponent>(world);
+                kickEntity.EntityAdd<TimeComponent>(world).time = world.GetTime() + 1.1f;
             }
 
         }

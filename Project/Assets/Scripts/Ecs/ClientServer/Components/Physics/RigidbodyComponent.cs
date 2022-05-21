@@ -1,3 +1,5 @@
+using Game.ClientServer.Physics;
+using Game.Physics;
 using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Components.Physics
@@ -7,5 +9,6 @@ namespace Game.Ecs.ClientServer.Components.Physics
     {
         public Vector2 LinearVelocity;
         public float AngularVelocity;
+        public BodyType BodyType;
     }
 }

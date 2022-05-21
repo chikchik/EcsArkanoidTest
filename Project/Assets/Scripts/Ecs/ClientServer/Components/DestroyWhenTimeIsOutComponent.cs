@@ -6,4 +6,10 @@ namespace Game.Ecs.ClientServer.Components
     public struct DestroyWhenTimeIsOutComponent
     {
     }
+    
+    [Serializable]
+    public struct StartSimpleMoveAtComponent
+    {
+        public float Time;
+    }
 }
