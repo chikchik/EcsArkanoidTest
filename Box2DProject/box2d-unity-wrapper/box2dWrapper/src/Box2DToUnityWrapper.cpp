@@ -110,7 +110,7 @@ extern "C"
 
         b2ChainShape* shape = new b2ChainShape();
         shape->CreateLoop(b2Vertices, count);
-
+        b2Free(b2Vertices);
         return shape;
     }
 
@@ -121,6 +121,7 @@ extern "C"
 
         b2PolygonShape* shape = new b2PolygonShape();
         shape->Set(b2Vertices, count);
+        b2Free(b2Vertices);
         return shape;
     }
 
