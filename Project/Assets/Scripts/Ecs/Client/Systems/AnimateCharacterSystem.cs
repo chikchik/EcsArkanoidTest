@@ -66,7 +66,6 @@ namespace Game.Ecs.Client.Systems
             foreach (var entity in filter)
             {
                 poolAnimator.Get(entity).animator.CrossFadeInFixedTime("kicking", 0.05f);
-                entity.EntityDel<PushingComponent>(world);
             }
         }
     }

@@ -12,11 +12,7 @@ namespace Game.Ecs.ClientServer.Systems
     {
     }
 
-    public struct PushingComponent
-    {
-    }
 
-    
     public class MoveSystem : IEcsRunSystem
     {
         public void Run(EcsSystems systems)
@@ -34,7 +30,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
             var poolSpeed = world.GetPool<SpeedComponent>();
             var poolMoving = world.GetPool<MovingComponent>();
-            
+
             foreach (var entity in filter)
             {
                 var moveDirectionComponent = poolMoveDirection.Get(entity);
@@ -42,7 +38,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                 var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).Value;
                 //var dir = moveDirectionComponent.value * deltaTime * speedComponent.speed;
-                var dir = moveDirectionComponent.value * deltaTime * speed;//speedComponent.speed;
+                var dir = moveDirectionComponent.value * deltaTime * speed; //speedComponent.speed;
                 if (dir.sqrMagnitude > 0)
                 {
                     poolPosition.GetRef(entity).value += dir;

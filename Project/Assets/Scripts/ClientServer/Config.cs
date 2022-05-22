@@ -26,6 +26,7 @@ namespace Game.ClientServer
         public static int VELOCITY_ITERATIONS = 6;
         public static int POSITION_ITERATIONS = 2;
 
-        public static string url = $"wss://dev1.ecs.fbpub.net/XsZubnMOTHC0JRDTS95S/{ROOM}";
+        //public static string url = $"wss://dev1.ecs.fbpub.net/XsZubnMOTHC0JRDTS95S/{ROOM}";
+        public static string url = $"ws://localhost:9096/XsZubnMOTHC0JRDTS95S/{ROOM}";
     }
 }

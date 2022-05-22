@@ -103,39 +103,39 @@ namespace Game.Ecs.ClientServer.Systems
                 
                 return;
             }
-            
+         
+            /*
             world.GetNearestEntities(
                 unitEntity,
                 position,
                 1, ref result, entity=> entity.EntityHas<RigidbodyComponent>(world));
 
-            //if (result.Count > 0)
-            {
-                //var entity = result[0];
+            */
                 
-                unitEntity.EntityAdd<PushingComponent>(world);
-                var kickEntity = world.NewEntity();
-                ref var rb = ref kickEntity.EntityAdd<RigidbodyDefinitionComponent>(world);
-                
-                rb.BodyType = BodyType.Kinematic;
-                rb.Density = 985f;
-                rb.Friction = 0.3f;
-                rb.Restitution = 0;
-                rb.RestitutionThreshold = 0.5f;   
+            unitEntity.EntityAdd<PushingComponent>(world).EndTime = 1.3f;
+            
+            var kickEntity = world.NewEntity();
+            ref var rb = ref kickEntity.EntityAdd<RigidbodyDefinitionComponent>(world);
+            
+            rb.BodyType = BodyType.Kinematic;
+            rb.Density = 985f;
+            rb.Friction = 0.3f;
+            rb.Restitution = 0;
+            rb.RestitutionThreshold = 0.5f;   
 
-                ref var collider = ref kickEntity.EntityAddComponent<CircleColliderComponent>(world);
-                collider.Radius = 0.1f;
+            ref var collider = ref kickEntity.EntityAddComponent<CircleColliderComponent>(world);
+            collider.Radius = 0.1f;
 
-                kickEntity.EntityAdd<PositionComponent>(world).value = position;
-                kickEntity.EntityAdd<RotationComponent>(world);
+            kickEntity.EntityAdd<PositionComponent>(world).value = position;
+            kickEntity.EntityAdd<RotationComponent>(world);
 
-                var lookDir = unitEntity.EntityGet<LookDirectionComponent>(world).value.normalized;
-                kickEntity.EntityAdd<StartSimpleMoveAtComponent>(world).Time = world.GetTime() + 1f;
-                var dir = lookDir * 12;
-                kickEntity.EntityAdd<MoveSimpleDirectionComponent>(world).value = dir;
-                kickEntity.EntityAdd<DestroyWhenTimeIsOutComponent>(world);
-                kickEntity.EntityAdd<TimeComponent>(world).time = world.GetTime() + 1.1f;
-            }
+            var lookDir = unitEntity.EntityGet<LookDirectionComponent>(world).value.normalized;
+            kickEntity.EntityAdd<StartSimpleMoveAtComponent>(world).Time = world.GetTime() + 1f;
+            var dir = lookDir * 12;
+            kickEntity.EntityAdd<MoveSimpleDirectionComponent>(world).value = dir;
+            kickEntity.EntityAdd<DestroyWhenTimeIsOutComponent>(world);
+            kickEntity.EntityAdd<TimeComponent>(world).time = world.GetTime() + 1.1f;
+        
 
         }
     }

@@ -106,6 +106,7 @@ namespace Game.ClientServer
             pool.AddComponent<MoveSimpleDirectionComponent>();
             pool.AddComponent<DestroyWhenTimeIsOutComponent>();
             pool.AddComponent<TimeComponent>();
+            pool.AddComponent<StartSimpleMoveAtComponent>();
             
             //pool.AddComponent<BeginContactComponent>();
             //pool.AddComponent<EndContactComponent>();
@@ -166,6 +167,7 @@ namespace Game.ClientServer
             systems.Add(new MoveSystem());
             systems.Add(new SimpleMoveSystem());
             systems.Add(new UnitMoveSystem());
+            systems.Add(new PushingSystem());
             
             
             systems.DelHere<BeginContactComponent>();
