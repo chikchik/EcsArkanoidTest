@@ -26,7 +26,6 @@
 #include <stddef.h>
 #include <stdio.h>
 
-static const int32 b2_chunkSize = 16 * 1024;
 static const int32 b2_maxBlockSize = 640;
 static const int32 b2_chunkArrayIncrement = 128;
 
@@ -116,18 +115,12 @@ b2BlockAllocator::b2BlockAllocator(int32 chunkSpace)
 	memset(m_freeLists, 0, sizeof(m_freeLists));
 }
 
-//static FILE* file = fopen("G:/Work/Fabross/dbgB2dAllocator.txt", "wt");
-
-
 b2BlockAllocator::b2BlockAllocator() : b2BlockAllocator(b2_chunkArrayIncrement)
 {
 }
 
 b2BlockAllocator::~b2BlockAllocator()
 {
-	// fprintf(file, "~b2BlockAllocator begin\n");
-	// fflush(file);
-
 	for (int32 i = 0; i < m_chunkCount; ++i)
 	{
 		memset(m_chunks[i].blocks, 0xcd, b2_chunkSize);
@@ -201,9 +194,6 @@ void* b2BlockAllocator::Allocate(int32 size)
 
 void b2BlockAllocator::Free(void* p, int32 size)
 {
-	// fprintf(file, "Free begin %p\n", p);
-	// fflush(file);
-
 	if (size == 0)
 	{
 		return;
@@ -253,8 +243,6 @@ void b2BlockAllocator::Free(void* p, int32 size)
 
 void b2BlockAllocator::Clear()
 {
-	// fprintf(file, "Clear begin\n");
-	// fflush(file);
 	for (int32 i = 0; i < m_chunkCount; ++i)
 	{
 		b2Free(m_chunks[i].blocks);

@@ -13,8 +13,6 @@
 #elif __APPLE__ || defined(__ANDROID__)
     #define DllExport __attribute__((visibility("default")))
 #endif
-// FILE* file = fopen("G:/Work/Fabross/dbgB2dDestroyOutput.txt", "w+t");
-// FILE* fileBodyInfo = fopen("G:/Work/Fabross/dbgB2dBodyInfo.txt", "w+t");
 
 extern "C"
 {
@@ -48,23 +46,6 @@ extern "C"
 
     typedef void(__stdcall* CallbackDebug)(char*);
 
-
-    void PrintBodyInfo(b2World* world)
-    {
-        for (b2Body* b = world->m_bodyList; b; b = b->m_next)
-        {
-            int entity = (int)b->GetUserData().pointer;
-            // fprintf(fileBodyInfo, "body entity id = %d\n", entity);
-            // fflush(file);
-            for (b2Fixture* f = b->GetFixtureList(); f; f = f->m_next)
-            {
-                b2Shape::Type shapeType = f->GetShape()->GetType();
-                // fprintf(fileBodyInfo, "shape type = %d\n", shapeType);
-                // fflush(file);
-            }
-        }
-    }
-
     DllExport void DebugDraw(b2World* world)
     {
         if (world != NULL)
@@ -92,9 +73,10 @@ extern "C"
             return NULL;
         }
 
-        // World 1
+        // new World
         b2World* clonedWorld = new b2World(*world);
 
+        // do we need to set all callbacks manually?
         MyContactListener* myContactListener = new MyContactListener(clonedWorld);
         MyContactListener* oldContactListener = (MyContactListener*)world->GetContactListener();
         myContactListener->m_callbackBeginContact = oldContactListener->m_callbackBeginContact;
@@ -102,37 +84,16 @@ extern "C"
         myContactListener->m_callbackPreSolve = oldContactListener->m_callbackPreSolve;
         myContactListener->m_callbackPostSolve = oldContactListener->m_callbackPostSolve;
         clonedWorld->SetContactListener(myContactListener);
-
+        // same here
         MyDebugDraw* oldDbgDraw = (MyDebugDraw*)world->m_debugDraw;
         clonedWorld->m_debugDraw = new MyDebugDraw(oldDbgDraw->m_drawCircle, oldDbgDraw->m_drawPoint, oldDbgDraw->m_drawSegment,
             oldDbgDraw->m_drawTransform, oldDbgDraw->m_drawPolygon);
 
-        // World 2
-        b2World* clonedWorld2 = new b2World(*clonedWorld);
-        MyContactListener* myContactListener2 = new MyContactListener(clonedWorld2);
-        MyContactListener* oldContactListener2 = (MyContactListener*)world->GetContactListener();
-        myContactListener2->m_callbackBeginContact = oldContactListener2->m_callbackBeginContact;
-        myContactListener2->m_callbackEndContact = oldContactListener2->m_callbackEndContact;
-        myContactListener2->m_callbackPreSolve = oldContactListener2->m_callbackPreSolve;
-        myContactListener2->m_callbackPostSolve = oldContactListener2->m_callbackPostSolve;
-        clonedWorld2->SetContactListener(myContactListener2);
-
-        MyDebugDraw* oldDbgDraw2 = (MyDebugDraw*)clonedWorld->m_debugDraw;
-        clonedWorld2->m_debugDraw = new MyDebugDraw(oldDbgDraw2->m_drawCircle, oldDbgDraw2->m_drawPoint, oldDbgDraw->m_drawSegment,
-            oldDbgDraw2->m_drawTransform, oldDbgDraw2->m_drawPolygon);
-
-
-        DestroyWorld(clonedWorld);
-
-        clonedWorld2->Dump();
-        PrintBodyInfo(clonedWorld2);
-        return clonedWorld2;
+        return clonedWorld;
     }
 
     DllExport b2World* CreateWorld(Vector2 gravity)
     {
-        // fprintf(file, "dbgB2dDestroyOutput opened\n");
-        // fflush(file);
         b2Vec2 bGravity(gravity.x, gravity.y);
         b2World* world = new b2World(bGravity);
 
@@ -266,19 +227,9 @@ extern "C"
 
     DllExport void DestroyWorld(b2World* world)
     {
-        // fprintf(file, "DestroyWorld start\n");
-        // fflush(file);
         b2ContactListener* myContactListener = world->GetContactListener();
-        // fprintf(file, "1\n");
-        // fflush(file);
         delete myContactListener;
-        // fprintf(file, "2\n");
-        // fflush(file);
-        // fprintf(file, "DestroyWorld before delete\n");
-        // fflush(file);
         delete world;
-        // fprintf(file, "DestroyWorld after delete\n");
-        // fflush(file);
     }
 
     DllExport b2Body* CreateBody(b2World* world, int bodyType, Vector2 position, float angle, int entity)

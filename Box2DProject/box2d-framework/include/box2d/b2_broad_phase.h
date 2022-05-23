@@ -206,11 +206,7 @@ void b2BroadPhase::UpdatePairs(T* callback)
 		void* userDataA = m_tree.GetUserData(primaryPair->proxyIdA);
 		void* userDataB = m_tree.GetUserData(primaryPair->proxyIdB);
 
-		// fprintf(file, "UpdatePairs AddPair before i =%d\n", i);
-		// fflush(file);
 		callback->AddPair(userDataA, userDataB);
-		// fprintf(file, "UpdatePairs AddPair after i =%d\n", i);
-		// fflush(file);
 	}
 
 

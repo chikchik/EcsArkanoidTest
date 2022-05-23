@@ -52,6 +52,7 @@ set(BOX2D_SOURCE_FILES
 	dynamics/b2_wheel_joint.cpp
 	dynamics/b2_world.cpp
 	dynamics/b2_world_callbacks.cpp
+	dynamics/clone_world.cpp
 	rope/b2_rope.cpp)
 
 set(BOX2D_HEADER_FILES
@@ -94,6 +95,7 @@ set(BOX2D_HEADER_FILES
 	../include/box2d/b2_wheel_joint.h
 	../include/box2d/b2_world.h
 	../include/box2d/b2_world_callbacks.h
+	../include/box2d/clone_world.h
 	../include/box2d/box2d.h)
 
 add_library(box2d ${BOX2D_SOURCE_FILES} ${BOX2D_HEADER_FILES})

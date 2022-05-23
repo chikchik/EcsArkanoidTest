@@ -27,6 +27,7 @@
 #include "b2_settings.h"
 
 const int32 b2_blockSizeCount = 14;
+static const int32 b2_chunkSize = 16 * 1024;
 
 struct b2Block;
 struct b2Chunk;

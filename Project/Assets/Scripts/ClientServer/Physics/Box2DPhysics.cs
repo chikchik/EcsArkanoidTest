@@ -145,5 +145,9 @@ namespace Game.ClientServer.Physics
         [DllImport(DllName)]
         public static extern void SetFlagsForDebugDraw(IntPtr worldPtr, UInt32 box2dDebugDrawFlags = 0);
 
+
+        [DllImport(DllName)]
+        public static extern IntPtr CloneWorld(IntPtr world);
+
     }
 }
