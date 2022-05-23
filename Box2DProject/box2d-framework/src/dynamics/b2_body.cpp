@@ -28,8 +28,14 @@
 
 #include <new>
 
-b2Body::b2Body(const b2BodyDef* bd, b2World* world)
+#include <stdio.h>
+//static FILE* file = fopen("G:/Work/Fabross/dbgB2db2Body.txt", "w+t");
+
+b2Body::b2Body(const b2BodyDef* bd, b2World* world, char* hint)
 {
+	// fprintf(file, "b2Body b2Body c'tor %s %p\n", hint, this);
+	// fflush(file);
+
 	b2Assert(bd->position.IsValid());
 	b2Assert(bd->linearVelocity.IsValid());
 	b2Assert(b2IsValid(bd->angle));
@@ -101,6 +107,8 @@ b2Body::b2Body(const b2BodyDef* bd, b2World* world)
 
 	m_fixtureList = nullptr;
 	m_fixtureCount = 0;
+	// fprintf(file, "b2Body end %s\n", hint);
+	// fflush(file);
 }
 
 b2Body::~b2Body()

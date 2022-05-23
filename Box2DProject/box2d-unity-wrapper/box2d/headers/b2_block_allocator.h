@@ -48,13 +48,25 @@ public:
 
 	void Clear();
 
-private:
+	explicit b2BlockAllocator(int chunkSpace);
+	b2BlockAllocator(const b2BlockAllocator& other);
 
 	b2Chunk* m_chunks;
+	b2Block* m_freeLists[b2_blockSizeCount];
 	int32 m_chunkCount;
 	int32 m_chunkSpace;
 
-	b2Block* m_freeLists[b2_blockSizeCount];
+};
+
+struct b2Chunk
+{
+	int32 blockSize;
+	b2Block* blocks;
+};
+
+struct b2Block
+{
+	b2Block* next;
 };
 
 #endif

@@ -38,7 +38,18 @@
 #include "box2d/b2_timer.h"
 #include "box2d/b2_world.h"
 
+#include "box2d/b2_gear_joint.h"
+
 #include <new>
+#include <unordered_set>
+#include <set>
+#include <map>
+#include <fstream>
+
+void PrintBodyInfo(b2Body* body, char* hint,
+	b2ContactEdge* edge, const std::unordered_set<void*>& movedObjs);
+static int copyIter = 0;
+
 
 b2World::b2World(const b2Vec2& gravity)
 {
@@ -69,10 +80,557 @@ b2World::b2World(const b2Vec2& gravity)
 	m_contactManager.m_allocator = &m_blockAllocator;
 
 	memset(&m_profile, 0, sizeof(b2Profile));
+
+}
+
+struct CloneWorldInfo
+{
+	b2BlockAllocator* allocator = nullptr;
+	int offset = 0;
+	std::unordered_set<void*> movedObjs;
+	std::map<void*const, ptrdiff_t> offsets;
+	std::set<void*> newAdresses; // Todel
+
+	b2World* m_newWorld;
+
+	 FILE* f = fopen("G:/Work/Fabross/dbgB2dOutput.txt", "wt");
+	// FILE* fMove = fopen("G:/Work/Fabross/dbgB2dMoveBegin.txt", "wt");
+	// FILE* fMoveOldNew = fopen("G:/Work/Fabross/dbgB2dMoveOldNew.txt", "w+t");
+
+	CloneWorldInfo(const b2BlockAllocator& newAllocator,
+		const b2BlockAllocator& oldAllocator)
+	{
+		for (int32 i = 0; i < oldAllocator.m_chunkCount; ++i)
+		{
+			b2Chunk* oldChunk = oldAllocator.m_chunks + i;
+			b2Chunk* newChunk = newAllocator.m_chunks + i;
+
+			size_t offset = reinterpret_cast<int8*>(newChunk->blocks)
+				- reinterpret_cast<int8*>(oldChunk->blocks);
+
+			offsets.insert(std::make_pair(oldChunk->blocks, offset));
+			newAdresses.insert(newChunk->blocks);
+		}
+		fprintf(f, "offset size %d", offsets.size());
+		fflush(f);
+	}
+
+	bool IsNewAdresses(void* p)
+	{
+		auto it = newAdresses.lower_bound(p);
+
+		if (it == newAdresses.end()
+			|| it != newAdresses.begin()
+			&& *it != p)
+		{
+			--it;
+		}
+		return (int8*)p >= (int8*)*it
+			&& (int8*)p <= (int8*)*it + 224;
+	}
+
+	bool IsOldAdress(void* p)
+	{
+		auto it = offsets.lower_bound(p);
+
+		if (it == offsets.end()
+			|| it != offsets.begin()
+			&& it->first != p)
+		{
+			--it;
+		}
+		return (int8*)p >= (int8*)it->first
+			&& (int8*)p <= (int8*)it->first + 224;
+	}
+
+	template<class  T>
+	T* GetMovedAdress(T* ptr, int idx)
+	{
+		return reinterpret_cast<T*>(reinterpret_cast<int8*>(ptr)
+			+ GetMovedOffset(ptr, idx));
+	}
+
+	size_t GetMovedOffset(void* p, int idx)
+	{
+		auto it = offsets.lower_bound(p);
+		
+		if (it == offsets.end()
+			|| it != offsets.begin()
+			&& it->first != p)
+		{
+			--it;
+		}
+		
+		 //fprintf(f, "GetMovedOffset %d\n", idx);
+		for each (auto obj in offsets)
+		{
+			 //fprintf(f, "%p\n", (int8*)obj.first);
+		}
+		 //fprintf(f, "%p - %p - %d\n", (int8*)p, (int8*)it->first, (int8*)p - (int8*)it->first);
+
+		//fflush(f);
+		b2Assert((int8*)p >= (int8*)it->first
+			&& (int8*)p <= (int8*)it->first + 224);
+
+		return it->second;
+	}
+
+	template<class T>
+	void IterateMove(T* head)
+	{
+		T* curNode = head;
+		while (curNode != nullptr)
+		{
+			// fprintf(fMoveOldNew, "IterateMove before %p - %p\n", curNode, curNode->m_next);
+			// fflush(fMoveOldNew);
+
+			Move(curNode);
+			// fprintf(fMoveOldNew, "IterateMove before %p - %p\n", curNode, curNode->m_next);
+			// fflush(fMoveOldNew);
+
+			curNode = curNode->m_next;
+		}
+	}
+
+	template<class T>
+	void IterateMove2(T* head)
+	{
+		T* curNode = head;
+		while (curNode != nullptr)
+		{
+			// fprintf(fMoveOldNew, "IterateMove2 before %p - %p\n", curNode, curNode->next);
+			// fflush(fMoveOldNew);
+
+			Move(curNode);
+			// fprintf(fMoveOldNew, "IterateMove2 after %p - %p\n", curNode, curNode->next);
+			// fflush(fMoveOldNew);
+			curNode = curNode->next;
+		}
+	}
+
+	void Move(b2World* newWorld, const b2World* oldWorld)
+	{
+		for each (auto obj in offsets)
+		{
+			// fprintf(fMove, "Move %d\n", obj.second);
+		}
+		// fflush(fMove);
+		
+		m_newWorld = newWorld;
+		if (oldWorld->m_bodyList != nullptr)
+		{
+			m_newWorld->m_bodyList =GetMovedAdress(oldWorld->m_bodyList, 0);
+			IterateMove(m_newWorld->m_bodyList);
+		}
+
+		if (oldWorld->m_jointList != nullptr)
+		{
+			// fprintf(fMoveOldNew, "Move b2World m_jointList %p\n",oldWorld->m_jointList);
+			// fflush(fMoveOldNew);
+			m_newWorld->m_jointList = GetMovedAdress(oldWorld->m_jointList, 1);
+			IterateMove(m_newWorld->m_jointList);
+		}
+		// fprintf(fMoveOldNew, "Move b2World after m_jointList %p\n", oldWorld->m_jointList);
+		// fflush(fMoveOldNew);
+	}
+
+	void Move(b2Body* obj)
+	{
+		if (IsOldAdress(obj))
+		{
+			// fprintf(fMoveOldNew, "b2Body IsOldAdress %p\n", obj);
+			// fflush(fMoveOldNew);
+		}
+		if (IsNewAdresses(obj))
+		{
+			// fprintf(fMoveOldNew, "b2Body IsNewAdresses %p\n", obj);
+			// fflush(fMoveOldNew);
+		}
+		// fprintf(fMoveOldNew, "b2Body %p - %d\n", obj, copyIter);
+		// fflush(fMoveOldNew);
+
+		b2Assert(!IsOldAdress(obj));
+
+		if (movedObjs.find(obj) != movedObjs.end()) return;
+		movedObjs.insert(obj);
+
+		obj->m_world = m_newWorld;
+
+		if (obj->m_prev != nullptr)
+		{
+			obj->m_prev = GetMovedAdress(obj->m_prev, 2);
+		}
+
+		if (obj->m_next != nullptr)
+		{
+			obj->m_next = GetMovedAdress(obj->m_next, 3);
+		}
+
+		if (obj->m_fixtureList != nullptr)
+		{
+			obj->m_fixtureList = GetMovedAdress(obj->m_fixtureList, 4);
+			IterateMove(obj->m_fixtureList);
+		}
+
+		if (obj->m_jointList != nullptr)
+		{
+			obj->m_jointList = GetMovedAdress(obj->m_jointList, 5);
+			IterateMove2(obj->m_jointList);
+		}
+
+		if (obj->m_contactList != nullptr)
+		{
+			obj->m_contactList = GetMovedAdress(obj->m_contactList, 6);
+			IterateMove2(obj->m_contactList);
+		}
+	}
+
+	void Move(b2Joint* obj)
+	{
+		if (IsOldAdress(obj))
+		{
+			// fprintf(fMoveOldNew, "b2Joint IsOldAdress %p\n", obj);
+			// fflush(fMoveOldNew);
+		}
+		if (IsNewAdresses(obj))
+		{
+			// fprintf(fMoveOldNew, "b2Joint IsNewAdresses %p\n", obj);
+			// fflush(fMoveOldNew);
+		}
+		// fprintf(fMoveOldNew, "b2Joint %p - %d\n", obj, copyIter);
+		// fflush(fMoveOldNew);
+		b2Assert(!IsOldAdress(obj));
+
+		if (movedObjs.find(obj) != movedObjs.end()) return;
+		movedObjs.insert(obj);
+		// fprintf(fMoveOldNew, "b2ContactEdge after b2Assert %p - %p\n",obj, obj->m_next);
+		// fflush(fMoveOldNew);
+
+		if (obj->m_prev != nullptr)
+		{
+			obj->m_prev = GetMovedAdress(obj->m_prev, 7);
+		}
+
+		if (obj->m_next != nullptr)
+		{
+			obj->m_next = GetMovedAdress(obj->m_next, 8);
+		}
+
+		if (obj->m_bodyA != nullptr)
+		{
+			obj->m_bodyA = GetMovedAdress(obj->m_bodyA, 9);
+			Move(obj->m_bodyA);
+		}
+		if (obj->m_bodyB != nullptr)
+		{
+			obj->m_bodyB = GetMovedAdress(obj->m_bodyB, 10);
+			Move(obj->m_bodyB);
+		}
+
+		Move(&obj->m_edgeA);
+		Move(&obj->m_edgeB);
+
+		if (auto gearJoint = dynamic_cast<b2GearJoint*>(obj))
+		{
+			if (gearJoint->m_joint1 != nullptr)
+			{
+				gearJoint->m_joint1 = GetMovedAdress(gearJoint->m_joint1, 11);
+				Move(gearJoint->m_joint1);
+			}
+			if (gearJoint->m_joint1 != nullptr)
+			{
+				gearJoint->m_joint2 = GetMovedAdress(gearJoint->m_joint2, 12);
+				Move(gearJoint->m_joint2);
+			}
+
+			if (gearJoint->m_bodyC != nullptr)
+			{
+				gearJoint->m_bodyC = GetMovedAdress(gearJoint->m_bodyC, 13);
+				Move(gearJoint->m_bodyC);
+			}
+			if (gearJoint->m_bodyD != nullptr)
+			{
+				gearJoint->m_bodyD = GetMovedAdress(gearJoint->m_bodyD, 14);
+				Move(gearJoint->m_bodyD);
+			}
+		}
+	}
+
+	void Move(b2JointEdge* jointEdge)
+	{
+		if (IsOldAdress(jointEdge))
+		{
+			// fprintf(fMoveOldNew, "b2JointEdge IsOldAdress %p\n", jointEdge);
+			// fflush(fMoveOldNew);
+		}
+		if (IsNewAdresses(jointEdge))
+		{
+			// fprintf(fMoveOldNew, "b2JointEdge IsNewAdresses %p\n", jointEdge);
+			// fflush(fMoveOldNew);
+		}
+		// fprintf(fMoveOldNew, "b2JointEdge %p - %d\n", jointEdge, copyIter);
+		// fflush(fMoveOldNew);
+
+		b2Assert(!IsOldAdress(jointEdge));
+
+		if (movedObjs.find(jointEdge) != movedObjs.end()) return;
+		movedObjs.insert(jointEdge);
+
+		if (jointEdge->prev != nullptr)
+		{
+			jointEdge->prev = GetMovedAdress(jointEdge->prev, 17);
+		}
+
+		if (jointEdge->next != nullptr)
+		{
+			jointEdge->next = GetMovedAdress(jointEdge->next, 18);
+		}
+
+		if (jointEdge->other != nullptr)
+		{
+			jointEdge->other = GetMovedAdress(jointEdge->other, 15);
+			Move(jointEdge->other);
+		}
+
+		if (jointEdge->joint != nullptr)
+		{
+			jointEdge->joint = GetMovedAdress(jointEdge->joint, 16);
+			IterateMove(jointEdge->joint);
+		}
+
+	}
+
+	void Move(b2ContactEdge* contactEdge)
+	{
+		if (IsOldAdress(contactEdge))
+		{
+			// fprintf(fMoveOldNew, "b2ContactEdge IsOldAdress %p\n", contactEdge);
+			// fflush(fMoveOldNew);
+		}
+		if (IsNewAdresses(contactEdge))
+		{
+			// fprintf(fMoveOldNew, "b2ContactEdge IsNewAdresses %p\n", contactEdge);
+			// fflush(fMoveOldNew);
+		}
+		// fprintf(fMoveOldNew, "b2ContactEdge %p - %d\n", contactEdge, copyIter);
+		// fflush(fMoveOldNew);
+
+		b2Assert(!IsOldAdress(contactEdge));
+		if (movedObjs.find(contactEdge) != movedObjs.end()) return;
+		movedObjs.insert(contactEdge);
+
+		// fprintf(fMoveOldNew, "b2ContactEdge after b2Assert %p - %p\n",contactEdge, contactEdge->next);
+		// fflush(fMoveOldNew);
+
+		if (contactEdge->prev)
+		{
+			contactEdge->prev = GetMovedAdress(contactEdge->prev, 21);
+		}
+
+		if (contactEdge->next)
+		{
+			bool isOld = IsOldAdress(contactEdge);
+			// fprintf(fMoveOldNew, "b2ContactEdge before GetMovedAdress IsOldAdress %d\n", isOld);
+			// fflush(fMoveOldNew);
+
+			contactEdge->next = GetMovedAdress(contactEdge->next, 22);
+			bool isNew = IsNewAdresses(contactEdge);
+			// fprintf(fMoveOldNew, "b2ContactEdge after GetMovedAdress IsNewAdress %d\n", isNew);
+			// fflush(fMoveOldNew);
+		}
+
+		if (contactEdge->other)
+		{
+			PrintBodyInfo(contactEdge->other, "before", contactEdge, movedObjs);
+			contactEdge->other = GetMovedAdress(contactEdge->other, 19);
+			PrintBodyInfo(contactEdge->other, "after", contactEdge, movedObjs);
+			Move(contactEdge->other);
+		}
+
+		if (contactEdge->contact)
+		{
+			contactEdge->contact = GetMovedAdress(contactEdge->contact, 20);
+			Move(contactEdge->contact);
+		}
+
+		// fprintf(fMoveOldNew, "b2ContactEdge end b2Assert %p - %p\n", contactEdge, contactEdge->next);
+		// fflush(fMoveOldNew);
+	}
+
+	void Move(b2Contact* obj)
+	{
+		if (IsOldAdress(obj))
+		{
+			// fprintf(fMoveOldNew, "b2Contact IsOldAdress %p\n", obj);
+			// fflush(fMoveOldNew);
+		}
+		if (IsNewAdresses(obj))
+		{
+			// fprintf(fMoveOldNew, "b2Contact IsNewAdresses %p\n", obj);
+			// fflush(fMoveOldNew);
+		}
+		// fprintf(fMoveOldNew, "b2Contact %p - %d\n", obj, copyIter);
+		// fflush(fMoveOldNew);
+
+		b2Assert(!IsOldAdress(obj));
+		if (movedObjs.find(obj) != movedObjs.end()) return;
+		movedObjs.insert(obj);
+
+		if (obj->m_prev != nullptr)
+		{
+			obj->m_prev = GetMovedAdress(obj->m_prev, 23);
+		}
+		if (obj->m_next != nullptr)
+		{
+			obj->m_next = GetMovedAdress(obj->m_next, 24);
+		}
+
+		// fprintf(fMoveOldNew, "b2Contact before Move %p - %p - %p - %d\n", &obj->m_nodeA,  &obj->m_nodeB, obj, (int8*)&obj->m_nodeA - (int8*)&obj->m_nodeB);
+		// fflush(fMoveOldNew);
+
+		IterateMove2(&obj->m_nodeA);
+		IterateMove2(&obj->m_nodeB);
+
+		if (obj->m_fixtureA != nullptr)
+		{
+			obj->m_fixtureA = GetMovedAdress(obj->m_fixtureA, 25);
+			IterateMove(obj->m_fixtureA);
+		}
+		if (obj->m_fixtureB != nullptr)
+		{
+			obj->m_fixtureB = GetMovedAdress(obj->m_fixtureB, 26);
+			IterateMove(obj->m_fixtureB);
+		}
+	}
+
+	void Move(b2Fixture* fixture)
+	{
+		if (IsOldAdress(fixture))
+		{
+			// fprintf(fMoveOldNew, "b2Fixture IsOldAdress %p\n", fixture);
+			// fflush(fMoveOldNew);
+		}
+		if (IsNewAdresses(fixture))
+		{
+			// fprintf(fMoveOldNew, "b2Fixture IsNewAdresses %p\n", fixture);
+			// fflush(fMoveOldNew);
+		}
+		// fprintf(fMoveOldNew, "b2Fixture %p - %d\n", fixture, copyIter);
+		// fflush(fMoveOldNew);
+		b2Assert(!IsOldAdress(fixture));
+
+		if (movedObjs.find(fixture) != movedObjs.end()) return;
+		movedObjs.insert(fixture);
+		if (fixture->m_next != nullptr)
+		{
+			fixture->m_next = GetMovedAdress(fixture->m_next, 27);
+		}
+		if (fixture->m_body != nullptr)
+		{
+			fixture->m_body = GetMovedAdress(fixture->m_body, 28);
+			Move(fixture->m_body);
+		}
+		if (fixture->m_shape != nullptr)
+		{
+			fixture->m_shape = GetMovedAdress(fixture->m_shape, 29);
+		}
+		if (fixture->m_proxies != nullptr)
+		{
+			fixture->m_proxies = GetMovedAdress(fixture->m_proxies, 30);
+		}
+	}
+
+	void Move(b2Shape* shape)
+	{
+		if (IsOldAdress(shape))
+		{
+			// fprintf(fMoveOldNew, "b2Shape IsOldAdress %p\n", shape);
+			// fflush(fMoveOldNew);
+		}
+		if (IsNewAdresses(shape))
+		{
+			// fprintf(fMoveOldNew, "b2Shape IsNewAdresses %p\n", shape);
+			// fflush(fMoveOldNew);
+		}
+		// fprintf(fMoveOldNew, "b2Shape %p - %d\n", shape, copyIter);
+		// fflush(fMoveOldNew);
+		b2Assert(IsNewAdresses(shape));
+
+		if (movedObjs.find(shape) != movedObjs.end()) return;
+		movedObjs.insert(shape);
+		// TODO chain shape maybe remove
+	}
+
+	void Move(b2FixtureProxy* proxy)
+	{
+		if (IsOldAdress(proxy))
+		{
+			// fprintf(fMoveOldNew, "b2FixtureProxy IsOldAdress %p\n", proxy);
+			// fflush(fMoveOldNew);
+		}
+		if (IsNewAdresses(proxy))
+		{
+			// fprintf(fMoveOldNew, "b2FixtureProxy IsNewAdresses %p\n", proxy);
+			// fflush(fMoveOldNew);
+		}
+		// fprintf(fMoveOldNew, "b2FixtureProxy %p - %d\n", proxy, copyIter);
+		// fflush(fMoveOldNew);
+		b2Assert(IsNewAdresses(proxy));
+
+		if (movedObjs.find(proxy) != movedObjs.end()) return;
+		movedObjs.insert(proxy);
+
+		if (proxy->fixture != nullptr)
+		{
+			proxy->fixture = GetMovedAdress(proxy->fixture, 31);
+			IterateMove(proxy->fixture);
+		}
+	}
+};
+
+//static FILE* fileWorldBodyInfo = fopen("G:/Work/Fabross/dbgB2dfileWorldBodyInfo.txt", "wt");
+
+void PrintBodyInfo(b2Body* body, char* hint,
+	b2ContactEdge* edge, const std::unordered_set<void*>& movedObjs)
+{
+	// fprintf(fileWorldBodyInfo, "PrintBodyInfo begin %p - %p - %s - %p\n", (int8*)body, body, hint, edge);
+	// fflush(fileWorldBodyInfo);
+
+	// fprintf(fileWorldBodyInfo, "PrintmovedObjs size %d copyIter %d\n", movedObjs.size(), copyIter);
+	//for each (auto var in movedObjs)
+	//{
+	//	// fprintf(fileWorldBodyInfo, "PrintBodyInfo begin %p\n", var);
+	//}
+		// fflush(fileWorldBodyInfo);
+
+	for (b2Body* b = body; b; b = b->m_next)
+	{
+		int entity = (int)b->GetUserData().pointer;
+		//// fprintf(fileWorldBodyInfo, "body entity id = %d pointer = %p\n", entity, b);
+		//// fflush(fileWorldBodyInfo);
+		for (b2Fixture* f = b->GetFixtureList(); f; f = f->m_next)
+		{
+			b2Shape::Type shapeType = f->GetShape()->GetType();
+			//// fprintf(fileWorldBodyInfo, "shape type = %d\n", shapeType);
+			//// fflush(fileWorldBodyInfo);
+		}
+	}
+}
+
+b2World::b2World(const b2World& world)
+	: m_blockAllocator(world.m_blockAllocator),
+	m_bodyList(nullptr), m_jointList(nullptr)
+{	
+	CloneWorldInfo cloneWorld(m_blockAllocator, world.m_blockAllocator);
+	cloneWorld.Move(this, &world);
+	++copyIter;
 }
 
 b2World::~b2World()
 {
+	// FILE* file = fopen("G:/Work/Fabross/dbgB2dDestroyOutput.txt", "wt");
+	// fprintf(file, "DestroyWorld before m_debugDraw\n");
+	// fflush(file);
 	delete m_debugDraw;
 	// Some shapes allocate using b2Alloc.
 	b2Body* b = m_bodyList;
@@ -85,12 +643,18 @@ b2World::~b2World()
 		{
 			b2Fixture* fNext = f->m_next;
 			f->m_proxyCount = 0;
+			// fprintf(file, "DestroyWorld before m_blockAllocator\n");
+			// fflush(file);
 			f->Destroy(&m_blockAllocator);
+			// fprintf(file, "DestroyWorld after m_blockAllocator\n");
+			// fflush(file);
 			f = fNext;
 		}
 
 		b = bNext;
 	}
+	// fprintf(file, "DestroyWorld ~b2World\n");
+	// fflush(file);
 }
 
 void b2World::SetDestructionListener(b2DestructionListener* listener)
@@ -132,7 +696,7 @@ b2Body* b2World::CreateBody(const b2BodyDef* def)
 	}
 
 	void* mem = m_blockAllocator.Allocate(sizeof(b2Body));
-	b2Body* b = new (mem) b2Body(def, this);
+	b2Body* b = new (mem) b2Body(def, this, "CreateBody");
 
 	// Add to world doubly linked list.
 	b->m_prev = nullptr;
@@ -404,6 +968,10 @@ void b2World::SetAllowSleeping(bool flag)
 // Find islands, integrate and solve constraints, solve position constraints
 void b2World::Solve(const b2TimeStep& step)
 {
+	// FILE* file = fopen("G:/Work/Fabross/dbgB2dSolve.txt", "w+t");
+	// fprintf(file, "Solve begin\n");
+	// fflush(file);
+
 	m_profile.solveInit = 0.0f;
 	m_profile.solveVelocity = 0.0f;
 	m_profile.solvePosition = 0.0f;
@@ -414,6 +982,9 @@ void b2World::Solve(const b2TimeStep& step)
 					m_jointCount,
 					&m_stackAllocator,
 					m_contactManager.m_contactListener);
+	// fprintf(file, "Solve after b2Island\n");
+	// fflush(file);
+
 
 	// Clear all the island flags.
 	for (b2Body* b = m_bodyList; b; b = b->m_next)
@@ -428,6 +999,8 @@ void b2World::Solve(const b2TimeStep& step)
 	{
 		j->m_islandFlag = false;
 	}
+	// fprintf(file, "Solve after Clear all the island flags\n");
+	// fflush(file);
 
 	// Build and simulate all awake islands.
 	int32 stackSize = m_bodyCount;
@@ -545,6 +1118,8 @@ void b2World::Solve(const b2TimeStep& step)
 				other->m_flags |= b2Body::e_islandFlag;
 			}
 		}
+		// fprintf(file, "Solve after DFS\n");
+		// fflush(file);
 
 		b2Profile profile;
 		island.Solve(&profile, step, m_gravity, m_allowSleep);
@@ -562,10 +1137,13 @@ void b2World::Solve(const b2TimeStep& step)
 				b->m_flags &= ~b2Body::e_islandFlag;
 			}
 		}
+		// fprintf(file, "Solve after Post solve cleanup\n");
+		// fflush(file);
 	}
 
 	m_stackAllocator.Free(stack);
-
+	// fprintf(file, "Solve after m_stackAllocator.Free\n");
+	// fflush(file);
 	{
 		b2Timer timer;
 		// Synchronize fixtures, check for out of range bodies.
@@ -584,11 +1162,16 @@ void b2World::Solve(const b2TimeStep& step)
 
 			// Update fixtures (for broad-phase).
 			b->SynchronizeFixtures();
+			// fprintf(file, "Solve after Update fixtures\n");
+			// fflush(file);
 		}
 
 		// Look for new contacts.
 		m_contactManager.FindNewContacts();
 		m_profile.broadphase = timer.GetMilliseconds();
+		// fprintf(file, "Solve after Look for new contacts\n");
+		// fflush(file);
+		//fclose(file);
 	}
 }
 
@@ -915,16 +1498,25 @@ void b2World::SolveTOI(const b2TimeStep& step)
 
 void b2World::Step(float dt, int32 velocityIterations, int32 positionIterations)
 {
+	// FILE* file = fopen("G:/Work/Fabross/dbgB2dStep.txt", "wt");
+	// fprintf(file, "Step begin\n");
+	// fflush(file);
+
 	b2Timer stepTimer;
+	// fprintf(file, "Step after timer\n");
+	// fflush(file);
 
 	// If new fixtures were added, we need to find the new contacts.
+	m_locked = true;
 	if (m_newContacts)
 	{
 		m_contactManager.FindNewContacts();
 		m_newContacts = false;
 	}
 
-	m_locked = true;
+	// fprintf(file, "Step after FindNewContacts\n");
+	// fflush(file);
+
 
 	b2TimeStep step;
 	step.dt = dt;
@@ -938,6 +1530,8 @@ void b2World::Step(float dt, int32 velocityIterations, int32 positionIterations)
 	{
 		step.inv_dt = 0.0f;
 	}
+	// fprintf(file, "Step after positionIterations\n");
+	// fflush(file);
 
 	step.dtRatio = m_inv_dt0 * dt;
 
@@ -949,6 +1543,8 @@ void b2World::Step(float dt, int32 velocityIterations, int32 positionIterations)
 		m_contactManager.Collide();
 		m_profile.collide = timer.GetMilliseconds();
 	}
+	// fprintf(file, "Step after Collide\n");
+	// fflush(file);
 
 	// Integrate velocities, solve velocity constraints, and integrate positions.
 	if (m_stepComplete && step.dt > 0.0f)
@@ -957,6 +1553,8 @@ void b2World::Step(float dt, int32 velocityIterations, int32 positionIterations)
 		Solve(step);
 		m_profile.solve = timer.GetMilliseconds();
 	}
+	// fprintf(file, "Step after Solve\n");
+	// fflush(file);
 
 	// Handle TOI events.
 	if (m_continuousPhysics && step.dt > 0.0f)
@@ -965,20 +1563,29 @@ void b2World::Step(float dt, int32 velocityIterations, int32 positionIterations)
 		SolveTOI(step);
 		m_profile.solveTOI = timer.GetMilliseconds();
 	}
+	// fprintf(file, "Step after SolveTOI\n");
+	// fflush(file);
 
 	if (step.dt > 0.0f)
 	{
 		m_inv_dt0 = step.inv_dt;
 	}
+	// fprintf(file, "Step after step.inv_dt\n");
+	// fflush(file);
 
 	if (m_clearForces)
 	{
 		ClearForces();
 	}
+	// fprintf(file, "Step after ClearForces\n");
+	// fflush(file);
 
 	m_locked = false;
 
 	m_profile.step = stepTimer.GetMilliseconds();
+	// fprintf(file, "Step after GetMilliseconds\n");
+	// fflush(file);
+	//fclose(file);
 }
 
 void b2World::ClearForces()
@@ -1289,7 +1896,7 @@ void b2World::Dump()
 		return;
 	}
 
-	b2OpenDump("box2d_dump.inl");
+	b2OpenDump("G:/Work/Fabross/box2d_dump.inl");
 
 	b2Dump("b2Vec2 g(%.9g, %.9g);\n", m_gravity.x, m_gravity.y);
 	b2Dump("m_world->SetGravity(g);\n");

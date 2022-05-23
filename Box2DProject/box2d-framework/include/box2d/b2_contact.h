@@ -215,6 +215,7 @@ protected:
 
 	uint32 m_flags;
 
+public:
 	// World pool and list pointers.
 	b2Contact* m_prev;
 	b2Contact* m_next;
@@ -225,6 +226,7 @@ protected:
 
 	b2Fixture* m_fixtureA;
 	b2Fixture* m_fixtureB;
+protected:
 
 	int32 m_indexA;
 	int32 m_indexB;

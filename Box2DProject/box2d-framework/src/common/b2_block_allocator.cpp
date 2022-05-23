@@ -24,6 +24,7 @@
 #include <limits.h>
 #include <string.h>
 #include <stddef.h>
+#include <stdio.h>
 
 static const int32 b2_chunkSize = 16 * 1024;
 static const int32 b2_maxBlockSize = 640;
@@ -75,33 +76,61 @@ struct b2SizeMap
 
 static const b2SizeMap b2_sizeMap;
 
-struct b2Chunk
+b2BlockAllocator::b2BlockAllocator(const b2BlockAllocator& other) 
+	: b2BlockAllocator(other.m_chunkSpace)
 {
-	int32 blockSize;
-	b2Block* blocks;
-};
+	m_chunkCount = other.m_chunkCount;
+	for (int32 i = 0; i < other.m_chunkCount; ++i)
+	{
+		b2Chunk* oldChunk = other.m_chunks + i;
+		b2Chunk* newChunk = m_chunks + i;
+		newChunk->blockSize = oldChunk->blockSize;
 
-struct b2Block
-{
-	b2Block* next;
-};
+		newChunk->blocks = (b2Block*)b2Alloc(b2_chunkSize);
+		memcpy(newChunk->blocks, oldChunk->blocks, b2_chunkSize);
 
-b2BlockAllocator::b2BlockAllocator()
+
+		int32 index = b2_sizeMap.values[oldChunk->blockSize];
+		b2Assert(0 <= index && index < b2_blockSizeCount);
+
+		b2Block* freeBlock = other.m_freeLists[index];
+		if (freeBlock >= oldChunk->blocks
+			&& freeBlock <= oldChunk->blocks + b2_chunkSize)
+		{
+			ptrdiff_t offset = reinterpret_cast<int8*>(newChunk->blocks)
+				- reinterpret_cast<int8*>(oldChunk->blocks);
+			m_freeLists[index] = reinterpret_cast<b2Block*>(
+				reinterpret_cast<int8*>(freeBlock) + offset);
+		}
+	}
+}
+
+b2BlockAllocator::b2BlockAllocator(int32 chunkSpace)
 {
 	b2Assert(b2_blockSizeCount < UCHAR_MAX);
-
-	m_chunkSpace = b2_chunkArrayIncrement;
+	m_chunkSpace = chunkSpace;
 	m_chunkCount = 0;
 	m_chunks = (b2Chunk*)b2Alloc(m_chunkSpace * sizeof(b2Chunk));
-	
+
 	memset(m_chunks, 0, m_chunkSpace * sizeof(b2Chunk));
 	memset(m_freeLists, 0, sizeof(m_freeLists));
 }
 
+//static FILE* file = fopen("G:/Work/Fabross/dbgB2dAllocator.txt", "wt");
+
+
+b2BlockAllocator::b2BlockAllocator() : b2BlockAllocator(b2_chunkArrayIncrement)
+{
+}
+
 b2BlockAllocator::~b2BlockAllocator()
 {
+	// fprintf(file, "~b2BlockAllocator begin\n");
+	// fflush(file);
+
 	for (int32 i = 0; i < m_chunkCount; ++i)
 	{
+		memset(m_chunks[i].blocks, 0xcd, b2_chunkSize);
 		b2Free(m_chunks[i].blocks);
 	}
 
@@ -116,6 +145,8 @@ void* b2BlockAllocator::Allocate(int32 size)
 	}
 
 	b2Assert(0 < size);
+
+	b2Assert(size < b2_maxBlockSize);
 
 	if (size > b2_maxBlockSize)
 	{
@@ -170,6 +201,9 @@ void* b2BlockAllocator::Allocate(int32 size)
 
 void b2BlockAllocator::Free(void* p, int32 size)
 {
+	// fprintf(file, "Free begin %p\n", p);
+	// fflush(file);
+
 	if (size == 0)
 	{
 		return;
@@ -219,6 +253,8 @@ void b2BlockAllocator::Free(void* p, int32 size)
 
 void b2BlockAllocator::Clear()
 {
+	// fprintf(file, "Clear begin\n");
+	// fflush(file);
 	for (int32 i = 0; i < m_chunkCount; ++i)
 	{
 		b2Free(m_chunks[i].blocks);

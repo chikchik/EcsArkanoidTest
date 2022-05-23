@@ -7,14 +7,13 @@
 
 class MyDebugDraw : public b2Draw
 {
-    private:
+    public:
     DrawDbgCircleCallback m_drawCircle;
     DrawDbgCircleCallback m_drawPoint;
     DrawDbgSegmentCallback m_drawSegment;
     DrawDbgTransformCallback m_drawTransform;
     DrawDbgPolygonCallback m_drawPolygon;
 
-    public:
 
     MyDebugDraw(DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
         DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);

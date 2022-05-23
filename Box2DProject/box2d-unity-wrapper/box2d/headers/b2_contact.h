@@ -57,9 +57,9 @@ inline float b2MixRestitutionThreshold(float threshold1, float threshold2)
 	return threshold1 < threshold2 ? threshold1 : threshold2;
 }
 
-typedef b2Contact* b2ContactCreateFcn(	b2Fixture* fixtureA, int32 indexA,
-										b2Fixture* fixtureB, int32 indexB,
-										b2BlockAllocator* allocator);
+typedef b2Contact* b2ContactCreateFcn(b2Fixture* fixtureA, int32 indexA,
+	b2Fixture* fixtureB, int32 indexB,
+	b2BlockAllocator* allocator);
 typedef void b2ContactDestroyFcn(b2Contact* contact, b2BlockAllocator* allocator);
 
 struct B2_API b2ContactRegister
@@ -176,29 +176,29 @@ protected:
 	enum
 	{
 		// Used when crawling contact graph when forming islands.
-		e_islandFlag		= 0x0001,
+		e_islandFlag = 0x0001,
 
 		// Set when the shapes are touching.
-		e_touchingFlag		= 0x0002,
+		e_touchingFlag = 0x0002,
 
 		// This contact can be disabled (by user)
-		e_enabledFlag		= 0x0004,
+		e_enabledFlag = 0x0004,
 
 		// This contact needs filtering because a fixture filter was changed.
-		e_filterFlag		= 0x0008,
+		e_filterFlag = 0x0008,
 
 		// This bullet contact had a TOI event
-		e_bulletHitFlag		= 0x0010,
+		e_bulletHitFlag = 0x0010,
 
 		// This contact has a valid TOI in m_toi
-		e_toiFlag			= 0x0020
+		e_toiFlag = 0x0020
 	};
 
 	/// Flag this contact for filtering. Filtering will occur the next time step.
 	void FlagForFiltering();
 
 	static void AddType(b2ContactCreateFcn* createFcn, b2ContactDestroyFcn* destroyFcn,
-						b2Shape::Type typeA, b2Shape::Type typeB);
+		b2Shape::Type typeA, b2Shape::Type typeB);
 	static void InitializeRegisters();
 	static b2Contact* Create(b2Fixture* fixtureA, int32 indexA, b2Fixture* fixtureB, int32 indexB, b2BlockAllocator* allocator);
 	static void Destroy(b2Contact* contact, b2Shape::Type typeA, b2Shape::Type typeB, b2BlockAllocator* allocator);
@@ -215,6 +215,7 @@ protected:
 
 	uint32 m_flags;
 
+public:
 	// World pool and list pointers.
 	b2Contact* m_prev;
 	b2Contact* m_next;
@@ -225,6 +226,7 @@ protected:
 
 	b2Fixture* m_fixtureA;
 	b2Fixture* m_fixtureB;
+protected:
 
 	int32 m_indexA;
 	int32 m_indexB;

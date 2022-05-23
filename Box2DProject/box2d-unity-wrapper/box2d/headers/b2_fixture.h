@@ -232,17 +232,21 @@ protected:
 
 	float m_density;
 
+public:
 	b2Fixture* m_next;
 	b2Body* m_body;
 
 	b2Shape* m_shape;
+protected:
 
 	float m_friction;
 	float m_restitution;
 	float m_restitutionThreshold;
-
+public:
 	b2FixtureProxy* m_proxies;
+
 	int32 m_proxyCount;
+private:
 
 	b2Filter m_filter;
 

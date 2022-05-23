@@ -408,16 +408,16 @@ private:
 	// m_flags
 	enum
 	{
-		e_islandFlag		= 0x0001,
-		e_awakeFlag			= 0x0002,
-		e_autoSleepFlag		= 0x0004,
-		e_bulletFlag		= 0x0008,
-		e_fixedRotationFlag	= 0x0010,
-		e_enabledFlag		= 0x0020,
-		e_toiFlag			= 0x0040
+		e_islandFlag = 0x0001,
+		e_awakeFlag = 0x0002,
+		e_autoSleepFlag = 0x0004,
+		e_bulletFlag = 0x0008,
+		e_fixedRotationFlag = 0x0010,
+		e_enabledFlag = 0x0020,
+		e_toiFlag = 0x0040
 	};
 
-	b2Body(const b2BodyDef* bd, b2World* world);
+	b2Body(const b2BodyDef* bd, b2World* world, char* hint);
 	~b2Body();
 
 	void SynchronizeFixtures();
@@ -444,6 +444,7 @@ private:
 	b2Vec2 m_force;
 	float m_torque;
 
+public:
 	b2World* m_world;
 	b2Body* m_prev;
 	b2Body* m_next;
@@ -453,6 +454,7 @@ private:
 
 	b2JointEdge* m_jointList;
 	b2ContactEdge* m_contactList;
+private:
 
 	float m_mass, m_invMass;
 
@@ -505,7 +507,7 @@ inline void b2Body::SetLinearVelocity(const b2Vec2& v)
 		return;
 	}
 
-	if (b2Dot(v,v) > 0.0f)
+	if (b2Dot(v, v) > 0.0f)
 	{
 		SetAwake(true);
 	}

@@ -49,6 +49,7 @@ public:
 	/// Construct a world object.
 	/// @param gravity the world gravity vector.
 	b2World(const b2Vec2& gravity);
+	b2World(const b2World& world);
 
 	/// Destruct the world. All physics entities are destroyed and all heap memory is released.
 	~b2World();
@@ -231,22 +232,25 @@ private:
 	void SolveTOI(const b2TimeStep& step);
 
 	void DrawShape(b2Fixture* shape, const b2Transform& xf, const b2Color& color);
-
+public:
 	b2BlockAllocator m_blockAllocator;
+private:
 	b2StackAllocator m_stackAllocator;
 
 	b2ContactManager m_contactManager;
-
+public:
 	b2Body* m_bodyList;
 	b2Joint* m_jointList;
 
 	int32 m_bodyCount;
 	int32 m_jointCount;
+private:
 
 	b2Vec2 m_gravity;
 	bool m_allowSleep;
 
 	b2DestructionListener* m_destructionListener;
+public:
 	b2Draw* m_debugDraw;
 
 	// This is used to compute the time step ratio to

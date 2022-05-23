@@ -89,6 +89,7 @@ protected:
 	void SolveVelocityConstraints(const b2SolverData& data) override;
 	bool SolvePositionConstraints(const b2SolverData& data) override;
 
+public:
 	b2Joint* m_joint1;
 	b2Joint* m_joint2;
 
@@ -100,6 +101,7 @@ protected:
 	b2Body* m_bodyC;
 	b2Body* m_bodyD;
 
+protected:
 	// Solver shared
 	b2Vec2 m_localAnchorA;
 	b2Vec2 m_localAnchorB;

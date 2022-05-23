@@ -28,6 +28,9 @@
 #include "b2_collision.h"
 #include "b2_dynamic_tree.h"
 
+
+#include <stdio.h>
+
 struct B2_API b2Pair
 {
 	int32 proxyIdA;
@@ -130,6 +133,10 @@ private:
 	int32 m_pairCount;
 
 	int32 m_queryProxyId;
+
+	// FILE* file = fopen("G:/Work/Fabross/dbgB2dUpdatePairs.txt", "w+t");
+
+
 };
 
 inline void* b2BroadPhase::GetUserData(int32 proxyId) const
@@ -199,8 +206,13 @@ void b2BroadPhase::UpdatePairs(T* callback)
 		void* userDataA = m_tree.GetUserData(primaryPair->proxyIdA);
 		void* userDataB = m_tree.GetUserData(primaryPair->proxyIdB);
 
+		// fprintf(file, "UpdatePairs AddPair before i =%d\n", i);
+		// fflush(file);
 		callback->AddPair(userDataA, userDataB);
+		// fprintf(file, "UpdatePairs AddPair after i =%d\n", i);
+		// fflush(file);
 	}
+
 
 	// Clear move flags
 	for (int32 i = 0; i < m_moveCount; ++i)

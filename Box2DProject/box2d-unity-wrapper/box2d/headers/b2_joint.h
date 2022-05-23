@@ -42,7 +42,7 @@ enum b2JointType
 	e_mouseJoint,
 	e_gearJoint,
 	e_wheelJoint,
-    e_weldJoint,
+	e_weldJoint,
 	e_frictionJoint,
 	e_motorJoint
 };
@@ -151,7 +151,7 @@ public:
 	virtual void Dump() { b2Dump("// Dump is not supported for this joint type.\n"); }
 
 	/// Shift the origin for any points stored in world coordinates.
-	virtual void ShiftOrigin(const b2Vec2& newOrigin) { B2_NOT_USED(newOrigin);  }
+	virtual void ShiftOrigin(const b2Vec2& newOrigin) { B2_NOT_USED(newOrigin); }
 
 	/// Debug draw this joint
 	virtual void Draw(b2Draw* draw) const;
@@ -175,13 +175,14 @@ protected:
 	virtual bool SolvePositionConstraints(const b2SolverData& data) = 0;
 
 	b2JointType m_type;
+public:
 	b2Joint* m_prev;
 	b2Joint* m_next;
 	b2JointEdge m_edgeA;
 	b2JointEdge m_edgeB;
 	b2Body* m_bodyA;
 	b2Body* m_bodyB;
-
+protected:
 	int32 m_index;
 
 	bool m_islandFlag;
