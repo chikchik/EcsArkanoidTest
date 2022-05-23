@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Game.Ecs.ClientServer.Components
 {
     [Serializable]
-    public struct MoveDirectionComponent
+    public struct MoveSimpleDirectionComponent
     {
         public Vector3 value;
     }

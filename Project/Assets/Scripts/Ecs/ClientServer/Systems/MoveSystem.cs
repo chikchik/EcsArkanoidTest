@@ -12,6 +12,11 @@ namespace Game.Ecs.ClientServer.Systems
     {
     }
 
+    public struct PushingComponent
+    {
+    }
+
+    
     public class MoveSystem : IEcsRunSystem
     {
         public void Run(EcsSystems systems)
@@ -45,10 +50,6 @@ namespace Game.Ecs.ClientServer.Systems
                 }
                 else
                     poolMoving.Del(entity);
-
-               // var animator = entity.EntityGet<AnimatorComponent>(world).animator;
-              //  var clip = animator.GetCurrentAnimatorClipInfo(0)[0].clip;
-                //var speed = clip.averageSpeed;
             }
         }
     }

@@ -10,6 +10,13 @@ using UnityEngine;
 
 namespace Game.Client
 {
+    public static class Box2DServices
+    {
+        public static void abc()
+        {
+            
+        }
+    }
     public static class ClientBox2DServices 
     {
         public static void CreateBody(EcsWorld world, int entity, Collider2D collider)
