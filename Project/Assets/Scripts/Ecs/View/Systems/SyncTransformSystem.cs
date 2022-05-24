@@ -8,6 +8,12 @@ namespace Game.Ecs.Client.Systems
 {
     public class SyncTransformSystem : IEcsRunSystem
     {
+        private bool singlePlayer;
+        public SyncTransformSystem(bool singlePlayer)
+        {
+            this.singlePlayer = singlePlayer;
+        }
+        
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
@@ -40,6 +46,8 @@ namespace Game.Ecs.Client.Systems
                     if (poolMainPlayer.Has(entity))
                     {
                         world.ReplaceUnique(new RootMotionComponent {Position = transform.position});
+                        if (singlePlayer)
+                            poolPosition.GetRef(entity).value = position;
                     }
                     else
                     {

@@ -34,7 +34,7 @@ namespace Game.Client
             client = new NetClient(world);
             
             viewSystems = new EcsSystems(world);
-            viewSystems.Add(new SyncTransformSystem());
+            viewSystems.Add(new SyncTransformSystem(false));
             viewSystems.Add(new RotateCharacterSystem());
             viewSystems.Add(new CameraFollowSystem());
 
