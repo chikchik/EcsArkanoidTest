@@ -47,9 +47,7 @@ namespace Game.Client
             world.AddUnique(new TickComponent{Value = new Tick(0)});
             world.AddUnique(new ClientViewComponent
             {
-                Camera = camera,
-                Global = global,
-                MainUI = ui
+                Global = global
             });
 
             unitEntity = UnitService.CreateUnitEntity(world);
@@ -64,7 +62,7 @@ namespace Game.Client
             viewSystems = new EcsSystems(world);
             viewSystems.Add(new SyncTransformSystem(true));
             viewSystems.Add(new RotateCharacterSystem());
-            viewSystems.Add(new CameraFollowSystem());
+            viewSystems.Add(new CameraFollowSystem(Camera.main));
             
             viewSystems.Init();
             

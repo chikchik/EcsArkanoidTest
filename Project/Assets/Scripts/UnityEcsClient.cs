@@ -36,7 +36,7 @@ namespace Game.Client
             viewSystems = new EcsSystems(world);
             viewSystems.Add(new SyncTransformSystem(false));
             viewSystems.Add(new RotateCharacterSystem());
-            viewSystems.Add(new CameraFollowSystem());
+            viewSystems.Add(new CameraFollowSystem(Camera.main));
 
 
             client.ConnectedAction = () =>
@@ -47,8 +47,6 @@ namespace Game.Client
             client.InitWorldAction = world =>
             {
                 var viewComponent = new ClientViewComponent();
-                viewComponent.Camera = Camera.main;
-                viewComponent.MainUI = ui;
                 viewComponent.Global = global;
 
                 world.AddUnique<ClientViewComponent>() = viewComponent;

@@ -9,6 +9,12 @@ namespace Game.Ecs.Client.Systems
     {
         private readonly Vector3 CameraOffset = new Vector3(-4, 8, 4) * 2;
 
+        private Camera camera;
+        public CameraFollowSystem(Camera camera)
+        {
+            this.camera = camera;
+        }
+        
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
@@ -21,7 +27,6 @@ namespace Game.Ecs.Client.Systems
             var clientPlayerComponent = world.GetUnique<ClientPlayerComponent>();
             var targetEntityTransform = poolTransform.Get(clientPlayerComponent.entity).transform;
             var targetPosition = targetEntityTransform.position + CameraOffset;
-            var camera = world.GetUnique<ClientViewComponent>().Camera;
 
             camera.transform.position = Vector3.Lerp(
                 camera.transform.position,
