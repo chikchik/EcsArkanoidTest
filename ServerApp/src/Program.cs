@@ -231,7 +231,7 @@ namespace ConsoleApp
             //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
             if (delay < 0)
             {
-                Console.WriteLine($"delay {delay}");
+                //Console.WriteLine($"delay {delay}");
                 leo.SyncLog.WriteLine($"input from {client.ID}, {packet.input.time} at {currentTick} too late {delay}");
 
                 packet.input.time = currentTick;

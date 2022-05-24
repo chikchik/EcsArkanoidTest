@@ -15,47 +15,42 @@ namespace Game.Ecs.ClientServer.Systems
                 .Inc<ButtonLinkComponent>()
                 .Inc<ProgressComponent>()
                 .End();
-            var poolGate = world.GetPool<GateComponent>();
             var poolButtonLink = world.GetPool<ButtonLinkComponent>();
-            var poolButton = world.GetPool<ButtonComponent>();
+            var poolButtonPressed = world.GetPool<ButtonPressedComponent>();
             var poolProgress = world.GetPool<ProgressComponent>();
             var poolSpeed = world.GetPool<SpeedComponent>();
             var poolOpened = world.GetPool<GateOpenedComponent>();
 
             var deltaTime = world.GetDeltaSeconds();
 
-            foreach (var entity in filter)
+            foreach (var gateEntity in filter)
             {
-                //var gateComponent = poolGate.Get(entity);
-                if (poolOpened.Has(entity))
+                if (poolOpened.Has(gateEntity))
                     continue;
 
-                if (!CanOpenGate(entity, poolButtonLink, poolButton))
+                var buttons = poolButtonLink.Get(gateEntity).Entities;
+                
+                if (!AreAllButtonsPressed(buttons, poolButtonPressed))
                     continue;
 
-                var progressComponent = poolProgress.Get(entity);
-                var speedComponent = poolSpeed.Get(entity);
+                var progressComponent = poolProgress.Get(gateEntity);
+                var speedComponent = poolSpeed.Get(gateEntity);
 
                 var progress = progressComponent.progress + speedComponent.speed * deltaTime;
 
                 if (progress >= 1f)
-                    poolOpened.Add(entity);
+                    poolOpened.Add(gateEntity);
 
-                poolProgress.ReplaceIfChanged(entity, new ProgressComponent{progress = Math.Clamp(progress, 0, 1)});
+                poolProgress.ReplaceIfChanged(gateEntity, new ProgressComponent{progress = Math.Clamp(progress, 0, 1)});
             }
         }
 
-        private bool CanOpenGate(int gateEntity,
-            EcsPool<ButtonLinkComponent> poolButtonLick,
-            EcsPool<ButtonComponent> poolButton)
+        private bool AreAllButtonsPressed(int[] entities, EcsPool<ButtonPressedComponent> poolButton)
         {
-            var buttonIds = poolButtonLick.Get(gateEntity).buttonIds;
-
-            for (var i = 0; i < buttonIds.Length; i++)
+            for (var i = 0; i < entities.Length; i++)
             {
-                var buttonComponent = poolButton.Get(buttonIds[i]);
-
-                if (!buttonComponent.isActivated) return false;
+                if (!poolButton.Has(entities[i]))
+                    return false;
             }
 
             return true;

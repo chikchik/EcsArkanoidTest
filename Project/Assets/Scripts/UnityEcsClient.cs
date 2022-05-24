@@ -54,7 +54,6 @@ namespace Game.Client
                 world.AddUnique<ClientViewComponent>() = viewComponent;
             };
 
-            client.LinkUnitsAction = world => { ClientServices.LinkUnits(world); };
 
             client.DeleteEntitiesAction = (world, entities) =>
             {

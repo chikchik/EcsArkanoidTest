@@ -41,8 +41,6 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filterUnits)
             {
-                Debug.Log($"link {entity}");
-
                 var characterView = Object.Instantiate(viewComponent.Global.characterPrefab);
 
                 ref var component = ref entity.EntityAddComponent<GameObjectComponent>(world);

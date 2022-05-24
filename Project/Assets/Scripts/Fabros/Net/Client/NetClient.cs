@@ -20,11 +20,14 @@ using Random = UnityEngine.Random;
 
 namespace Game.Fabros.Net.Client
 {
+    public struct UniqueEntityComponent
+    {
+        
+    }
     public class NetClient
     {
         public Action<EcsWorld, int[]> DeleteEntitiesAction;
         public Action<EcsWorld> InitWorldAction;
-        public Action<EcsWorld> LinkUnitsAction;
         public Action ConnectedAction;
 
 
@@ -108,7 +111,7 @@ namespace Game.Fabros.Net.Client
             
             if (delay != -999)
             {
-                Debug.Log($"delay {delay}");
+//                Debug.Log($"delay {delay}");
                 if (delay >= 2) 
                     stepOffset = 0.001f * delay;
 
@@ -166,8 +169,6 @@ namespace Game.Fabros.Net.Client
             if (dif2.RemovedEntities != null)
                 DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
             WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif2);
-            //перепривязываем юнитов
-            LinkUnitsAction(MainWorld);
         }
         private async UniTask<string> AsyncMain(Packet packet)
         {
@@ -258,6 +259,9 @@ namespace Game.Fabros.Net.Client
 
                             if (entity.EntityHas<LocalEntityComponent>(MainWorld))
                                 return;
+                            
+                            
+                            
 
                             if (entity.EntityHasComponent<GameObjectComponent>(MainWorld))
                             {

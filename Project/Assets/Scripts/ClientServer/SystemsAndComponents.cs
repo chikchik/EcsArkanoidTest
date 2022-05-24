@@ -56,6 +56,7 @@ namespace Game.ClientServer
             pool.AddComponent<BushComponent>();
             pool.AddComponent<ButtonComponent>();
             pool.AddComponent<ButtonLinkComponent>();
+            pool.AddComponent<ButtonPressedComponent>();
             pool.AddComponent<UnitComponent>();
             pool.AddComponent<GateComponent>();
             pool.AddComponent<MoveInfoComponent>();
@@ -98,7 +99,8 @@ namespace Game.ClientServer
             return pool;
         }
 
-        public static void AddSystems(ComponentsPool pool, EcsSystems systems, bool client, bool server)
+        public static void AddSystems(ComponentsPool pool, EcsSystems systems,
+            bool client, bool server)
         {
 #if CLIENT
             void AddClient(IEcsSystem system)
