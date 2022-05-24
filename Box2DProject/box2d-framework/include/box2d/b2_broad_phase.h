@@ -50,6 +50,7 @@ public:
 	};
 
 	b2BroadPhase();
+	b2BroadPhase(const b2BroadPhase& other);
 	~b2BroadPhase();
 
 	/// Create a proxy with an initial AABB. Pairs are not reported until
@@ -120,6 +121,7 @@ private:
 
 	bool QueryCallback(int32 proxyId);
 
+public:
 	b2DynamicTree m_tree;
 
 	int32 m_proxyCount;
@@ -133,10 +135,6 @@ private:
 	int32 m_pairCount;
 
 	int32 m_queryProxyId;
-
-	// FILE* file = fopen("G:/Work/Fabross/dbgB2dUpdatePairs.txt", "w+t");
-
-
 };
 
 inline void* b2BroadPhase::GetUserData(int32 proxyId) const

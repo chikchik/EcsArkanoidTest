@@ -147,7 +147,7 @@ namespace Game.ClientServer.Physics
 
 
         [DllImport(DllName)]
-        public static extern IntPtr CloneWorld(IntPtr world);
+        public static extern IntPtr CloneWorld(ref BodyReferenceComponent[] dataArr, int count, IntPtr world);
 
     }
 }

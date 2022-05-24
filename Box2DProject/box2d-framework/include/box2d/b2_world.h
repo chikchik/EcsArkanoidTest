@@ -40,6 +40,8 @@ class b2Draw;
 class b2Fixture;
 class b2Joint;
 
+class BodyReferenceComponent;
+
 /// The world class manages all physics entities, dynamic simulation,
 /// and asynchronous queries. The world also contains efficient memory
 /// management facilities.
@@ -49,7 +51,7 @@ public:
 	/// Construct a world object.
 	/// @param gravity the world gravity vector.
 	b2World(const b2Vec2& gravity);
-	b2World(const b2World& world);
+	b2World(BodyReferenceComponent* vertices, const int& count, const b2World& world);
 
 	/// Destruct the world. All physics entities are destroyed and all heap memory is released.
 	~b2World();
@@ -237,8 +239,8 @@ public:
 private:
 	b2StackAllocator m_stackAllocator;
 
-	b2ContactManager m_contactManager;
 public:
+	b2ContactManager m_contactManager;
 	b2Body* m_bodyList;
 	b2Joint* m_jointList;
 

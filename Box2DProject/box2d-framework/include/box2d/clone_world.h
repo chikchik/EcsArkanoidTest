@@ -8,9 +8,14 @@
 #include "box2d/b2_polygon_shape.h"
 #include "box2d/b2_world.h"
 #include "box2d/b2_gear_joint.h"
+#include "b2_contact_manager.h"
 
 #include <unordered_set>
 #include <map>
+
+#include <stdio.h>
+
+class BodyReferenceComponent;
 
 struct CloneWorldInfo
 {
@@ -21,16 +26,17 @@ struct CloneWorldInfo
 
 	b2World* m_newWorld;
 
+	template<class T>
+	T* GetMovedAdress(T* ptr);
 
-	CloneWorldInfo(const b2BlockAllocator& newAllocator,
+	CloneWorldInfo(BodyReferenceComponent* vertices, const int& count,
+		const b2BlockAllocator& newAllocator,
 		const b2BlockAllocator& oldAllocator);
 
 	bool IsOldAdress(void* p);
 
-	template<class T>
-	T* GetMovedAdress(T* ptr, int idx);
 
-	size_t GetMovedOffset(void* p, int idx);
+	size_t GetMovedOffset(void* p);
 
 	template<class T>
 	void IterateMove(T* head);
@@ -38,8 +44,10 @@ struct CloneWorldInfo
 	template<class T>
 	void IterateMove2(T* head);
 
-	void Move(b2World* newWorld, const b2World* oldWorld);
+	void Move(b2TreeNode* obj);
 
+	void Move(b2World* newWorld);
+	
 	void Move(b2Body* obj);
 
 	void Move(b2Joint* obj);

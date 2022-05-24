@@ -38,6 +38,17 @@ b2ContactManager::b2ContactManager()
 	m_allocator = nullptr;
 }
 
+b2ContactManager::b2ContactManager(const b2ContactManager& other)
+	: m_broadPhase(other.m_broadPhase)
+{
+	m_allocator = nullptr;
+	m_contactList = other.m_contactList;
+	m_contactCount = other.m_contactCount;
+	m_contactFilter = other.m_contactFilter;
+	m_contactListener = nullptr;
+}
+
+
 void b2ContactManager::Destroy(b2Contact* c)
 {
 	b2Fixture* fixtureA = c->GetFixtureA();

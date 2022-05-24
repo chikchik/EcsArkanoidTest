@@ -1,6 +1,12 @@
 #include "box2d/clone_world.h"
 
-CloneWorldInfo::CloneWorldInfo(const b2BlockAllocator & newAllocator,
+struct BodyReferenceComponent
+{
+public: void* BodyReference;
+};
+
+CloneWorldInfo::CloneWorldInfo(BodyReferenceComponent* vertices, const int& count,
+	const b2BlockAllocator& newAllocator,
 	const b2BlockAllocator& oldAllocator)
 {
 	for (int32 i = 0; i < oldAllocator.m_chunkCount; ++i)
@@ -12,6 +18,11 @@ CloneWorldInfo::CloneWorldInfo(const b2BlockAllocator & newAllocator,
 			- reinterpret_cast<int8*>(oldChunk->blocks);
 
 		offsets.insert(std::make_pair(oldChunk->blocks, offset));
+	}
+
+	for (int32 i = 0; i < count; i++)
+	{
+		vertices[i].BodyReference = GetMovedAdress(vertices[i].BodyReference);
 	}
 }
 
@@ -29,14 +40,20 @@ bool CloneWorldInfo::IsOldAdress(void* p)
 		&& (int8*)p <= (int8*)it->first + b2_chunkSize;
 }
 
+
 template<class  T>
-T* CloneWorldInfo::GetMovedAdress(T* ptr, int idx)
+T* CloneWorldInfo::GetMovedAdress(T* ptr)
 {
-	return reinterpret_cast<T*>(reinterpret_cast<int8*>(ptr)
-		+ GetMovedOffset(ptr, idx));
+	
+	b2Assert(IsOldAdress(ptr));
+
+	auto newAdrr = reinterpret_cast<T*>(reinterpret_cast<int8*>(ptr)
+		+ GetMovedOffset(ptr));
+	b2Assert(!IsOldAdress(newAdrr));
+	return newAdrr;
 }
 
-size_t CloneWorldInfo::GetMovedOffset(void* p, int idx)
+size_t CloneWorldInfo::GetMovedOffset(void* p)
 {
 	auto it = offsets.lower_bound(p);
 
@@ -75,19 +92,49 @@ void CloneWorldInfo::IterateMove2(T* head)
 	}
 }
 
-void CloneWorldInfo::Move(b2World* newWorld, const b2World* oldWorld)
+void CloneWorldInfo::Move(b2World* newWorld)
 {
 	m_newWorld = newWorld;
-	if (oldWorld->m_bodyList)
+
+	if (newWorld->m_contactManager.m_contactList)
 	{
-		m_newWorld->m_bodyList = GetMovedAdress(oldWorld->m_bodyList, 0);
+		newWorld->m_contactManager.m_contactList
+			= GetMovedAdress(newWorld->m_contactManager.m_contactList);
+		IterateMove(newWorld->m_contactManager.m_contactList);
+	}
+
+	for (int i = 0; i < newWorld->m_contactManager.m_broadPhase.m_tree.m_nodeCount; ++i)
+	{
+		Move(newWorld->m_contactManager.m_broadPhase.m_tree.m_nodes + i);
+	}
+
+	if (newWorld->m_bodyList)
+	{
+		m_newWorld->m_bodyList = GetMovedAdress(newWorld->m_bodyList);
 		IterateMove(m_newWorld->m_bodyList);
 	}
 
-	if (oldWorld->m_jointList)
+	if (newWorld->m_jointList)
 	{
-		m_newWorld->m_jointList = GetMovedAdress(oldWorld->m_jointList, 1);
+		m_newWorld->m_jointList = GetMovedAdress(newWorld->m_jointList);
 		IterateMove(m_newWorld->m_jointList);
+	}
+}
+
+void CloneWorldInfo::Move(b2TreeNode* obj)
+{
+	b2Assert(!IsOldAdress(obj));
+	auto ptr = static_cast<b2FixtureProxy*>(obj->userData);
+	//b2Assert(ptr);
+	if (ptr)
+	{
+		ptr = GetMovedAdress(ptr);
+
+
+		obj->userData = ptr;
+
+		
+		Move(ptr);
 	}
 }
 
@@ -102,29 +149,29 @@ void CloneWorldInfo::Move(b2Body* obj)
 
 	if (obj->m_prev)
 	{
-		obj->m_prev = GetMovedAdress(obj->m_prev, 2);
+		obj->m_prev = GetMovedAdress(obj->m_prev);
 	}
 
 	if (obj->m_next)
 	{
-		obj->m_next = GetMovedAdress(obj->m_next, 3);
+		obj->m_next = GetMovedAdress(obj->m_next);
 	}
 
 	if (obj->m_fixtureList)
 	{
-		obj->m_fixtureList = GetMovedAdress(obj->m_fixtureList, 4);
+		obj->m_fixtureList = GetMovedAdress(obj->m_fixtureList);
 		IterateMove(obj->m_fixtureList);
 	}
 
 	if (obj->m_jointList)
 	{
-		obj->m_jointList = GetMovedAdress(obj->m_jointList, 5);
+		obj->m_jointList = GetMovedAdress(obj->m_jointList);
 		IterateMove2(obj->m_jointList);
 	}
 
 	if (obj->m_contactList)
 	{
-		obj->m_contactList = GetMovedAdress(obj->m_contactList, 6);
+		obj->m_contactList = GetMovedAdress(obj->m_contactList);
 		IterateMove2(obj->m_contactList);
 	}
 }
@@ -138,22 +185,22 @@ void CloneWorldInfo::Move(b2Joint* obj)
 
 	if (obj->m_prev)
 	{
-		obj->m_prev = GetMovedAdress(obj->m_prev, 7);
+		obj->m_prev = GetMovedAdress(obj->m_prev);
 	}
 
 	if (obj->m_next)
 	{
-		obj->m_next = GetMovedAdress(obj->m_next, 8);
+		obj->m_next = GetMovedAdress(obj->m_next);
 	}
 
 	if (obj->m_bodyA)
 	{
-		obj->m_bodyA = GetMovedAdress(obj->m_bodyA, 9);
+		obj->m_bodyA = GetMovedAdress(obj->m_bodyA);
 		Move(obj->m_bodyA);
 	}
 	if (obj->m_bodyB)
 	{
-		obj->m_bodyB = GetMovedAdress(obj->m_bodyB, 10);
+		obj->m_bodyB = GetMovedAdress(obj->m_bodyB);
 		Move(obj->m_bodyB);
 	}
 
@@ -164,23 +211,23 @@ void CloneWorldInfo::Move(b2Joint* obj)
 	{
 		if (gearJoint->m_joint1)
 		{
-			gearJoint->m_joint1 = GetMovedAdress(gearJoint->m_joint1, 11);
+			gearJoint->m_joint1 = GetMovedAdress(gearJoint->m_joint1);
 			Move(gearJoint->m_joint1);
 		}
 		if (gearJoint->m_joint1)
 		{
-			gearJoint->m_joint2 = GetMovedAdress(gearJoint->m_joint2, 12);
+			gearJoint->m_joint2 = GetMovedAdress(gearJoint->m_joint2);
 			Move(gearJoint->m_joint2);
 		}
 
 		if (gearJoint->m_bodyC)
 		{
-			gearJoint->m_bodyC = GetMovedAdress(gearJoint->m_bodyC, 13);
+			gearJoint->m_bodyC = GetMovedAdress(gearJoint->m_bodyC);
 			Move(gearJoint->m_bodyC);
 		}
 		if (gearJoint->m_bodyD)
 		{
-			gearJoint->m_bodyD = GetMovedAdress(gearJoint->m_bodyD, 14);
+			gearJoint->m_bodyD = GetMovedAdress(gearJoint->m_bodyD);
 			Move(gearJoint->m_bodyD);
 		}
 	}
@@ -195,23 +242,23 @@ void CloneWorldInfo::Move(b2JointEdge* obj)
 
 	if (obj->prev)
 	{
-		obj->prev = GetMovedAdress(obj->prev, 17);
+		obj->prev = GetMovedAdress(obj->prev);
 	}
 
 	if (obj->next)
 	{
-		obj->next = GetMovedAdress(obj->next, 18);
+		obj->next = GetMovedAdress(obj->next);
 	}
 
 	if (obj->other)
 	{
-		obj->other = GetMovedAdress(obj->other, 15);
+		obj->other = GetMovedAdress(obj->other);
 		Move(obj->other);
 	}
 
 	if (obj->joint)
 	{
-		obj->joint = GetMovedAdress(obj->joint, 16);
+		obj->joint = GetMovedAdress(obj->joint);
 		IterateMove(obj->joint);
 	}
 
@@ -225,23 +272,23 @@ void CloneWorldInfo::Move(b2ContactEdge* obj)
 
 	if (obj->prev)
 	{
-		obj->prev = GetMovedAdress(obj->prev, 21);
+		obj->prev = GetMovedAdress(obj->prev);
 	}
 
 	if (obj->next)
 	{
-		obj->next = GetMovedAdress(obj->next, 22);
+		obj->next = GetMovedAdress(obj->next);
 	}
 
 	if (obj->other)
 	{
-		obj->other = GetMovedAdress(obj->other, 19);
+		obj->other = GetMovedAdress(obj->other);
 		Move(obj->other);
 	}
 
 	if (obj->contact)
 	{
-		obj->contact = GetMovedAdress(obj->contact, 20);
+		obj->contact = GetMovedAdress(obj->contact);
 		Move(obj->contact);
 	}
 }
@@ -254,11 +301,11 @@ void CloneWorldInfo::Move(b2Contact* obj)
 
 	if (obj->m_prev)
 	{
-		obj->m_prev = GetMovedAdress(obj->m_prev, 23);
+		obj->m_prev = GetMovedAdress(obj->m_prev);
 	}
 	if (obj->m_next)
 	{
-		obj->m_next = GetMovedAdress(obj->m_next, 24);
+		obj->m_next = GetMovedAdress(obj->m_next);
 	}
 
 	IterateMove2(&obj->m_nodeA);
@@ -266,12 +313,12 @@ void CloneWorldInfo::Move(b2Contact* obj)
 
 	if (obj->m_fixtureA)
 	{
-		obj->m_fixtureA = GetMovedAdress(obj->m_fixtureA, 25);
+		obj->m_fixtureA = GetMovedAdress(obj->m_fixtureA);
 		IterateMove(obj->m_fixtureA);
 	}
 	if (obj->m_fixtureB)
 	{
-		obj->m_fixtureB = GetMovedAdress(obj->m_fixtureB, 26);
+		obj->m_fixtureB = GetMovedAdress(obj->m_fixtureB);
 		IterateMove(obj->m_fixtureB);
 	}
 }
@@ -284,20 +331,20 @@ void CloneWorldInfo::Move(b2Fixture* obj)
 	movedObjs.insert(obj);
 	if (obj->m_next)
 	{
-		obj->m_next = GetMovedAdress(obj->m_next, 27);
+		obj->m_next = GetMovedAdress(obj->m_next);
 	}
 	if (obj->m_body)
 	{
-		obj->m_body = GetMovedAdress(obj->m_body, 28);
+		obj->m_body = GetMovedAdress(obj->m_body);
 		Move(obj->m_body);
 	}
 	if (obj->m_shape)
 	{
-		obj->m_shape = GetMovedAdress(obj->m_shape, 29);
+		obj->m_shape = GetMovedAdress(obj->m_shape);
 	}
 	if (obj->m_proxies)
 	{
-		obj->m_proxies = GetMovedAdress(obj->m_proxies, 30);
+		obj->m_proxies = GetMovedAdress(obj->m_proxies);
 	}
 }
 
@@ -319,7 +366,7 @@ void CloneWorldInfo::Move(b2FixtureProxy* obj)
 
 	if (obj->fixture)
 	{
-		obj->fixture = GetMovedAdress(obj->fixture, 31);
+		obj->fixture = GetMovedAdress(obj->fixture);
 		IterateMove(obj->fixture);
 	}
 }

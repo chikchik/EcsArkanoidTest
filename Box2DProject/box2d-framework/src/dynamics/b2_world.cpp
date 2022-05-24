@@ -44,6 +44,11 @@
 
 #include <new>
 
+struct BodyReferenceComponent
+{
+public: void* BodyReference;
+};
+
 b2World::b2World(const b2Vec2& gravity)
 {
 	m_destructionListener = nullptr;
@@ -76,12 +81,32 @@ b2World::b2World(const b2Vec2& gravity)
 
 }
 
-b2World::b2World(const b2World& world)
-	: m_blockAllocator(world.m_blockAllocator),
-	m_bodyList(nullptr), m_jointList(nullptr)
+
+b2World::b2World(BodyReferenceComponent* vertices, const int& count, const b2World& world)
+	: m_blockAllocator(world.m_blockAllocator), m_contactManager(world.m_contactManager),
+	m_bodyList(world.m_bodyList), m_jointList(world.m_jointList), m_locked(world.m_locked)
 {	
-	CloneWorldInfo cloneWorld(m_blockAllocator, world.m_blockAllocator);
-	cloneWorld.Move(this, &world);
+	m_destructionListener = nullptr;
+	m_debugDraw = nullptr;
+	m_bodyCount = world.m_bodyCount;
+	m_jointCount = world.m_jointCount;
+	m_warmStarting = world.m_warmStarting;
+	m_continuousPhysics = world.m_continuousPhysics;
+	m_subStepping = world.m_subStepping;
+	m_stepComplete = world.m_stepComplete;
+	m_allowSleep = world.m_allowSleep;
+	m_gravity = world.m_gravity;
+	m_newContacts = world.m_newContacts;
+	m_locked = world.m_locked;
+	m_clearForces = world.m_clearForces;
+	m_inv_dt0 = world.m_inv_dt0;
+	m_contactManager.m_allocator = &m_blockAllocator;
+
+	m_profile = world.m_profile;
+	
+	CloneWorldInfo cloneWorld(vertices, count,
+		m_blockAllocator, world.m_blockAllocator);
+	cloneWorld.Move(this);
 }
 
 b2World::~b2World()
@@ -929,8 +954,9 @@ void b2World::Step(float dt, int32 velocityIterations, int32 positionIterations)
 {
 	b2Timer stepTimer;
 
-	// If new fixtures were added, we need to find the new contacts.
+	// move locke or create new for copying
 	m_locked = true;
+	// If new fixtures were added, we need to find the new contacts.
 	if (m_newContacts)
 	{
 		m_contactManager.FindNewContacts();
