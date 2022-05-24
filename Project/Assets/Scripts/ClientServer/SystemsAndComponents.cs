@@ -92,6 +92,8 @@ namespace Game.ClientServer
             pool.AddComponent<LookDirectionComponent>();
             
             pool.AddComponent<AverageSpeedComponent>();
+            
+            pool.AddComponent<ButtonSpawnComponent>();
 
             return pool;
         }
@@ -157,6 +159,7 @@ namespace Game.ClientServer
 #endif
             // gates and buttons
             systems.Add(new ButtonsInteractionSystem());
+            systems.Add(new ButtonSpawnerSystem());
             systems.Add(new GateSystem());
             systems.Add(new MoveByProgressSystem());
 
@@ -170,6 +173,7 @@ namespace Game.ClientServer
             systems.Add(new FireSystem());
 
 #if CLIENT
+            AddClient(new CreateViewSystem());
             AddClient(new FireViewSystem());
             AddClient(new InventorySystem());
 #endif
@@ -190,6 +194,7 @@ namespace Game.ClientServer
 #endif
 
 
+            systems.Add(new EventsSystem<ButtonPressedComponent>());
             systems.Add(new EventsSystem<PlayerComponent>());
             systems.Add(new EventsSystem<ButtonPushCompleted>());
             systems.Add(new EventsSystem<ObjectiveOpenedComponent>());

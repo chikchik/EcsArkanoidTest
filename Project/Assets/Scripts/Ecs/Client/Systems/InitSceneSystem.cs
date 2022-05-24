@@ -43,9 +43,6 @@ namespace Game.Ecs.Client.Systems
              */
 
             sceneEntitiesByName.Values.ForEach(go => { Object.Destroy(go); });
-
-
-            ClientServices.LinkUnits(world);
         }
     }
 }

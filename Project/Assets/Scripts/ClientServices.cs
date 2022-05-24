@@ -165,9 +165,10 @@ namespace Game.Client
             forEachObject<ButtonView>(view =>
             {
                 var buttonEntity = GetOrCreateGameEntity(view.gameObject);
+
                 ref var buttonComponent = ref buttonEntity.EntityAdd<ButtonComponent>(world);
                 buttonComponent.isActivated = false;
-
+                
                 ref var positionComponent = ref buttonEntity.EntityAdd<PositionComponent>(world);
                 positionComponent.value = view.transform.position;
 
@@ -176,7 +177,7 @@ namespace Game.Client
 
                 buttonEntity.EntityAdd<InteractableComponent>(world);
                 
-
+                
                 ref var speedComponent = ref buttonEntity.EntityAddComponent<SpeedComponent>(world);
                 speedComponent.speed = view.speed;
 
@@ -186,6 +187,11 @@ namespace Game.Client
                 ref var moveInfoComponent = ref buttonEntity.EntityAddComponent<MoveInfoComponent>(world);
                 moveInfoComponent.startPoint = view.StartPosition;
                 moveInfoComponent.endPoint = view.EndPosition;
+                
+                if (view.Spawner)
+                {
+                    buttonEntity.EntityAdd<ButtonSpawnComponent>(world);
+                }
             });
 
             forEachObject<GateView>(view =>
@@ -223,17 +229,11 @@ namespace Game.Client
 
                 ref var playerComponent = ref characterEntity.EntityAddComponent<PlayerComponent>(world);
                 playerComponent.id = Random.Range(-9999, -1111);
-
-                //if (view.IsAICharacter) characterEntity.EntityAddComponent<AIPlayerComponent>(world);
-
                 characterEntity.EntityAddComponent<UnitComponent>(world);
 
                 characterEntity.EntityAddComponent<MoveDirectionComponent>(world);
                 characterEntity.EntityAddComponent<PositionComponent>(world);
-
                 
-                //characterEntity.EntityAddComponent<AverageSpeedComponent>(world).value = clip.averageSpeed;
-
                 ref var radiusComponent = ref characterEntity.EntityAddComponent<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
 

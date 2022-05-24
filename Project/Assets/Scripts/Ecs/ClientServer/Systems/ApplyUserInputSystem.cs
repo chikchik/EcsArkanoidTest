@@ -76,7 +76,7 @@ namespace Game.Ecs.ClientServer.Systems
         public void Interract(EcsWorld world, int unitEntity)
         {
             var result = new List<int>();
-            world.GetNearestEntities(
+            world.GetNearestEntities(unitEntity,
                 unitEntity.EntityGet<PositionComponent>(world).value,
                 1, ref result, entity=> entity.EntityHas<InteractableComponent>(world));
 

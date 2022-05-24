@@ -1,5 +1,5 @@
 using System;
-using UnityEngine;
+using Leopotam.EcsLite;
 
 namespace Game.Ecs.ClientServer.Components
 {
@@ -10,13 +10,14 @@ namespace Game.Ecs.ClientServer.Components
     }
 
     [Serializable]
-    public struct ButtonPushCompleted
+    public struct ButtonPressedComponent
     {
     }
+
     
+    [EmptyComponent]
     [Serializable]
-    public struct RootMotionComponent
+    public struct ButtonSpawnComponent
     {
-        public Vector3 Position;
     }
 }

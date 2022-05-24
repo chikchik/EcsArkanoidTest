@@ -26,3 +26,4 @@ ServerApp/bin/
 ServerApp/.vs/
 *.userproperties
 Project/ProjectSettings/RiderScriptEditorPersistedState.asset
+ServerApp/UpgradeLog.htm
