@@ -79,7 +79,7 @@ namespace Game.Fabros.Net.ClientServer
 
             //отладочный код, который умеет писать в файлы hash мира и его diff
             var empty = WorldUtils.CreateWorld("empty", Pool);
-            var dif = WorldUtils.BuildDiff(Pool, empty, world);
+            var dif = WorldUtils.BuildDiff(Pool, empty, world, true);
 
             var str = JsonUtility.ToJson(dif, true);
             var hash = global::Fabros.Ecs.Utils.Utils.CreateMD5(str);

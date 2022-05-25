@@ -186,9 +186,11 @@ namespace ConsoleApp
                 var client = new Client(packet.playerID);
 
                 Console.WriteLine($"got hello from client {packet.playerID}");
-                
 
-                SendAsync(new Packet { hello = new Hello(), hasHello = true }, client.Address);
+                var components = leo.Pool.Components.Select(component => component.GetFullName()).ToArray();
+                var hello = new Hello {Components = components};
+
+                SendAsync(new Packet { hello = hello, hasHello = true }, client.Address);
 
                 var emptyWorld = WorldUtils.CreateWorld("empty", leo.Pool);
                 SendInitialWorld(emptyWorld, client);
@@ -289,7 +291,7 @@ namespace ConsoleApp
 
         void SendWorldToClients()
         {
-            var dif = WorldUtils.BuildDiff(leo.Pool, sentWorld, world);
+            var dif = WorldUtils.BuildDiff(leo.Pool, sentWorld, world, false);
             leo.SyncLog.WriteLine($"send world {leo.GetPrevTick(world)}->{leo.GetCurrentTick(world)} to clients\n");
 
             //clients list could be modified
@@ -331,7 +333,7 @@ namespace ConsoleApp
 
         void SendInitialWorld(EcsWorld prevWorld, Client client)
         {
-            var dif = WorldUtils.BuildDiff(leo.Pool, prevWorld, sentWorld);
+            var dif = WorldUtils.BuildDiff(leo.Pool, prevWorld, sentWorld, false);
 
             var packet = new Packet
             {

@@ -82,7 +82,7 @@ namespace Game.Fabros.Net.Client
         {
             //произвольный код для подключения к серверу
             //особой важности не имеет после подкл к сокету вызывается asyncmain
-            var hello = new Packet {hello = new Hello {text = "hello"}, playerID = playerID, hasHello = true};
+            var hello = new Packet {hello = new Hello {Text = "hello"}, playerID = playerID, hasHello = true};
 
             var url = $"{Config.url}/{playerID}";
             var connection = new WebSocketConnection(hello, url, P2P.ADDR_SERVER);
@@ -164,7 +164,7 @@ namespace Game.Fabros.Net.Client
             Leo.SyncLog.WriteLine("sync end\n");
 
             var dif2 = WorldUtils.BuildDiff(Leo.Pool, MainWorld,
-                copyServerWorld);
+                copyServerWorld, false);
 
             if (dif2.RemovedEntities != null)
                 DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
@@ -172,12 +172,15 @@ namespace Game.Fabros.Net.Client
         }
         private async UniTask<string> AsyncMain(Packet packet)
         {
+            Leo.Pool.RemapOrder(packet.hello.Components);
             while (!packet.hasWelcomeFromServer)
             {
                 var msg = await socket.AsyncWaitMessage();
                 packet = P2P.ParseResponse<Packet>(msg.buffer);
             }
-
+            
+            
+                
             if (!Application.isPlaying)
                 throw new Exception("async next step for stopped application");
 
@@ -259,9 +262,6 @@ namespace Game.Fabros.Net.Client
 
                             if (entity.EntityHas<LocalEntityComponent>(MainWorld))
                                 return;
-                            
-                            
-                            
 
                             if (entity.EntityHasComponent<GameObjectComponent>(MainWorld))
                             {
