@@ -26,66 +26,6 @@ namespace Game.Client
             collectableTargetComponent.targetObject = bushView.Berries.gameObject;
         }
 
-        public static void LinkUnits(EcsWorld world)
-        {
-            var viewComponent = world.GetUnique<ClientViewComponent>();
-
-            //клиентский код, он привязывает GameObjects к entities  из мира
-            //вызывается часто и должно быть быстрым, корректно обрабатывать появление новых entities
-            //и пропадание каких-то старых
-            //потому тут на всякий случай передается прошлый уже привязанный мир к game objects 
-            //что может облегчить задачу
-
-            var filter = world.Filter<GameObjectNameComponent>().End();
-
-            foreach (var entity in filter)
-            {
-                if (entity.EntityHasComponent<GameObjectComponent>(world))
-                    continue;
-
-                if (entity.EntityHasComponent<GameObjectNameComponent>(world))
-                {
-                    var name = entity.EntityGetComponent<GameObjectNameComponent>(world).Name;
-                    var go = GameObject.Find(name).gameObject;
-                    go.gameObject.SetActive(true);
-
-                    entity.EntityAddComponent<GameObjectComponent>(world).GameObject = go;
-                    entity.EntityAddComponent<TransformComponent>(world).transform = go.transform;
-
-                    if (entity.EntityHasComponent<CollectableComponent>(world))
-                        ConfigureCollectableUnit(world, go, entity);
-                }
-            }
-
-            var filterUnits = world.Filter<UnitComponent>().End();
-
-            foreach (var entity in filterUnits)
-            {
-                if (entity.EntityHasComponent<GameObjectComponent>(world))
-                    continue;
-
-                Debug.Log($"link {entity}");
-
-                var characterView = Object.Instantiate(viewComponent.Global.characterPrefab);
-
-                ref var component = ref entity.EntityAddComponent<GameObjectComponent>(world);
-                component.GameObject = characterView.gameObject;
-                
-                ref var transformComponent = ref entity.EntityAddComponent<TransformComponent>(world);
-                transformComponent.transform = characterView.transform;
-
-                ref var animatorComponent = ref entity.EntityAddComponent<AnimatorComponent>(world);
-                animatorComponent.animator = characterView.Animator;
-
-                var position = entity.EntityGet<PositionComponent>(world).value;
-                entity.EntityAdd<RootMotionComponent>(world).Position = position;
-
-                transformComponent.transform.position = position;
-
-                entity.EntityReplaceComponent<LerpComponent>(world).value = 0.5f;
-            }
-        }
-
         private static void forEachObject<T>(Action<T> fn) where T : Component//it is UNITY Mono Component
         {
             var items = Object.FindObjectsOfType<T>();
@@ -165,9 +105,10 @@ namespace Game.Client
             forEachObject<ButtonView>(view =>
             {
                 var buttonEntity = GetOrCreateGameEntity(view.gameObject);
+
                 ref var buttonComponent = ref buttonEntity.EntityAdd<ButtonComponent>(world);
                 buttonComponent.isActivated = false;
-
+                
                 ref var positionComponent = ref buttonEntity.EntityAdd<PositionComponent>(world);
                 positionComponent.value = view.transform.position;
 
@@ -176,7 +117,7 @@ namespace Game.Client
 
                 buttonEntity.EntityAdd<InteractableComponent>(world);
                 
-
+                
                 ref var speedComponent = ref buttonEntity.EntityAddComponent<SpeedComponent>(world);
                 speedComponent.speed = view.speed;
 
@@ -186,6 +127,11 @@ namespace Game.Client
                 ref var moveInfoComponent = ref buttonEntity.EntityAddComponent<MoveInfoComponent>(world);
                 moveInfoComponent.startPoint = view.StartPosition;
                 moveInfoComponent.endPoint = view.EndPosition;
+                
+                if (view.Spawner)
+                {
+                    buttonEntity.EntityAdd<ButtonSpawnComponent>(world);
+                }
             });
 
             forEachObject<GateView>(view =>
@@ -194,11 +140,11 @@ namespace Game.Client
                 ref var gateComponent = ref gateEntity.EntityAdd<GateComponent>(world);
 
                 ref var buttonLinkComponent = ref gateEntity.EntityAdd<ButtonLinkComponent>(world);
-                buttonLinkComponent.buttonIds = new int[view.OpenedBy.Count];
+                buttonLinkComponent.Entities = new int[view.OpenedBy.Count];
 
                 for (var i = 0; i < view.OpenedBy.Count; i++)
                     if (entities.TryGetValue(view.OpenedBy[i], out var buttonEntity))
-                        buttonLinkComponent.buttonIds[i] = buttonEntity;
+                        buttonLinkComponent.Entities[i] = buttonEntity;
 
                 ref var positionComponent = ref gateEntity.EntityAdd<PositionComponent>(world);
                 positionComponent.value = view.transform.position;
@@ -223,17 +169,11 @@ namespace Game.Client
 
                 ref var playerComponent = ref characterEntity.EntityAddComponent<PlayerComponent>(world);
                 playerComponent.id = Random.Range(-9999, -1111);
-
-                //if (view.IsAICharacter) characterEntity.EntityAddComponent<AIPlayerComponent>(world);
-
                 characterEntity.EntityAddComponent<UnitComponent>(world);
 
                 characterEntity.EntityAddComponent<MoveDirectionComponent>(world);
                 characterEntity.EntityAddComponent<PositionComponent>(world);
-
                 
-                //characterEntity.EntityAddComponent<AverageSpeedComponent>(world).value = clip.averageSpeed;
-
                 ref var radiusComponent = ref characterEntity.EntityAddComponent<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
 

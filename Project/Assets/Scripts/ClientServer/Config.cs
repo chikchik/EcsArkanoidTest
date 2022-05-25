@@ -20,6 +20,7 @@ namespace Game.ClientServer
 #endif
 
         public static string ROOM = $"sandbox_{P2P.GetDevRoom()}";
+
         
         //Physics
         public static Vector2 GRAVITY = new Vector2(0, 0);
@@ -27,6 +28,7 @@ namespace Game.ClientServer
         public static int POSITION_ITERATIONS = 2;
 
         //public static string url = $"wss://dev1.ecs.fbpub.net/XsZubnMOTHC0JRDTS95S/{ROOM}";
-        public static string url = $"ws://localhost:9096/XsZubnMOTHC0JRDTS95S/{ROOM}";
+        //public static string url = $"ws://localhost:9096/XsZubnMOTHC0JRDTS95S/{ROOM}";
+        public static string url = $"ws://dev1.ecs.fbpub.net:9096/XsZubnMOTHC0JRDTS95S/{ROOM}";
     }
 }

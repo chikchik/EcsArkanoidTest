@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Game.Fabros.Net.ClientServer.Protocol
 {
+    /* это протокол для прототипа, для простоты в нем нет оптимизаций, содержит лишние поля и прочий мусор */
     [Serializable]
     public class Packet
     {

@@ -30,6 +30,7 @@
         27,
         28,
         29,
+<<<<<<< HEAD
         30,
         31,
         32,
@@ -42,6 +43,9 @@
         39,
         40,
         41
+=======
+        30
+>>>>>>> dev
     ],
     "CreatedEntitiesGen": [
         1,
@@ -73,6 +77,7 @@
         1,
         1,
         1,
+<<<<<<< HEAD
         1,
         1,
         1,
@@ -84,11 +89,14 @@
         1,
         1,
         1,
+=======
+>>>>>>> dev
         1
     ],
     "Groups": [
         {
-            "ComponentName": "FlammableComponent",
+            "FullComponentName": "Game.Fabros.EcsModules.Fire.ClientServer.Components.FlammableComponent",
+            "Id": 0,
             "Components": "{\"data\":[{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0}]}",
             "ChangedEntities": [
                 2,
@@ -110,8 +118,14 @@
             "RemovedFromEntities": []
         },
         {
+<<<<<<< HEAD
             "ComponentName": "GameObjectNameComponent",
             "Components": "{\"data\":[{\"Name\":\"Bush (0)\"},{\"Name\":\"Bush (14)\"},{\"Name\":\"Bush (12)\"},{\"Name\":\"BushObj3\"},{\"Name\":\"Bush (10)\"},{\"Name\":\"BushObj\"},{\"Name\":\"Bush (9)\"},{\"Name\":\"Bush (5)\"},{\"Name\":\"BushObj2\"},{\"Name\":\"Bush (7)\"},{\"Name\":\"Bush (1)\"},{\"Name\":\"Bush (2)\"},{\"Name\":\"Bush (11)\"},{\"Name\":\"Bush (13)\"},{\"Name\":\"Bush (8)\"},{\"Name\":\"Chest\"},{\"Name\":\"Button1\"},{\"Name\":\"Button3\"},{\"Name\":\"Button2\"},{\"Name\":\"Button4\"},{\"Name\":\"Button5\"},{\"Name\":\"Gate2\"},{\"Name\":\"Gate1\"},{\"Name\":\"Gate2 (2)\"},{\"Name\":\"Gate2 (4)\"},{\"Name\":\"Gate2 (3)\"},{\"Name\":\"Gate3\"},{\"Name\":\"ChestWall\"},{\"Name\":\"Rigidbody (7)\"},{\"Name\":\"Rigidbody (5)\"},{\"Name\":\"Rigidbody (2)\"},{\"Name\":\"Rigidbody (6)\"},{\"Name\":\"Wall (1)\"},{\"Name\":\"Rigidbody (8)\"},{\"Name\":\"Circle\"},{\"Name\":\"Circle (2)\"},{\"Name\":\"Rigidbody (4)\"},{\"Name\":\"Rigidbody (1)\"},{\"Name\":\"Circle (1)\"},{\"Name\":\"Star\"}]}",
+=======
+            "FullComponentName": "Game.Ecs.ClientServer.Components.GameObjectNameComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"Name\":\"Bush (0)\"},{\"Name\":\"Bush (14)\"},{\"Name\":\"Bush (12)\"},{\"Name\":\"BushObj3\"},{\"Name\":\"Bush (10)\"},{\"Name\":\"BushObj\"},{\"Name\":\"Bush (9)\"},{\"Name\":\"Bush (5)\"},{\"Name\":\"BushObj2\"},{\"Name\":\"Bush (7)\"},{\"Name\":\"Bush (1)\"},{\"Name\":\"Bush (2)\"},{\"Name\":\"Bush (11)\"},{\"Name\":\"Bush (13)\"},{\"Name\":\"Bush (8)\"},{\"Name\":\"Chest\"},{\"Name\":\"Button1\"},{\"Name\":\"Button3\"},{\"Name\":\"Button2\"},{\"Name\":\"Button4\"},{\"Name\":\"Button5\"},{\"Name\":\"ButtonSpawn\"},{\"Name\":\"Gate2\"},{\"Name\":\"Gate1\"},{\"Name\":\"Gate2 (2)\"},{\"Name\":\"Gate2 (4)\"},{\"Name\":\"Gate2 (3)\"},{\"Name\":\"Gate3\"},{\"Name\":\"ChestWall\"}]}",
+>>>>>>> dev
             "ChangedEntities": [
                 2,
                 3,
@@ -141,6 +155,7 @@
                 27,
                 28,
                 29,
+<<<<<<< HEAD
                 30,
                 31,
                 32,
@@ -153,11 +168,15 @@
                 39,
                 40,
                 41
+=======
+                30
+>>>>>>> dev
             ],
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "BoxComponent",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.BoxComponent",
+            "Id": 0,
             "Components": "{\"data\":[{}]}",
             "ChangedEntities": [
                 17
@@ -165,7 +184,8 @@
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "BushComponent",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.BushComponent",
+            "Id": 0,
             "Components": "{\"data\":[{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"},{\"name\":\"Berries\"}]}",
             "ChangedEntities": [
                 2,
@@ -187,48 +207,58 @@
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "ButtonComponent",
-            "Components": "{\"data\":[{\"isActivated\":false},{\"isActivated\":false},{\"isActivated\":false},{\"isActivated\":false},{\"isActivated\":false}]}",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.ButtonComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"isActivated\":false},{\"isActivated\":false},{\"isActivated\":false},{\"isActivated\":false},{\"isActivated\":false},{\"isActivated\":false}]}",
             "ChangedEntities": [
                 18,
                 19,
                 20,
                 21,
-                22
+                22,
+                23
             ],
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "ButtonLinkComponent",
-            "Components": "{\"data\":[{\"buttonIds\":[20]},{\"buttonIds\":[18,19]},{\"buttonIds\":[22,19]},{\"buttonIds\":[22,19]},{\"buttonIds\":[22,19]},{\"buttonIds\":[21]},{\"buttonIds\":[18]}]}",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.ButtonLinkComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"Entities\":[20]},{\"Entities\":[18,19]},{\"Entities\":[22,19]},{\"Entities\":[22,19]},{\"Entities\":[22,19]},{\"Entities\":[21]},{\"Entities\":[18]}]}",
             "ChangedEntities": [
-                23,
                 24,
                 25,
                 26,
                 27,
                 28,
-                29
+                29,
+                30
             ],
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "GateComponent",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.GateComponent",
+            "Id": 0,
             "Components": "{\"data\":[{},{},{},{},{},{},{}]}",
             "ChangedEntities": [
-                23,
                 24,
                 25,
                 26,
                 27,
                 28,
-                29
+                29,
+                30
             ],
             "RemovedFromEntities": []
         },
         {
+<<<<<<< HEAD
             "ComponentName": "MoveInfoComponent",
             "Components": "{\"data\":[{\"startPoint\":{\"x\":-3.5,\"y\":-0.03200000151991844,\"z\":5.389999866485596},\"endPoint\":{\"x\":-3.5,\"y\":-0.15199999511241914,\"z\":5.389999866485596}},{\"startPoint\":{\"x\":-2.430000066757202,\"y\":-0.03200000151991844,\"z\":7.190000057220459},\"endPoint\":{\"x\":-2.430000066757202,\"y\":-0.15199999511241914,\"z\":7.190000057220459}},{\"startPoint\":{\"x\":-1.840000033378601,\"y\":-0.03200000151991844,\"z\":-6.53000020980835},\"endPoint\":{\"x\":-1.840000033378601,\"y\":-0.15199999511241914,\"z\":-6.53000020980835}},{\"startPoint\":{\"x\":-8.979999542236329,\"y\":-0.03200000151991844,\"z\":4.050000190734863},\"endPoint\":{\"x\":-8.979999542236329,\"y\":-0.15199999511241914,\"z\":4.050000190734863}},{\"startPoint\":{\"x\":-28.84000015258789,\"y\":-0.03200000151991844,\"z\":17.93000030517578},\"endPoint\":{\"x\":-28.84000015258789,\"y\":-0.15199999511241914,\"z\":17.93000030517578}},{\"startPoint\":{\"x\":7.369999885559082,\"y\":1.4299999475479127,\"z\":0.0},\"endPoint\":{\"x\":7.369999885559082,\"y\":-1.8700000047683716,\"z\":0.0}},{\"startPoint\":{\"x\":-2.568000078201294,\"y\":1.4299999475479127,\"z\":-3.0139999389648439},\"endPoint\":{\"x\":-2.568000078201294,\"y\":-1.8700000047683716,\"z\":-3.0139999389648439}},{\"startPoint\":{\"x\":-10.579999923706055,\"y\":1.4299999475479127,\"z\":-15.770000457763672},\"endPoint\":{\"x\":-10.579999923706055,\"y\":-1.8700000047683716,\"z\":-15.770000457763672}},{\"startPoint\":{\"x\":-10.5,\"y\":1.4299999475479127,\"z\":-26.25},\"endPoint\":{\"x\":-10.5,\"y\":-1.8700000047683716,\"z\":-26.25}},{\"startPoint\":{\"x\":-10.539999961853028,\"y\":1.4299999475479127,\"z\":-21.0},\"endPoint\":{\"x\":-10.539999961853028,\"y\":-1.8700000047683716,\"z\":-21.0}},{\"startPoint\":{\"x\":-10.729999542236329,\"y\":1.4299999475479127,\"z\":2.4700000286102297},\"endPoint\":{\"x\":-10.729999542236329,\"y\":-1.8700000047683716,\"z\":2.4700000286102297}},{\"startPoint\":{\"x\":-0.4799995422363281,\"y\":-0.06999993324279785,\"z\":2.140000343322754},\"endPoint\":{\"x\":-0.4799995422363281,\"y\":-1.7699999809265137,\"z\":2.140000343322754}}]}",
+=======
+            "FullComponentName": "Game.Ecs.ClientServer.Components.MoveInfoComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"startPoint\":{\"x\":-3.5,\"y\":-0.03200000151991844,\"z\":5.389999866485596},\"endPoint\":{\"x\":-3.5,\"y\":-0.15199999511241914,\"z\":5.389999866485596}},{\"startPoint\":{\"x\":-2.430000066757202,\"y\":-0.03200000151991844,\"z\":7.190000057220459},\"endPoint\":{\"x\":-2.430000066757202,\"y\":-0.15199999511241914,\"z\":7.190000057220459}},{\"startPoint\":{\"x\":-1.840000033378601,\"y\":-0.03200000151991844,\"z\":-6.53000020980835},\"endPoint\":{\"x\":-1.840000033378601,\"y\":-0.15199999511241914,\"z\":-6.53000020980835}},{\"startPoint\":{\"x\":-8.979999542236329,\"y\":-0.03200000151991844,\"z\":4.050000190734863},\"endPoint\":{\"x\":-8.979999542236329,\"y\":-0.15199999511241914,\"z\":4.050000190734863}},{\"startPoint\":{\"x\":-28.84000015258789,\"y\":-0.03200000151991844,\"z\":17.93000030517578},\"endPoint\":{\"x\":-28.84000015258789,\"y\":-0.15199999511241914,\"z\":17.93000030517578}},{\"startPoint\":{\"x\":-6.059999942779541,\"y\":-0.031999945640563968,\"z\":2.4800000190734865},\"endPoint\":{\"x\":-6.059999942779541,\"y\":-0.15199995040893556,\"z\":2.4800000190734865}},{\"startPoint\":{\"x\":7.369999885559082,\"y\":1.4299999475479127,\"z\":0.0},\"endPoint\":{\"x\":7.369999885559082,\"y\":-1.8700000047683716,\"z\":0.0}},{\"startPoint\":{\"x\":-2.568000078201294,\"y\":1.4299999475479127,\"z\":-3.0139999389648439},\"endPoint\":{\"x\":-2.568000078201294,\"y\":-1.8700000047683716,\"z\":-3.0139999389648439}},{\"startPoint\":{\"x\":-10.579999923706055,\"y\":1.4299999475479127,\"z\":-15.770000457763672},\"endPoint\":{\"x\":-10.579999923706055,\"y\":-1.8700000047683716,\"z\":-15.770000457763672}},{\"startPoint\":{\"x\":-10.5,\"y\":1.4299999475479127,\"z\":-26.25},\"endPoint\":{\"x\":-10.5,\"y\":-1.8700000047683716,\"z\":-26.25}},{\"startPoint\":{\"x\":-10.539999961853028,\"y\":1.4299999475479127,\"z\":-21.0},\"endPoint\":{\"x\":-10.539999961853028,\"y\":-1.8700000047683716,\"z\":-21.0}},{\"startPoint\":{\"x\":-10.729999542236329,\"y\":1.4299999475479127,\"z\":2.4700000286102297},\"endPoint\":{\"x\":-10.729999542236329,\"y\":-1.8700000047683716,\"z\":2.4700000286102297}},{\"startPoint\":{\"x\":-0.47999998927116396,\"y\":-0.07000000029802323,\"z\":2.140000104904175},\"endPoint\":{\"x\":-0.47999998927116396,\"y\":-1.7700001001358033,\"z\":2.140000104904175}}]}",
+>>>>>>> dev
             "ChangedEntities": [
                 18,
                 19,
@@ -241,13 +271,15 @@
                 26,
                 27,
                 28,
-                29
+                29,
+                30
             ],
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "InteractableComponent",
-            "Components": "{\"data\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.InteractableComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}",
             "ChangedEntities": [
                 2,
                 3,
@@ -269,12 +301,14 @@
                 19,
                 20,
                 21,
-                22
+                22,
+                23
             ],
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "CollectableComponent",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.CollectableComponent",
+            "Id": 0,
             "Components": "{\"data\":[{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false},{\"isCollected\":false}]}",
             "ChangedEntities": [
                 2,
@@ -296,8 +330,9 @@
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "ProgressComponent",
-            "Components": "{\"data\":[{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0}]}",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.ProgressComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0},{\"progress\":0.0}]}",
             "ChangedEntities": [
                 18,
                 19,
@@ -310,13 +345,20 @@
                 26,
                 27,
                 28,
-                29
+                29,
+                30
             ],
             "RemovedFromEntities": []
         },
         {
+<<<<<<< HEAD
             "ComponentName": "PositionComponent",
             "Components": "{\"data\":[{\"value\":{\"x\":2.872999906539917,\"y\":0.0,\"z\":2.61299991607666}},{\"value\":{\"x\":-30.309999465942384,\"y\":0.0,\"z\":-7.509999752044678}},{\"value\":{\"x\":-30.260000228881837,\"y\":0.0,\"z\":-4.809999465942383}},{\"value\":{\"x\":-15.9399995803833,\"y\":0.0,\"z\":3.799999952316284}},{\"value\":{\"x\":-23.219999313354493,\"y\":0.0,\"z\":-7.37999963760376}},{\"value\":{\"x\":-0.5400000214576721,\"y\":0.0,\"z\":5.809999942779541}},{\"value\":{\"x\":-23.290000915527345,\"y\":0.0,\"z\":-10.210000038146973}},{\"value\":{\"x\":-0.40400001406669619,\"y\":0.0,\"z\":6.771999835968018}},{\"value\":{\"x\":-13.760000228881836,\"y\":0.0,\"z\":3.8399999141693117}},{\"value\":{\"x\":-23.389999389648439,\"y\":0.0,\"z\":-4.699999809265137}},{\"value\":{\"x\":-3.4739999771118166,\"y\":-0.10729999840259552,\"z\":1.4700000286102296}},{\"value\":{\"x\":2.9200000762939455,\"y\":0.0,\"z\":4.949999809265137}},{\"value\":{\"x\":-28.079999923706056,\"y\":0.0,\"z\":-4.7699995040893559}},{\"value\":{\"x\":-30.380001068115236,\"y\":0.0,\"z\":-10.34000015258789}},{\"value\":{\"x\":-25.56999969482422,\"y\":0.0,\"z\":-4.739999771118164}},{\"value\":{\"x\":-0.6071834564208984,\"y\":0.04673019051551819,\"z\":2.6399483680725099}},{\"value\":{\"x\":-3.5,\"y\":-0.03200000151991844,\"z\":5.389999866485596}},{\"value\":{\"x\":-2.430000066757202,\"y\":-0.03200000151991844,\"z\":7.190000057220459}},{\"value\":{\"x\":-1.840000033378601,\"y\":-0.03200000151991844,\"z\":-6.53000020980835}},{\"value\":{\"x\":-8.979999542236329,\"y\":-0.03200000151991844,\"z\":4.050000190734863}},{\"value\":{\"x\":-28.84000015258789,\"y\":-0.03200000151991844,\"z\":17.93000030517578}},{\"value\":{\"x\":7.369999885559082,\"y\":1.4299999475479127,\"z\":0.0}},{\"value\":{\"x\":-2.568000078201294,\"y\":1.4299999475479127,\"z\":-3.0139999389648439}},{\"value\":{\"x\":-10.579999923706055,\"y\":1.4299999475479127,\"z\":-15.770000457763672}},{\"value\":{\"x\":-10.5,\"y\":1.4299999475479127,\"z\":-26.25}},{\"value\":{\"x\":-10.539999961853028,\"y\":1.4299999475479127,\"z\":-21.0}},{\"value\":{\"x\":-10.729999542236329,\"y\":1.4299999475479127,\"z\":2.4700000286102297}},{\"value\":{\"x\":-0.4799995422363281,\"y\":-0.06999993324279785,\"z\":2.140000343322754}},{\"value\":{\"x\":-2.740000009536743,\"y\":0.5,\"z\":10.470000267028809}},{\"value\":{\"x\":-1.409999966621399,\"y\":0.5,\"z\":7.789999961853027}},{\"value\":{\"x\":-0.35999995470046999,\"y\":0.5,\"z\":8.210000038146973}},{\"value\":{\"x\":2.2300002574920656,\"y\":0.5,\"z\":11.649998664855957}},{\"value\":{\"x\":14.34000015258789,\"y\":-3.7236404418945314,\"z\":9.720000267028809}},{\"value\":{\"x\":1.2300000190734864,\"y\":0.5,\"z\":8.971320152282715}},{\"value\":{\"x\":-0.19999998807907105,\"y\":0.5,\"z\":14.809999465942383}},{\"value\":{\"x\":1.7899999618530274,\"y\":0.5,\"z\":13.589999198913575}},{\"value\":{\"x\":2.430000066757202,\"y\":0.5,\"z\":10.000000953674317}},{\"value\":{\"x\":-3.9699997901916506,\"y\":0.5,\"z\":4.149998664855957}},{\"value\":{\"x\":-1.0,\"y\":0.5,\"z\":18.899999618530275}},{\"value\":{\"x\":-2.130000114440918,\"y\":0.8053790330886841,\"z\":14.189998626708985}}]}",
+=======
+            "FullComponentName": "Fabros.EcsModules.Base.Components.PositionComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"value\":{\"x\":2.872999906539917,\"y\":0.0,\"z\":2.61299991607666}},{\"value\":{\"x\":-30.309999465942384,\"y\":0.0,\"z\":-7.509999752044678}},{\"value\":{\"x\":-30.260000228881837,\"y\":0.0,\"z\":-4.809999465942383}},{\"value\":{\"x\":-15.9399995803833,\"y\":0.0,\"z\":3.799999952316284}},{\"value\":{\"x\":-23.219999313354493,\"y\":0.0,\"z\":-7.37999963760376}},{\"value\":{\"x\":-0.5400000214576721,\"y\":0.0,\"z\":5.809999942779541}},{\"value\":{\"x\":-23.290000915527345,\"y\":0.0,\"z\":-10.210000038146973}},{\"value\":{\"x\":-0.40400001406669619,\"y\":0.0,\"z\":6.771999835968018}},{\"value\":{\"x\":-13.760000228881836,\"y\":0.0,\"z\":3.8399999141693117}},{\"value\":{\"x\":-23.389999389648439,\"y\":0.0,\"z\":-4.699999809265137}},{\"value\":{\"x\":-3.4739999771118166,\"y\":-0.10729999840259552,\"z\":1.4700000286102296}},{\"value\":{\"x\":2.9200000762939455,\"y\":0.0,\"z\":4.949999809265137}},{\"value\":{\"x\":-28.079999923706056,\"y\":0.0,\"z\":-4.7699995040893559}},{\"value\":{\"x\":-30.380001068115236,\"y\":0.0,\"z\":-10.34000015258789}},{\"value\":{\"x\":-25.56999969482422,\"y\":0.0,\"z\":-4.739999771118164}},{\"value\":{\"x\":-0.6071834564208984,\"y\":0.04673019051551819,\"z\":2.6399483680725099}},{\"value\":{\"x\":-3.5,\"y\":-0.03200000151991844,\"z\":5.389999866485596}},{\"value\":{\"x\":-2.430000066757202,\"y\":-0.03200000151991844,\"z\":7.190000057220459}},{\"value\":{\"x\":-1.840000033378601,\"y\":-0.03200000151991844,\"z\":-6.53000020980835}},{\"value\":{\"x\":-8.979999542236329,\"y\":-0.03200000151991844,\"z\":4.050000190734863}},{\"value\":{\"x\":-28.84000015258789,\"y\":-0.03200000151991844,\"z\":17.93000030517578}},{\"value\":{\"x\":-6.059999942779541,\"y\":-0.031999945640563968,\"z\":2.4800000190734865}},{\"value\":{\"x\":7.369999885559082,\"y\":1.4299999475479127,\"z\":0.0}},{\"value\":{\"x\":-2.568000078201294,\"y\":1.4299999475479127,\"z\":-3.0139999389648439}},{\"value\":{\"x\":-10.579999923706055,\"y\":1.4299999475479127,\"z\":-15.770000457763672}},{\"value\":{\"x\":-10.5,\"y\":1.4299999475479127,\"z\":-26.25}},{\"value\":{\"x\":-10.539999961853028,\"y\":1.4299999475479127,\"z\":-21.0}},{\"value\":{\"x\":-10.729999542236329,\"y\":1.4299999475479127,\"z\":2.4700000286102297}},{\"value\":{\"x\":-0.47999998927116396,\"y\":-0.07000000029802323,\"z\":2.140000104904175}}]}",
+>>>>>>> dev
             "ChangedEntities": [
                 2,
                 3,
@@ -346,6 +388,7 @@
                 27,
                 28,
                 29,
+<<<<<<< HEAD
                 30,
                 31,
                 32,
@@ -358,12 +401,16 @@
                 39,
                 40,
                 41
+=======
+                30
+>>>>>>> dev
             ],
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "RadiusComponent",
-            "Components": "{\"data\":[{\"radius\":0.5},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.654699981212616},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.4999999701976776},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0}]}",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.RadiusComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"radius\":0.5},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.654699981212616},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.5000001192092896},{\"radius\":0.4999999701976776},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":0.4469650089740753},{\"radius\":0.4469650387763977},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0},{\"radius\":1.0}]}",
             "ChangedEntities": [
                 2,
                 3,
@@ -392,12 +439,14 @@
                 26,
                 27,
                 28,
-                29
+                29,
+                30
             ],
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "ResourceComponent",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.ResourceComponent",
+            "Id": 0,
             "Components": "{\"data\":[{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1},{\"count\":1}]}",
             "ChangedEntities": [
                 2,
@@ -419,8 +468,9 @@
             "RemovedFromEntities": []
         },
         {
-            "ComponentName": "SpeedComponent",
-            "Components": "{\"data\":[{\"speed\":3.0},{\"speed\":3.0},{\"speed\":3.0},{\"speed\":3.0},{\"speed\":3.0},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":1.0}]}",
+            "FullComponentName": "Game.Ecs.ClientServer.Components.SpeedComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"speed\":3.0},{\"speed\":3.0},{\"speed\":3.0},{\"speed\":3.0},{\"speed\":3.0},{\"speed\":3.0},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":0.20000000298023225},{\"speed\":1.0}]}",
             "ChangedEntities": [
                 18,
                 19,
@@ -433,11 +483,13 @@
                 26,
                 27,
                 28,
-                29
+                29,
+                30
             ],
             "RemovedFromEntities": []
         },
         {
+<<<<<<< HEAD
             "ComponentName": "RigidbodyDefinitionComponent",
             "Components": "{\"data\":[{\"BodyType\":2,\"Density\":1000.0,\"Friction\":0.30000001192092898,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":20.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.30000001192092898,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.30000001192092898,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.30000001192092898,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.30000001192092898,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.30000001192092898,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.30000001192092898,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.30000001192092898,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.30000001192092898,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.30000001192092898,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":2.0,\"AngularDamping\":5.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false}]}",
             "ChangedEntities": [
@@ -510,9 +562,22 @@
         },
         {
             "ComponentName": "AverageSpeedComponent",
+=======
+            "FullComponentName": "Game.Ecs.ClientServer.Components.AverageSpeedComponent",
+            "Id": 0,
+>>>>>>> dev
             "Components": "{\"data\":[{\"Value\":1.7699999809265137}]}",
             "ChangedEntities": [
                 0
+            ],
+            "RemovedFromEntities": []
+        },
+        {
+            "FullComponentName": "Game.Ecs.ClientServer.Components.ButtonSpawnComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{}]}",
+            "ChangedEntities": [
+                23
             ],
             "RemovedFromEntities": []
         }

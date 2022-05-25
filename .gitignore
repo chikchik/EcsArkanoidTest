@@ -32,4 +32,8 @@ Box2DProject/*/build
 *.vscode
 Box2DProject/box2d-unity-wrapper/out
 Project/ProjectSettings/RiderScriptEditorPersistedState.asset
+<<<<<<< HEAD
 Box2DProject/box2d-unity-wrapper/box2d/headers
+=======
+ServerApp/UpgradeLog.htm
+>>>>>>> dev

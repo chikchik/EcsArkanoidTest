@@ -4,6 +4,7 @@ using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Grid.Other;
 using Fabros.EcsModules.Tick.Other;
+using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
@@ -25,6 +26,8 @@ namespace Game.Ecs.ClientServer.Systems
             var poolProgress = world.GetPool<ProgressComponent>();
             var poolUnit = world.GetPool<UnitComponent>();
             var poolButton = world.GetPool<ButtonComponent>();
+            var poolButtonSpawn = world.GetPool<ButtonSpawnComponent>();
+            var poolPressed = world.GetPool<ButtonPressedComponent>();
             var poolSpeed = world.GetPool<SpeedComponent>();
             var poolBody = world.GetPool<RigidbodyComponent>();
             
@@ -34,12 +37,17 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var buttonEntity in filter)
             {
                 var pos = buttonEntity.EntityGet<PositionComponent>(world).value;
-                world.GetNearestEntities(buttonEntity, pos, 0.5f, ref entities, entity => poolUnit.Has(entity) || poolBody.Has(entity));
 
+                world.GetNearestEntities(buttonEntity, pos, 0.5f, ref entities, entity => poolUnit.Has(entity) || poolBody.Has(entity));
                 
                 var pressed = entities.Count > 0;
                 poolButton.ReplaceIfChanged(buttonEntity, new ButtonComponent{isActivated = pressed});
 
+                if (pressed)
+                    poolPressed.Replace(buttonEntity);
+                else
+                    poolPressed.Del(buttonEntity);
+                    
                 var speedComponent = poolSpeed.Get(buttonEntity);
                 var progressComponent = poolProgress.Get(buttonEntity);
                 

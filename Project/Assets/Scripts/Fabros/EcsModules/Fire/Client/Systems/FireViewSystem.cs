@@ -15,17 +15,14 @@ namespace Game.Fabros.EcsModules.Fire.Client.Systems
             var world = systems.GetWorld();
 
             var global = world.GetUnique<ClientViewComponent>().Global;
-            var filter = world.Filter<FireComponent>().End();
+            
             var poolFire = world.GetPool<FireComponent>();
             var poolFireView = world.GetPool<FireViewComponent>();
-            var poolGO = world.GetPool<GameObjectComponent>();
 
 
+            var filter = world.FilterAdded<FireComponent>().End();
             foreach (var entity in filter)
             {
-                if (poolFireView.Has(entity))
-                    continue;
-
                 var fireComponent = poolFire.Get(entity);
 
                 var ps = Object.Instantiate(global.FireParticles);
@@ -33,9 +30,6 @@ namespace Game.Fabros.EcsModules.Fire.Client.Systems
                 ps.name = entity.ToString();
                 ps.transform.localScale = Vector3.one * fireComponent.size;
                 poolFireView.Add(entity).view = ps;
-
-                //entity.EntityAddComponent<FireViewComponent2>(world);
-                //poolGO.Add(entity).gameObject = ps.gameObject;
             }
 
             var filterBurned = world.Filter<BurnedOutComponent>().Inc<FireViewComponent>().End();

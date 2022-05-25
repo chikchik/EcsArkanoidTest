@@ -34,15 +34,15 @@ namespace Game.Client
             client = new NetClient(world);
             
             viewSystems = new EcsSystems(world);
-            viewSystems.Add(new SyncTransformSystem());
+            viewSystems.Add(new SyncTransformSystem(false));
             viewSystems.Add(new RotateCharacterSystem());
+
             viewSystems.Add(new RotateRigidbodySystem());
-            viewSystems.Add(new CameraFollowSystem());
+            viewSystems.Add(new CameraFollowSystem(Camera.main));
             
 #if UNITY_EDITOR
             viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
-
 
             client.ConnectedAction = () =>
             {
@@ -52,14 +52,11 @@ namespace Game.Client
             client.InitWorldAction = world =>
             {
                 var viewComponent = new ClientViewComponent();
-                viewComponent.Camera = Camera.main;
-                viewComponent.MainUI = ui;
                 viewComponent.Global = global;
 
                 world.AddUnique<ClientViewComponent>() = viewComponent;
             };
 
-            client.LinkUnitsAction = world => { ClientServices.LinkUnits(world); };
 
             client.DeleteEntitiesAction = (world, entities) =>
             {

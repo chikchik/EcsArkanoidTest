@@ -9,5 +9,7 @@ namespace Game.View
 
         public Vector3 StartPosition => transform.position;
         public Vector3 EndPosition => StartPosition - moveOffset;
+
+        public bool Spawner;
     }
 }

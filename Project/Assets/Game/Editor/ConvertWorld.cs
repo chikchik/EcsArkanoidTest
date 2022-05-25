@@ -23,7 +23,7 @@ public static class ConvertWorld
         
         Debug.Log("saving world");
         var pool = SystemsAndComponents.CreateComponentsPool();
-        var dif = WorldUtils.BuildDiff(pool, WorldUtils.CreateWorld("save", pool), world);
+        var dif = WorldUtils.BuildDiff(pool, WorldUtils.CreateWorld("save", pool), world, true);
         File.WriteAllText("../ServerApp/world.ecs.json", JsonUtility.ToJson(dif, true));
     }
 }

@@ -60,6 +60,7 @@ namespace Game.ClientServer
             pool.AddComponent<BushComponent>();
             pool.AddComponent<ButtonComponent>();
             pool.AddComponent<ButtonLinkComponent>();
+            pool.AddComponent<ButtonPressedComponent>();
             pool.AddComponent<UnitComponent>();
             pool.AddComponent<GateComponent>();
             pool.AddComponent<MoveInfoComponent>();
@@ -114,10 +115,13 @@ namespace Game.ClientServer
             //pool.AddComponent<PostSolveComponent>();
             
             pool.AddComponent<AverageSpeedComponent>();
+            
+            pool.AddComponent<ButtonSpawnComponent>();
 
             return pool;
         }
-        
+
+       
         public static void AddSystems(ComponentsPool pool, EcsSystems systems, bool client, bool server)
         {
 #if CLIENT
@@ -200,6 +204,7 @@ namespace Game.ClientServer
 #endif
             // gates and buttons
             systems.Add(new ButtonsInteractionSystem());
+            systems.Add(new ButtonSpawnerSystem());
             systems.Add(new GateSystem());
             systems.Add(new MoveByProgressSystem());
 
@@ -213,6 +218,7 @@ namespace Game.ClientServer
             systems.Add(new FireSystem());
 
 #if CLIENT
+            AddClient(new CreateViewSystem());
             AddClient(new FireViewSystem());
             AddClient(new InventorySystem());
 #endif
@@ -233,6 +239,8 @@ namespace Game.ClientServer
 #endif
 
 
+            systems.Add(new EventsSystem<FireComponent>());
+            systems.Add(new EventsSystem<ButtonPressedComponent>());
             systems.Add(new EventsSystem<PlayerComponent>());
             systems.Add(new EventsSystem<ButtonPushCompleted>());
             systems.Add(new EventsSystem<ObjectiveOpenedComponent>());
