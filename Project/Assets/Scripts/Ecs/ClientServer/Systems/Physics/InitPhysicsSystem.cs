@@ -24,20 +24,20 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         {
             _ecsWorld = systems.GetWorld();
             if (!_ecsWorld.HasUnique<PhysicsWorldComponent>())
-            {
-                ref var physicsWorldComponent = ref _ecsWorld.AddUnique<PhysicsWorldComponent>();
-                physicsWorldComponent.WorldReference = Box2DPhysics.CreateWorld(Config.GRAVITY);
-                
-                _cbkBeginContactDelegate = SetBeginContactCallback;
-                _cbkEndContactDelegate = SetEndContactCallback;
-                _cbkPostSolveDelegate = SetPreSolveCallback;
-                _cbkPreSolveDelegate = SetPostSolveCallback;
-                
-                Box2DPhysics.SetBeginContactCallback(physicsWorldComponent.WorldReference, _cbkBeginContactDelegate);
-                Box2DPhysics.SetEndContactCallback(physicsWorldComponent.WorldReference, _cbkEndContactDelegate);
-                Box2DPhysics.SetPostSolveCallback(physicsWorldComponent.WorldReference, _cbkPostSolveDelegate);
-                Box2DPhysics.SetPreSolveCallback(physicsWorldComponent.WorldReference, _cbkPreSolveDelegate);
-            }
+                _ecsWorld.AddUnique<PhysicsWorldComponent>().WorldReference = Box2DPhysics.CreateWorld(Config.GRAVITY);
+
+            var b2world = _ecsWorld.GetUnique<PhysicsWorldComponent>().WorldReference;
+
+            _cbkBeginContactDelegate = SetBeginContactCallback;
+            _cbkEndContactDelegate = SetEndContactCallback;
+            _cbkPostSolveDelegate = SetPreSolveCallback;
+            _cbkPreSolveDelegate = SetPostSolveCallback;
+            
+            Box2DPhysics.SetBeginContactCallback(b2world, _cbkBeginContactDelegate);
+            Box2DPhysics.SetEndContactCallback(b2world, _cbkEndContactDelegate);
+            Box2DPhysics.SetPostSolveCallback(b2world, _cbkPostSolveDelegate);
+            Box2DPhysics.SetPreSolveCallback(b2world, _cbkPreSolveDelegate);
+            
         }
         
         public void SetBeginContactCallback(CollisionCallbackData callbackData)

@@ -17,32 +17,24 @@ namespace Game.ClientServer.Physics
 #endif
 
         // Clone current physicsWorld, delete old, change all old body references to the new ones, return cloned world
-        public static IntPtr ClonePhysicsWorldAndChangeEcsBodyRef(EcsWorld world, IntPtr physicsWorld)
-        {            
-            EcsFilter filter = world.Filter<BodyReferenceComponent>().End();
-            var entities = filter.GetEntities();
-            var poolBodyReferences = world.GetPool<BodyReferenceComponent>();
-            IntPtr[] arrayOfReferences = new IntPtr[entities.Count];
-
-            for (int i = 0; i < entities.Count; i++)
-            {
-                ref var bodyRef = ref poolBodyReferences.GetRef(entities[i]);
-                arrayOfReferences[i] = bodyRef.BodyReference;
-            }
+        public static void ReplicateBox2D(EcsWorld src, EcsWorld dest)
+        {
+            var entities = new List<int>();
+            src.GetPool<BodyReferenceComponent>().GetEntities(entities);
+            var srcPool = src.GetPool<BodyReferenceComponent>();
             
-            var cloneWorld = Box2DPhysics.CloneWorld(ref arrayOfReferences, entities.Count, physicsWorld);
-
-            ref var worldReference = ref world.GetUniqueRef<PhysicsWorldComponent>().WorldReference;
-            Box2DPhysics.DestroyWorld(worldReference);
-
+            IntPtr[] arrayOfReferences = new IntPtr[entities.Count];
             for (int i = 0; i < entities.Count; i++)
-            {
-                ref var bodyRef = ref poolBodyReferences.GetRef(entities[i]);
-                bodyRef.BodyReference = arrayOfReferences[i];
-            }
-            worldReference = cloneWorld;
+                arrayOfReferences[i] = srcPool.Get(entities[i]).BodyReference;
 
-            return cloneWorld;
+            var srcWorld = src.GetUnique<PhysicsWorldComponent>().WorldReference;
+            var newWorld = Box2DPhysics.CloneWorld(ref arrayOfReferences, entities.Count, srcWorld);
+
+            dest.AddUnique<PhysicsWorldComponent>().WorldReference = newWorld;
+            var destPool = dest.GetPool<BodyReferenceComponent>();
+            
+            for (int i = 0; i < entities.Count; i++)
+                destPool.Add(entities[i]).BodyReference = arrayOfReferences[i];
         }
 
         public static IntPtr GetBodyRefFromEntity(this EcsWorld world, int entity)

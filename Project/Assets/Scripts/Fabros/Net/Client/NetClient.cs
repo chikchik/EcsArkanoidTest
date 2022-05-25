@@ -6,6 +6,7 @@ using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
+using Game.ClientServer.Physics;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.Client.Components;
@@ -134,6 +135,7 @@ namespace Game.Fabros.Net.Client
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
             copyServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
        
+            PhysicsServices.ReplicateBox2D(ServerWorld, copyServerWorld);
             
             var copyServerSystems = new EcsSystems(copyServerWorld);
             copyServerSystems.AddWorld(InputWorld, "input");
