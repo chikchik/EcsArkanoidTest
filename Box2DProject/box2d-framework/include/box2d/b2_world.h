@@ -39,8 +39,7 @@ class b2Body;
 class b2Draw;
 class b2Fixture;
 class b2Joint;
-
-class BodyReferenceComponent;
+struct CloneWorldService;
 
 /// The world class manages all physics entities, dynamic simulation,
 /// and asynchronous queries. The world also contains efficient memory
@@ -51,7 +50,8 @@ public:
 	/// Construct a world object.
 	/// @param gravity the world gravity vector.
 	b2World(const b2Vec2& gravity);
-	b2World(BodyReferenceComponent* vertices, const int& count, const b2World& world);
+	b2World(void** arrayOfReferences, const int& count,
+		const b2World& world, CloneWorldService& cloneService);
 
 	/// Destruct the world. All physics entities are destroyed and all heap memory is released.
 	~b2World();

@@ -36,18 +36,14 @@
 #include "box2d/b2_pulley_joint.h"
 #include "box2d/b2_time_of_impact.h"
 #include "box2d/b2_timer.h"
+#include "box2d/clone_world_service.h"
+#include "box2d/clone_world.h"
 #include "box2d/b2_world.h"
 
 #include "box2d/b2_gear_joint.h"
 
-#include "box2d/clone_world.h"
 
 #include <new>
-
-struct BodyReferenceComponent
-{
-public: void* BodyReference;
-};
 
 b2World::b2World(const b2Vec2& gravity)
 {
@@ -82,8 +78,9 @@ b2World::b2World(const b2Vec2& gravity)
 }
 
 
-b2World::b2World(BodyReferenceComponent* vertices, const int& count, const b2World& world)
-	: m_blockAllocator(world.m_blockAllocator),
+b2World::b2World(void** arrayOfReferences, const int& count,
+	const b2World& world, CloneWorldService& cloneService)
+	: m_blockAllocator(world.m_blockAllocator, cloneService),
 	m_contactManager(world.m_contactManager),
 	m_bodyList(world.m_bodyList), m_jointList(world.m_jointList), m_locked(world.m_locked)
 {	
@@ -105,8 +102,8 @@ b2World::b2World(BodyReferenceComponent* vertices, const int& count, const b2Wor
 	m_profile = world.m_profile;
 	m_contactManager.m_allocator = &m_blockAllocator;
 	
-	CloneWorldInfo cloneWorld(vertices, count,
-		m_blockAllocator, world.m_blockAllocator);
+	CloneWorldInfo cloneWorld(arrayOfReferences, count,
+		m_blockAllocator, world.m_blockAllocator, cloneService);
 	cloneWorld.Move(this);
 }
 

@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include "box2d/clone_world_service.h"
 #include "box2d/b2_block_allocator.h"
 #include <limits.h>
 #include <string.h>
 #include <stddef.h>
-#include <stdio.h>
 
 
 static const int32 b2_maxBlockSize = 640;
@@ -76,52 +76,10 @@ struct b2SizeMap
 
 static const b2SizeMap b2_sizeMap;
 
-bool b2BlockAllocator::IsOldAdress(void* p)
-{
-	auto it = offsets.lower_bound(p);
-
-	if (it == offsets.end()
-		|| it != offsets.begin()
-		&& it->first != p)
-	{
-		--it;
-	}
-	return (int8*)p >= (int8*)it->first
-		&& (int8*)p <= (int8*)it->first + b2_chunkSize;
-}
-
-template<class  T>
-T* b2BlockAllocator::GetMovedAdress(T* ptr)
-{
-	b2Assert(IsOldAdress(ptr));
-
-	auto newAdrr = reinterpret_cast<T*>(reinterpret_cast<int8*>(ptr)
-		+ GetMovedOffset(ptr));
-	b2Assert(!IsOldAdress(newAdrr));
-	return newAdrr;
-}
-
-size_t b2BlockAllocator::GetMovedOffset(void* p)
-{
-	auto it = offsets.lower_bound(p);
-
-	if (it == offsets.end()
-		|| it != offsets.begin()
-		&& it->first != p)
-	{
-		--it;
-	}
-
-	b2Assert((int8*)p >= (int8*)it->first
-		&& (int8*)p <= (int8*)it->first + b2_chunkSize);
-
-	return it->second;
-}
-
-b2BlockAllocator::b2BlockAllocator(const b2BlockAllocator& other) 
+b2BlockAllocator::b2BlockAllocator(const b2BlockAllocator& other,
+	CloneWorldService& cloneService)
 	: b2BlockAllocator(other.m_chunkSpace)
 {
-
 	m_chunkCount = other.m_chunkCount;
 	for (int32 i = 0; i < m_chunkCount; ++i)
 	{
@@ -135,7 +93,7 @@ b2BlockAllocator::b2BlockAllocator(const b2BlockAllocator& other)
 		ptrdiff_t offset = reinterpret_cast<int8*>(newChunk->blocks)
 			- reinterpret_cast<int8*>(oldChunk->blocks);
 
-		offsets.insert(std::make_pair(oldChunk->blocks, offset));
+		cloneService.offsets.insert(std::make_pair(oldChunk->blocks, offset));
 
 		int32 index = b2_sizeMap.values[newChunk->blockSize];
 		b2Assert(0 <= index && index < b2_blockSizeCount);
@@ -155,7 +113,7 @@ b2BlockAllocator::b2BlockAllocator(const b2BlockAllocator& other)
 		{
 			if (block->next)
 			{
-				block->next = GetMovedAdress(block->next);
+				block->next = cloneService.GetMovedAdress(block->next);
 			}
 		}
 	}

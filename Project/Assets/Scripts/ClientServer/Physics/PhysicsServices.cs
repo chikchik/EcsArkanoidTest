@@ -19,19 +19,16 @@ namespace Game.ClientServer.Physics
 
         // Clone current physicsWorld, delete old, change all old body references to the new ones, return cloned world
         public static IntPtr ClonePhysicsWorldAndChangeEcsBodyRef(EcsWorld world, IntPtr physicsWorld)
-        {
-            
+        {            
             EcsFilter filter = world.Filter<BodyReferenceComponent>().End();
             var entities = filter.GetEntities();
             var poolBodyReferences = world.GetPool<BodyReferenceComponent>();
-            BodyReferenceComponent[] arrayOfReferences = new BodyReferenceComponent[entities.Count];
+            IntPtr[] arrayOfReferences = new IntPtr[entities.Count];
 
             for (int i = 0; i < entities.Count; i++)
             {
                 ref var bodyRef = ref poolBodyReferences.GetRef(entities[i]);
-                // ref IntPtr ptrRef = ref bodyRef.BodyReference;
-                arrayOfReferences[i] = bodyRef;
-                // Debug.Log($"Reference before {arrayOfReferences[i].BodyReference} {bodyRef.BodyReference}");
+                arrayOfReferences[i] = bodyRef.BodyReference;
             }
             
             var cloneWorld = Box2DPhysics.CloneWorld(ref arrayOfReferences, entities.Count, physicsWorld);
@@ -39,13 +36,10 @@ namespace Game.ClientServer.Physics
             ref var worldReference = ref world.GetUniqueRef<PhysicsWorldComponent>().WorldReference;
             Box2DPhysics.DestroyWorld(worldReference);
 
-            
-
             for (int i = 0; i < entities.Count; i++)
             {
                 ref var bodyRef = ref poolBodyReferences.GetRef(entities[i]);
-                bodyRef.BodyReference = arrayOfReferences[i].BodyReference;
-                // Debug.Log($"Reference after {arrayOfReferences[i].BodyReference} {bodyRef.BodyReference}");
+                bodyRef.BodyReference = arrayOfReferences[i];
             }
             worldReference = cloneWorld;
 

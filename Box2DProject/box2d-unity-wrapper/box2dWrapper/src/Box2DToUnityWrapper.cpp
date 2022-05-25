@@ -5,20 +5,15 @@
 #include <raycast.h>
 #include <debug_draw.h>
 #include <contact_listener.h>
+
 // SAFEARRAY
 #include <comdef.h>
-
 
 #ifdef _WIN32
     #define DllExport __declspec (dllexport)
 #elif __APPLE__ || defined(__ANDROID__)
     #define DllExport __attribute__((visibility("default")))
 #endif
-
-struct BodyReferenceComponent
-{
-public: void* BodyReference;
-};
 
 extern "C"
 {
@@ -72,15 +67,16 @@ extern "C"
 
     DllExport void DestroyWorld(b2World* world);
 
-    DllExport b2World* CloneWorld(BodyReferenceComponent*& vertices, int count, b2World* world)
+    DllExport b2World* CloneWorld(void**& arrayOfReferences, int count, b2World* world)
     {
         if (world->IsLocked())
         {
             return NULL;
         }
+        CloneWorldService cloneService;
 
         // new World
-        b2World* clonedWorld = new b2World(vertices, count, *world);
+        b2World* clonedWorld = new b2World(arrayOfReferences, count, *world, cloneService);
 
         // do we need to set all callbacks manually?
         MyContactListener* myContactListener = new MyContactListener(clonedWorld);

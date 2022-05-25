@@ -13,30 +13,25 @@
 #include <unordered_set>
 #include <map>
 
-#include <stdio.h>
-
-class BodyReferenceComponent;
+struct CloneWorldService;
 
 struct CloneWorldInfo
 {
 	b2BlockAllocator* allocator = nullptr;
 	int offset = 0;
 	std::unordered_set<void*> movedObjs;
-	std::map<void* const, ptrdiff_t> offsets;
+	CloneWorldService* m_cloneService;
 
 	b2World* m_newWorld;
 
 	template<class T>
 	T* GetMovedAdress(T* ptr);
 
-	CloneWorldInfo(BodyReferenceComponent* vertices, const int& count,
+	CloneWorldInfo(void** arrayOfReferences,
+		const int& count,
 		const b2BlockAllocator& newAllocator,
-		const b2BlockAllocator& oldAllocator);
-
-	bool IsOldAdress(void* p);
-
-
-	size_t GetMovedOffset(void* p);
+		const b2BlockAllocator& oldAllocator,
+		CloneWorldService& cloneService);
 
 	template<class T>
 	void IterateMove(T* head);
