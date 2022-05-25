@@ -25,11 +25,13 @@
 
 #include "b2_api.h"
 #include "b2_settings.h"
+#include "b2_allocator_constants.h"
 
 const int32 b2_blockSizeCount = 14;
 
 struct b2Block;
 struct b2Chunk;
+struct CloneWorldService;
 
 /// This is a small object allocator used for allocating small
 /// objects that persist for more than one time step.
@@ -48,13 +50,25 @@ public:
 
 	void Clear();
 
-private:
+	explicit b2BlockAllocator(int chunkSpace);
+	b2BlockAllocator(const b2BlockAllocator& other,
+		CloneWorldService& cloneService);
 
 	b2Chunk* m_chunks;
+	b2Block* m_freeLists[b2_blockSizeCount];
 	int32 m_chunkCount;
 	int32 m_chunkSpace;
+};
 
-	b2Block* m_freeLists[b2_blockSizeCount];
+struct b2Chunk
+{
+	int32 blockSize;
+	b2Block* blocks;
+};
+
+struct b2Block
+{
+	b2Block* next;
 };
 
 #endif

@@ -20,12 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include "box2d/clone_world_service.h"
 #include "box2d/b2_block_allocator.h"
 #include <limits.h>
 #include <string.h>
 #include <stddef.h>
 
-static const int32 b2_chunkSize = 16 * 1024;
+
 static const int32 b2_maxBlockSize = 640;
 static const int32 b2_chunkArrayIncrement = 128;
 
@@ -75,33 +76,69 @@ struct b2SizeMap
 
 static const b2SizeMap b2_sizeMap;
 
-struct b2Chunk
+b2BlockAllocator::b2BlockAllocator(const b2BlockAllocator& other,
+	CloneWorldService& cloneService)
+	: b2BlockAllocator(other.m_chunkSpace)
 {
-	int32 blockSize;
-	b2Block* blocks;
-};
+	m_chunkCount = other.m_chunkCount;
+	for (int32 i = 0; i < m_chunkCount; ++i)
+	{
+		b2Chunk* oldChunk = other.m_chunks + i;
+		b2Chunk* newChunk = m_chunks + i;
+		newChunk->blockSize = oldChunk->blockSize;
 
-struct b2Block
-{
-	b2Block* next;
-};
+		newChunk->blocks = (b2Block*)b2Alloc(b2_chunkSize);
+		memcpy(newChunk->blocks, oldChunk->blocks, b2_chunkSize);
 
-b2BlockAllocator::b2BlockAllocator()
+		ptrdiff_t offset = reinterpret_cast<int8*>(newChunk->blocks)
+			- reinterpret_cast<int8*>(oldChunk->blocks);
+
+		cloneService.offsets.insert(std::make_pair(oldChunk->blocks, offset));
+
+		int32 index = b2_sizeMap.values[newChunk->blockSize];
+		b2Assert(0 <= index && index < b2_blockSizeCount);
+
+		b2Block* freeBlock = other.m_freeLists[index];
+		if (freeBlock >= oldChunk->blocks
+			&& freeBlock <= oldChunk->blocks + b2_chunkSize)
+		{
+			m_freeLists[index] = reinterpret_cast<b2Block*>(
+				reinterpret_cast<int8*>(freeBlock) + offset);
+		}
+	}
+
+	for (int32 i = 0; i < b2_blockSizeCount; ++i)
+	{
+		for (b2Block* block = m_freeLists[i]; block; block = block->next)
+		{
+			if (block->next)
+			{
+				block->next = cloneService.GetMovedAdress(block->next);
+			}
+		}
+	}
+}
+
+b2BlockAllocator::b2BlockAllocator(int32 chunkSpace)
 {
 	b2Assert(b2_blockSizeCount < UCHAR_MAX);
-
-	m_chunkSpace = b2_chunkArrayIncrement;
+	m_chunkSpace = chunkSpace;
 	m_chunkCount = 0;
 	m_chunks = (b2Chunk*)b2Alloc(m_chunkSpace * sizeof(b2Chunk));
-	
+
 	memset(m_chunks, 0, m_chunkSpace * sizeof(b2Chunk));
 	memset(m_freeLists, 0, sizeof(m_freeLists));
+}
+
+b2BlockAllocator::b2BlockAllocator() : b2BlockAllocator(b2_chunkArrayIncrement)
+{
 }
 
 b2BlockAllocator::~b2BlockAllocator()
 {
 	for (int32 i = 0; i < m_chunkCount; ++i)
 	{
+		memset(m_chunks[i].blocks, 0xcd, b2_chunkSize);
 		b2Free(m_chunks[i].blocks);
 	}
 
@@ -116,6 +153,8 @@ void* b2BlockAllocator::Allocate(int32 size)
 	}
 
 	b2Assert(0 < size);
+
+	b2Assert(size < b2_maxBlockSize);
 
 	if (size > b2_maxBlockSize)
 	{
@@ -163,7 +202,6 @@ void* b2BlockAllocator::Allocate(int32 size)
 
 		m_freeLists[index] = chunk->blocks->next;
 		++m_chunkCount;
-
 		return chunk->blocks;
 	}
 }

@@ -70,6 +70,7 @@ class B2_API b2DynamicTree
 public:
 	/// Constructing the tree initializes the node pool.
 	b2DynamicTree();
+	b2DynamicTree(const b2DynamicTree& other);
 
 	/// Destroy the tree, freeing the node pool.
 	~b2DynamicTree();
@@ -151,6 +152,7 @@ private:
 
 	int32 m_root;
 
+public:
 	b2TreeNode* m_nodes;
 	int32 m_nodeCount;
 	int32 m_nodeCapacity;

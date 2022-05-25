@@ -31,7 +31,7 @@ namespace Game.ClientServer.Physics
         public static extern void DestroyWorld(IntPtr world);
 
         [DllImport(DllName)]
-        public static extern IntPtr CreateBody(IntPtr worldPtr, int bodyType, Vector2 position, float angle, int entity);
+        public static extern IntPtr CreateBody(IntPtr world, int bodyType, Vector2 position, float angle, int entity);
 
         [DllImport(DllName)]
         public static extern void AddFixtureToBody(IntPtr body, IntPtr shape, float density,
@@ -53,7 +53,7 @@ namespace Game.ClientServer.Physics
         public static extern void DestroyBody(IntPtr world, IntPtr body);
 
         [DllImport(DllName)]
-        public static extern Vector2 GetPosition(IntPtr bodyPtr);
+        public static extern Vector2 GetPosition(IntPtr body);
 
         [DllImport(DllName)]
         public static extern void SetPosition(IntPtr body, Vector2 position);
@@ -144,6 +144,10 @@ namespace Game.ClientServer.Physics
 
         [DllImport(DllName)]
         public static extern void SetFlagsForDebugDraw(IntPtr worldPtr, UInt32 box2dDebugDrawFlags = 0);
+
+
+        [DllImport(DllName)]
+        public static extern IntPtr CloneWorld(ref IntPtr[] dataArr, int count, IntPtr world);
 
     }
 }

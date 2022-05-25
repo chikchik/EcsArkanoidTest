@@ -28,6 +28,9 @@
 #include "b2_collision.h"
 #include "b2_dynamic_tree.h"
 
+
+#include <stdio.h>
+
 struct B2_API b2Pair
 {
 	int32 proxyIdA;
@@ -47,6 +50,7 @@ public:
 	};
 
 	b2BroadPhase();
+	b2BroadPhase(const b2BroadPhase& other);
 	~b2BroadPhase();
 
 	/// Create a proxy with an initial AABB. Pairs are not reported until
@@ -117,6 +121,7 @@ private:
 
 	bool QueryCallback(int32 proxyId);
 
+public:
 	b2DynamicTree m_tree;
 
 	int32 m_proxyCount;
@@ -201,6 +206,7 @@ void b2BroadPhase::UpdatePairs(T* callback)
 
 		callback->AddPair(userDataA, userDataB);
 	}
+
 
 	// Clear move flags
 	for (int32 i = 0; i < m_moveCount; ++i)

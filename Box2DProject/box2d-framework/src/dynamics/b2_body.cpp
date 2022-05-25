@@ -28,7 +28,9 @@
 
 #include <new>
 
-b2Body::b2Body(const b2BodyDef* bd, b2World* world)
+#include <stdio.h>
+
+b2Body::b2Body(const b2BodyDef* bd, b2World* world, char* hint)
 {
 	b2Assert(bd->position.IsValid());
 	b2Assert(bd->linearVelocity.IsValid());

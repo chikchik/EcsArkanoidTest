@@ -175,13 +175,14 @@ protected:
 	virtual bool SolvePositionConstraints(const b2SolverData& data) = 0;
 
 	b2JointType m_type;
+public:
 	b2Joint* m_prev;
 	b2Joint* m_next;
 	b2JointEdge m_edgeA;
 	b2JointEdge m_edgeB;
 	b2Body* m_bodyA;
 	b2Body* m_bodyB;
-
+protected:
 	int32 m_index;
 
 	bool m_islandFlag;

@@ -6,6 +6,9 @@
 #include <debug_draw.h>
 #include <contact_listener.h>
 
+// SAFEARRAY
+#include <comdef.h>
+
 #ifdef _WIN32
     #define DllExport __declspec (dllexport)
 #elif __APPLE__ || defined(__ANDROID__)
@@ -42,6 +45,8 @@ extern "C"
         world -> SetDebugDraw(dbgDraw);
     }
 
+    typedef void(__stdcall* CallbackDebug)(char*);
+
     DllExport void DebugDraw(b2World* world)
     {
         if (world != NULL)
@@ -60,6 +65,34 @@ extern "C"
         return world;
     }
 
+    DllExport void DestroyWorld(b2World* world);
+
+    DllExport b2World* CloneWorld(void**& arrayOfReferences, int count, b2World* world)
+    {
+        if (world->IsLocked())
+        {
+            return NULL;
+        }
+        CloneWorldService cloneService;
+
+        // new World
+        b2World* clonedWorld = new b2World(arrayOfReferences, count, *world, cloneService);
+
+        // do we need to set all callbacks manually?
+        MyContactListener* myContactListener = new MyContactListener(clonedWorld);
+        MyContactListener* oldContactListener = (MyContactListener*)world->GetContactListener();
+        myContactListener->m_callbackBeginContact = oldContactListener->m_callbackBeginContact;
+        myContactListener->m_callbackEndContact = oldContactListener->m_callbackEndContact;
+        myContactListener->m_callbackPreSolve = oldContactListener->m_callbackPreSolve;
+        myContactListener->m_callbackPostSolve = oldContactListener->m_callbackPostSolve;
+        clonedWorld->SetContactListener(myContactListener);
+        // same here
+        MyDebugDraw* oldDbgDraw = (MyDebugDraw*)world->m_debugDraw;
+        clonedWorld->m_debugDraw = new MyDebugDraw(oldDbgDraw->m_drawCircle, oldDbgDraw->m_drawPoint, oldDbgDraw->m_drawSegment,
+            oldDbgDraw->m_drawTransform, oldDbgDraw->m_drawPolygon);
+        return clonedWorld;
+    }
+
     DllExport b2World* CreateWorld(Vector2 gravity)
     {
         b2Vec2 bGravity(gravity.x, gravity.y);
@@ -69,6 +102,8 @@ extern "C"
 
         world -> SetContactListener(myContactListener);
 
+
+
         return world;
     }
 
@@ -77,11 +112,125 @@ extern "C"
         return body -> GetWorld();
     }
 
+
+    DllExport int GetContactListCount(b2Body* body)
+    {
+        int size = 0;
+        for (const b2ContactEdge* cE = body -> GetContactList(); cE; cE = cE->next)
+        {
+            size++;
+        }
+        return size;
+    }
+
+    DllExport void GetContactList(b2Body* body, SAFEARRAY*& dataArr, CallbackDebug cb)
+    {
+        int size = GetContactListCount(body);
+
+        if (size == 0) return;
+
+        // Creation of a new SAFEARRAY
+        SAFEARRAYBOUND bounds;
+        bounds.lLbound = 0;
+        bounds.cElements = size;
+
+        dataArr = SafeArrayCreate(VT_I4, 1, &bounds);
+        int* pVals;
+
+        HRESULT hr = SafeArrayAccessData(dataArr, (void**)&pVals); // direct access to SA memory
+        cb("hr");
+
+        if (SUCCEEDED(hr))
+        {
+            ULONG i = 0;
+            for (b2ContactEdge* cE = body -> GetContactList(); 
+                cE && i < bounds.cElements; cE = cE->next, i++)
+            {
+                pVals[i] = (int)cE -> other;
+                cb("SUCCEEDED");
+            }
+            
+        }
+        else
+        {
+            cb("!SUCCEEDED");
+            return;
+        }
+        hr = SafeArrayUnaccessData(dataArr);
+        if (SUCCEEDED(hr))
+        {
+            cb("SUCCEEDED");
+        }
+        else
+        {
+            cb("!SUCCEEDED");
+        }
+    }
+
+    DllExport CollisionCallbackData TryGetContactInfoForBodies(b2Body* body1, b2Body* body2)
+    {
+        b2Contact* myContact = NULL;
+        CollisionCallbackData data
+        {
+            NULL,               //physicsWorld
+            -1,                 //entityA
+            -1,                 //entityB
+            -1,                 //velA
+            -1,                 //velB
+            { 0, 0}, { 0, 0},   //contactPoints
+            2,                  //contactPointCount
+            {0, 0}              //normal
+        };
+        for (b2ContactEdge* cE = body1 -> GetContactList(); cE; cE = cE->next)
+		{
+            if (cE -> other == body2)
+            {
+                myContact = cE -> contact;
+                break;
+            }
+		}
+
+        if (myContact == NULL) return data;
+
+        b2WorldManifold worldManifold;
+        myContact -> GetWorldManifold(&worldManifold);
+
+        data.physicsWorld = myContact->GetFixtureA()->GetBody()->GetWorld();
+        data.entityA = (int)myContact->GetFixtureA()->GetBody()->GetUserData().pointer;
+        data.entityB = (int)myContact->GetFixtureB()->GetBody()->GetUserData().pointer;
+        b2Vec2 b2dVelA = myContact->GetFixtureA()->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold.points[0]);
+        Vector2 velA {
+            b2dVelA.x,
+            b2dVelA.y
+        };
+        data.velA = velA;
+
+        b2Vec2 b2dVelB = myContact->GetFixtureB()->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold.points[1]);
+        Vector2 velB {
+            b2dVelB.x,
+            b2dVelB.y
+        };
+        data.velB = velB;
+
+        size_t length = (sizeof(worldManifold.points)/sizeof(*worldManifold.points));
+        memcpy(data.contactPoints, worldManifold.points, length * sizeof(Vector2));
+        data.contactPointCount = 2;
+
+        Vector2 normal
+        {
+            worldManifold.normal.x,
+            worldManifold.normal.y
+        };
+        data.normal = normal;
+
+        return data;
+    }
+
     DllExport void DestroyWorld(b2World* world)
     {
-        delete world -> GetContactListener();
+        b2ContactListener* myContactListener = world->GetContactListener();
+        delete myContactListener;
         delete world;
-        world = nullptr;
     }
 
     DllExport b2Body* CreateBody(b2World* world, int bodyType, Vector2 position, float angle, int entity)
@@ -110,7 +259,7 @@ extern "C"
 
         b2ChainShape* shape = new b2ChainShape();
         shape->CreateLoop(b2Vertices, count);
-
+        b2Free(b2Vertices);
         return shape;
     }
 
@@ -121,6 +270,7 @@ extern "C"
 
         b2PolygonShape* shape = new b2PolygonShape();
         shape->Set(b2Vertices, count);
+        b2Free(b2Vertices);
         return shape;
     }
 
@@ -193,6 +343,10 @@ extern "C"
 
     DllExport void SetPosition(b2Body* body, Vector2 position)
     {
+        if (body->GetWorld()->m_locked)
+        {
+            return;
+        }
         float angle = body -> GetAngle();
         b2Vec2 bPosition(position.x, position.y);
 
@@ -207,6 +361,10 @@ extern "C"
 
     DllExport void SetAngle(b2Body* body, float angle)
     {
+        if (body->GetWorld()->m_locked)
+        {
+            return;
+        }
         b2Vec2 position = body -> GetPosition();
 
         body -> SetTransform(position, angle);
@@ -214,6 +372,10 @@ extern "C"
 
     DllExport void SetLinearVelocity(b2Body* body, Vector2 linearVelocity)
     {
+        if (body->GetWorld()->m_locked)
+        {
+            return;
+        }
         b2Vec2 bLinearVelocity(linearVelocity.x, linearVelocity.y);
 
         body -> SetLinearVelocity(bLinearVelocity);
@@ -221,6 +383,10 @@ extern "C"
 
     DllExport void SetAngularVelocity(b2Body* body, float angularVelocity)
     {
+        if (body->GetWorld()->m_locked)
+        {
+            return;
+        }
         body -> SetAngularVelocity(angularVelocity);
     }
 

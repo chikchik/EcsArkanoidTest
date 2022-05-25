@@ -36,6 +36,22 @@ b2BroadPhase::b2BroadPhase()
 	m_moveBuffer = (int32*)b2Alloc(m_moveCapacity * sizeof(int32));
 }
 
+b2BroadPhase::b2BroadPhase(const b2BroadPhase& other)
+	: m_tree(other.m_tree)
+{
+	m_proxyCount = other.m_proxyCount;
+	m_pairCapacity = other.m_pairCapacity;
+	m_pairCount = other.m_pairCount;
+	m_pairBuffer = (b2Pair*)b2Alloc(m_pairCapacity * sizeof(b2Pair));
+
+	memcpy(m_pairBuffer, other.m_pairBuffer, m_pairCapacity * sizeof(b2Pair));
+
+	m_moveCapacity = other.m_moveCapacity;
+	m_moveCount = other.m_moveCount;
+	m_moveBuffer = (int32*)b2Alloc(m_moveCapacity * sizeof(int32));
+	memcpy(m_moveBuffer, other.m_moveBuffer, m_moveCapacity * sizeof(int32));
+}
+
 b2BroadPhase::~b2BroadPhase()
 {
 	b2Free(m_moveBuffer);

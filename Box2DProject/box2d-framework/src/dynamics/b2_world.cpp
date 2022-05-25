@@ -36,7 +36,12 @@
 #include "box2d/b2_pulley_joint.h"
 #include "box2d/b2_time_of_impact.h"
 #include "box2d/b2_timer.h"
+#include "box2d/clone_world_service.h"
+#include "box2d/clone_world.h"
 #include "box2d/b2_world.h"
+
+#include "box2d/b2_gear_joint.h"
+
 
 #include <new>
 
@@ -69,6 +74,37 @@ b2World::b2World(const b2Vec2& gravity)
 	m_contactManager.m_allocator = &m_blockAllocator;
 
 	memset(&m_profile, 0, sizeof(b2Profile));
+
+}
+
+
+b2World::b2World(void** arrayOfReferences, const int& count,
+	const b2World& world, CloneWorldService& cloneService)
+	: m_blockAllocator(world.m_blockAllocator, cloneService),
+	m_contactManager(world.m_contactManager),
+	m_bodyList(world.m_bodyList), m_jointList(world.m_jointList), m_locked(world.m_locked)
+{	
+	m_destructionListener = nullptr;
+	m_debugDraw = nullptr;
+	m_bodyCount = world.m_bodyCount;
+	m_jointCount = world.m_jointCount;
+	m_warmStarting = world.m_warmStarting;
+	m_continuousPhysics = world.m_continuousPhysics;
+	m_subStepping = world.m_subStepping;
+	m_stepComplete = world.m_stepComplete;
+	m_allowSleep = world.m_allowSleep;
+	m_gravity = world.m_gravity;
+	m_newContacts = world.m_newContacts;
+	m_locked = world.m_locked;
+	m_clearForces = world.m_clearForces;
+	m_inv_dt0 = world.m_inv_dt0;
+
+	m_profile = world.m_profile;
+	m_contactManager.m_allocator = &m_blockAllocator;
+	
+	CloneWorldInfo cloneWorld(arrayOfReferences, count,
+		m_blockAllocator, world.m_blockAllocator, cloneService);
+	cloneWorld.Move(this);
 }
 
 b2World::~b2World()
@@ -132,7 +168,7 @@ b2Body* b2World::CreateBody(const b2BodyDef* def)
 	}
 
 	void* mem = m_blockAllocator.Allocate(sizeof(b2Body));
-	b2Body* b = new (mem) b2Body(def, this);
+	b2Body* b = new (mem) b2Body(def, this, "CreateBody");
 
 	// Add to world doubly linked list.
 	b->m_prev = nullptr;
@@ -565,7 +601,6 @@ void b2World::Solve(const b2TimeStep& step)
 	}
 
 	m_stackAllocator.Free(stack);
-
 	{
 		b2Timer timer;
 		// Synchronize fixtures, check for out of range bodies.
@@ -917,14 +952,14 @@ void b2World::Step(float dt, int32 velocityIterations, int32 positionIterations)
 {
 	b2Timer stepTimer;
 
+	// move locke or create new for copying
+	m_locked = true;
 	// If new fixtures were added, we need to find the new contacts.
 	if (m_newContacts)
 	{
 		m_contactManager.FindNewContacts();
 		m_newContacts = false;
 	}
-
-	m_locked = true;
 
 	b2TimeStep step;
 	step.dt = dt;
@@ -1289,7 +1324,7 @@ void b2World::Dump()
 		return;
 	}
 
-	b2OpenDump("box2d_dump.inl");
+	b2OpenDump("G:/Work/Fabross/box2d_dump.inl");
 
 	b2Dump("b2Vec2 g(%.9g, %.9g);\n", m_gravity.x, m_gravity.y);
 	b2Dump("m_world->SetGravity(g);\n");

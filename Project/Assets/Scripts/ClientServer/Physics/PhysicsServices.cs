@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using Fabros.Ecs.Utils;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
+using UnityEditor.Experimental;
+using UnityEngine;
 
 namespace Game.ClientServer.Physics
 {
@@ -14,7 +16,35 @@ namespace Game.ClientServer.Physics
 #else
         private const string DllName = "libbox2d";
 #endif
-        
+
+        // Clone current physicsWorld, delete old, change all old body references to the new ones, return cloned world
+        public static IntPtr ClonePhysicsWorldAndChangeEcsBodyRef(EcsWorld world, IntPtr physicsWorld)
+        {            
+            EcsFilter filter = world.Filter<BodyReferenceComponent>().End();
+            var entities = filter.GetEntities();
+            var poolBodyReferences = world.GetPool<BodyReferenceComponent>();
+            IntPtr[] arrayOfReferences = new IntPtr[entities.Count];
+
+            for (int i = 0; i < entities.Count; i++)
+            {
+                ref var bodyRef = ref poolBodyReferences.GetRef(entities[i]);
+                arrayOfReferences[i] = bodyRef.BodyReference;
+            }
+            
+            var cloneWorld = Box2DPhysics.CloneWorld(ref arrayOfReferences, entities.Count, physicsWorld);
+
+            ref var worldReference = ref world.GetUniqueRef<PhysicsWorldComponent>().WorldReference;
+            Box2DPhysics.DestroyWorld(worldReference);
+
+            for (int i = 0; i < entities.Count; i++)
+            {
+                ref var bodyRef = ref poolBodyReferences.GetRef(entities[i]);
+                bodyRef.BodyReference = arrayOfReferences[i];
+            }
+            worldReference = cloneWorld;
+
+            return cloneWorld;
+        }
 
         public static IntPtr GetBodyRefFromEntity(this EcsWorld world, int entity)
         {
