@@ -26,6 +26,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
+
 static const int32 b2_maxBlockSize = 640;
 static const int32 b2_chunkArrayIncrement = 128;
 
@@ -75,11 +76,54 @@ struct b2SizeMap
 
 static const b2SizeMap b2_sizeMap;
 
+bool b2BlockAllocator::IsOldAdress(void* p)
+{
+	auto it = offsets.lower_bound(p);
+
+	if (it == offsets.end()
+		|| it != offsets.begin()
+		&& it->first != p)
+	{
+		--it;
+	}
+	return (int8*)p >= (int8*)it->first
+		&& (int8*)p <= (int8*)it->first + b2_chunkSize;
+}
+
+template<class  T>
+T* b2BlockAllocator::GetMovedAdress(T* ptr)
+{
+	b2Assert(IsOldAdress(ptr));
+
+	auto newAdrr = reinterpret_cast<T*>(reinterpret_cast<int8*>(ptr)
+		+ GetMovedOffset(ptr));
+	b2Assert(!IsOldAdress(newAdrr));
+	return newAdrr;
+}
+
+size_t b2BlockAllocator::GetMovedOffset(void* p)
+{
+	auto it = offsets.lower_bound(p);
+
+	if (it == offsets.end()
+		|| it != offsets.begin()
+		&& it->first != p)
+	{
+		--it;
+	}
+
+	b2Assert((int8*)p >= (int8*)it->first
+		&& (int8*)p <= (int8*)it->first + b2_chunkSize);
+
+	return it->second;
+}
+
 b2BlockAllocator::b2BlockAllocator(const b2BlockAllocator& other) 
 	: b2BlockAllocator(other.m_chunkSpace)
 {
+
 	m_chunkCount = other.m_chunkCount;
-	for (int32 i = 0; i < other.m_chunkCount; ++i)
+	for (int32 i = 0; i < m_chunkCount; ++i)
 	{
 		b2Chunk* oldChunk = other.m_chunks + i;
 		b2Chunk* newChunk = m_chunks + i;
@@ -88,18 +132,31 @@ b2BlockAllocator::b2BlockAllocator(const b2BlockAllocator& other)
 		newChunk->blocks = (b2Block*)b2Alloc(b2_chunkSize);
 		memcpy(newChunk->blocks, oldChunk->blocks, b2_chunkSize);
 
+		ptrdiff_t offset = reinterpret_cast<int8*>(newChunk->blocks)
+			- reinterpret_cast<int8*>(oldChunk->blocks);
 
-		int32 index = b2_sizeMap.values[oldChunk->blockSize];
+		offsets.insert(std::make_pair(oldChunk->blocks, offset));
+
+		int32 index = b2_sizeMap.values[newChunk->blockSize];
 		b2Assert(0 <= index && index < b2_blockSizeCount);
 
 		b2Block* freeBlock = other.m_freeLists[index];
 		if (freeBlock >= oldChunk->blocks
 			&& freeBlock <= oldChunk->blocks + b2_chunkSize)
 		{
-			ptrdiff_t offset = reinterpret_cast<int8*>(newChunk->blocks)
-				- reinterpret_cast<int8*>(oldChunk->blocks);
 			m_freeLists[index] = reinterpret_cast<b2Block*>(
 				reinterpret_cast<int8*>(freeBlock) + offset);
+		}
+	}
+
+	for (int32 i = 0; i < b2_blockSizeCount; ++i)
+	{
+		for (b2Block* block = m_freeLists[i]; block; block = block->next)
+		{
+			if (block->next)
+			{
+				block->next = GetMovedAdress(block->next);
+			}
 		}
 	}
 }
@@ -187,7 +244,6 @@ void* b2BlockAllocator::Allocate(int32 size)
 
 		m_freeLists[index] = chunk->blocks->next;
 		++m_chunkCount;
-
 		return chunk->blocks;
 	}
 }

@@ -26,6 +26,8 @@
 #include "b2_api.h"
 #include "b2_settings.h"
 
+#include <map>
+
 const int32 b2_blockSizeCount = 14;
 static const int32 b2_chunkSize = 16 * 1024;
 
@@ -51,11 +53,15 @@ public:
 
 	explicit b2BlockAllocator(int chunkSpace);
 	b2BlockAllocator(const b2BlockAllocator& other);
+	size_t GetMovedOffset(void* p);
+	template<class  T>T* GetMovedAdress(T* ptr);
+	bool IsOldAdress(void* p);
 
 	b2Chunk* m_chunks;
 	b2Block* m_freeLists[b2_blockSizeCount];
 	int32 m_chunkCount;
 	int32 m_chunkSpace;
+	std::map<void* const, ptrdiff_t> offsets;
 };
 
 struct b2Chunk

@@ -83,7 +83,8 @@ b2World::b2World(const b2Vec2& gravity)
 
 
 b2World::b2World(BodyReferenceComponent* vertices, const int& count, const b2World& world)
-	: m_blockAllocator(world.m_blockAllocator), m_contactManager(world.m_contactManager),
+	: m_blockAllocator(world.m_blockAllocator),
+	m_contactManager(world.m_contactManager),
 	m_bodyList(world.m_bodyList), m_jointList(world.m_jointList), m_locked(world.m_locked)
 {	
 	m_destructionListener = nullptr;
@@ -100,9 +101,9 @@ b2World::b2World(BodyReferenceComponent* vertices, const int& count, const b2Wor
 	m_locked = world.m_locked;
 	m_clearForces = world.m_clearForces;
 	m_inv_dt0 = world.m_inv_dt0;
-	m_contactManager.m_allocator = &m_blockAllocator;
 
 	m_profile = world.m_profile;
+	m_contactManager.m_allocator = &m_blockAllocator;
 	
 	CloneWorldInfo cloneWorld(vertices, count,
 		m_blockAllocator, world.m_blockAllocator);

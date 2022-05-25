@@ -15,8 +15,6 @@
     #define DllExport __attribute__((visibility("default")))
 #endif
 
-static FILE* file = fopen("G:/Work/Fabross/dbgB2dChangeBodyRef", "wt");
-
 struct BodyReferenceComponent
 {
 public: void* BodyReference;
@@ -81,10 +79,8 @@ extern "C"
             return NULL;
         }
 
-
         // new World
         b2World* clonedWorld = new b2World(vertices, count, *world);
-
 
         // do we need to set all callbacks manually?
         MyContactListener* myContactListener = new MyContactListener(clonedWorld);
@@ -98,7 +94,6 @@ extern "C"
         MyDebugDraw* oldDbgDraw = (MyDebugDraw*)world->m_debugDraw;
         clonedWorld->m_debugDraw = new MyDebugDraw(oldDbgDraw->m_drawCircle, oldDbgDraw->m_drawPoint, oldDbgDraw->m_drawSegment,
             oldDbgDraw->m_drawTransform, oldDbgDraw->m_drawPolygon);
-
         return clonedWorld;
     }
 
@@ -352,6 +347,10 @@ extern "C"
 
     DllExport void SetPosition(b2Body* body, Vector2 position)
     {
+        if (body->GetWorld()->m_locked)
+        {
+            return;
+        }
         float angle = body -> GetAngle();
         b2Vec2 bPosition(position.x, position.y);
 
@@ -366,6 +365,10 @@ extern "C"
 
     DllExport void SetAngle(b2Body* body, float angle)
     {
+        if (body->GetWorld()->m_locked)
+        {
+            return;
+        }
         b2Vec2 position = body -> GetPosition();
 
         body -> SetTransform(position, angle);
@@ -373,6 +376,10 @@ extern "C"
 
     DllExport void SetLinearVelocity(b2Body* body, Vector2 linearVelocity)
     {
+        if (body->GetWorld()->m_locked)
+        {
+            return;
+        }
         b2Vec2 bLinearVelocity(linearVelocity.x, linearVelocity.y);
 
         body -> SetLinearVelocity(bLinearVelocity);
@@ -380,6 +387,10 @@ extern "C"
 
     DllExport void SetAngularVelocity(b2Body* body, float angularVelocity)
     {
+        if (body->GetWorld()->m_locked)
+        {
+            return;
+        }
         body -> SetAngularVelocity(angularVelocity);
     }
 

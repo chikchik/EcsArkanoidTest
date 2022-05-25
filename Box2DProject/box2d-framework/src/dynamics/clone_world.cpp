@@ -40,13 +40,10 @@ bool CloneWorldInfo::IsOldAdress(void* p)
 		&& (int8*)p <= (int8*)it->first + b2_chunkSize;
 }
 
-
 template<class  T>
 T* CloneWorldInfo::GetMovedAdress(T* ptr)
 {
-	
 	b2Assert(IsOldAdress(ptr));
-
 	auto newAdrr = reinterpret_cast<T*>(reinterpret_cast<int8*>(ptr)
 		+ GetMovedOffset(ptr));
 	b2Assert(!IsOldAdress(newAdrr));
@@ -129,7 +126,6 @@ void CloneWorldInfo::Move(b2TreeNode* obj)
 	if (ptr)
 	{
 		ptr = GetMovedAdress(ptr);
-
 
 		obj->userData = ptr;
 

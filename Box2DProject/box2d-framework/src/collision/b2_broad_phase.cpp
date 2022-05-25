@@ -49,7 +49,7 @@ b2BroadPhase::b2BroadPhase(const b2BroadPhase& other)
 	m_moveCapacity = other.m_moveCapacity;
 	m_moveCount = other.m_moveCount;
 	m_moveBuffer = (int32*)b2Alloc(m_moveCapacity * sizeof(int32));
-	memcpy(m_moveBuffer, other.m_moveBuffer, m_moveCapacity * sizeof(b2Pair));
+	memcpy(m_moveBuffer, other.m_moveBuffer, m_moveCapacity * sizeof(int32));
 }
 
 b2BroadPhase::~b2BroadPhase()
