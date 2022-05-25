@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Systems.Physics
 {
+    /**
+     * Writes PositionComponent and RotationComponent to Body
+     */
     public class SyncPhysicsWorldSystem : IEcsRunSystem
     {
         public void Run(EcsSystems systems)

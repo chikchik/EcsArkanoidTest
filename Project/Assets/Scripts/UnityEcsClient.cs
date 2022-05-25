@@ -31,6 +31,10 @@ namespace Game.Client
 
         private void Start()
         {
+            UnityEngine.Physics.autoSimulation = false;
+            UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
+            
+            
             client = new NetClient(world);
             
             viewSystems = new EcsSystems(world);

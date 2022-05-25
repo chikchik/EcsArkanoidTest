@@ -20,19 +20,17 @@ namespace Game.Ecs.Client.Systems
             var poolLookDirection = world.GetPool<LookDirectionComponent>();
             var poolLerp = world.GetPool<LerpComponent>();
             
-            var delta = Time.deltaTime;
-
             foreach (var entity in filter)
             {
                 var transform = poolTransform.Get(entity).transform;
                 var direction = poolLookDirection.Get(entity).value;
 
-                if (Mathf.Approximately(direction.magnitude, 0)) continue;
+                if (Mathf.Approximately(direction.magnitude, 0))
+                    continue;
                 //if (direction.magnitude < 0.99)
                   //  continue;
 
-                var lerp = poolLerp.Has(entity) ? poolLerp.Get(entity).value : 1f;
-                lerp *= Time.deltaTime * 30;
+                var lerp = poolLerp.GetNullable(entity)?.value??1f;
                 
                 var quat = Quaternion.LookRotation(direction);
                 transform.localRotation = Quaternion.Lerp(transform.localRotation, quat, lerp);

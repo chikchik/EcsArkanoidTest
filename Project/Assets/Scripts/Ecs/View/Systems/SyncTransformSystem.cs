@@ -35,8 +35,8 @@ namespace Game.Ecs.Client.Systems
             {
                 var transform = poolTransform.Get(entity).transform;
                 var targetPosition = poolPosition.Get(entity).value;
-                var lerp = poolLerp.GetNullable(entity)?.value ?? 1f;
-                lerp *= lerpScale;
+                
+                var lerp = poolLerp.GetNullable(entity)?.value??1f;
                 
                 //transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
                 //transform.position = targetPosition;
@@ -58,14 +58,13 @@ namespace Game.Ecs.Client.Systems
                         var err = position - targetPosition;
                         if (err.magnitude > 0.1f)
                         {
-                            transform.position = Vector3.Lerp(transform.position, targetPosition, lerp * dt);
+                            transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
                         }
                     }
                 }
                 else
                 {
-                    transform.position = Vector3.Lerp(transform.position, targetPosition, lerp * dt);
-                    //transform.position = targetPosition;
+                    transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);                    
                 }
             }
         }

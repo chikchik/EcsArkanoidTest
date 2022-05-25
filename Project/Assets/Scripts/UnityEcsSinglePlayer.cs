@@ -34,7 +34,11 @@ namespace Game.Client
 
         public void Start()
         {
+            UnityEngine.Physics.autoSimulation = false;
+            UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
+            
             inputWorld = new EcsWorld("input");
+            
             
             systems = new EcsSystems(world);
             systems.AddWorld(inputWorld, "input");

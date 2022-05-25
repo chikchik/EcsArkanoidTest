@@ -9,6 +9,7 @@ using Game.ClientServer;
 using Game.ClientServer.Physics;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Systems.Physics;
 using Game.Fabros.EcsModules.Fire.Client.Components;
 using Game.Fabros.Net.Client.Socket;
 using Game.Fabros.Net.ClientServer;
@@ -137,10 +138,10 @@ namespace Game.Fabros.Net.Client
        
             PhysicsServices.ReplicateBox2D(ServerWorld, copyServerWorld);
             
-            var copyServerSystems = new EcsSystems(copyServerWorld);
-            copyServerSystems.AddWorld(InputWorld, "input");
-            SystemsAndComponents.AddSystems(Leo.Pool, copyServerSystems, false, false);
-            copyServerSystems.Init();
+            //var copyServerSystems = new EcsSystems(copyServerWorld);
+            //copyServerSystems.AddWorld(InputWorld, "input");
+            //SystemsAndComponents.AddSystems(Leo.Pool, copyServerSystems, false, false);
+            //copyServerSystems.Init();
             
             
 
@@ -149,7 +150,7 @@ namespace Game.Fabros.Net.Client
             
             while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
             {
-                Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), false);
+                Leo.Tick(serverSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), false);
                 if (iterations > 500)
                 {
                     Debug.LogWarning(
@@ -160,7 +161,7 @@ namespace Game.Fabros.Net.Client
                 iterations++;
             }
             
-            copyServerSystems.Destroy();
+            //copyServerSystems.Destroy();
 
             Leo.SyncLog.WriteLine("sync end\n");
 
@@ -210,6 +211,12 @@ namespace Game.Fabros.Net.Client
 
             serverSystems = new EcsSystems(ServerWorld);
             serverSystems.AddWorld(InputWorld, "input");
+            
+            serverSystems.Add(new PhysicsSystem());
+            serverSystems.Add(new PopulatePhysicsWorldSystem());
+            serverSystems.Add(new SyncPhysicsWorldSystem());
+            
+            
             SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
             serverSystems.Init();
 

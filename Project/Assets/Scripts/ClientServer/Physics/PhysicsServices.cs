@@ -32,9 +32,14 @@ namespace Game.ClientServer.Physics
 
             dest.AddUnique<PhysicsWorldComponent>().WorldReference = newWorld;
             var destPool = dest.GetPool<BodyReferenceComponent>();
-            
+            var destPoolBodyCreated = dest.GetPool<BodyCreatedComponent>();
+
             for (int i = 0; i < entities.Count; i++)
-                destPool.Add(entities[i]).BodyReference = arrayOfReferences[i];
+            {
+                var entity = entities[i];
+                destPool.Add(entity).BodyReference = arrayOfReferences[i];
+                destPoolBodyCreated.Add(entity);
+            }
         }
 
         public static IntPtr GetBodyRefFromEntity(this EcsWorld world, int entity)

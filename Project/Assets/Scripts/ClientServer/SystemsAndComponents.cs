@@ -158,11 +158,10 @@ namespace Game.ClientServer
 #endif
             
             
-            systems.Add(new InitPhysicsSystem());
+            systems.Add(new PhysicsSystem());
 #if CLIENT
             systems.Add(new InitBox2dDebug());
 #endif
-            systems.Add(new PopulatePhysicsWorldSystem());
             systems.Add(new SyncPhysicsWorldSystem());
 
             AddServer(new AIPlayerSystem());
@@ -179,7 +178,7 @@ namespace Game.ClientServer
             systems.DelHere<PreSolveComponent>();
             systems.DelHere<PostSolveComponent>();
             
-            systems.Add(new UpdatePhysicsWorldSystem());
+            systems.Add(new UpdatePhysicsSystem());
             systems.Add(new EntitiesLifeTimeSystem());
             
             systems.Add(GridModule.GetSystems());

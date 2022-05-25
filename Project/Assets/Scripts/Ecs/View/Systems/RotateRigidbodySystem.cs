@@ -22,9 +22,8 @@ namespace Game.Ecs.Client.Systems
                 .End();
 
             var poolTransform = world.GetPool<TransformComponent>();
-            // var poolRigidbody = world.GetPool<RigidbodyComponent>();
+            var poolLerp = world.GetPool<LerpComponent>();
             var poolRotation = world.GetPool<RotationComponent>();
-            var dt = world.GetDeltaSeconds();
 
             foreach (var entity in filter)
             {
@@ -34,7 +33,9 @@ namespace Game.Ecs.Client.Systems
                 var eulerAngle = transform.eulerAngles;
 
                 var viewAngle = eulerAngle.y;
-                viewAngle = Mathf.LerpAngle(viewAngle, Mathf.Rad2Deg * -angle, dt*8);
+                
+                var lerp = poolLerp.GetNullable(entity)?.value??1f;
+                viewAngle = Mathf.LerpAngle(viewAngle, Mathf.Rad2Deg * -angle, lerp);
 
                 //viewAngle = Mathf.Rad2Deg * -angle;
 
