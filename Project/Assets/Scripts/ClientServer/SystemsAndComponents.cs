@@ -182,10 +182,6 @@ namespace Game.ClientServer
             systems.Add(new UpdatePhysicsWorldSystem());
             systems.Add(new EntitiesLifeTimeSystem());
             
-#if CLIENT
-            AddClient(new AnimateCharacterSystem());
-#endif
-            
             systems.Add(GridModule.GetSystems());
             systems.Add(new ApplyUserInputSystem());
 

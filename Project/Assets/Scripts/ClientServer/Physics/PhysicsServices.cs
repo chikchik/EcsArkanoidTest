@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using Fabros.Ecs.Utils;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
-using UnityEditor.Experimental;
 using UnityEngine;
 
 namespace Game.ClientServer.Physics
