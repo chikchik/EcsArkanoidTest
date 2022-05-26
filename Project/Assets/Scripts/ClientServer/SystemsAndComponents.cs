@@ -149,7 +149,7 @@ namespace Game.ClientServer
             AddClient(new DetectPlayerIdChangesSystem());
 #endif
             
-            //AddServer(new SpawnBotSystem());
+            AddServer(new SpawnBotSystem());
             AddServer(new JoinPlayerSystem());
 
 #if CLIENT
@@ -182,7 +182,7 @@ namespace Game.ClientServer
             systems.Add(new ApplyInputSystem());
 
 
-            //AddServer(new FootprintSystem());
+            AddServer(new FootprintSystem());
 
 #if CLIENT
             AddClient(new FootprintViewSystem());
@@ -196,7 +196,7 @@ namespace Game.ClientServer
 #endif
             // gates and buttons
             systems.Add(new ButtonsInteractionSystem());
-            systems.Add(new ButtonCustomSystem());
+            AddServer(new ButtonCustomSystem());
             systems.Add(new GateSystem());
             systems.Add(new MoveByProgressSystem());
 

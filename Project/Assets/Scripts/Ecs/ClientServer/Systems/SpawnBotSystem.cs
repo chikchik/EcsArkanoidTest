@@ -10,7 +10,6 @@ namespace Game.Ecs.ClientServer.Systems
     {
         public void Init(EcsSystems systems)
         {
-            return;
             var world = systems.GetWorld();
             var botEntity = UnitService.CreateUnitEntity(world);
             botEntity.EntityAddComponent<AIPlayerComponent>(world);

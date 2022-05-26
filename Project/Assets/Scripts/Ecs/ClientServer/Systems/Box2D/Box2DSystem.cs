@@ -274,7 +274,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 Box2DApi.SetAngularDamping(bodyReference, def.AngularDamping);
                 
                 poolBodyReference.Add(entity).BodyReference = bodyReference;
-                poolRigidBody.Add(entity).BodyType = def.BodyType;
+                poolRigidBody.Replace(entity).BodyType = def.BodyType;
             }
         }
 

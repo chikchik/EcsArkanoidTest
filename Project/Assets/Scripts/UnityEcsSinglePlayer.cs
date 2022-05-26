@@ -30,7 +30,7 @@ namespace Game.Client
         private EcsSystems systems;
         private EcsSystems viewSystems;
 
-        private int unitEntity;
+        private int unitEntity = -1;
         private int playerId = 1;
 
         public void Start()
@@ -59,6 +59,7 @@ namespace Game.Client
             
             unitEntity = UnitService.CreateUnitEntity(world);
             world.AddUnique(new ClientPlayerComponent{ entity = unitEntity});
+            
             
 #if UNITY_EDITOR
             systems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));

@@ -23,7 +23,7 @@ namespace Game.Ecs.ClientServer.Systems
                 .Inc<PositionComponent>()
                 .Inc<SpeedComponent>()
                 .Inc<AverageSpeedComponent>()
-                .Exc<AIPlayerComponent>()
+                //.Inc<AIPlayerComponent>()
                 .End();
             var deltaTime = world.GetDeltaSeconds();
             var poolPosition = world.GetPool<PositionComponent>();

@@ -11,7 +11,7 @@ namespace Game.Ecs.ClientServer.Systems
 
         public AIPlayerSystem()
         {
-            random = new Random();
+            random = new Random(2);
         }
 
         public void Run(EcsSystems systems)
