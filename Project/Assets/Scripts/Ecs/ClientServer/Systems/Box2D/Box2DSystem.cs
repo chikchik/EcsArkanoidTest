@@ -16,18 +16,20 @@ namespace Game.Ecs.ClientServer.Systems.Physics
 {
     public class Box2DSystem : IEcsInitSystem, IEcsRunSystem, IEcsDestroySystem, IEcsWorldChangedSystem
     {
-        private Box2DPhysics.CallbackDelegate _cbkBeginContactDelegate;
-        private Box2DPhysics.CallbackDelegate _cbkEndContactDelegate;
-        private Box2DPhysics.CallbackDelegate _cbkPostSolveDelegate;
-        private Box2DPhysics.CallbackDelegate _cbkPreSolveDelegate;
+        private Box2DApi.CallbackDelegate _cbkBeginContactDelegate;
+        private Box2DApi.CallbackDelegate _cbkEndContactDelegate;
+        private Box2DApi.CallbackDelegate _cbkPostSolveDelegate;
+        private Box2DApi.CallbackDelegate _cbkPreSolveDelegate;
         
         private EcsWorld world;
+        
+        private List<Vector2> shapeVertices = new List<Vector2>();
         
         public void Init(EcsSystems systems)
         {
             world = systems.GetWorld();
             if (!world.HasUnique<PhysicsWorldComponent>())
-                world.AddUnique<PhysicsWorldComponent>().WorldReference = Box2DPhysics.CreateWorld(Config.GRAVITY);
+                world.AddUnique<PhysicsWorldComponent>().WorldReference = Box2DApi.CreateWorld(Config.GRAVITY);
 
             var b2world = world.GetUnique<PhysicsWorldComponent>().WorldReference;
             if (b2world == default)
@@ -40,10 +42,10 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             _cbkPostSolveDelegate = SetPreSolveCallback;
             _cbkPreSolveDelegate = SetPostSolveCallback;
             
-            Box2DPhysics.SetBeginContactCallback(b2world, _cbkBeginContactDelegate);
-            Box2DPhysics.SetEndContactCallback(b2world, _cbkEndContactDelegate);
-            Box2DPhysics.SetPostSolveCallback(b2world, _cbkPostSolveDelegate);
-            Box2DPhysics.SetPreSolveCallback(b2world, _cbkPreSolveDelegate);
+            Box2DApi.SetBeginContactCallback(b2world, _cbkBeginContactDelegate);
+            Box2DApi.SetEndContactCallback(b2world, _cbkEndContactDelegate);
+            Box2DApi.SetPostSolveCallback(b2world, _cbkPostSolveDelegate);
+            Box2DApi.SetPreSolveCallback(b2world, _cbkPreSolveDelegate);
         }
         
         public void WorldChanged(EcsWorld world)
@@ -109,7 +111,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             foreach (var entity in filter)
             {
                 var bodyReference = bodyReferenceComponent.Get(entity).BodyReference;
-                var bodyInfo = Box2DPhysics.GetBodyInfo(bodyReference);
+                var bodyInfo = Box2DApi.GetBodyInfo(bodyReference);
                 
                 ref var rigidBodyComponent = ref poolRigidBodyComponent.GetRef(entity);
                 if (rigidBodyComponent.BodyType == BodyType.Dynamic)
@@ -154,7 +156,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 bodyInfo.Position.x = positionComponent.value.x;
                 bodyInfo.Position.y = positionComponent.value.z;
                 
-                Box2DPhysics.SetBodyInfo(bodyReference, bodyInfo);
+                Box2DApi.SetBodyInfo(bodyReference, bodyInfo);
             }
         }
 
@@ -163,7 +165,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             var physicsWorld = world.GetUnique<PhysicsWorldComponent>();
             var deltaTime = world.GetDeltaSeconds();
 
-            Box2DPhysics.UpdateWorld(
+            Box2DApi.UpdateWorld(
                 physicsWorld.WorldReference, 
                 deltaTime, 
                 Config.POSITION_ITERATIONS, 
@@ -186,25 +188,23 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         }
 
 
-        private static IntPtr CreateSimpleShape(EcsWorld world, int entity, IntPtr bodyReference, RigidbodyDefinitionComponent definition)
+        private static IntPtr CreateSimpleShape(EcsWorld world, int entity)
         {
-            IntPtr shape = IntPtr.Zero;
-            
             var boxCollider = entity.EntityGetNullable<BoxColliderComponent>(world);
             if (boxCollider.HasValue)
-                return Box2DPhysics.CreateBoxShape(boxCollider.Value.Size / 2f);
+                return Box2DApi.CreateBoxShape(boxCollider.Value.Size / 2f);
 
             var circleCollider = entity.EntityGetNullable<CircleColliderComponent>(world);
             
             if (circleCollider.HasValue)
-                return Box2DPhysics.CreateCircleShape(circleCollider.Value.Radius);
+                return Box2DApi.CreateCircleShape(circleCollider.Value.Radius);
             
             var chainCollider = entity.EntityGetNullable<ChainColliderComponent>(world);
             
             if (chainCollider.HasValue)
             {
                 var vertices = chainCollider.Value.Points;
-                return Box2DPhysics.CreateChainShape(vertices, vertices.Length);
+                return Box2DApi.CreateChainShape(vertices, vertices.Length);
             }
 
             return default;
@@ -236,7 +236,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 var positionComponent = poolPositionComponent.Get(entity);
                 var bodyAngle = poolRotationComponent.Get(entity).value;
             
-                var bodyReference = Box2DPhysics.CreateBody(
+                var bodyReference = Box2DApi.CreateBody(
                     physicsWorld,
                     (int) def.BodyType,
                     new Vector2(positionComponent.value.x, positionComponent.value.z),
@@ -254,23 +254,24 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                     var anchors = polygonCollider.Value.Anchors;
 
                     int index = 0;
-                    List<Vector2> shapeVertices = new List<Vector2>();
+                    
                     foreach (var anchor in anchors)
                     {
                         shapeVertices.Clear();
                         for (int offset = index; index <= anchor + offset; index++)
                             shapeVertices.Add(vertices[index]);
-                        var shape = Box2DPhysics.CreatePolygonShape(shapeVertices.ToArray(), shapeVertices.Count);
+                        var shape = Box2DApi.CreatePolygonShape(shapeVertices.ToArray(), shapeVertices.Count);
                         AddFixtureToBody(bodyReference, shape, def);
                     }
                 }
                 else
                 {
-                    var shape = CreateSimpleShape(world, entity, bodyReference, def);
+                    var shape = CreateSimpleShape(world, entity);
                     AddFixtureToBody(bodyReference, shape, def);
                 }
 
-                Box2DPhysics.SetLinearDamping(bodyReference, def.LinearDamping);
+                Box2DApi.SetLinearDamping(bodyReference, def.LinearDamping);
+                Box2DApi.SetAngularDamping(bodyReference, def.AngularDamping);
                 
                 poolBodyReference.Add(entity).BodyReference = bodyReference;
                 poolRigidBody.Add(entity).BodyType = def.BodyType;
@@ -285,7 +286,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             filter.MaskBits = rigidbodyDefinitionComponent.MaskBits;
             filter.GroupIndex = rigidbodyDefinitionComponent.GroupIndex;
             
-            Box2DPhysics.AddFixtureToBody(bodyReference, shape,
+            Box2DApi.AddFixtureToBody(bodyReference, shape,
                 rigidbodyDefinitionComponent.Density,
                 rigidbodyDefinitionComponent.Friction,
                 rigidbodyDefinitionComponent.Restitution,
@@ -297,7 +298,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         public void Destroy(EcsSystems systems)
         {
             var box2d = world.GetUnique<PhysicsWorldComponent>();
-            Box2DPhysics.DestroyWorld(box2d.WorldReference);
+            Box2DApi.DestroyWorld(box2d.WorldReference);
             world.DelUnique<PhysicsWorldComponent>();
 
             var poolRefs = world.GetPool<BodyReferenceComponent>();

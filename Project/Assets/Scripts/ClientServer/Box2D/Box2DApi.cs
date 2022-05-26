@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.ClientServer.Box2D
 {
-    public static class Box2DPhysics
+    public static class Box2DApi
     {
 #if UNITY_IPHONE && !UNITY_EDITOR
     private const string DllName = "__Internal";

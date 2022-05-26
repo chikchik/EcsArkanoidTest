@@ -23,7 +23,7 @@ namespace Game.ClientServer
             entity.EntityAddComponent<LookDirectionComponent>(world).value = new Vector3(1,0,0);
 
             //entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(-1.5f, 0, 9f);
-            entity.EntityAddComponent<PositionComponent>(world);//.value = new Vector3(-1.5f, 0, 9f);
+            entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(2, 0, 8.5f);
 
             entity.EntityAddComponent<FoodCollectedComponent>(world).Value = 0;
             entity.EntityAddComponent<AnimationStateComponent>(world).id = "angry";

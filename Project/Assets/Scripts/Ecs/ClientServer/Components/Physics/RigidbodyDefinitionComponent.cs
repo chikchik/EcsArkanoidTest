@@ -24,8 +24,8 @@ namespace Game.Ecs.ClientServer.Components.Physics
             c.BodyType = BodyType.Dynamic;
             c.Density = 1f;
             c.RestitutionThreshold = 0.5f;
-            c.LinearDamping = 2.0f;
-            c.AngularDamping = 5.0f;
+            c.LinearDamping = 1.0f;
+            c.AngularDamping = 1.0f;
             c.Friction = 0f;
             c.Restitution = 0f;
             c.CategoryBits = 0x0001;

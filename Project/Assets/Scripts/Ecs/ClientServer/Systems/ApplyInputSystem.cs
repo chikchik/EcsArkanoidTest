@@ -13,11 +13,20 @@ using Game.Ecs.ClientServer.Components.Physics;
 using Game.Fabros.Net.ClientServer;
 using Leopotam.EcsLite;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-    public class ApplyUserInputSystem : IEcsRunSystem
+    public class ApplyInputSystem : IEcsRunSystem
     {
+        private Random rnd = new Random(1);
+
+
+        private float NextFloat(float left, float right)
+        {
+            return (float)rnd.NextDouble() * (right - left) + left;
+        }
+
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
@@ -60,6 +69,20 @@ namespace Game.Ecs.ClientServer.Systems
                     if (poolInputAction.Has(inputEntity))
                     {
                         Interract(world, unitEntity);
+
+                        var bodies = world.Filter<BodyReferenceComponent>().End();
+                        foreach (var bodyEntity in bodies)
+                        {
+                            var b2d = bodyEntity.EntityGet<BodyReferenceComponent>(world).BodyReference;
+                            var dir = new Vector2(NextFloat(-1,1), NextFloat(-1,1));
+                            dir.Normalize();
+                            Box2DApi.ApplyForce(b2d, dir * NextFloat(5,20), new Vector2(0.4f,0));
+                            
+                            var dir2 = new Vector2(NextFloat(-1,1), NextFloat(-1,1));
+                            dir2.Normalize();
+                            
+                            Box2DApi.ApplyForceToCenter(b2d, dir2 * NextFloat(50,100));
+                        }
                     } 
  
                     if (poolInputMoveTo.Has(inputEntity))
@@ -110,7 +133,6 @@ namespace Game.Ecs.ClientServer.Systems
                 unitEntity,
                 position,
                 1, ref result, entity=> entity.EntityHas<RigidbodyComponent>(world));
-
             */
                 
             unitEntity.EntityAdd<PushingComponent>(world).EndTime = 1.3f;

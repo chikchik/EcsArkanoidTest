@@ -23,7 +23,7 @@ namespace Game
             if (_ecsWorld != null && _physicsWorldRef == IntPtr.Zero)
                 _physicsWorldRef = _ecsWorld.GetUnique<PhysicsWorldComponent>().WorldReference;
             
-            Box2DPhysics.DebugDraw(_physicsWorldRef);
+            Box2DApi.DebugDraw(_physicsWorldRef);
         }
     }
 }

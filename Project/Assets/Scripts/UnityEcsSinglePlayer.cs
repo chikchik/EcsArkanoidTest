@@ -1,6 +1,7 @@
 ﻿using System;
 using Fabros.Ecs;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
@@ -55,9 +56,8 @@ namespace Game.Client
                 Global = global
             });
 
+            
             unitEntity = UnitService.CreateUnitEntity(world);
-            
-            
             world.AddUnique(new ClientPlayerComponent{ entity = unitEntity});
             
 #if UNITY_EDITOR

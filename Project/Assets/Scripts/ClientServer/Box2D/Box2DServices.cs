@@ -6,7 +6,7 @@ using Leopotam.EcsLite;
 
 namespace Game.ClientServer.Box2D
 {
-    public static class PhysicsServices
+    public static class Box2DServices
     {
 #if UNITY_IPHONE && !UNITY_EDITOR
     private const string DllName = "__Internal";
@@ -28,7 +28,7 @@ namespace Game.ClientServer.Box2D
             var srcWorld = src.GetUnique<PhysicsWorldComponent>().WorldReference;
             if (srcWorld == default)
                 return;
-            var newDestWorld = Box2DPhysics.CloneWorld(ref arrayOfReferences, srcEntities.Count, srcWorld);
+            var newDestWorld = Box2DApi.CloneWorld(ref arrayOfReferences, srcEntities.Count, srcWorld);
 
             
             var destPool = dest.GetPool<BodyReferenceComponent>();
@@ -39,7 +39,7 @@ namespace Game.ClientServer.Box2D
             {
                 var oldDestWorld = dest.ReplaceUnique<PhysicsWorldComponent>().WorldReference;
                 if (oldDestWorld != default)
-                    Box2DPhysics.DestroyWorld(oldDestWorld);
+                    Box2DApi.DestroyWorld(oldDestWorld);
                 
                 var destEntities = new List<int>();
                 destPool.GetEntities(destEntities);

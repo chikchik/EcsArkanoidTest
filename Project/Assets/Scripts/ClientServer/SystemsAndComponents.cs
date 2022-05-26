@@ -180,7 +180,7 @@ namespace Game.ClientServer
             systems.Add(new EntitiesLifeTimeSystem());
             
             systems.Add(GridModule.GetSystems());
-            systems.Add(new ApplyUserInputSystem());
+            systems.Add(new ApplyInputSystem());
 
 
             //AddServer(new FootprintSystem());

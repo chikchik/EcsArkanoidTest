@@ -9,11 +9,11 @@ namespace Game.Ecs.Client.Physics
 {
     public class InitBox2dDebug : IEcsInitSystem
     {
-        private Box2DPhysics.DrawDbgCircleCallback _circleCallback;
-        private Box2DPhysics.DrawDbgCircleCallback _pointCallback;
-        private Box2DPhysics.DrawDbgSegmentCallback _segmentCallback;
-        private Box2DPhysics.DrawDbgTransformCallback _transformCallback;
-        private Box2DPhysics.DrawDbgPolygonCallback _polygonCallback;
+        private Box2DApi.DrawDbgCircleCallback _circleCallback;
+        private Box2DApi.DrawDbgCircleCallback _pointCallback;
+        private Box2DApi.DrawDbgSegmentCallback _segmentCallback;
+        private Box2DApi.DrawDbgTransformCallback _transformCallback;
+        private Box2DApi.DrawDbgPolygonCallback _polygonCallback;
 
         public void Init(EcsSystems systems)
         {
@@ -27,13 +27,13 @@ namespace Game.Ecs.Client.Physics
             _segmentCallback = DrawSegment;
             _transformCallback = DrawTransform;
             _polygonCallback = DrawPolygon;
-            Box2DPhysics.SetDebugDraw(physicsWorld, _circleCallback, _pointCallback, _segmentCallback,
+            Box2DApi.SetDebugDraw(physicsWorld, _circleCallback, _pointCallback, _segmentCallback,
                 _transformCallback, _polygonCallback);
 
             var box2dDebugDrawFlags = (UInt32) (Box2dDebugDrawFlags.ShapeBit | Box2dDebugDrawFlags.JointBit |
                                                 Box2dDebugDrawFlags.AabbBit | Box2dDebugDrawFlags.PairBit |
                                                 Box2dDebugDrawFlags.CenterOfMassBit | Box2dDebugDrawFlags.ContactBit);
-            Box2DPhysics.SetFlagsForDebugDraw(physicsWorld, box2dDebugDrawFlags);
+            Box2DApi.SetFlagsForDebugDraw(physicsWorld, box2dDebugDrawFlags);
         }
         
         void DrawPolygon(Vector2[] v, Int32 vCount, Box2dColor color)
