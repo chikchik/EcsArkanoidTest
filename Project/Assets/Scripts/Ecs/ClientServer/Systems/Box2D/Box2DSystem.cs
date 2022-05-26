@@ -5,8 +5,8 @@ using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
-using Game.ClientServer.Physics;
-using Game.ClientServer.Physics.Components;
+using Game.ClientServer.Box2D;
+using Game.ClientServer.Box2D.Components;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -177,7 +177,6 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             
             //write ecs components -> body
             UpdateInternalBox2D();
-            
             
             //sim box2d world
             UpdateBox2D();

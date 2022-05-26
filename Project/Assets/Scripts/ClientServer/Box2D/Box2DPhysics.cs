@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace Game.ClientServer.Physics
+namespace Game.ClientServer.Box2D
 {
     public static class Box2DPhysics
     {

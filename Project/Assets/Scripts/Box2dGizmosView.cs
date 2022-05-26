@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Game.ClientServer.Physics;
+using Game.ClientServer.Box2D;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
 using UnityEngine;

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Fabros.Ecs.Utils;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
-using UnityEngine;
 
-namespace Game.ClientServer.Physics
+namespace Game.ClientServer.Box2D
 {
     public static class PhysicsServices
     {

@@ -1,4 +1,4 @@
-using Game.ClientServer.Physics;
+using Game.ClientServer.Box2D;
 using UnityEngine;
 
 namespace Game.Physics

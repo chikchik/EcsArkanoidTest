@@ -1,5 +1,5 @@
 using System;
-using Game.ClientServer.Physics;
+using Game.ClientServer.Box2D;
 using Leopotam.EcsLite;
 
 namespace Game.Ecs.ClientServer.Components.Physics

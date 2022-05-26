@@ -1,4 +1,4 @@
-﻿using Game.ClientServer.Physics;
+﻿using Game.ClientServer.Box2D;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;

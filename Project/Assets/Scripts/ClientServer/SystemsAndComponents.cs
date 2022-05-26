@@ -3,7 +3,7 @@ using Fabros.Ecs.Systems;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Tick;
-using Game.ClientServer.Physics.Components;
+using Game.ClientServer.Box2D.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;

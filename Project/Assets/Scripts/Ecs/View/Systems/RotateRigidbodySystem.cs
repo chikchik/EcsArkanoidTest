@@ -1,6 +1,6 @@
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Other;
-using Game.ClientServer.Physics.Components;
+using Game.ClientServer.Box2D.Components;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Physics;

@@ -1,8 +1,8 @@
 ﻿using System;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
-using Game.ClientServer.Physics;
-using Game.ClientServer.Physics.Components;
+using Game.ClientServer.Box2D;
+using Game.ClientServer.Box2D.Components;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Physics;

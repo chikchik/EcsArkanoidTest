@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.ClientServer.Physics
+namespace Game.ClientServer.Box2D
 {
     public struct BodyInfo
     {
