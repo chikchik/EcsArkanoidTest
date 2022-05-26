@@ -58,7 +58,7 @@ namespace Game.Ecs.Client.Systems
                         var err = position - targetPosition;
                         if (err.magnitude > 0.1f)
                         {
-                            transform.position = Vector3.Lerp(transform.position, targetPosition, 1);
+                            transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
                         }
                     }
                 }

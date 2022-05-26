@@ -117,13 +117,13 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 if (rigidBodyComponent.BodyType == BodyType.Dynamic)
                 {
                     ref var positionComponent = ref poolPosition.GetRef(entity);
-                    ref var rotationComponent = ref poolRotation.GetRef(entity);
-
                     positionComponent.value.x = bodyInfo.Position.x;
                     positionComponent.value.z = bodyInfo.Position.y;
+                    
                     rigidBodyComponent.LinearVelocity = bodyInfo.LinearVelocity;
                     rigidBodyComponent.AngularVelocity = bodyInfo.AngularVelocity;
-                    rotationComponent.value = bodyInfo.Angle;
+                    
+                    poolRotation.GetRef(entity).value = bodyInfo.Angle;
                 }
             }
         }

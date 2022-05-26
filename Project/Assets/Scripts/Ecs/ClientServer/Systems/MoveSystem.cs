@@ -3,6 +3,7 @@ using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
 using UnityEngine;
 
@@ -46,6 +47,24 @@ namespace Game.Ecs.ClientServer.Systems
                 }
                 else
                     poolMoving.Del(entity);
+            }
+        }
+    }
+
+    public class AddLerpSystem : IEcsRunSystem
+    {
+        public void Run(EcsSystems systems)
+        {
+            var world = systems.GetWorld();
+            var filter = world.Filter<PositionComponent>().IncAdded<BodyReferenceComponent>().End();
+            var poolLerp = world.GetPool<LerpComponent>();
+            
+            foreach (var entity in filter)
+            {
+                if (entity.EntityHas<LerpComponent>(world))
+                    continue;
+                
+                poolLerp.Add(entity).value = 0.25f;
             }
         }
     }
