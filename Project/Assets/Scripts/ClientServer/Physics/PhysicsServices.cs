@@ -19,27 +19,50 @@ namespace Game.ClientServer.Physics
         // Clone current physicsWorld, delete old, change all old body references to the new ones, return cloned world
         public static void ReplicateBox2D(EcsWorld src, EcsWorld dest)
         {
-            var entities = new List<int>();
-            src.GetPool<BodyReferenceComponent>().GetEntities(entities);
+            var srcEntities = new List<int>();
+            src.GetPool<BodyReferenceComponent>().GetEntities(srcEntities);
             var srcPool = src.GetPool<BodyReferenceComponent>();
             
-            IntPtr[] arrayOfReferences = new IntPtr[entities.Count];
-            for (int i = 0; i < entities.Count; i++)
-                arrayOfReferences[i] = srcPool.Get(entities[i]).BodyReference;
+            IntPtr[] arrayOfReferences = new IntPtr[srcEntities.Count + 111];
+            for (int i = 0; i < srcEntities.Count; i++)
+                arrayOfReferences[i] = srcPool.Get(srcEntities[i]).BodyReference;
 
             var srcWorld = src.GetUnique<PhysicsWorldComponent>().WorldReference;
-            var newWorld = Box2DPhysics.CloneWorld(ref arrayOfReferences, entities.Count, srcWorld);
+            if (srcWorld == default)
+                return;
+            var newDestWorld = Box2DPhysics.CloneWorld(ref arrayOfReferences, srcEntities.Count, srcWorld);
 
-            dest.AddUnique<PhysicsWorldComponent>().WorldReference = newWorld;
+            
             var destPool = dest.GetPool<BodyReferenceComponent>();
             var destPoolBodyCreated = dest.GetPool<BodyCreatedComponent>();
-
-            for (int i = 0; i < entities.Count; i++)
+            
+            
+            if (dest.HasUnique<PhysicsWorldComponent>())
             {
-                var entity = entities[i];
-                destPool.Add(entity).BodyReference = arrayOfReferences[i];
-                destPoolBodyCreated.Add(entity);
+                var oldDestWorld = dest.ReplaceUnique<PhysicsWorldComponent>().WorldReference;
+                if (oldDestWorld != default)
+                    Box2DPhysics.DestroyWorld(oldDestWorld);
+                
+                var destEntities = new List<int>();
+                destPool.GetEntities(destEntities);
+
+                for (int i = 0; i < destEntities.Count; i++)
+                {
+                    var entity = destEntities[i];
+                    destPool.Del(entity);
+                    destPoolBodyCreated.Del(entity);
+                }
             }
+            
+            dest.ReplaceUnique<PhysicsWorldComponent>().WorldReference = newDestWorld;
+
+            for (int i = 0; i < srcEntities.Count; i++)
+            {
+                var entity = srcEntities[i];
+                destPool.Replace(entity).BodyReference = arrayOfReferences[i];
+                destPoolBodyCreated.Replace(entity);
+            }
+            
         }
 
         public static IntPtr GetBodyRefFromEntity(this EcsWorld world, int entity)

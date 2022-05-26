@@ -136,12 +136,12 @@ namespace Game.Fabros.Net.Client
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
             copyServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
        
-            PhysicsServices.ReplicateBox2D(ServerWorld, copyServerWorld);
+            //PhysicsServices.ReplicateBox2D(ServerWorld, copyServerWorld);
             
-            //var copyServerSystems = new EcsSystems(copyServerWorld);
-            //copyServerSystems.AddWorld(InputWorld, "input");
-            //SystemsAndComponents.AddSystems(Leo.Pool, copyServerSystems, false, false);
-            //copyServerSystems.Init();
+            var copyServerSystems = new EcsSystems(copyServerWorld);
+            copyServerSystems.AddWorld(InputWorld, "input");
+            SystemsAndComponents.AddSystems(Leo.Pool, copyServerSystems, false, false);
+            copyServerSystems.Init();
             
             
 
@@ -150,7 +150,7 @@ namespace Game.Fabros.Net.Client
             
             while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
             {
-                Leo.Tick(serverSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), false);
+                Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), false);
                 if (iterations > 500)
                 {
                     Debug.LogWarning(
@@ -161,7 +161,7 @@ namespace Game.Fabros.Net.Client
                 iterations++;
             }
             
-            //copyServerSystems.Destroy();
+            
 
             Leo.SyncLog.WriteLine("sync end\n");
 
@@ -171,6 +171,9 @@ namespace Game.Fabros.Net.Client
             if (dif2.RemovedEntities != null)
                 DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
             WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif2);
+            
+            //PhysicsServices.ReplicateBox2D(copyServerWorld, MainWorld);
+            copyServerSystems.Destroy();
         }
         private async UniTask<string> AsyncMain(Packet packet)
         {
@@ -212,9 +215,7 @@ namespace Game.Fabros.Net.Client
             serverSystems = new EcsSystems(ServerWorld);
             serverSystems.AddWorld(InputWorld, "input");
             
-            serverSystems.Add(new PhysicsSystem());
-            serverSystems.Add(new PopulatePhysicsWorldSystem());
-            serverSystems.Add(new SyncPhysicsWorldSystem());
+            serverSystems.Add(new Box2DSystem());
             
             
             SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
@@ -291,6 +292,7 @@ namespace Game.Fabros.Net.Client
 
                         //применяем diff к прошлому миру полученному от сервера
                         WorldUtils.ApplyDiff(Leo.Pool, ServerWorld, dif);
+                        //serverSystems.Run();
                     }
 
                     if (updated)

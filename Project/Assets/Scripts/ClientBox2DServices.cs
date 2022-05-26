@@ -74,21 +74,26 @@ namespace Game.Client
             if (collider is PolygonCollider2D)
             {
                 ref var polygonColliderComponent = ref entity.EntityAddComponent<PolygonColliderComponent>(world);
+                
+                //todo PhysicsShapeGroup2D?
                 PhysicsShapeGroup2D physicsShapeGroup2D = new PhysicsShapeGroup2D();
                 var shapes = collider.GetShapes(physicsShapeGroup2D);
 
                 polygonColliderComponent.Anchors = new int[shapes];
-                polygonColliderComponent.Vertices = new List<Vector2>();
+                
+                var tempVertices = new List<Vector2>();
                 var vertices = new List<Vector2>();
                 for (int i = 0; i < shapes; i++)
                 {
-                    physicsShapeGroup2D.GetShapeVertices(i, vertices);
-                    polygonColliderComponent.Anchors[i] = vertices.Count - 1;
-                    foreach (var vector2 in vertices)
+                    physicsShapeGroup2D.GetShapeVertices(i, tempVertices);
+                    polygonColliderComponent.Anchors[i] = tempVertices.Count - 1;
+                    foreach (var vector2 in tempVertices)
                     {
-                        polygonColliderComponent.Vertices.Add(vector2);
+                        vertices.Add(vector2);
                     }
                 }
+                
+                polygonColliderComponent.Vertices = vertices.ToArray();
             }
             
             if (Application.isPlaying)
