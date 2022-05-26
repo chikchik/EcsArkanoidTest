@@ -14,10 +14,11 @@ namespace Game.Ecs.ClientServer.Components
     {
     }
 
-    
-    [EmptyComponent]
     [Serializable]
-    public struct ButtonSpawnComponent
+    public struct ButtonCustomComponent
     {
+        public bool Spawn;
+        public bool Shake;
     }
+    
 }

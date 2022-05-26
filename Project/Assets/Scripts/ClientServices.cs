@@ -129,9 +129,9 @@ namespace Game.Client
                 moveInfoComponent.endPoint = view.EndPosition;
                 
                 if (view.Spawner)
-                {
-                    buttonEntity.EntityAdd<ButtonSpawnComponent>(world);
-                }
+                    buttonEntity.EntityReplace<ButtonCustomComponent>(world).Spawn = true;
+                if (view.Shake)
+                    buttonEntity.EntityReplace<ButtonCustomComponent>(world).Shake = true;
             });
 
             forEachObject<GateView>(view =>

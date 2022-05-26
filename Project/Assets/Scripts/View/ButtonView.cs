@@ -11,5 +11,6 @@ namespace Game.View
         public Vector3 EndPosition => StartPosition - moveOffset;
 
         public bool Spawner;
+        public bool Shake;
     }
 }

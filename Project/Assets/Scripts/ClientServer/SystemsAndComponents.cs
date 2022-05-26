@@ -115,8 +115,7 @@ namespace Game.ClientServer
             //pool.AddComponent<PostSolveComponent>();
             
             pool.AddComponent<AverageSpeedComponent>();
-            
-            pool.AddComponent<ButtonSpawnComponent>();
+            pool.AddComponent<ButtonCustomComponent>();
 
             return pool;
         }
@@ -197,7 +196,7 @@ namespace Game.ClientServer
 #endif
             // gates and buttons
             systems.Add(new ButtonsInteractionSystem());
-            systems.Add(new ButtonSpawnerSystem());
+            systems.Add(new ButtonCustomSystem());
             systems.Add(new GateSystem());
             systems.Add(new MoveByProgressSystem());
 

@@ -26,7 +26,6 @@ namespace Game.Ecs.ClientServer.Systems
             var poolProgress = world.GetPool<ProgressComponent>();
             var poolUnit = world.GetPool<UnitComponent>();
             var poolButton = world.GetPool<ButtonComponent>();
-            var poolButtonSpawn = world.GetPool<ButtonSpawnComponent>();
             var poolPressed = world.GetPool<ButtonPressedComponent>();
             var poolSpeed = world.GetPool<SpeedComponent>();
             var poolBody = world.GetPool<RigidbodyComponent>();
