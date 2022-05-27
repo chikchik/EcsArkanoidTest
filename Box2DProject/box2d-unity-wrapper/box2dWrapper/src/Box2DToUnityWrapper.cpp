@@ -72,9 +72,13 @@ extern "C"
         myContactListener->m_callbackPostSolve = oldContactListener->m_callbackPostSolve;
         clonedWorld->SetContactListener(myContactListener);
         // same here
-        MyDebugDraw* oldDbgDraw = (MyDebugDraw*)world->m_debugDraw;
-        clonedWorld->m_debugDraw = new MyDebugDraw(oldDbgDraw->m_drawCircle, oldDbgDraw->m_drawPoint, oldDbgDraw->m_drawSegment,
-            oldDbgDraw->m_drawTransform, oldDbgDraw->m_drawPolygon);
+
+        if (world->m_debugDraw)
+        {
+            MyDebugDraw* oldDbgDraw = (MyDebugDraw*)world->m_debugDraw;
+            clonedWorld->m_debugDraw = new MyDebugDraw(oldDbgDraw->m_drawCircle, oldDbgDraw->m_drawPoint, oldDbgDraw->m_drawSegment,
+                oldDbgDraw->m_drawTransform, oldDbgDraw->m_drawPolygon);
+        }
         return clonedWorld;
     }
 
