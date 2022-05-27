@@ -21,6 +21,10 @@ namespace Game.ClientServer.Box2D
             Int32 vCount, Box2dColor color);
         
         [DllImport(DllName)]
+        public static extern void SetContactCallbacks(IntPtr world, CallbackDelegate beginContact,
+            CallbackDelegate endContact, CallbackDelegate preSolve, CallbackDelegate postSolve);
+        
+        [DllImport(DllName)]
         public static extern IntPtr UpdateWorld(IntPtr world, float timeStep, int velocityIterations,
             int positionIterations);
 

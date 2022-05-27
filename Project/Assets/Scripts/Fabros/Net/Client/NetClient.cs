@@ -6,6 +6,7 @@ using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
+using Game.ClientServer.Box2D;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Systems.Physics;
@@ -135,7 +136,7 @@ namespace Game.Fabros.Net.Client
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
             copyServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
        
-            //PhysicsServices.ReplicateBox2D(ServerWorld, copyServerWorld);
+            // Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
             
             var copyServerSystems = new EcsSystems(copyServerWorld);
             copyServerSystems.AddWorld(InputWorld, "input");
@@ -171,7 +172,7 @@ namespace Game.Fabros.Net.Client
                 DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
             WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif2);
             
-            //PhysicsServices.ReplicateBox2D(copyServerWorld, MainWorld);
+            Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld);
             copyServerSystems.Destroy();
         }
         private async UniTask<string> AsyncMain(Packet packet)

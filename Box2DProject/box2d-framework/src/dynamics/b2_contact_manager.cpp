@@ -45,7 +45,7 @@ b2ContactManager::b2ContactManager(const b2ContactManager& other)
 	m_contactList = other.m_contactList;
 	m_contactCount = other.m_contactCount;
 	m_contactFilter = other.m_contactFilter;
-	m_contactListener = nullptr;
+	m_contactListener = &b2_defaultListener;
 }
 
 

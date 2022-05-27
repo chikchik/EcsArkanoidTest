@@ -41,11 +41,9 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             _cbkEndContactDelegate = SetEndContactCallback;
             _cbkPostSolveDelegate = SetPreSolveCallback;
             _cbkPreSolveDelegate = SetPostSolveCallback;
-            
-            Box2DApi.SetBeginContactCallback(b2world, _cbkBeginContactDelegate);
-            Box2DApi.SetEndContactCallback(b2world, _cbkEndContactDelegate);
-            Box2DApi.SetPostSolveCallback(b2world, _cbkPostSolveDelegate);
-            Box2DApi.SetPreSolveCallback(b2world, _cbkPreSolveDelegate);
+
+            Box2DApi.SetContactCallbacks(b2world, _cbkBeginContactDelegate, _cbkEndContactDelegate,
+                _cbkPreSolveDelegate, _cbkPostSolveDelegate);
         }
         
         public void WorldChanged(EcsWorld world)

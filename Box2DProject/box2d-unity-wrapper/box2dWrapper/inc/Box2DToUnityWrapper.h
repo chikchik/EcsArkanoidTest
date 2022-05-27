@@ -28,6 +28,9 @@ extern "C"
 
     DllExport void SetPostSolveCallback(b2World* world, Callback callback);
 
+    DllExport void SetContactCallbacks(b2World* world, Callback beginContact,
+        Callback endContact, Callback preSolve, Callback postSolve);
+
     DllExport void SetDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle,
         DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
         DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);

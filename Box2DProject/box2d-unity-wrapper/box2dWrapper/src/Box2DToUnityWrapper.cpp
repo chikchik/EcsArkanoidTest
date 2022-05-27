@@ -22,6 +22,15 @@ extern "C"
         ((MyContactListener*)world -> GetContactListener()) -> m_callbackPostSolve = callback;
     }
 
+    DllExport void SetContactCallbacks(b2World* world, Callback beginContact,
+        Callback endContact, Callback preSolve, Callback postSolve)
+    {
+        SetBeginContactCallback(world, beginContact);
+        SetEndContactCallback(world, endContact);
+        SetPreSolveCallback(world, preSolve);
+        SetPostSolveCallback(world, postSolve);
+    }
+
     DllExport void SetDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
         DrawDbgSegmentCallback drawSegment, DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon)
     {
@@ -62,10 +71,10 @@ extern "C"
         // do we need to set all callbacks manually?
         MyContactListener* myContactListener = new MyContactListener(clonedWorld);
         MyContactListener* oldContactListener = (MyContactListener*)world->GetContactListener();
-        myContactListener->m_callbackBeginContact = oldContactListener->m_callbackBeginContact;
-        myContactListener->m_callbackEndContact = oldContactListener->m_callbackEndContact;
-        myContactListener->m_callbackPreSolve = oldContactListener->m_callbackPreSolve;
-        myContactListener->m_callbackPostSolve = oldContactListener->m_callbackPostSolve;
+        //myContactListener->m_callbackBeginContact = oldContactListener->m_callbackBeginContact;
+        //myContactListener->m_callbackEndContact = oldContactListener->m_callbackEndContact;
+        //myContactListener->m_callbackPreSolve = oldContactListener->m_callbackPreSolve;
+        //myContactListener->m_callbackPostSolve = oldContactListener->m_callbackPostSolve;
         clonedWorld->SetContactListener(myContactListener);
         // same here
 
