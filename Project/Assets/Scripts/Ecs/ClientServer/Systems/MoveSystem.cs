@@ -35,7 +35,7 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var entity in filter)
             {
                 var moveDirectionComponent = poolMoveDirection.Get(entity);
-                var speedComponent = poolSpeed.Get(entity);
+                //var speedComponent = poolSpeed.Get(entity);
 
                 var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).Value;
                 //var dir = moveDirectionComponent.value * deltaTime * speedComponent.speed;

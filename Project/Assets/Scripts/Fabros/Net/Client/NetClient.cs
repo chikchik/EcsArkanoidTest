@@ -17,6 +17,7 @@ using Game.Fabros.Net.ClientServer.Protocol;
 using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
+using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -98,7 +99,7 @@ namespace Game.Fabros.Net.Client
 
         private void Sim(int delay)
         {
-            
+            Profiler.BeginSample("NetClientSim");
             //Debug.Log($"world\n{LeoDebug.e2s(serverWorld)}");
 
             //удаляем гарантированно устаревший ввод от игрока
@@ -148,6 +149,7 @@ namespace Game.Fabros.Net.Client
             var serverTick = Leo.GetCurrentTick(copyServerWorld);
             var clientTick = Leo.GetCurrentTick(MainWorld);
             
+            Profiler.BeginSample("SimServerWorld");
             while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
             {
                 Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), false);
@@ -160,6 +162,7 @@ namespace Game.Fabros.Net.Client
 
                 iterations++;
             }
+            Profiler.EndSample();
             
             
 
@@ -172,8 +175,12 @@ namespace Game.Fabros.Net.Client
                 DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
             WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif2);
             
-            Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld);
+            Profiler.BeginSample("replicate2");
+            //Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld);
+            Profiler.EndSample();
+            
             copyServerSystems.Destroy();
+            Profiler.EndSample();
         }
         private async UniTask<string> AsyncMain(Packet packet)
         {

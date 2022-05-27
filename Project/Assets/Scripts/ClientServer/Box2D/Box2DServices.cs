@@ -21,7 +21,7 @@ namespace Game.ClientServer.Box2D
             src.GetPool<BodyReferenceComponent>().GetEntities(srcEntities);
             var srcPool = src.GetPool<BodyReferenceComponent>();
             
-            IntPtr[] arrayOfReferences = new IntPtr[srcEntities.Count + 111];
+            IntPtr[] arrayOfReferences = new IntPtr[srcEntities.Count + 1];
             for (int i = 0; i < srcEntities.Count; i++)
                 arrayOfReferences[i] = srcPool.Get(srcEntities[i]).BodyReference;
 

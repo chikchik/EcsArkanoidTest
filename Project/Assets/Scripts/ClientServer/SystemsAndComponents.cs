@@ -230,7 +230,7 @@ namespace Game.ClientServer
             AddClient(new AnimateCharacterSystem());
 #endif
 
-            systems.Add(new AddLerpSystem());
+            //systems.Add(new AddLerpSystem());
 
             systems.Add(new EventsSystem<BodyReferenceComponent>());
             systems.Add(new EventsSystem<FireComponent>());

@@ -10,6 +10,7 @@ using Game.ClientServer.Box2D.Components;
 using Game.Ecs.ClientServer.Components.Physics;
 using Leopotam.EcsLite;
 using UnityEngine;
+using UnityEngine.Profiling;
 using Object = System.Object;
 
 namespace Game.Ecs.ClientServer.Systems.Physics
@@ -128,6 +129,8 @@ namespace Game.Ecs.ClientServer.Systems.Physics
 
         private void UpdateInternalBox2D()
         {
+            Profiler.BeginSample("UpdateInternalBox2D");
+            
             var filter = world
                 .Filter<BodyReferenceComponent>()
                 .Inc<RigidbodyComponent>()
@@ -173,6 +176,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         
         public void Run(EcsSystems systems)
         {
+            Profiler.BeginSample("Box2DSystemRun");
             //create new bodies
             CreateBodies();
             
@@ -184,6 +188,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             
             //write body -> ecs components
             UpdateEcsComponents();
+            Profiler.EndSample();
         }
 
 
