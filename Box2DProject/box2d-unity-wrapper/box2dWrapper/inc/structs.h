@@ -30,6 +30,7 @@ struct BodyInfo
     public : Vector2 linearVelocity;
     public : float angularVelocity;
     public : float angle;
+    public : bool awake;
 };
 
 struct CollisionCallbackData

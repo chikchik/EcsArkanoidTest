@@ -30,8 +30,6 @@ extern "C"
         world -> SetDebugDraw(dbgDraw);
     }
 
-    typedef void(__stdcall* CallbackDebug)(char*);
-
     DllExport void DebugDraw(b2World* world)
     {
         if (world != NULL)
@@ -49,8 +47,6 @@ extern "C"
 
         return world;
     }
-
-    DllExport void DestroyWorld(b2World* world);
 
     DllExport b2World* CloneWorld(void**& arrayOfReferences, int count, b2World* world)
     {
@@ -293,6 +289,85 @@ extern "C"
         b2Free(shape);
     }
 
+    DllExport float GetMass(b2Body* body)
+    {
+        return body->GetMass();
+    }
+
+    DllExport float GetInertia(b2Body* body)
+    {
+        return body->GetInertia();
+    }
+
+    DllExport void SetFixedRotation(b2Body* body, bool flag)
+    {
+        body->SetFixedRotation(flag);
+    }
+
+    DllExport bool IsFixedRotation(b2Body* body)
+    {
+        return body->IsFixedRotation();
+    }
+
+    DllExport bool IsAwake(b2Body* body)
+    {
+        return body->IsAwake();
+    }
+
+    DllExport bool IsSleepingAllowed(b2Body* body)
+    {
+        return body->IsSleepingAllowed();
+    }
+
+    DllExport void SetSleepingAllowed(b2Body* body, bool flag)
+    {
+        body->SetSleepingAllowed(flag);
+    }
+
+    DllExport bool IsBullet(b2Body* body)
+    {
+        return body->IsBullet();
+    }
+
+    DllExport int GetType(b2Body* body)
+    {
+        return body->GetType();
+    }
+
+    DllExport void SetType(b2Body* body, int type)
+    {
+        if (body->GetWorld()->m_locked)
+        {
+            return;
+        }
+        body->SetType((b2BodyType)type);
+    }
+
+    DllExport void SetGravityScale(b2Body* body, float scale)
+    {
+        body->SetGravityScale(scale);
+    }
+
+    DllExport float GetGravityScale(b2Body* body)
+    {
+        return body->GetGravityScale();
+    }
+
+    DllExport void SetAwake(b2Body* body, bool flag)
+    {
+        body->SetAwake(flag);
+    }
+
+    DllExport void ApplyTorque(b2Body* body, float torque, bool wake)
+    {
+        body->ApplyTorque(torque, wake);
+    }
+
+    DllExport void ApplyAngularImpulse(b2Body* body, float impulse, bool wake)
+    {
+        body->ApplyAngularImpulse(impulse, wake);
+    }
+
     DllExport float GetLinearDamping(b2Body* body)
     {
         return body -> GetLinearDamping();
@@ -330,7 +405,7 @@ extern "C"
         return sharedPos;
     }
 
-    DllExport void SetPosition(b2Body* body, Vector2 position)
+    DllExport void SetPosition(b2Body* body, Vector2 position, bool wake)
     {
         if (body->GetWorld()->m_locked)
         {
@@ -340,7 +415,7 @@ extern "C"
         b2Vec2 bPosition(position.x, position.y);
 
         body -> SetTransform(bPosition, angle);
-        body -> SetAwake(true);
+        body -> SetAwake(wake);
     }
 
     DllExport float GetAngle(b2Body* body)
@@ -361,10 +436,6 @@ extern "C"
 
     DllExport void SetLinearVelocity(b2Body* body, Vector2 linearVelocity)
     {
-        if (body->GetWorld()->m_locked)
-        {
-            return;
-        }
         b2Vec2 bLinearVelocity(linearVelocity.x, linearVelocity.y);
 
         body -> SetLinearVelocity(bLinearVelocity);
@@ -372,10 +443,6 @@ extern "C"
 
     DllExport void SetAngularVelocity(b2Body* body, float angularVelocity)
     {
-        if (body->GetWorld()->m_locked)
-        {
-            return;
-        }
         body -> SetAngularVelocity(angularVelocity);
     }
 
@@ -396,34 +463,34 @@ extern "C"
         return  body -> GetAngularVelocity();
     }
 
-    DllExport void ApplyForce(b2Body* body, Vector2 force, Vector2 point)
+    DllExport void ApplyForce(b2Body* body, Vector2 force, Vector2 point, bool wake)
     {
         b2Vec2 bForce(force.x, force.y);
         b2Vec2 bPoint(point.x, point.y);
 
-        body -> ApplyForce(bForce, bPoint, true);
+        body -> ApplyForce(bForce, bPoint, wake);
     }
 
-    DllExport void ApplyForceToCenter(b2Body* body, Vector2 force)
+    DllExport void ApplyForceToCenter(b2Body* body, Vector2 force, bool wake)
     {
         b2Vec2 bForce(force.x, force.y);
 
-        body -> ApplyForceToCenter(bForce, true);
+        body -> ApplyForceToCenter(bForce, wake);
     }
 
-    DllExport void ApplyLinearImpulse(b2Body* body, Vector2 force, Vector2 point)
+    DllExport void ApplyLinearImpulse(b2Body* body, Vector2 force, Vector2 point, bool wake)
     {
         b2Vec2 bForce(force.x, force.y);
         b2Vec2 bPoint(point.x, point.y);
 
-        body -> ApplyLinearImpulse(bForce, bPoint, true);
+        body -> ApplyLinearImpulse(bForce, bPoint, wake);
     }
 
-    DllExport void ApplyLinearImpulseToCenter(b2Body* body, Vector2 force)
+    DllExport void ApplyLinearImpulseToCenter(b2Body* body, Vector2 force, bool wake)
     {
         b2Vec2 bForce(force.x, force.y);
 
-        body -> ApplyLinearImpulseToCenter(bForce, true);
+        body -> ApplyLinearImpulseToCenter(bForce, wake);
     }
 
     DllExport void SetEnabled(b2Body* body, bool flag)
@@ -450,7 +517,7 @@ extern "C"
     DllExport void SetBodyInfo(b2Body* body, BodyInfo bodyInfo)
     {
         SetAngle(body, bodyInfo.angle);
-        SetPosition(body, bodyInfo.position);
+        SetPosition(body, bodyInfo.position, bodyInfo.awake);
         SetLinearVelocity(body, bodyInfo.linearVelocity);
         SetAngularVelocity(body, bodyInfo.angularVelocity);
     }

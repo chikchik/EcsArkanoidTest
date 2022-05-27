@@ -46,23 +46,11 @@ extern "C"
 
     DllExport b2World* CreateWorld(Vector2 gravity);
 
-    DllExport b2World* GetWorldFromBody(b2Body* body);
-
-
-    DllExport int GetContactListCount(b2Body* body);
-
-    DllExport void GetContactList(b2Body* body,
-        SAFEARRAY*& dataArr, CallbackDebug cb);
-
     DllExport CollisionCallbackData TryGetContactInfoForBodies(b2Body* body1,
         b2Body* body2);
 
     DllExport void DestroyWorld(b2World* world);
 
-    DllExport b2Body* CreateBody(b2World* world, int bodyType,
-        Vector2 position, float angle, int entity);
-
-    DllExport int GetEntityFromBody(b2Body* body);
 
     DllExport b2Shape* CreateChainShape(Vector2 vertices[], int count);
 
@@ -72,23 +60,27 @@ extern "C"
 
     DllExport b2Shape* CreateBoxShape(Vector2 extents);
 
+
+    // BODY
+    DllExport b2Body* CreateBody(b2World* world, int bodyType,
+        Vector2 position, float angle, int entity);
+
     DllExport void AddFixtureToBody(b2Body* body, b2Shape* shape,
         float density, float friction, float restitution,
         float restitutionThreshold, bool isTrigger, b2Filter filter);
+    
+    DllExport int GetContactListCount(b2Body* body);
 
-    DllExport float GetLinearDamping(b2Body* body);
+    DllExport void GetContactList(b2Body* body,
+        SAFEARRAY*& dataArr, CallbackDebug cb);
 
-    DllExport float GetAngularDamping(b2Body* body);
-
-    DllExport void SetLinearDamping(b2Body* body, float val);
-
-    DllExport void SetAngularDamping(b2Body* body, float val);
+    DllExport int GetEntityFromBody(b2Body* body);
 
     DllExport void DestroyBody(b2World* world, b2Body* body);
 
     DllExport Vector2 GetPosition(b2Body* body);
 
-    DllExport void SetPosition(b2Body* body, Vector2 position);
+    DllExport void SetPosition(b2Body* body, Vector2 position, bool wake);
 
     DllExport float GetAngle(b2Body* body);
 
@@ -102,23 +94,65 @@ extern "C"
 
     DllExport float GetAngularVelocity(b2Body* body);
 
-    DllExport void ApplyForce(b2Body* body, Vector2 force, Vector2 point);
+    DllExport void ApplyForce(b2Body* body, Vector2 force, Vector2 point, bool wake);
 
-    DllExport void ApplyForceToCenter(b2Body* body, Vector2 force);
+    DllExport void ApplyForceToCenter(b2Body* body, Vector2 force, bool wake);
 
-    DllExport void ApplyLinearImpulse(b2Body* body, Vector2 force, Vector2 point);
+    DllExport void ApplyTorque(b2Body* body, float torque, bool wake);
 
-    DllExport void ApplyLinearImpulseToCenter(b2Body* body, Vector2 force);
+    DllExport void ApplyLinearImpulse(b2Body* body, Vector2 force, Vector2 point, bool wake);
+
+    DllExport void ApplyLinearImpulseToCenter(b2Body* body, Vector2 force, bool wake);
+
+    DllExport void ApplyAngularImpulse(b2Body* body, float impulse, bool wake);
+
+    DllExport float GetLinearDamping(b2Body* body);
+
+    DllExport void SetLinearDamping(b2Body* body, float val);
+
+    DllExport float GetAngularDamping(b2Body* body);
+
+    DllExport void SetAngularDamping(b2Body* body, float val);
+
+    DllExport float GetGravityScale(b2Body* body);
+
+    DllExport void SetGravityScale(b2Body* body, float scale);
+
+    DllExport void SetType(b2Body* body, int type);
+
+    DllExport int GetType(b2Body* body);
+
+    DllExport void SetBullet(b2Body* body, bool flag);
+
+    DllExport bool IsBullet(b2Body* body);
+
+    DllExport void SetSleepingAllowed(b2Body* body, bool flag);
+
+    DllExport bool IsSleepingAllowed(b2Body* body);
+
+    DllExport void SetAwake(b2Body* body, bool flag);
+
+    DllExport bool IsAwake(b2Body* body);
 
     DllExport void SetEnabled(b2Body* body, bool flag);
 
     DllExport bool IsEnabled(b2Body* body);
 
+    DllExport void SetFixedRotation(b2Body* body, bool flag);
+
+    DllExport bool IsFixedRotation(b2Body* body);
+
+    DllExport b2World* GetWorldFromBody(b2Body* body);
+
+    DllExport void SetEnabled(b2Body* body, bool flag);
+
+    DllExport float GetMass(b2Body* body);
+
+    DllExport float GetInertia(b2Body* body);
+
     DllExport BodyInfo GetBodyInfo(b2Body* body);
 
     DllExport void SetBodyInfo(b2Body* body, BodyInfo bodyInfo);
-
-    DllExport void SetBullet(b2Body* body, bool flag);
 
     DllExport B2FilterReturnType GetBodyFixturesFilterData(b2Body* body);
 
