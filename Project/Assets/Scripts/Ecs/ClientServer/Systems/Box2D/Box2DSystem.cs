@@ -151,7 +151,8 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 {
                     LinearVelocity = rigidBodyComponent.LinearVelocity,
                     AngularVelocity = rigidBodyComponent.AngularVelocity,
-                    Angle = rotationComponent.value
+                    Angle = rotationComponent.value,
+                    Awake = true
                 };
                 bodyInfo.Position.x = positionComponent.value.x;
                 bodyInfo.Position.y = positionComponent.value.z;

@@ -56,7 +56,7 @@ namespace Game.ClientServer.Box2D
         public static extern Vector2 GetPosition(IntPtr body);
 
         [DllImport(DllName)]
-        public static extern void SetPosition(IntPtr body, Vector2 position);
+        public static extern void SetPosition(IntPtr body, Vector2 position, bool wake);
 
         [DllImport(DllName)]
         public static extern float GetAngle(IntPtr body);
@@ -148,6 +148,53 @@ namespace Game.ClientServer.Box2D
 
         [DllImport(DllName)]
         public static extern IntPtr CloneWorld(ref IntPtr[] dataArr, int count, IntPtr world);
+        
+        [DllImport(DllName)]
+        public static extern float GetMass(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern float GetInertia(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern void SetFixedRotation(IntPtr body, bool flag);
+
+        [DllImport(DllName)]
+        public static extern bool IsFixedRotation(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern bool IsAwake(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern bool IsSleepingAllowed(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern void SetSleepingAllowed(IntPtr body, bool flag);
+
+        [DllImport(DllName)]
+        public static extern bool IsBullet(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern int GetType(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern void SetType(IntPtr body, int type);
+
+        [DllImport(DllName)]
+        public static extern void SetGravityScale(IntPtr body, float scale);
+
+        [DllImport(DllName)]
+        public static extern float GetGravityScale(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern void SetAwake(IntPtr body, bool flag);
+
+        [DllImport(DllName)]
+        public static extern void ApplyTorque(IntPtr body, float torque, bool wake);
+
+        [DllImport(DllName)]
+        public static extern void ApplyAngularImpulse(IntPtr body, float impulse, bool wake);
+
+
 
     }
 }
