@@ -1,19 +1,4 @@
-#include <stddef.h>
-#include <vector>
-#include <box2d.h>
-#include <callbacks.h>
-#include <raycast.h>
-#include <debug_draw.h>
-#include <contact_listener.h>
-
-// SAFEARRAY
-#include <comdef.h>
-
-#ifdef _WIN32
-    #define DllExport __declspec (dllexport)
-#elif __APPLE__ || defined(__ANDROID__)
-    #define DllExport __attribute__((visibility("default")))
-#endif
+#include <Box2DToUnityWrapper.h>
 
 extern "C"
 {

@@ -3,6 +3,8 @@
 
 #include <structs.h>
 
+typedef void(__stdcall* CallbackDebug)(char*);
+
 typedef void (__stdcall * Callback)(CollisionCallbackData);
 typedef void (__stdcall * DrawDbgCircleCallback)(Vector2, float, Box2dColor);
 typedef void (__stdcall * DrawDbgSegmentCallback)(Vector2, Vector2, Box2dColor);

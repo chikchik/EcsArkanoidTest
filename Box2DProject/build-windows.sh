@@ -15,8 +15,9 @@ buildWrapperAndLink()
     local LIB_PATH="./build/box2dWrapper/src/Debug/libbox2d.dll"
     local SERVER_PATH="../../ServerApp/"
     local GAME_PATH="../../Project/Assets/Plugins/LibBox2D/Windows"
+    local TEST_PATH="../box2d-console"
 
-    ./build-windows.sh && (echo "$(tput setaf 2)BUILD COMPLETE, COPYING...$(tput setaf 3)" && cp -v $LIB_PATH $SERVER_PATH && cp -v $LIB_PATH $GAME_PATH && echo "$(tput setaf 2)DONE!" || echo "$(tput setaf 1)ERROR!") || echo "$(tput setaf 1)BUILD ERROR!"
+    ./build-windows.sh && (echo "$(tput setaf 2)BUILD COMPLETE, COPYING...$(tput setaf 3)" && cp -v $LIB_PATH $SERVER_PATH && cp -v $LIB_PATH $GAME_PATH && cp -v $LIB_PATH $TEST_PATH && echo "$(tput setaf 2)DONE!" || echo "$(tput setaf 1)ERROR!") || echo "$(tput setaf 1)BUILD ERROR!"
 }
 
 buildWrapperAndLink
