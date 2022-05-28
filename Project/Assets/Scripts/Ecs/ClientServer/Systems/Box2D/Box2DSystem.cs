@@ -25,6 +25,21 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         private EcsWorld world;
         
         private List<Vector2> shapeVertices = new List<Vector2>();
+
+        private bool createBodies;
+        private bool updateBox2d;
+        private bool updateInternalObjects;
+        private bool writeToComponents;
+        private bool createContacts;
+
+        public Box2DSystem(bool createBodies = true, bool updateBox2d = true, bool updateInternalObjects = true, bool writeToComponents = true, bool createContacts = true)
+        {
+            this.createBodies = createBodies;
+            this.updateBox2d = updateBox2d;
+            this.updateInternalObjects = updateInternalObjects;
+            this.writeToComponents = writeToComponents;
+            this.createContacts = createContacts;
+        }
         
         public void Init(EcsSystems systems)
         {
@@ -38,13 +53,17 @@ namespace Game.Ecs.ClientServer.Systems.Physics
                 throw new Exception("b2world is null");
             }
 
-            _cbkBeginContactDelegate = SetBeginContactCallback;
-            _cbkEndContactDelegate = SetEndContactCallback;
-            _cbkPostSolveDelegate = SetPreSolveCallback;
-            _cbkPreSolveDelegate = SetPostSolveCallback;
+            if (createContacts)
+            {
 
-            Box2DApi.SetContactCallbacks(b2world, _cbkBeginContactDelegate, _cbkEndContactDelegate,
-                _cbkPreSolveDelegate, _cbkPostSolveDelegate);
+                _cbkBeginContactDelegate = SetBeginContactCallback;
+                _cbkEndContactDelegate = SetEndContactCallback;
+                _cbkPostSolveDelegate = SetPreSolveCallback;
+                _cbkPreSolveDelegate = SetPostSolveCallback;
+
+                Box2DApi.SetContactCallbacks(b2world, _cbkBeginContactDelegate, _cbkEndContactDelegate,
+                    _cbkPreSolveDelegate, _cbkPostSolveDelegate);
+            }
         }
         
         public void WorldChanged(EcsWorld world)
@@ -127,7 +146,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
             }
         }
 
-        private void UpdateInternalBox2D()
+        private void UpdateInternalBox2DObjects()
         {
             Profiler.BeginSample("UpdateInternalBox2D");
             
@@ -178,16 +197,20 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         {
             Profiler.BeginSample("Box2DSystemRun");
             //create new bodies
-            CreateBodies();
+            if (createBodies)
+                CreateBodies();
             
             //write ecs components -> body
-            UpdateInternalBox2D();
+            if (updateInternalObjects)
+                UpdateInternalBox2DObjects();
             
             //sim box2d world
-            UpdateBox2D();
+            if (updateBox2d)
+                UpdateBox2D();
             
             //write body -> ecs components
-            UpdateEcsComponents();
+            if (writeToComponents)
+                UpdateEcsComponents();
             Profiler.EndSample();
         }
 
