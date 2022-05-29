@@ -53,7 +53,7 @@ namespace Game.Ecs.Client.Systems
                 animatorComponent.animator = characterView.Animator;
 
                 var position = entity.EntityGet<PositionComponent>(world).value;
-                entity.EntityAdd<RootMotionComponent>(world).Position = position;
+                //entity.EntityAdd<RootMotionComponent>(world).Position = position;
 
                 transformComponent.transform.position = position;
 

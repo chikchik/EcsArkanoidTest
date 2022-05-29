@@ -195,7 +195,7 @@ namespace Game.Client
             var clip = clips.First(clip => clip.name == "Walking");
             //todo calculate exact speed
 
-            world.AddUnique<AverageSpeedComponent>().Value = 1.77f; //clip.averageSpeed;
+            world.AddUnique<AverageSpeedComponent>().Value = 1.72f; //clip.averageSpeed;
         }
     }
 }

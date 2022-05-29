@@ -47,6 +47,7 @@ namespace Game.Ecs.Client.Systems
 
                     var position = transform.position;
 
+                    /*
                     if (poolMainPlayer.Has(entity))
                     {
                         world.ReplaceUnique(new RootMotionComponent {Position = transform.position});
@@ -54,13 +55,14 @@ namespace Game.Ecs.Client.Systems
                             poolPosition.GetRef(entity).value = position;
                     }
                     else
-                    {
+                    {*/
                         var err = position - targetPosition;
                         if (err.magnitude > 0.1f)
                         {
-                            transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
+                            Debug.Log($"qq {err.magnitude}");
+                            transform.position = Vector3.Lerp(transform.position, targetPosition, 0.25f);
                         }
-                    }
+                    //}
                 }
                 else
                 {
