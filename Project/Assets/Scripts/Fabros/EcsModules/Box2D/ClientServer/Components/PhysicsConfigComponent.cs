@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.Ecs.ClientServer.Components.Physics
+namespace Game.Fabros.EcsModules.Box2D.ClientServer.Components
 {
     [Serializable]
     public struct PhysicsConfigComponent

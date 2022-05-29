@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Ecs.ClientServer.Components.Physics
+namespace Game.Fabros.EcsModules.Box2D.ClientServer.Components
 {
     [System.Serializable]
     public struct BoxColliderComponent

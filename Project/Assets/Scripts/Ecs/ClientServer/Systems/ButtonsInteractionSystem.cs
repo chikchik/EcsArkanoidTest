@@ -6,7 +6,7 @@ using Fabros.EcsModules.Grid.Other;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
-using Game.Ecs.ClientServer.Components.Physics;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
 using Leopotam.EcsLite;
 
 namespace Game.Ecs.ClientServer.Systems

@@ -1,4 +1,4 @@
-using Game.ClientServer.Box2D;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
 using UnityEngine;
 
 namespace Game.Physics

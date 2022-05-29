@@ -6,13 +6,14 @@ using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
-using Game.ClientServer.Box2D;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-using Game.Ecs.ClientServer.Systems.Physics;
+using Game.Fabros.EcsModules.Box2D.ClientServer;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Game.Fabros.EcsModules.Fire.Client.Components;
 using Game.Fabros.Net.Client.Socket;
 using Game.Fabros.Net.ClientServer;
+using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Game.Utils;
 using Leopotam.EcsLite;
@@ -217,7 +218,7 @@ namespace Game.Fabros.Net.Client
 
             serverSystems = new EcsSystems(ServerWorld);
             serverSystems.AddWorld(InputWorld, "input");
-            serverSystems.Add(new Box2DSystem(true, true, true, true, false));
+            serverSystems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, new Vector2(0,0), true, true, true, true, false));
 
             //SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
             serverSystems.Init();

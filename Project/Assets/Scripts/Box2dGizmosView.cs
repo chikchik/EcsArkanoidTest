@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Game.ClientServer.Box2D;
-using Game.Ecs.ClientServer.Components.Physics;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;

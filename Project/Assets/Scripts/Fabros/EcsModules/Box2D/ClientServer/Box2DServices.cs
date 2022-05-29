@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Game.Ecs.ClientServer.Components.Physics;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
 using Leopotam.EcsLite;
 
-namespace Game.ClientServer.Box2D
+namespace Game.Fabros.EcsModules.Box2D.ClientServer
 {
     public static class Box2DServices
     {

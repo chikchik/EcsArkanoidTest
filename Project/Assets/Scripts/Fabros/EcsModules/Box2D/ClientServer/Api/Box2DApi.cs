@@ -2,12 +2,12 @@ using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace Game.ClientServer.Box2D
+namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
 {
     public static class Box2DApi
     {
 #if UNITY_IPHONE && !UNITY_EDITOR
-    private const string DllName = "__Internal";
+        private const string DllName = "__Internal";
 #else
         private const string DllName = "libbox2d";
 #endif

@@ -6,6 +6,7 @@ using Fabros.Ecs;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.ClientServer.Components;
+using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
 using UnityEngine;

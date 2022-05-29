@@ -1,19 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Other;
-using Game.ClientServer;
-using Game.ClientServer.Box2D;
-using Game.ClientServer.Box2D.Components;
-using Game.Ecs.ClientServer.Components.Physics;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Leopotam.EcsLite;
 using UnityEngine;
 using UnityEngine.Profiling;
-using Object = System.Object;
 
-namespace Game.Ecs.ClientServer.Systems.Physics
+namespace Game.Fabros.EcsModules.Box2D.ClientServer.Systems
 {
     public class Box2DSystem : IEcsInitSystem, IEcsRunSystem, IEcsDestroySystem, IEcsWorldChangedSystem
     {
@@ -31,9 +28,25 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         private bool updateInternalObjects;
         private bool writeToComponents;
         private bool createContacts;
+        
+        private int positionIterations;
+        private int velocityIterations;
+        private Vector2 graviti;
 
-        public Box2DSystem(bool createBodies = true, bool updateBox2d = true, bool updateInternalObjects = true, bool writeToComponents = true, bool createContacts = true)
+        public Box2DSystem(
+            int positionIterations = 6,
+            int velocityIterations = 2,
+            Vector2 graviti = new Vector2(),
+            bool createBodies = true, 
+            bool updateBox2d = true, 
+            bool updateInternalObjects = true,
+            bool writeToComponents = true, 
+            bool createContacts = true)
         {
+            this.positionIterations = positionIterations;
+            this.velocityIterations = velocityIterations;
+            this.graviti = graviti;
+            
             this.createBodies = createBodies;
             this.updateBox2d = updateBox2d;
             this.updateInternalObjects = updateInternalObjects;
@@ -45,7 +58,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
         {
             world = systems.GetWorld();
             if (!world.HasUnique<PhysicsWorldComponent>())
-                world.AddUnique<PhysicsWorldComponent>().WorldReference = Box2DApi.CreateWorld(Config.GRAVITY);
+                world.AddUnique<PhysicsWorldComponent>().WorldReference = Box2DApi.CreateWorld(graviti);
 
             var b2world = world.GetUnique<PhysicsWorldComponent>().WorldReference;
             if (b2world == default)
@@ -188,9 +201,7 @@ namespace Game.Ecs.ClientServer.Systems.Physics
 
             Box2DApi.UpdateWorld(
                 physicsWorld.WorldReference, 
-                deltaTime, 
-                Config.POSITION_ITERATIONS, 
-                Config.VELOCITY_ITERATIONS);
+                deltaTime, positionIterations, velocityIterations);
         }
         
         public void Run(EcsSystems systems)

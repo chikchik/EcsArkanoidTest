@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.Ecs.ClientServer.Components
+namespace Game.Fabros.Net.ClientServer.Ecs.Components
 {
     [Serializable]
     public struct TickrateConfigComponent

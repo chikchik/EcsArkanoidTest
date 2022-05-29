@@ -2,6 +2,7 @@
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Input;
+using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Leopotam.EcsLite;
 
 namespace Game.Fabros.Net.ClientServer.Ecs.Systems

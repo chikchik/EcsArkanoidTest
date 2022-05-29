@@ -3,22 +3,25 @@ using Fabros.Ecs.Systems;
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Tick;
-using Game.ClientServer.Box2D.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Inventory;
 using Game.Ecs.ClientServer.Components.Objective;
-using Game.Ecs.ClientServer.Components.Physics;
 using Game.Ecs.ClientServer.Systems;
-using Game.Ecs.ClientServer.Systems.Physics;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Components.Other;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Systems;
+using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Systems;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.ExtendedSystems;
+using UnityEngine;
+
 #if CLIENT
-using Game.Ecs.Client.Physics;
+using Game.Fabros.EcsModules.Box2D.Client.Systems;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
 using Game.Fabros.EcsModules.Fire.Client.Systems;
@@ -159,7 +162,7 @@ namespace Game.ClientServer
 #if CLIENT
             systems.Add(new InitBox2dDebug());
 #endif
-            systems.Add(new Box2DSystem());
+            systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, new Vector2(0,0)));
 
             AddServer(new AIPlayerSystem());
 

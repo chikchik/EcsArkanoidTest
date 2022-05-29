@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Base.Components;
-using Game.ClientServer.Box2D;
-using Game.ClientServer.Box2D.Components;
-using Game.Ecs.ClientServer.Components.Physics;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
 using Game.View;
 using Leopotam.EcsLite;
 using UnityEngine;

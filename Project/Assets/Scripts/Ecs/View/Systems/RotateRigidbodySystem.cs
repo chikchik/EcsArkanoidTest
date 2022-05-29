@@ -1,9 +1,8 @@
 using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Other;
-using Game.ClientServer.Box2D.Components;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-using Game.Ecs.ClientServer.Components.Physics;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
 

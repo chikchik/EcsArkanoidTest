@@ -1,4 +1,4 @@
-﻿namespace Game.ClientServer.Box2D.Components
+﻿namespace Game.Fabros.EcsModules.Box2D.ClientServer.Components
 {
     [System.Serializable]
     public struct RotationComponent

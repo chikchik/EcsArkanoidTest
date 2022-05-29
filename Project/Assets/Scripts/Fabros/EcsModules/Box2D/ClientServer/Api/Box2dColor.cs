@@ -1,4 +1,4 @@
-﻿namespace Game.ClientServer.Box2D
+﻿namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
 {
     public struct Box2dColor
     {

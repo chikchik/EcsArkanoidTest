@@ -89,4 +89,10 @@
 		</Compile>
 	</ItemGroup>
 
+	<ItemGroup>
+		<Compile Include="$(Scripts)\Fabros\EcsModules\Box2D\ClientServer\**\*.cs">
+			<Link>FabrosX\EcsModules\Fire\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+	</ItemGroup>
+
 </Project>

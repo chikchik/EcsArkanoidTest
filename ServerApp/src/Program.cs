@@ -14,6 +14,7 @@ using Fabros.P2P;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.ClientServer;
+using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
 using Newtonsoft.Json;

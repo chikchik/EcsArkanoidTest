@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using Game.ClientServer.Box2D;
-using Game.Ecs.ClientServer.Components.Physics;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
+using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace Game.Ecs.Client.Physics
+namespace Game.Fabros.EcsModules.Box2D.Client.Systems
 {
     public class InitBox2dDebug : IEcsInitSystem
     {
