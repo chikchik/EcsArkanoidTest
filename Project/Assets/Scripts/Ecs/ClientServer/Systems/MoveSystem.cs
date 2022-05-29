@@ -64,7 +64,7 @@ namespace Game.Ecs.ClientServer.Systems
                 if (entity.EntityHas<LerpComponent>(world))
                     continue;
                 
-                poolLerp.Add(entity).value = 0.25f;
+                poolLerp.Add(entity).value = 0.5f;
             }
         }
     }

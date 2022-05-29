@@ -50,7 +50,6 @@ namespace Game.Ecs.Client.Systems
                     /*
                     if (poolMainPlayer.Has(entity))
                     {
-                        world.ReplaceUnique(new RootMotionComponent {Position = transform.position});
                         if (singlePlayer)
                             poolPosition.GetRef(entity).value = position;
                     }

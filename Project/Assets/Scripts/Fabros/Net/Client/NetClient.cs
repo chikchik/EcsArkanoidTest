@@ -137,7 +137,7 @@ namespace Game.Fabros.Net.Client
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
             copyServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
        
-            // Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
+            Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
             
             var copyServerSystems = new EcsSystems(copyServerWorld);
             copyServerSystems.AddWorld(InputWorld, "input");
@@ -176,7 +176,7 @@ namespace Game.Fabros.Net.Client
             WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif2);
             
             Profiler.BeginSample("replicate2");
-            //Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld);
+            Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld);
             Profiler.EndSample();
             
             copyServerSystems.Destroy();
@@ -221,11 +221,9 @@ namespace Game.Fabros.Net.Client
 
             serverSystems = new EcsSystems(ServerWorld);
             serverSystems.AddWorld(InputWorld, "input");
-            
-            serverSystems.Add(new Box2DSystem());
-            
-            
-            SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
+            serverSystems.Add(new Box2DSystem(true, true, true, true, false));
+
+            //SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
             serverSystems.Init();
 
             Debug.Log($"world\n{LeoDebug.e2s(MainWorld)}");
@@ -299,7 +297,7 @@ namespace Game.Fabros.Net.Client
 
                         //применяем diff к прошлому миру полученному от сервера
                         WorldUtils.ApplyDiff(Leo.Pool, ServerWorld, dif);
-                        //serverSystems.Run();
+                        serverSystems.Run();
                     }
 
                     if (updated)
