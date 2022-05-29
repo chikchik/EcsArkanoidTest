@@ -3,8 +3,7 @@
 namespace Game.Ecs.ClientServer.Components
 {
     [Serializable]
-    public struct PlayerComponent
+    public struct IsMainPlayerComponent
     {
-        public int id;
     }
 }

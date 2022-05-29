@@ -23,10 +23,6 @@ using Random = UnityEngine.Random;
 
 namespace Game.Fabros.Net.Client
 {
-    public struct UniqueEntityComponent
-    {
-        
-    }
     public class NetClient
     {
         public Action<EcsWorld, int[]> DeleteEntitiesAction;
