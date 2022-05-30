@@ -160,7 +160,7 @@ namespace Game.ClientServer
 #endif
             
 #if CLIENT
-            systems.Add(new InitBox2dDebug());
+            systems.Add(new Box2dDebugViewSystem());
 #endif
             systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, new Vector2(0,0)));
 

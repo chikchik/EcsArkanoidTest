@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Game.Fabros.EcsModules.Box2D.Client.Systems
 {
-    public class InitBox2dDebug : IEcsInitSystem
+    public class Box2dDebugViewSystem : IEcsInitSystem, IEcsDestroySystem
     {
         private Box2DApi.DrawDbgCircleCallback _circleCallback;
         private Box2DApi.DrawDbgCircleCallback _pointCallback;
@@ -33,6 +33,10 @@ namespace Game.Fabros.EcsModules.Box2D.Client.Systems
                                                 Box2dDebugDrawFlags.AabbBit | Box2dDebugDrawFlags.PairBit |
                                                 Box2dDebugDrawFlags.CenterOfMassBit | Box2dDebugDrawFlags.ContactBit);
             Box2DApi.SetFlagsForDebugDraw(physicsWorld, box2dDebugDrawFlags);
+        }
+        public void Destroy(EcsSystems systems)
+        {
+            //todo impl destroy
         }
         
         void DrawPolygon(Vector2[] v, Int32 vCount, Box2dColor color)
@@ -74,5 +78,6 @@ namespace Game.Fabros.EcsModules.Box2D.Client.Systems
             var v2 = new Vector3(angleX.x, 0.1f, angleX.y);
             Gizmos.DrawLine(v1, v1 + v2);
         }
+
     }
 }
