@@ -71,6 +71,15 @@ extern "C"
     DllExport b2Body* CreateBody(b2World* world, int bodyType,
         Vector2 position, float angle, int entity);
 
+    DllExport int GetJointListCount(b2Body* body);
+
+    DllExport void TryGetJointListFromBody(b2Body* body, ListOfPointersCallback cb);
+
+    DllExport b2Joint* CreateJoint(b2World* world, int jointType,
+        b2Body* bodyA, b2Body* bodyB, bool isCollideConnected);
+
+    DllExport void DestroyJoint(b2World* world, b2Joint* joint);
+
     DllExport void AddFixtureToBody(b2Body* body, b2Shape* shape,
         float density, float friction, float restitution,
         float restitutionThreshold, bool isTrigger, b2Filter filter);

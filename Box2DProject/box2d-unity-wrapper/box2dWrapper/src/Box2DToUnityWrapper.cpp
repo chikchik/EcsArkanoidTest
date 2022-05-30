@@ -113,6 +113,16 @@ extern "C"
         return size;
     }
 
+    DllExport int GetJointListCount(b2Body* body)
+    {
+        int size = 0;
+        for (const b2JointEdge* cE = body->GetJointList(); cE; cE = cE->next)
+        {
+            size++;
+        }
+        return size;
+    }
+
     DllExport void TryGetContactList(b2Body* body, ListOfPointersCallback successCb)
     {
         int count = GetContactListCount(body);
@@ -199,6 +209,24 @@ extern "C"
         delete collisionDataArray;
     }
 
+    DllExport void TryGetJointListFromBody(b2Body* body, ListOfPointersCallback cb)
+    {
+        int count = GetJointListCount(body);
+        if (count <= 0) return;
+
+        b2Joint** myJoint = new b2Joint*[count];
+
+        int i = 0;
+        for (b2JointEdge* j = body->GetJointList(); j; j = j->next, ++i)
+        {
+            myJoint[i] = j->joint;
+        }
+
+
+        cb(count, (void**)myJoint);
+        delete myJoint;
+    }
+
     DllExport void TryGetContactInfoForBodies(b2Body* body1, b2Body* body2, CollisionCallback cb)
     {
         b2Contact* myContact = NULL;
@@ -224,6 +252,22 @@ extern "C"
         b2ContactListener* myContactListener = world->GetContactListener();
         delete myContactListener;
         delete world;
+    }
+
+    DllExport b2Joint* CreateJoint(b2World* world, int jointType,
+        b2Body* bodyA, b2Body* bodyB, bool isCollideConnected)
+    {
+        b2JointDef def;
+        def.type = (b2JointType)jointType;
+        def.bodyA = bodyA;
+        def.bodyB = bodyB;
+        def.collideConnected = isCollideConnected;
+        return world->CreateJoint(&def);
+    }
+
+    DllExport void DestroyJoint(b2World* world, b2Joint* joint)
+    {
+        world->DestroyJoint(joint);
     }
 
     DllExport b2Body* CreateBody(b2World* world, int bodyType, Vector2 position, float angle, int entity)
@@ -571,4 +615,7 @@ extern "C"
 
         return true;
     }
+
+    // JOINTS
+
 }

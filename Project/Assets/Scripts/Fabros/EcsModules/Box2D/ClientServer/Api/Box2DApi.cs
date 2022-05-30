@@ -215,6 +215,68 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern void TryGetContactInfosForBody(IntPtr body,
             ListOfPointersCallback success);
+        
+        
+        // JOINTS
+        [DllImport(DllName)]
+        public static extern IntPtr CreateJoint(IntPtr world, int jointType,
+            IntPtr bodyA, IntPtr bodyB, bool isCollideConnected);
+        
+        [DllImport(DllName)]
+        public static extern void DestroyJoint(IntPtr world, IntPtr joint);
+        
+        [DllImport(DllName)]
+        public static extern int GetJointListCount(IntPtr body);
+        
+        [DllImport(DllName)]
+        public static extern void TryGetJointListFromBody(IntPtr body, ListOfPointersCallback cb);
+        
+            
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointAnchorA(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointAnchorB(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointReactionForce(IntPtr joint, float inv_dt);
+
+        [DllImport(DllName)]
+        public static extern float GetJointReactionTorque(IntPtr joint, float inv_dt);
+
+        [DllImport(DllName)]
+        public static extern float GetJointLength(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float SetJointLength(IntPtr joint, float length);
+
+        [DllImport(DllName)]
+        public static extern float GetMinJointLength(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float SetMinJointLength(IntPtr joint, float minLength);
+
+        [DllImport(DllName)]
+        public static extern float GetMaxJointLength(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float SetMaxJointLength(IntPtr joint, float maxLength);
+
+        [DllImport(DllName)]
+        public static extern float GetCurrentJointLength(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointStiffness(IntPtr joint, float stiffness);
+
+        [DllImport(DllName)]
+        public static extern float GetJointStiffness(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointDamping(IntPtr joint, float damping);
+
+        [DllImport(DllName)]
+        public static extern float GetJointDamping(IntPtr joint);
+
 
     }
 }
