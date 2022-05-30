@@ -1,5 +1,6 @@
-﻿using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Base.Components;
+﻿using Fabros.Ecs.Client.Components;
+using Fabros.Ecs.ClientServer.Components;
+using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
 using Game.Fabros.EcsModules.Fire.Client.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
@@ -38,7 +39,10 @@ namespace Game.Fabros.EcsModules.Fire.Client.Systems
                 Object.Destroy(poolFireView.Get(entity).view.gameObject);
                 poolFireView.Del(entity);
 
-                entity.EntityWith<GameObjectComponent>(world, component => { Object.Destroy(component.GameObject); });
+                entity.EntityWith<TransformComponent>(world, component =>
+                {
+                    Object.Destroy(component.Transform.gameObject);
+                });
             }
         }
     }

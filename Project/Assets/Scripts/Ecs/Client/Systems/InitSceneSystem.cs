@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Fabros.Ecs.Client.Components;
 using Game.Client;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
@@ -22,17 +23,17 @@ namespace Game.Ecs.Client.Systems
             var sceneWorld = new EcsWorld("fromScene");
             ClientServices.InitializeNewWorldFromScene(sceneWorld);
 
-            var poolSceneWorldObjects = sceneWorld.GetPool<GameObjectComponent>();
+            var poolSceneWorldObjects = sceneWorld.GetPool<TransformComponent>();
             var poolSceneWorldObjectNames = sceneWorld.GetPool<GameObjectNameComponent>();
 
             var poolWorldObjectNames = world.GetPool<GameObjectNameComponent>();
 
-            var sceneEntitiesByName = new Dictionary<string, GameObject>();
+            var sceneEntitiesByName = new Dictionary<string, Transform>();
 
             foreach (var entity in sceneWorld.Filter<GameObjectNameComponent>().End())
             {
                 var name = poolSceneWorldObjectNames.Get(entity).Name;
-                sceneEntitiesByName[name] = poolSceneWorldObjects.Get(entity).GameObject;
+                sceneEntitiesByName[name] = poolSceneWorldObjects.Get(entity).Transform;
             }
 
             foreach (var entity in world.Filter<GameObjectNameComponent>().End())
@@ -42,7 +43,10 @@ namespace Game.Ecs.Client.Systems
              * все кто остался в sceneEntitiesByName можно удалить со сцены
              */
 
-            sceneEntitiesByName.Values.ForEach(go => { Object.Destroy(go); });
+            sceneEntitiesByName.Values.ForEach(tr =>
+            {
+                Object.Destroy(tr.gameObject);
+            });
         }
     }
 }

@@ -1,5 +1,6 @@
 using Fabros;
 using Fabros.Ecs;
+using Fabros.Ecs.ClientServer.Serializer;
 using Newtonsoft.Json;
 
 

@@ -1,4 +1,4 @@
-using Fabros.EcsModules.Base.Components;
+using Fabros.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Leopotam.EcsLite;

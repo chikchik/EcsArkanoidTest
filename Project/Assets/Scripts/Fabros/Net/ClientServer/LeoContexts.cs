@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Fabros.Ecs;
+using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.ClientServer.Components;
@@ -52,6 +54,24 @@ namespace Game.Fabros.Net.ClientServer
             world.AddUnique<PendingInputComponent>().data = new UserInput[0];
         }
 
+        
+        public static string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Convert the byte array to hexadecimal string
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
 
         public void FilterInputs(Tick time)
         {
@@ -83,7 +103,7 @@ namespace Game.Fabros.Net.ClientServer
             var dif = WorldUtils.BuildDiff(Pool, empty, world, true);
 
             var str = JsonUtility.ToJson(dif, true);
-            var hash = global::Fabros.Ecs.Utils.Utils.CreateMD5(str);
+            var hash = CreateMD5(str);
 
 
             SyncLog.WriteLine($"<- tick {time.Value}\n");

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Fabros.EcsModules.Base.Components;
 using Game.Utils;
 using UnityEngine;
 

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Fabros.Ecs.Client.Components;
+using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Base.Components;
 using Game.Ecs.Client.Components;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
@@ -45,14 +46,11 @@ namespace Game.Client
 
                 entity = world.NewEntity();
 
-                ref var component = ref entity.EntityAdd<GameObjectComponent>(world);
-                component.GameObject = go;
-
                 ref var gameObjectNameComponent = ref entity.EntityAdd<GameObjectNameComponent>(world);
                 gameObjectNameComponent.Name = go.name;
 
                 ref var transformComponent = ref entity.EntityAdd<TransformComponent>(world);
-                transformComponent.transform = go.transform;
+                transformComponent.Transform = go.transform;
 
                 entities.Add(go, entity);
 

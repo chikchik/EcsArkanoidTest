@@ -1,6 +1,6 @@
 ﻿using System;
+using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Base.Components;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Box2D.ClientServer.Api;

@@ -1,7 +1,7 @@
 ﻿using System;
 using Fabros.Ecs;
+using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;

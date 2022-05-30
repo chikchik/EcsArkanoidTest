@@ -1,5 +1,6 @@
 using System.IO;
 using Fabros.Ecs;
+using Fabros.Ecs.ClientServer.Serializer;
 using Leopotam.EcsLite;
 using UnityEngine;
 

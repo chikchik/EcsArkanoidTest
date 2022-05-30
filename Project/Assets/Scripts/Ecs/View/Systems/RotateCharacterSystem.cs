@@ -1,3 +1,4 @@
+using Fabros.Ecs.Client.Components;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Leopotam.EcsLite;
@@ -22,20 +23,16 @@ namespace Game.Ecs.Client.Systems
             
             foreach (var entity in filter)
             {
-                var transform = poolTransform.Get(entity).transform;
+                var transform = poolTransform.Get(entity).Transform;
                 var direction = poolLookDirection.Get(entity).value;
 
                 if (Mathf.Approximately(direction.magnitude, 0))
                     continue;
-                //if (direction.magnitude < 0.99)
-                  //  continue;
 
                 var lerp = poolLerp.GetNullable(entity)?.value??1f;
                 
                 var quat = Quaternion.LookRotation(direction);
                 transform.localRotation = Quaternion.Lerp(transform.localRotation, quat, lerp);
-                
-                //transform.forward = direction.normalized;
             }
         }
     }

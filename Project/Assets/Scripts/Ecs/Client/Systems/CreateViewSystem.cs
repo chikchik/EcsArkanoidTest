@@ -1,5 +1,6 @@
-﻿using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Base.Components;
+﻿using Fabros.Ecs.Client.Components;
+using Fabros.Ecs.ClientServer.Components;
+using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.View;
@@ -17,7 +18,7 @@ namespace Game.Ecs.Client.Systems
             var viewComponent = world.GetUnique<ClientViewComponent>();
 
             var filter = world.Filter<GameObjectNameComponent>()
-                .Exc<GameObjectComponent>().End();
+                .Exc<TransformComponent>().End();
 
             foreach (var entity in filter)
             {
@@ -25,8 +26,8 @@ namespace Game.Ecs.Client.Systems
                 var go = GameObject.Find(name).gameObject;
                 go.gameObject.SetActive(true);
 
-                entity.EntityAddComponent<GameObjectComponent>(world).GameObject = go;
-                entity.EntityAddComponent<TransformComponent>(world).transform = go.transform;
+
+                entity.EntityAddComponent<TransformComponent>(world).Transform = go.transform;
 
                 if (entity.EntityHasComponent<CollectableComponent>(world))
                 {
@@ -37,25 +38,22 @@ namespace Game.Ecs.Client.Systems
             }
 
             var filterUnits = world.Filter<UnitComponent>()
-                .Exc<GameObjectComponent>().End();
+                .Exc<TransformComponent>().End();
 
             foreach (var entity in filterUnits)
             {
                 var characterView = Object.Instantiate(viewComponent.Global.characterPrefab);
 
-                ref var component = ref entity.EntityAddComponent<GameObjectComponent>(world);
-                component.GameObject = characterView.gameObject;
+                ref var component = ref entity.EntityAddComponent<TransformComponent>(world);
+                component.Transform = characterView.transform;
                 
-                ref var transformComponent = ref entity.EntityAddComponent<TransformComponent>(world);
-                transformComponent.transform = characterView.transform;
-
                 ref var animatorComponent = ref entity.EntityAddComponent<AnimatorComponent>(world);
                 animatorComponent.animator = characterView.Animator;
 
                 var position = entity.EntityGet<PositionComponent>(world).value;
                 //entity.EntityAdd<RootMotionComponent>(world).Position = position;
 
-                transformComponent.transform.position = position;
+                component.Transform.position = position;
 
                 entity.EntityReplaceComponent<LerpComponent>(world).value = 0.5f;
             }

@@ -1,4 +1,4 @@
-using Fabros.EcsModules.Base.Components;
+using Fabros.Ecs.Client.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
@@ -26,7 +26,7 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filter)
             {
-                var transform = poolTransform.Get(entity).transform;
+                var transform = poolTransform.Get(entity).Transform;
                 var angle = poolRotation.Get(entity).value;
                 
                 var eulerAngle = transform.eulerAngles;

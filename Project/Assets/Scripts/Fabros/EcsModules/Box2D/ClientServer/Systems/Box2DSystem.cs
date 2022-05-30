@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
 using Game.Fabros.EcsModules.Box2D.ClientServer.Components;

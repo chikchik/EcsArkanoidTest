@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Base.Components;
 using Fabros.EcsModules.Grid.Other;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;

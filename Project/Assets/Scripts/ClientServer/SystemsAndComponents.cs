@@ -1,6 +1,7 @@
 ﻿using Fabros.Ecs;
-using Fabros.Ecs.Systems;
-using Fabros.EcsModules.Base.Components;
+using Fabros.Ecs.ClientServer.Components;
+using Fabros.Ecs.ClientServer.Serializer;
+using Fabros.Ecs.ClientServer.Systems;
 using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Tick;
 using Game.Ecs.ClientServer.Components;

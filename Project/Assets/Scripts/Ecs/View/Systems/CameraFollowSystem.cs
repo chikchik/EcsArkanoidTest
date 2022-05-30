@@ -1,3 +1,4 @@
+using Fabros.Ecs.Client.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.Client.Components;
 using Leopotam.EcsLite;
@@ -25,7 +26,7 @@ namespace Game.Ecs.Client.Systems
             var deltaTime = Time.deltaTime;
 
             var clientPlayerComponent = world.GetUnique<ClientPlayerComponent>();
-            var targetEntityTransform = poolTransform.Get(clientPlayerComponent.entity).transform;
+            var targetEntityTransform = poolTransform.Get(clientPlayerComponent.entity).Transform;
             var targetPosition = targetEntityTransform.position + CameraOffset;
 
             camera.transform.position = Vector3.Lerp(

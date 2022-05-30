@@ -1,6 +1,9 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Fabros.Ecs;
+using Fabros.Ecs.Client.Components;
+using Fabros.Ecs.ClientServer.Components;
+using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
@@ -274,15 +277,9 @@ namespace Game.Fabros.Net.Client
                             if (entity.EntityHas<LocalEntityComponent>(MainWorld))
                                 return;
 
-                            if (entity.EntityHasComponent<GameObjectComponent>(MainWorld))
+                            if (entity.EntityHasComponent<TransformComponent>(MainWorld))
                             {
-                                var go = entity.EntityGetComponent<GameObjectComponent>(MainWorld).GameObject;
-                                Object.Destroy(go);
-                            }
-
-                            if (entity.EntityHasComponent<FireViewComponent>(MainWorld))
-                            {
-                                var go = entity.EntityGetComponent<FireViewComponent>(MainWorld).view.gameObject;
+                                var go = entity.EntityGetComponent<TransformComponent>(MainWorld).Transform.gameObject;
                                 Object.Destroy(go);
                             }
 

@@ -1,4 +1,5 @@
-using Fabros.EcsModules.Base.Components;
+using Fabros.Ecs.Client.Components;
+using Fabros.Ecs.ClientServer.Components;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
@@ -34,7 +35,7 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filter)
             {
-                var transform = poolTransform.Get(entity).transform;
+                var transform = poolTransform.Get(entity).Transform;
                 var targetPosition = poolPosition.Get(entity).value;
                 
                 var lerp = poolLerp.GetNullable(entity)?.value??1f;
