@@ -31,10 +31,10 @@ class MyContactListener : public b2ContactListener
 
     MyContactListener(b2World* world) : m_world(world) {};
 
-    Callback m_callbackBeginContact = NULL;
-    Callback m_callbackEndContact = NULL;
-    Callback m_callbackPreSolve = NULL;
-    Callback m_callbackPostSolve = NULL;
+    CollisionCallback m_callbackBeginContact = NULL;
+    CollisionCallback m_callbackEndContact = NULL;
+    CollisionCallback m_callbackPreSolve = NULL;
+    CollisionCallback m_callbackPostSolve = NULL;
 };
 
 #endif

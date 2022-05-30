@@ -11,7 +11,8 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
 #else
         private const string DllName = "libbox2d";
 #endif
-        public delegate void CallbackDelegate(CollisionCallbackData callbackData);
+        public delegate void DbgCallback(string str);
+        public delegate void CollisionCallback(CollisionCallbackData callbackData);
         public delegate void DrawDbgCircleCallback(Vector2 center, float radius, Box2dColor color);
         public delegate void DrawDbgSegmentCallback(Vector2 v1, Vector2 v2, Box2dColor color);
         public delegate void DrawDbgTransformCallback(Vector2 v, Vector2 angle, Box2dColor color);
@@ -20,9 +21,12 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
             [MarshalAs(UnmanagedType.LPArray, SizeConst = 10)] [Out] Vector2[] v,
             Int32 vCount, Box2dColor color);
         
+        public delegate void ListOfPointersCallback(Int32 count, 
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IntPtr[] ptrArray);
+        
         [DllImport(DllName)]
-        public static extern void SetContactCallbacks(IntPtr world, CallbackDelegate beginContact,
-            CallbackDelegate endContact, CallbackDelegate preSolve, CallbackDelegate postSolve);
+        public static extern void SetContactCallbacks(IntPtr world, CollisionCallback beginContact,
+            CollisionCallback endContact, CollisionCallback preSolve, CollisionCallback postSolve);
         
         [DllImport(DllName)]
         public static extern IntPtr UpdateWorld(IntPtr world, float timeStep, int velocityIterations,
@@ -124,22 +128,23 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
         public static extern void SetAngularDamping(IntPtr body, float val);
         
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetBeginContactCallback(IntPtr worldPtr, CallbackDelegate callback);
+        public static extern void SetBeginContactCallback(IntPtr worldPtr, CollisionCallback callback);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetEndContactCallback(IntPtr worldPtr, CallbackDelegate callback);
+        public static extern void SetEndContactCallback(IntPtr worldPtr, CollisionCallback callback);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetPreSolveCallback(IntPtr worldPtr, CallbackDelegate callback);
+        public static extern void SetPreSolveCallback(IntPtr worldPtr, CollisionCallback callback);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetPostSolveCallback(IntPtr worldPtr, CallbackDelegate callback);
+        public static extern void SetPostSolveCallback(IntPtr worldPtr, CollisionCallback callback);
 
         [DllImport(DllName)]
         public static extern B2Filter GetBodyFixturesFilterData(IntPtr body);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetDebugDraw(IntPtr world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
+        public static extern void SetDebugDraw(IntPtr world, DrawDbgCircleCallback drawCircle,
+            DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
             DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
 
 
@@ -198,7 +203,18 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
         [DllImport(DllName)]
         public static extern void ApplyAngularImpulse(IntPtr body, float impulse, bool wake);
 
+        [DllImport(DllName)]
+        public static extern void TryGetContactList(IntPtr body,
+            ListOfPointersCallback success, DbgCallback cb);
+        
+        [DllImport(DllName)]
+        public static extern void TryGetContactInfoForBodies(IntPtr body1,
+            IntPtr body2, CollisionCallback success);
 
+        // Marshal.PtrToStructure<CollisionCallbackData>(ptr)
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
+        public static extern void TryGetContactInfosForBody(IntPtr body,
+            ListOfPointersCallback success);
 
     }
 }

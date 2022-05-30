@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
 {
+    [StructLayout(LayoutKind.Sequential)]
     public struct CollisionCallbackData
     {
         public IntPtr PhysicsWorld;

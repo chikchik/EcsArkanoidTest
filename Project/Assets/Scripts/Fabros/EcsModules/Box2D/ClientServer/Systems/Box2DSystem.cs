@@ -14,10 +14,10 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Systems
 {
     public class Box2DSystem : IEcsInitSystem, IEcsRunSystem, IEcsDestroySystem, IEcsWorldChangedSystem
     {
-        private Box2DApi.CallbackDelegate _cbkBeginContactDelegate;
-        private Box2DApi.CallbackDelegate _cbkEndContactDelegate;
-        private Box2DApi.CallbackDelegate _cbkPostSolveDelegate;
-        private Box2DApi.CallbackDelegate _cbkPreSolveDelegate;
+        private Box2DApi.CollisionCallback _cbkBeginContactDelegate;
+        private Box2DApi.CollisionCallback _cbkEndContactDelegate;
+        private Box2DApi.CollisionCallback _cbkPostSolveDelegate;
+        private Box2DApi.CollisionCallback _cbkPreSolveDelegate;
         
         private EcsWorld world;
         
