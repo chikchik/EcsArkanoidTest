@@ -73,12 +73,13 @@ int main()
      SetLinearVelocity(boxes[1], force);
      SetAngularVelocity(boxes[1], 20);
 
+     auto bodiesRef = reinterpret_cast<void**>(boxes);
 
 
      for(int32 i = 0; i < 1000; i++)
      {
          UpdateWorld(world, timeStep, velocityIterations, positionIterations);
-         //world = CloneWorld(bodiesRef, 2, world);
+         world = CloneWorld(bodiesRef, 2, world);
          Vector2 position = GetPosition(boxes[2]);
          float angle = GetAngle(boxes[2]);
 
