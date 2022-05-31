@@ -397,19 +397,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
 
         [DllImport(DllName)]
         public static extern void SetJointRatio(IntPtr joint, float ratio);
-
-        [DllImport(DllName)]
-        public static extern int GetMotorJointTypeA(IntPtr joint);
-
-        [DllImport(DllName)]
-        public static extern int GetMotorJointTypeB(IntPtr joint);
-
-        [DllImport(DllName)]
-        public static extern IntPtr GetMotorJointBodyC(IntPtr joint);
-
-        [DllImport(DllName)]
-        public static extern IntPtr GetMotorJointBodyD(IntPtr joint);
-
+        
 // DISTANCE JOINT
         [DllImport(DllName)]
         public static extern float GetJointLength(IntPtr joint);

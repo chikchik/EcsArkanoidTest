@@ -109,6 +109,7 @@ b2World::b2World(void** arrayOfReferences, const int& count,
 
 b2World::~b2World()
 {
+	m_debugDraw = nullptr;
 	// Some shapes allocate using b2Alloc.
 	b2Body* b = m_bodyList;
 	while (b)
