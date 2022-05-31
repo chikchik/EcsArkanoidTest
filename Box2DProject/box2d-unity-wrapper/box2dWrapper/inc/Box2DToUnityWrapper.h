@@ -20,16 +20,16 @@
 
 extern "C"
 {
-    DllExport void SetBeginContactCallback(b2World* world, Callback callback);
+    DllExport void SetBeginContactCallback(b2World* world, CollisionCallback callback);
 
-    DllExport void SetEndContactCallback(b2World* world, Callback callback);
+    DllExport void SetEndContactCallback(b2World* world, CollisionCallback callback);
 
-    DllExport void SetPreSolveCallback(b2World* world, Callback callback);
+    DllExport void SetPreSolveCallback(b2World* world, CollisionCallback callback);
 
-    DllExport void SetPostSolveCallback(b2World* world, Callback callback);
+    DllExport void SetPostSolveCallback(b2World* world, CollisionCallback callback);
 
-    DllExport void SetContactCallbacks(b2World* world, Callback beginContact,
-        Callback endContact, Callback preSolve, Callback postSolve);
+    DllExport void SetContactCallbacks(b2World* world, CollisionCallback beginContact,
+        CollisionCallback endContact, CollisionCallback preSolve, CollisionCallback postSolve);
 
     DllExport void SetDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle,
         DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
@@ -49,8 +49,11 @@ extern "C"
 
     DllExport b2World* CreateWorld(Vector2 gravity);
 
-    DllExport CollisionCallbackData TryGetContactInfoForBodies(b2Body* body1,
-        b2Body* body2);
+    DllExport void TryGetContactInfoForBodies(b2Body* body1,
+        b2Body* body2, CollisionCallback cb);
+
+    DllExport void TryGetContactInfosForBody(b2Body* body,
+        ListOfPointersCallback cb);
 
     DllExport void DestroyWorld(b2World* world);
 
@@ -68,14 +71,22 @@ extern "C"
     DllExport b2Body* CreateBody(b2World* world, int bodyType,
         Vector2 position, float angle, int entity);
 
+    DllExport int GetJointListCount(b2Body* body);
+
+    DllExport void TryGetJointListFromBody(b2Body* body, ListOfPointersCallback cb);
+
+    DllExport b2Joint* CreateJoint(b2World* world, int jointType,
+        b2Body* bodyA, b2Body* bodyB, bool isCollideConnected);
+
+    DllExport void DestroyJoint(b2World* world, b2Joint* joint);
+
     DllExport void AddFixtureToBody(b2Body* body, b2Shape* shape,
         float density, float friction, float restitution,
         float restitutionThreshold, bool isTrigger, b2Filter filter);
     
     DllExport int GetContactListCount(b2Body* body);
 
-    DllExport void GetContactList(b2Body* body,
-        SAFEARRAY*& dataArr, CallbackDebug cb);
+    DllExport void TryGetContactList(b2Body* body, ListOfPointersCallback successCb);
 
     DllExport int GetEntityFromBody(b2Body* body);
 

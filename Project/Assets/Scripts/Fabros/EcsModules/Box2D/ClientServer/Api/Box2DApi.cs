@@ -11,7 +11,8 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
 #else
         private const string DllName = "libbox2d";
 #endif
-        public delegate void CallbackDelegate(CollisionCallbackData callbackData);
+        public delegate void DbgCallback(string str);
+        public delegate void CollisionCallback(CollisionCallbackData callbackData);
         public delegate void DrawDbgCircleCallback(Vector2 center, float radius, Box2dColor color);
         public delegate void DrawDbgSegmentCallback(Vector2 v1, Vector2 v2, Box2dColor color);
         public delegate void DrawDbgTransformCallback(Vector2 v, Vector2 angle, Box2dColor color);
@@ -20,9 +21,12 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
             [MarshalAs(UnmanagedType.LPArray, SizeConst = 10)] [Out] Vector2[] v,
             Int32 vCount, Box2dColor color);
         
+        public delegate void ListOfPointersCallback(Int32 count, 
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IntPtr[] ptrArray);
+        
         [DllImport(DllName)]
-        public static extern void SetContactCallbacks(IntPtr world, CallbackDelegate beginContact,
-            CallbackDelegate endContact, CallbackDelegate preSolve, CallbackDelegate postSolve);
+        public static extern void SetContactCallbacks(IntPtr world, CollisionCallback beginContact,
+            CollisionCallback endContact, CollisionCallback preSolve, CollisionCallback postSolve);
         
         [DllImport(DllName)]
         public static extern IntPtr UpdateWorld(IntPtr world, float timeStep, int velocityIterations,
@@ -124,22 +128,23 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
         public static extern void SetAngularDamping(IntPtr body, float val);
         
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetBeginContactCallback(IntPtr worldPtr, CallbackDelegate callback);
+        public static extern void SetBeginContactCallback(IntPtr worldPtr, CollisionCallback callback);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetEndContactCallback(IntPtr worldPtr, CallbackDelegate callback);
+        public static extern void SetEndContactCallback(IntPtr worldPtr, CollisionCallback callback);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetPreSolveCallback(IntPtr worldPtr, CallbackDelegate callback);
+        public static extern void SetPreSolveCallback(IntPtr worldPtr, CollisionCallback callback);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetPostSolveCallback(IntPtr worldPtr, CallbackDelegate callback);
+        public static extern void SetPostSolveCallback(IntPtr worldPtr, CollisionCallback callback);
 
         [DllImport(DllName)]
         public static extern B2Filter GetBodyFixturesFilterData(IntPtr body);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetDebugDraw(IntPtr world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
+        public static extern void SetDebugDraw(IntPtr world, DrawDbgCircleCallback drawCircle,
+            DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
             DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
 
 
@@ -198,7 +203,169 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
         [DllImport(DllName)]
         public static extern void ApplyAngularImpulse(IntPtr body, float impulse, bool wake);
 
+        [DllImport(DllName)]
+        public static extern void TryGetContactList(IntPtr body,
+            ListOfPointersCallback success, DbgCallback cb);
+        
+        [DllImport(DllName)]
+        public static extern void TryGetContactInfoForBodies(IntPtr body1,
+            IntPtr body2, CollisionCallback success);
 
+        // Marshal.PtrToStructure<CollisionCallbackData>(ptr)
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
+        public static extern void TryGetContactInfosForBody(IntPtr body,
+            ListOfPointersCallback success);
+        
+        
+        // JOINTS COMMON
+        [DllImport(DllName)]
+        public static extern IntPtr CreateJoint(IntPtr world, int jointType,
+            IntPtr bodyA, IntPtr bodyB, bool isCollideConnected);
+        
+        [DllImport(DllName)]
+        public static extern void DestroyJoint(IntPtr world, IntPtr joint);
+        
+        [DllImport(DllName)]
+        public static extern int GetJointListCount(IntPtr body);
+        
+        [DllImport(DllName)]
+        public static extern void TryGetJointListFromBody(IntPtr body, ListOfPointersCallback cb);
+                    
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointAnchorA(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointAnchorB(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointReactionForce(IntPtr joint, float inv_dt);
+
+        [DllImport(DllName)]
+        public static extern float GetJointReactionTorque(IntPtr joint, float inv_dt);
+        
+        [DllImport(DllName)]
+        public static extern IntPtr GetJointBodyA(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern IntPtr GetJointBodyB(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern bool IsJointEnabled(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void ShiftJointOrigin(IntPtr joint, Vector2 newOrigin);
+
+        // DISTANCE JOINTS
+        [DllImport(DllName)]
+        public static extern float GetJointLength(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float SetJointLength(IntPtr joint, float length);
+
+        [DllImport(DllName)]
+        public static extern float GetJointMinLength(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float SetJointMinLength(IntPtr joint, float minLength);
+
+        [DllImport(DllName)]
+        public static extern float GetJointMaxLength(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float SetJointMaxLength(IntPtr joint, float maxLength);
+
+        [DllImport(DllName)]
+        public static extern float GetJointCurrentLength(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointStiffness(IntPtr joint, float stiffness);
+
+        [DllImport(DllName)]
+        public static extern float GetJointStiffness(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointDamping(IntPtr joint, float damping);
+
+        [DllImport(DllName)]
+        public static extern float GetJointDamping(IntPtr joint);
+        
+        
+        // REVOLUTE JOINTS
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointLocalAnchorA(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointLocalAnchorB(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointReferenceAngle(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointAngle(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointSpeed(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern bool IsJointLimitEnabled(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void EnableJointLimit(IntPtr joint, bool flag);
+
+        [DllImport(DllName)]
+        public static extern float GetJointLowerLimit(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointUpperLimit(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointLimits(IntPtr joint, float lower, float upper);
+
+        [DllImport(DllName)]
+        public static extern bool IsJointMotorEnabled(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void EnableJointMotor(IntPtr joint, bool flag);
+
+        [DllImport(DllName)]
+        public static extern void SetJointMotorSpeed(IntPtr joint, float speed);
+
+        [DllImport(DllName)]
+        public static extern float GetJointMotorSpeed(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointMaxMotorTorque(IntPtr joint, float torque);
+
+        [DllImport(DllName)]
+        public static extern float GetJointMaxMotorTorque(IntPtr joint);
+        
+        [DllImport(DllName)]
+        public static extern float GetJointMotorTorque(IntPtr joint, float inv_dt);
+        
+        // MOUSE JOINT
+        [DllImport(DllName)]
+        public static extern void SetTarget(IntPtr joint, Vector2 target);
+
+        [DllImport(DllName)]
+        public static extern Vector2 GetTarget(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetMaxForce(IntPtr joint, float force);
+
+        [DllImport(DllName)]
+        public static extern float GetMaxForce(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetStiffness(IntPtr joint, float stiffness);
+
+        [DllImport(DllName)]
+        public static extern float GetStiffness(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetDamping(IntPtr joint, float damping);
+
+        [DllImport(DllName)]
+        public static extern float GetDamping(IntPtr joint);
 
     }
 }

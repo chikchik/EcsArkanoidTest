@@ -1,29 +1,31 @@
 #include <Box2DToUnityWrapper.h>
 
+#include <stdio.h>
+
 extern "C"
 {
-    DllExport void SetBeginContactCallback(b2World* world, Callback callback)
+    DllExport void SetBeginContactCallback(b2World* world, CollisionCallback callback)
     {
         ((MyContactListener*)world -> GetContactListener()) -> m_callbackBeginContact = callback;
     }
 
-    DllExport void SetEndContactCallback(b2World* world, Callback callback)
+    DllExport void SetEndContactCallback(b2World* world, CollisionCallback callback)
     {
         ((MyContactListener*)world -> GetContactListener()) -> m_callbackEndContact = callback;
     }
 
-    DllExport void SetPreSolveCallback(b2World* world, Callback callback)
+    DllExport void SetPreSolveCallback(b2World* world, CollisionCallback callback)
     {
         ((MyContactListener*)world -> GetContactListener()) -> m_callbackPreSolve = callback;
     }
 
-    DllExport void SetPostSolveCallback(b2World* world, Callback callback)
+    DllExport void SetPostSolveCallback(b2World* world, CollisionCallback callback)
     {
         ((MyContactListener*)world -> GetContactListener()) -> m_callbackPostSolve = callback;
     }
 
-    DllExport void SetContactCallbacks(b2World* world, Callback beginContact,
-        Callback endContact, Callback preSolve, Callback postSolve)
+    DllExport void SetContactCallbacks(b2World* world, CollisionCallback beginContact,
+        CollisionCallback endContact, CollisionCallback preSolve, CollisionCallback postSolve)
     {
         SetBeginContactCallback(world, beginContact);
         SetEndContactCallback(world, endContact);
@@ -70,11 +72,6 @@ extern "C"
 
         // do we need to set all callbacks manually?
         MyContactListener* myContactListener = new MyContactListener(clonedWorld);
-        MyContactListener* oldContactListener = (MyContactListener*)world->GetContactListener();
-        //myContactListener->m_callbackBeginContact = oldContactListener->m_callbackBeginContact;
-        //myContactListener->m_callbackEndContact = oldContactListener->m_callbackEndContact;
-        //myContactListener->m_callbackPreSolve = oldContactListener->m_callbackPreSolve;
-        //myContactListener->m_callbackPostSolve = oldContactListener->m_callbackPostSolve;
         clonedWorld->SetContactListener(myContactListener);
         // same here
 
@@ -106,7 +103,6 @@ extern "C"
         return body -> GetWorld();
     }
 
-
     DllExport int GetContactListCount(b2Body* body)
     {
         int size = 0;
@@ -117,53 +113,36 @@ extern "C"
         return size;
     }
 
-    DllExport void GetContactList(b2Body* body, SAFEARRAY*& dataArr, CallbackDebug cb)
+    DllExport int GetJointListCount(b2Body* body)
     {
-        int size = GetContactListCount(body);
-
-        if (size == 0) return;
-
-        // Creation of a new SAFEARRAY
-        SAFEARRAYBOUND bounds;
-        bounds.lLbound = 0;
-        bounds.cElements = size;
-
-        dataArr = SafeArrayCreate(VT_I4, 1, &bounds);
-        int* pVals;
-
-        HRESULT hr = SafeArrayAccessData(dataArr, (void**)&pVals); // direct access to SA memory
-        cb("hr");
-
-        if (SUCCEEDED(hr))
+        int size = 0;
+        for (const b2JointEdge* cE = body->GetJointList(); cE; cE = cE->next)
         {
-            ULONG i = 0;
-            for (b2ContactEdge* cE = body -> GetContactList(); 
-                cE && i < bounds.cElements; cE = cE->next, i++)
-            {
-                pVals[i] = (int)cE -> other;
-                cb("SUCCEEDED");
-            }
-            
+            size++;
         }
-        else
-        {
-            cb("!SUCCEEDED");
-            return;
-        }
-        hr = SafeArrayUnaccessData(dataArr);
-        if (SUCCEEDED(hr))
-        {
-            cb("SUCCEEDED");
-        }
-        else
-        {
-            cb("!SUCCEEDED");
-        }
+        return size;
     }
 
-    DllExport CollisionCallbackData TryGetContactInfoForBodies(b2Body* body1, b2Body* body2)
+    DllExport void TryGetContactList(b2Body* body, ListOfPointersCallback successCb)
     {
-        b2Contact* myContact = NULL;
+        int count = GetContactListCount(body);
+        if (count == 0) return;
+
+        b2Body** ptrArray = new b2Body*[count];
+
+        int i = 0;
+        for (b2ContactEdge* cE = body -> GetContactList(); 
+            cE; cE = cE->next, ++i)
+        {
+            ptrArray[i] = cE -> other;
+        }
+
+        successCb(count, (void**)ptrArray);
+        delete ptrArray;
+    }
+
+    CollisionCallbackData GetContactInfoFromContact(b2Contact* contact)
+    {
         CollisionCallbackData data
         {
             NULL,               //physicsWorld
@@ -175,38 +154,28 @@ extern "C"
             2,                  //contactPointCount
             {0, 0}              //normal
         };
-        for (b2ContactEdge* cE = body1 -> GetContactList(); cE; cE = cE->next)
-		{
-            if (cE -> other == body2)
-            {
-                myContact = cE -> contact;
-                break;
-            }
-		}
-
-        if (myContact == NULL) return data;
 
         b2WorldManifold worldManifold;
-        myContact -> GetWorldManifold(&worldManifold);
+        contact->GetWorldManifold(&worldManifold);
 
-        data.physicsWorld = myContact->GetFixtureA()->GetBody()->GetWorld();
-        data.entityA = (int)myContact->GetFixtureA()->GetBody()->GetUserData().pointer;
-        data.entityB = (int)myContact->GetFixtureB()->GetBody()->GetUserData().pointer;
-        b2Vec2 b2dVelA = myContact->GetFixtureA()->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold.points[0]);
-        Vector2 velA {
+        data.physicsWorld = contact->GetFixtureA()->GetBody()->GetWorld();
+        data.entityA = (int)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
+        data.entityB = (int)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
+        b2Vec2 b2dVelA = contact->GetFixtureA()->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold.points[0]);
+        Vector2 velA{
             b2dVelA.x,
             b2dVelA.y
         };
         data.velA = velA;
 
-        b2Vec2 b2dVelB = myContact->GetFixtureB()->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold.points[1]);
-        Vector2 velB {
+        b2Vec2 b2dVelB = contact->GetFixtureB()->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold.points[1]);
+        Vector2 velB{
             b2dVelB.x,
             b2dVelB.y
         };
         data.velB = velB;
 
-        size_t length = (sizeof(worldManifold.points)/sizeof(*worldManifold.points));
+        size_t length = (sizeof(worldManifold.points) / sizeof(*worldManifold.points));
         memcpy(data.contactPoints, worldManifold.points, length * sizeof(Vector2));
         data.contactPointCount = 2;
 
@@ -220,11 +189,85 @@ extern "C"
         return data;
     }
 
+    DllExport void TryGetContactInfosForBody(b2Body* body, ListOfPointersCallback cb)
+    {
+        int count = GetContactListCount(body);
+        if (count <= 0) return;
+
+        b2Contact* myContact = NULL;
+        CollisionCallbackData **collisionDataArray = new CollisionCallbackData*[count];
+
+        int i = 0;
+        for (b2ContactEdge* cE = body->GetContactList(); cE; cE = cE->next, ++i)
+        {
+            myContact = cE->contact;
+            collisionDataArray[i] = &GetContactInfoFromContact(myContact);
+        }
+
+
+        cb(count, (void**)collisionDataArray);
+        delete collisionDataArray;
+    }
+
+    DllExport void TryGetJointListFromBody(b2Body* body, ListOfPointersCallback cb)
+    {
+        int count = GetJointListCount(body);
+        if (count <= 0) return;
+
+        b2Joint** myJoint = new b2Joint*[count];
+
+        int i = 0;
+        for (b2JointEdge* j = body->GetJointList(); j; j = j->next, ++i)
+        {
+            myJoint[i] = j->joint;
+        }
+
+
+        cb(count, (void**)myJoint);
+        delete myJoint;
+    }
+
+    DllExport void TryGetContactInfoForBodies(b2Body* body1, b2Body* body2, CollisionCallback cb)
+    {
+        b2Contact* myContact = NULL;
+
+        for (b2ContactEdge* cE = body1 -> GetContactList(); cE; cE = cE->next)
+		{
+            if (cE -> other == body2)
+            {
+                myContact = cE -> contact;
+                break;
+            }
+        }
+
+        if (myContact == NULL) return;
+
+        CollisionCallbackData data = GetContactInfoFromContact(myContact);
+
+        cb(data);
+    }
+
     DllExport void DestroyWorld(b2World* world)
     {
         b2ContactListener* myContactListener = world->GetContactListener();
         delete myContactListener;
         delete world;
+    }
+
+    DllExport b2Joint* CreateJoint(b2World* world, int jointType,
+        b2Body* bodyA, b2Body* bodyB, bool isCollideConnected)
+    {
+        b2JointDef def;
+        def.type = (b2JointType)jointType;
+        def.bodyA = bodyA;
+        def.bodyB = bodyB;
+        def.collideConnected = isCollideConnected;
+        return world->CreateJoint(&def);
+    }
+
+    DllExport void DestroyJoint(b2World* world, b2Joint* joint)
+    {
+        world->DestroyJoint(joint);
     }
 
     DllExport b2Body* CreateBody(b2World* world, int bodyType, Vector2 position, float angle, int entity)
@@ -572,4 +615,7 @@ extern "C"
 
         return true;
     }
+
+    // JOINTS
+
 }

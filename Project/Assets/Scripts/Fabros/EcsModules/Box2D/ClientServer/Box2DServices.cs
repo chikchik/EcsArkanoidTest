@@ -82,6 +82,6 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer
         public static extern int GetEntityFromBody(IntPtr body);
 
         [DllImport(DllName)]
-        public static extern IntPtr GetWorldFromBody(this IntPtr body);
+        public static extern IntPtr GetWorldFromBody(IntPtr body);
     }
 }
