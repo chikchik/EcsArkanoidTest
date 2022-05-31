@@ -341,6 +341,31 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
         
         [DllImport(DllName)]
         public static extern float GetJointMotorTorque(IntPtr joint, float inv_dt);
+        
+        // MOUSE JOINT
+        [DllImport(DllName)]
+        public static extern void SetTarget(IntPtr joint, Vector2 target);
+
+        [DllImport(DllName)]
+        public static extern Vector2 GetTarget(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetMaxForce(IntPtr joint, float force);
+
+        [DllImport(DllName)]
+        public static extern float GetMaxForce(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetStiffness(IntPtr joint, float stiffness);
+
+        [DllImport(DllName)]
+        public static extern float GetStiffness(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetDamping(IntPtr joint, float damping);
+
+        [DllImport(DllName)]
+        public static extern float GetDamping(IntPtr joint);
 
     }
 }
