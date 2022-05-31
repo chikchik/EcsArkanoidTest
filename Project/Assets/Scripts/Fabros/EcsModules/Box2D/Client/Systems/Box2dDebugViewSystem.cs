@@ -18,12 +18,6 @@ namespace Fabros.EcsModules.Box2D.Client.Systems
                 return;
             
             var physicsWorld = world.GetUnique<PhysicsWorldComponent>().WorldReference;
-
-            var box2dDebugDrawFlags = (UInt32) (Box2dDebugDrawFlags.ShapeBit | Box2dDebugDrawFlags.JointBit |
-                                                Box2dDebugDrawFlags.AabbBit | Box2dDebugDrawFlags.PairBit |
-                                                Box2dDebugDrawFlags.CenterOfMassBit | Box2dDebugDrawFlags.ContactBit);
-            Box2DApi.SetFlagsForDebugDraw(physicsWorld, box2dDebugDrawFlags);
-
             _gizmosView = GameObject.FindObjectOfType<Box2dGizmosView>();
 
             if (!_gizmosView)
@@ -32,6 +26,11 @@ namespace Fabros.EcsModules.Box2D.Client.Systems
                 _gizmosView = go.AddComponent<Box2dGizmosView>();
             }
             _gizmosView.SetBox2D(physicsWorld);
+            
+            var box2dDebugDrawFlags = (UInt32) (Box2dDebugDrawFlags.ShapeBit | Box2dDebugDrawFlags.JointBit |
+                                                Box2dDebugDrawFlags.AabbBit | Box2dDebugDrawFlags.PairBit |
+                                                Box2dDebugDrawFlags.CenterOfMassBit | Box2dDebugDrawFlags.ContactBit);
+            Box2DApi.SetFlagsForDebugDraw(physicsWorld, box2dDebugDrawFlags);
         }
         
         public void Destroy(EcsSystems systems)
