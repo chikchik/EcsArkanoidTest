@@ -895,8 +895,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 310098415}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.10625169, y: 0.8728953, z: -0.4226216, w: 0.21944362}
+  m_LocalPosition: {x: -8.973274, y: 19.50552, z: 25.977764}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -935,7 +935,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 310098415}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a40d8f6d3964305bf43266306f0b9c0, type: 3}
   m_Name: 
@@ -947,7 +947,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 310098415}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e2d1c66bd77411eb4f2b3068d08afad, type: 3}
   m_Name: 
@@ -9116,6 +9116,7 @@ GameObject:
   - component: {fileID: 2040037192}
   - component: {fileID: 2040037191}
   - component: {fileID: 2040037190}
+  - component: {fileID: 2040037195}
   m_Layer: 0
   m_Name: Star (7)
   m_TagString: Untagged
@@ -9131,7 +9132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2040037188}
   m_LocalRotation: {x: 0, y: 0.33041552, z: 0, w: 0.94383556}
-  m_LocalPosition: {x: -4.66, y: 0.30537903, z: -2.47}
+  m_LocalPosition: {x: -2.73, y: 0.30537903, z: -4.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9257,6 +9258,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2040037188}
   m_Mesh: {fileID: -5801228030656462994, guid: 73ee9027b92364a41bf62ec9504f50ea, type: 3}
+--- !u!114 &2040037195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040037188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f10414d29cc4691aeaadeeefed099a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Connect: {fileID: 847741715}
 --- !u!1001 &2046901508
 PrefabInstance:
   m_ObjectHideFlags: 0

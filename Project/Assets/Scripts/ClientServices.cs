@@ -188,6 +188,14 @@ namespace Game.Client
                 ClientBox2DServices.CreateBody(world, entity, collider);
             });
             
+            forEachObject<JointConnect>(joint =>
+            {
+                var entityA = GetOrCreateGameEntity(joint.gameObject);
+                var entityB = GetOrCreateGameEntity(joint.Connect);
+                
+                //entityA.EntityAdd<>()
+            });
+            
             var unit = Object.FindObjectOfType<Global>().characterPrefab;
             
             var clips = unit.Animator.runtimeAnimatorController.animationClips;
