@@ -33,7 +33,7 @@ extern "C"
 
     DllExport void SetDebugDraw(b2World* world, b2Draw* debugDraw);
 
-    DllExport b2Draw* CreateBox2dDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
+    DllExport b2Draw* CreateBox2dDebugDraw(DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
         DrawDbgSegmentCallback drawSegment, DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
 
     DllExport void DebugDraw(b2World* world);
