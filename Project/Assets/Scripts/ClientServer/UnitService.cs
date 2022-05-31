@@ -48,7 +48,7 @@ namespace Game.ClientServer
             rigidBodyDefinitionComponent.RestitutionThreshold = 0.5f;   
 
             ref var collider = ref entity.EntityAddComponent<CircleColliderComponent>(world);
-            collider.Radius = 0.3f;
+            collider.Radius = 0.4f;
 
             entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();
             
