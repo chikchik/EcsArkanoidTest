@@ -31,9 +31,10 @@ extern "C"
     DllExport void SetContactCallbacks(b2World* world, CollisionCallback beginContact,
         CollisionCallback endContact, CollisionCallback preSolve, CollisionCallback postSolve);
 
-    DllExport void SetDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle,
-        DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
-        DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
+    DllExport void SetDebugDraw(b2World* world, b2Draw* debugDraw);
+
+    DllExport b2Draw* CreateBox2dDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
+        DrawDbgSegmentCallback drawSegment, DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
 
     DllExport void DebugDraw(b2World* world);
 

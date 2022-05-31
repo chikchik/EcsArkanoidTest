@@ -150,9 +150,12 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         public static extern B2Filter GetBodyFixturesFilterData(IntPtr body);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetDebugDraw(IntPtr world, DrawDbgCircleCallback drawCircle,
-            DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
-            DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
+        public static extern void SetDebugDraw(IntPtr world, IntPtr debugDraw);
+        
+        [DllImport(DllName)]
+        public static extern IntPtr CreateBox2dDebugDraw(IntPtr world, DrawDbgCircleCallback drawCircle,
+                DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
+                DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
 
 
         [DllImport(DllName)]

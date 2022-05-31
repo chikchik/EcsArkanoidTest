@@ -14,7 +14,6 @@ class MyDebugDraw : public b2Draw
     DrawDbgTransformCallback m_drawTransform;
     DrawDbgPolygonCallback m_drawPolygon;
 
-
     MyDebugDraw(DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
         DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
 
