@@ -66,7 +66,7 @@ int main()
      b2Body* b1 = boxes[1];
      b2Body* b2 = boxes[2];
 
-     b2Joint* j = CreateJoint(world, b2JointType::e_distanceJoint, boxes[1], boxes[2], true);
+     b2Joint* j = CreateJoint(world, b2JointType::e_revoluteJoint, boxes[1], boxes[2], true);
      SetJointMaxLength(j, 50);
 
 

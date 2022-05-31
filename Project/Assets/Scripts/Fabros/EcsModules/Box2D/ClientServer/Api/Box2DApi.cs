@@ -217,7 +217,7 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
             ListOfPointersCallback success);
         
         
-        // JOINTS
+        // JOINTS COMMON
         [DllImport(DllName)]
         public static extern IntPtr CreateJoint(IntPtr world, int jointType,
             IntPtr bodyA, IntPtr bodyB, bool isCollideConnected);
@@ -230,8 +230,7 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
         
         [DllImport(DllName)]
         public static extern void TryGetJointListFromBody(IntPtr body, ListOfPointersCallback cb);
-        
-            
+                    
         [DllImport(DllName)]
         public static extern Vector2 GetJointAnchorA(IntPtr joint);
 
@@ -243,7 +242,20 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
 
         [DllImport(DllName)]
         public static extern float GetJointReactionTorque(IntPtr joint, float inv_dt);
+        
+        [DllImport(DllName)]
+        public static extern IntPtr GetJointBodyA(IntPtr joint);
 
+        [DllImport(DllName)]
+        public static extern IntPtr GetJointBodyB(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern bool IsJointEnabled(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void ShiftJointOrigin(IntPtr joint, Vector2 newOrigin);
+
+        // DISTANCE JOINTS
         [DllImport(DllName)]
         public static extern float GetJointLength(IntPtr joint);
 
@@ -251,19 +263,19 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
         public static extern float SetJointLength(IntPtr joint, float length);
 
         [DllImport(DllName)]
-        public static extern float GetMinJointLength(IntPtr joint);
+        public static extern float GetJointMinLength(IntPtr joint);
 
         [DllImport(DllName)]
-        public static extern float SetMinJointLength(IntPtr joint, float minLength);
+        public static extern float SetJointMinLength(IntPtr joint, float minLength);
 
         [DllImport(DllName)]
-        public static extern float GetMaxJointLength(IntPtr joint);
+        public static extern float GetJointMaxLength(IntPtr joint);
 
         [DllImport(DllName)]
-        public static extern float SetMaxJointLength(IntPtr joint, float maxLength);
+        public static extern float SetJointMaxLength(IntPtr joint, float maxLength);
 
         [DllImport(DllName)]
-        public static extern float GetCurrentJointLength(IntPtr joint);
+        public static extern float GetJointCurrentLength(IntPtr joint);
 
         [DllImport(DllName)]
         public static extern void SetJointStiffness(IntPtr joint, float stiffness);
@@ -276,7 +288,59 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
 
         [DllImport(DllName)]
         public static extern float GetJointDamping(IntPtr joint);
+        
+        
+        // REVOLUTE JOINTS
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointLocalAnchorA(IntPtr joint);
 
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointLocalAnchorB(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointReferenceAngle(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointAngle(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointSpeed(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern bool IsJointLimitEnabled(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void EnableJointLimit(IntPtr joint, bool flag);
+
+        [DllImport(DllName)]
+        public static extern float GetJointLowerLimit(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointUpperLimit(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointLimits(IntPtr joint, float lower, float upper);
+
+        [DllImport(DllName)]
+        public static extern bool IsJointMotorEnabled(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void EnableJointMotor(IntPtr joint, bool flag);
+
+        [DllImport(DllName)]
+        public static extern void SetJointMotorSpeed(IntPtr joint, float speed);
+
+        [DllImport(DllName)]
+        public static extern float GetJointMotorSpeed(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointMaxMotorTorque(IntPtr joint, float torque);
+
+        [DllImport(DllName)]
+        public static extern float GetJointMaxMotorTorque(IntPtr joint);
+        
+        [DllImport(DllName)]
+        public static extern float GetJointMotorTorque(IntPtr joint, float inv_dt);
 
     }
 }

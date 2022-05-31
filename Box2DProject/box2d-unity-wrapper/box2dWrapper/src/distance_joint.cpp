@@ -1,43 +1,5 @@
 #include <distance_joint.h>
 
-DllExport Vector2 GetJointAnchorA(b2Joint* joint)
-{
-    b2Vec2 vv = static_cast<b2DistanceJoint*>(joint)->GetAnchorA();
-    Vector2 v
-    {
-        vv.x,
-        vv.y
-    };
-    return v;
-}
-
-DllExport Vector2 GetJointAnchorB(b2Joint* joint)
-{
-    b2Vec2 vv = static_cast<b2DistanceJoint*>(joint)->GetAnchorB();
-    Vector2 v
-    {
-        vv.x,
-        vv.y
-    };
-    return v;
-}
-
-DllExport Vector2 GetJointReactionForce(b2Joint* joint, float inv_dt)
-{
-    b2Vec2 vv = static_cast<b2DistanceJoint*>(joint)->GetReactionForce(inv_dt);
-    Vector2 v
-    {
-        vv.x,
-        vv.y
-    };
-    return v;
-}
-
-DllExport float GetJointReactionTorque(b2Joint* joint, float inv_dt)
-{
-    return static_cast<b2DistanceJoint*>(joint)->GetReactionTorque(inv_dt);
-}
-
 DllExport float GetJointLength(b2Joint* joint)
 {
     return static_cast<b2DistanceJoint*>(joint)->GetLength();
