@@ -24,13 +24,4 @@ DllExport float SetJointMaxLength(b2Joint* joint, float maxLength);
 
 DllExport float GetJointCurrentLength(b2Joint* joint);
 
-DllExport void SetJointStiffness(b2Joint* joint, float stiffness);
-
-DllExport float GetJointStiffness(b2Joint* joint);
-
-DllExport void SetJointDamping(b2Joint* joint, float damping);
-
-DllExport float GetJointDamping(b2Joint* joint);
-
-
 #endif

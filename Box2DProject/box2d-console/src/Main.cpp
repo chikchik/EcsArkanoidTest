@@ -5,6 +5,7 @@
 #include "box2d.h"
 #include "Box2DToUnityWrapper.h"
 #include "distance_joint.h"
+#include "joint.h"
 
 #include <stdio.h>
 #include <string>
@@ -67,6 +68,7 @@ int main()
      b2Body* b2 = boxes[2];
 
      b2Joint* j = CreateJoint(world, b2JointType::e_mouseJoint, boxes[1], boxes[2], true);
+     SetJointStiffness(j, 10);
      SetJointMaxLength(j, 50);
 
 

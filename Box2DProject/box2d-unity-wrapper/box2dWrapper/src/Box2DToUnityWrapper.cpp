@@ -33,12 +33,15 @@ extern "C"
         SetPostSolveCallback(world, postSolve);
     }
 
-    DllExport void SetDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
+    DllExport void SetDebugDraw(b2World* world, b2Draw* debugDraw)
+    {
+        world -> SetDebugDraw(debugDraw);
+    }
+
+    DllExport b2Draw* CreateBox2dDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
         DrawDbgSegmentCallback drawSegment, DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon)
     {
-        MyDebugDraw* dbgDraw = new MyDebugDraw(drawCircle, drawPoint, drawSegment, drawTransform, drawPolygon);
-
-        world -> SetDebugDraw(dbgDraw);
+        return new MyDebugDraw(drawCircle, drawPoint, drawSegment, drawTransform, drawPolygon);
     }
 
     DllExport void DebugDraw(b2World* world)
@@ -73,14 +76,7 @@ extern "C"
         // do we need to set all callbacks manually?
         MyContactListener* myContactListener = new MyContactListener(clonedWorld);
         clonedWorld->SetContactListener(myContactListener);
-        // same here
 
-        if (world->m_debugDraw)
-        {
-            MyDebugDraw* oldDbgDraw = (MyDebugDraw*)world->m_debugDraw;
-            clonedWorld->m_debugDraw = new MyDebugDraw(oldDbgDraw->m_drawCircle, oldDbgDraw->m_drawPoint, oldDbgDraw->m_drawSegment,
-                oldDbgDraw->m_drawTransform, oldDbgDraw->m_drawPolygon);
-        }
         return clonedWorld;
     }
 

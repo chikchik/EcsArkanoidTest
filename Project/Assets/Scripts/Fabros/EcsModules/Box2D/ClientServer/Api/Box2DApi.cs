@@ -11,20 +11,20 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
 #else
         private const string DllName = "libbox2d";
 #endif
-        
+
         public enum JointType
         {
             UnknownJoint = 0,
-            RevoluteJoint,
-            PrismaticJoint,
-            DistanceJoint,
-            PulleyJoint,
-            MouseJoint,
-            GearJoint,
-            WheelJoint,
-            WeldJoint,
-            FrictionJoint,
-            MotorJoint
+            RevoluteJoint = 1,
+            PrismaticJoin = 2,
+            DistanceJoint = 3,
+            PulleyJoint = 4,
+            MouseJoint = 5,
+            GearJoint = 6,
+            WheelJoint = 7,
+            WeldJoint = 8,
+            FrictionJoint = 9,
+            MotorJoint = 10
         };
         
         public struct RaycastOutputReturnType
@@ -36,22 +36,28 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         }
         
         public delegate void DbgCallback(string str);
+
         public delegate void CollisionCallback(CollisionCallbackData callbackData);
+
         public delegate void DrawDbgCircleCallback(Vector2 center, float radius, Box2dColor color);
+
         public delegate void DrawDbgSegmentCallback(Vector2 v1, Vector2 v2, Box2dColor color);
+
         public delegate void DrawDbgTransformCallback(Vector2 v, Vector2 angle, Box2dColor color);
-        
+
         public delegate void DrawDbgPolygonCallback(
-            [MarshalAs(UnmanagedType.LPArray, SizeConst = 10)] [Out] Vector2[] v,
-            Int32 vCount, Box2dColor color);
-        
-        public delegate void ListOfPointersCallback(Int32 count, 
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IntPtr[] ptrArray);
-        
+            [MarshalAs(UnmanagedType.LPArray, SizeConst = 10)] [Out]
+            Vector2[] v,
+            int vCount, Box2dColor color);
+
+        public delegate void ListOfPointersCallback(int count,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]
+            IntPtr[] ptrArray);
+
         [DllImport(DllName)]
         public static extern void SetContactCallbacks(IntPtr world, CollisionCallback beginContact,
             CollisionCallback endContact, CollisionCallback preSolve, CollisionCallback postSolve);
-        
+
         [DllImport(DllName)]
         public static extern IntPtr UpdateWorld(IntPtr world, float timeStep, int velocityIterations,
             int positionIterations);
@@ -71,13 +77,13 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
 
         [DllImport(DllName)]
         public static extern IntPtr CreateCircleShape(float radius);
-        
+
         [DllImport(DllName)]
         public static extern IntPtr CreateBoxShape(Vector2 extents);
 
         [DllImport(DllName)]
         public static extern IntPtr CreatePolygonShape(Vector2[] vertices, int count);
-        
+
         [DllImport(DllName)]
         public static extern IntPtr CreateChainShape(Vector2[] vertices, int count);
 
@@ -116,29 +122,29 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
 
         [DllImport(DllName)]
         public static extern void ApplyForce(IntPtr body, Vector2 force, Vector2 point);
-        
+
         [DllImport(DllName)]
         public static extern void ApplyForceToCenter(IntPtr body, Vector2 force);
-        
+
         [DllImport(DllName)]
         public static extern void ApplyLinearImpulse(IntPtr body, Vector2 force, Vector2 point);
-        
+
         [DllImport(DllName)]
         public static extern void ApplyLinearImpulseToCenter(IntPtr body, Vector2 force);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool RayCast(IntPtr world, Vector2 origin, Vector2 direction,
-            ref RaycastOutputReturnType hit, float distance, UInt16 layerMask = 0);
+            ref RaycastOutputReturnType hit, float distance, ushort layerMask = 0);
 
         [DllImport(DllName)]
         public static extern void SetEnabled(IntPtr body, bool flag);
 
         [DllImport(DllName)]
         public static extern bool IsEnabled(IntPtr body);
-        
+
         [DllImport(DllName)]
         public static extern void SetBullet(IntPtr body, bool flag);
-        
+
         [DllImport(DllName)]
         public static extern float GetLinearDamping(IntPtr body);
 
@@ -150,7 +156,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
 
         [DllImport(DllName)]
         public static extern void SetAngularDamping(IntPtr body, float val);
-        
+
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern void SetBeginContactCallback(IntPtr worldPtr, CollisionCallback callback);
 
@@ -167,21 +173,24 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         public static extern B2Filter GetBodyFixturesFilterData(IntPtr body);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern void SetDebugDraw(IntPtr world, DrawDbgCircleCallback drawCircle,
-            DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
-            DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
+        public static extern void SetDebugDraw(IntPtr world, IntPtr debugDraw);
+        
+        [DllImport(DllName)]
+        public static extern IntPtr CreateBox2dDebugDraw(IntPtr world, DrawDbgCircleCallback drawCircle,
+                DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
+                DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
 
 
         [DllImport(DllName)]
         public static extern void DebugDraw(IntPtr world);
 
         [DllImport(DllName)]
-        public static extern void SetFlagsForDebugDraw(IntPtr worldPtr, UInt32 box2dDebugDrawFlags = 0);
+        public static extern void SetFlagsForDebugDraw(IntPtr worldPtr, uint box2dDebugDrawFlags = 0);
 
 
         [DllImport(DllName)]
         public static extern IntPtr CloneWorld(ref IntPtr[] dataArr, int count, IntPtr world);
-        
+
         [DllImport(DllName)]
         public static extern float GetMass(IntPtr body);
 
@@ -230,7 +239,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         [DllImport(DllName)]
         public static extern void TryGetContactList(IntPtr body,
             ListOfPointersCallback success, DbgCallback cb);
-        
+
         [DllImport(DllName)]
         public static extern void TryGetContactInfoForBodies(IntPtr body1,
             IntPtr body2, CollisionCallback success);
@@ -239,22 +248,9 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern void TryGetContactInfosForBody(IntPtr body,
             ListOfPointersCallback success);
-        
-        
-        // JOINTS COMMON
-        [DllImport(DllName)]
-        public static extern IntPtr CreateJoint(IntPtr world, int jointType,
-            IntPtr bodyA, IntPtr bodyB, bool isCollideConnected);
-        
-        [DllImport(DllName)]
-        public static extern void DestroyJoint(IntPtr world, IntPtr joint);
-        
-        [DllImport(DllName)]
-        public static extern int GetJointListCount(IntPtr body);
-        
-        [DllImport(DllName)]
-        public static extern void TryGetJointListFromBody(IntPtr body, ListOfPointersCallback cb);
-                    
+
+
+// Common for ALL joints
         [DllImport(DllName)]
         public static extern Vector2 GetJointAnchorA(IntPtr joint);
 
@@ -266,7 +262,10 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
 
         [DllImport(DllName)]
         public static extern float GetJointReactionTorque(IntPtr joint, float inv_dt);
-        
+
+        [DllImport(DllName)]
+        public static extern int GetJointType(IntPtr joint);
+
         [DllImport(DllName)]
         public static extern IntPtr GetJointBodyA(IntPtr joint);
 
@@ -279,28 +278,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         [DllImport(DllName)]
         public static extern void ShiftJointOrigin(IntPtr joint, Vector2 newOrigin);
 
-        // DISTANCE JOINTS
-        [DllImport(DllName)]
-        public static extern float GetJointLength(IntPtr joint);
-
-        [DllImport(DllName)]
-        public static extern float SetJointLength(IntPtr joint, float length);
-
-        [DllImport(DllName)]
-        public static extern float GetJointMinLength(IntPtr joint);
-
-        [DllImport(DllName)]
-        public static extern float SetJointMinLength(IntPtr joint, float minLength);
-
-        [DllImport(DllName)]
-        public static extern float GetJointMaxLength(IntPtr joint);
-
-        [DllImport(DllName)]
-        public static extern float SetJointMaxLength(IntPtr joint, float maxLength);
-
-        [DllImport(DllName)]
-        public static extern float GetJointCurrentLength(IntPtr joint);
-
+// common for mouse, distance
         [DllImport(DllName)]
         public static extern void SetJointStiffness(IntPtr joint, float stiffness);
 
@@ -312,24 +290,44 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
 
         [DllImport(DllName)]
         public static extern float GetJointDamping(IntPtr joint);
-        
-        
-        // REVOLUTE JOINTS
+
+// common for revolute, friction, prismatic
         [DllImport(DllName)]
         public static extern Vector2 GetJointLocalAnchorA(IntPtr joint);
 
         [DllImport(DllName)]
         public static extern Vector2 GetJointLocalAnchorB(IntPtr joint);
 
+// common for mouse, friction, motor
+        [DllImport(DllName)]
+        public static extern float GetJointMaxForce(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointMaxForce(IntPtr joint, float force);
+
+// common for motor, friction
+        [DllImport(DllName)]
+        public static extern void SetJointMaxTorque(IntPtr joint, float torque);
+
+        [DllImport(DllName)]
+        public static extern float GetJointMaxTorque(IntPtr joint);
+
+// common for prismatic, revolute, weld
         [DllImport(DllName)]
         public static extern float GetJointReferenceAngle(IntPtr joint);
 
+// common for prismatic, wheel
         [DllImport(DllName)]
-        public static extern float GetJointAngle(IntPtr joint);
+        public static extern Vector2 GetJointLocalAxisA(IntPtr joint);
 
+        [DllImport(DllName)]
+        public static extern float GetJointTranslation(IntPtr joint);
+
+//common for prismatic, revolute
         [DllImport(DllName)]
         public static extern float GetJointSpeed(IntPtr joint);
 
+//common for prismatic, revolute, wheel
         [DllImport(DllName)]
         public static extern bool IsJointLimitEnabled(IntPtr joint);
 
@@ -357,39 +355,127 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         [DllImport(DllName)]
         public static extern float GetJointMotorSpeed(IntPtr joint);
 
+// common for pulley, gear
+        [DllImport(DllName)]
+        public static extern float GetJointRatio(IntPtr joint);
+
+// common for revolute, wheel
+        [DllImport(DllName)]
+        public static extern float GetJointAngle(IntPtr joint);
+
         [DllImport(DllName)]
         public static extern void SetJointMaxMotorTorque(IntPtr joint, float torque);
 
         [DllImport(DllName)]
         public static extern float GetJointMaxMotorTorque(IntPtr joint);
-        
+
         [DllImport(DllName)]
         public static extern float GetJointMotorTorque(IntPtr joint, float inv_dt);
-        
-        // MOUSE JOINT
+
+// GEAR JOINT
         [DllImport(DllName)]
-        public static extern void SetTarget(IntPtr joint, Vector2 target);
+        public static extern IntPtr GetJoint1(IntPtr joint);
 
         [DllImport(DllName)]
-        public static extern Vector2 GetTarget(IntPtr joint);
+        public static extern IntPtr GetJoint2(IntPtr joint);
 
         [DllImport(DllName)]
-        public static extern void SetMaxForce(IntPtr joint, float force);
+        public static extern void SetJointRatio(IntPtr joint, float ratio);
 
         [DllImport(DllName)]
-        public static extern float GetMaxForce(IntPtr joint);
+        public static extern int GetMotorJointTypeA(IntPtr joint);
 
         [DllImport(DllName)]
-        public static extern void SetStiffness(IntPtr joint, float stiffness);
+        public static extern int GetMotorJointTypeB(IntPtr joint);
 
         [DllImport(DllName)]
-        public static extern float GetStiffness(IntPtr joint);
+        public static extern IntPtr GetMotorJointBodyC(IntPtr joint);
 
         [DllImport(DllName)]
-        public static extern void SetDamping(IntPtr joint, float damping);
+        public static extern IntPtr GetMotorJointBodyD(IntPtr joint);
+
+// DISTANCE JOINT
+        [DllImport(DllName)]
+        public static extern float GetJointLength(IntPtr joint);
 
         [DllImport(DllName)]
-        public static extern float GetDamping(IntPtr joint);
+        public static extern float SetJointLength(IntPtr joint, float length);
 
+        [DllImport(DllName)]
+        public static extern float GetJointMinLength(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float SetJointMinLength(IntPtr joint, float minLength);
+
+        [DllImport(DllName)]
+        public static extern float GetJointMaxLength(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float SetJointMaxLength(IntPtr joint, float maxLength);
+
+        [DllImport(DllName)]
+        public static extern float GetJointCurrentLength(IntPtr joint);
+
+// MOTOR JOINT
+        [DllImport(DllName)]
+        public static extern void SetJointLinearOffset(IntPtr joint, Vector2 linearOffset);
+
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointLinearOffset(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointAngularOffset(IntPtr joint, float angularOffset);
+
+        [DllImport(DllName)]
+        public static extern float GetJointAngularOffset(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern void SetJointCorrectionFactor(IntPtr joint, float factor);
+
+        [DllImport(DllName)]
+        public static extern float GetJointCorrectionFactor(IntPtr joint);
+
+// MOUSE JOINT
+        [DllImport(DllName)]
+        public static extern void SetJointTarget(IntPtr joint, Vector2 target);
+
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointTarget(IntPtr joint);
+
+// PRISMATIC JOINT
+        [DllImport(DllName)]
+        public static extern void SetJointMaxMotorForce(IntPtr joint, float force);
+
+        [DllImport(DllName)]
+        public static extern float GetJointMaxMotorForce(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointMotorForce(IntPtr joint, float inv_dt);
+
+// PULLEY JOINT
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointGroundAnchorA(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern Vector2 GetJointGroundAnchorB(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointLengthA(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointLengthB(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointCurrentLengthA(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointCurrentLengthB(IntPtr joint);
+
+// WHEEL JOINT
+        [DllImport(DllName)]
+        public static extern float GetJointLinearSpeed(IntPtr joint);
+
+        [DllImport(DllName)]
+        public static extern float GetJointAngularSpeed(IntPtr joint);
     }
 }

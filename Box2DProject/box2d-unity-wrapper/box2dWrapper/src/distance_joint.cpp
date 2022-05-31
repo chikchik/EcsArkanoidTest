@@ -34,23 +34,3 @@ DllExport float GetJointCurrentLength(b2Joint* joint)
 {
     return static_cast<b2DistanceJoint*>(joint)->GetCurrentLength();
 }
-
-DllExport void SetJointStiffness(b2Joint* joint, float stiffness)
-{
-    return static_cast<b2DistanceJoint*>(joint)->SetStiffness(stiffness);
-}
-
-DllExport float GetJointStiffness(b2Joint* joint)
-{
-    return static_cast<b2DistanceJoint*>(joint)->GetStiffness();
-}
-
-DllExport void SetJointDamping(b2Joint* joint, float damping)
-{
-    return static_cast<b2DistanceJoint*>(joint)->SetDamping(damping);
-}
-
-DllExport float GetJointDamping(b2Joint* joint)
-{
-    return static_cast<b2DistanceJoint*>(joint)->GetDamping();
-}

@@ -11,21 +11,8 @@
 #include <b2_mouse_joint.h>
 
 
-DllExport void SetTarget(b2Joint* joint, Vector2 target);
+DllExport void SetJointTarget(b2Joint* joint, Vector2 target);
 
-DllExport Vector2 GetTarget(b2Joint* joint);
-
-DllExport void SetMaxForce(b2Joint* joint, float force);
-
-DllExport float GetMaxForce(b2Joint* joint);
-
-DllExport void SetStiffness(b2Joint* joint, float stiffness);
-
-DllExport float GetStiffness(b2Joint* joint);
-
-DllExport void SetDamping(b2Joint* joint, float damping);
-
-DllExport float GetDamping(b2Joint* joint);
-
+DllExport Vector2 GetJointTarget(b2Joint* joint);
 
 #endif
