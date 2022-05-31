@@ -176,7 +176,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         public static extern void SetDebugDraw(IntPtr world, IntPtr debugDraw);
         
         [DllImport(DllName)]
-        public static extern IntPtr CreateBox2dDebugDraw(IntPtr world, DrawDbgCircleCallback drawCircle,
+        public static extern IntPtr CreateBox2dDebugDraw(DrawDbgCircleCallback drawCircle,
                 DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
                 DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
 
@@ -251,6 +251,22 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
 
 
 // Common for ALL joints
+
+        [DllImport(DllName)]
+        public static extern int GetJointListCount(IntPtr body);
+
+        [DllImport(DllName)]
+        public static extern void TryGetJointListFromBody(IntPtr body, ListOfPointersCallback cb);
+
+        [DllImport(DllName)]
+        public static extern IntPtr CreateJoint(IntPtr world, int jointType,
+                    IntPtr bodyA, IntPtr bodyB, bool isCollideConnected);
+
+        [DllImport(DllName)]
+        public static extern void DestroyJoint(IntPtr world, IntPtr joint);
+
+
+
         [DllImport(DllName)]
         public static extern Vector2 GetJointAnchorA(IntPtr joint);
 

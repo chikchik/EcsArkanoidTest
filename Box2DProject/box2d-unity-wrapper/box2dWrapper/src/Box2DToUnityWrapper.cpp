@@ -38,7 +38,7 @@ extern "C"
         world -> SetDebugDraw(debugDraw);
     }
 
-    DllExport b2Draw* CreateBox2dDebugDraw(b2World* world, DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
+    DllExport b2Draw* CreateBox2dDebugDraw(DrawDbgCircleCallback drawCircle, DrawDbgCircleCallback drawPoint,
         DrawDbgSegmentCallback drawSegment, DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon)
     {
         return new MyDebugDraw(drawCircle, drawPoint, drawSegment, drawTransform, drawPolygon);
