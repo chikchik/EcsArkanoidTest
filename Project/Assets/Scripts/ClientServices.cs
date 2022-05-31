@@ -4,11 +4,13 @@ using System.Linq;
 using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Game.Ecs.Client.Components;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
+using Game.Physics;
 using Game.Utils;
 using Game.View;
 using Leopotam.EcsLite;
@@ -192,8 +194,7 @@ namespace Game.Client
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
                 var entityB = GetOrCreateGameEntity(joint.Connect);
-                
-                //entityA.EntityAdd<>()
+                entityA.EntityAdd<JointTestComponent>(world).Entity = entityB;
             });
             
             var unit = Object.FindObjectOfType<Global>().characterPrefab;

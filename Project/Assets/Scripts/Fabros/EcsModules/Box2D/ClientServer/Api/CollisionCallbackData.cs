@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
+namespace Fabros.EcsModules.Box2D.ClientServer.Api
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct CollisionCallbackData

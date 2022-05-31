@@ -1,10 +1,10 @@
 ﻿using System;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
+using Fabros.EcsModules.Box2D.ClientServer.Api;
+using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace Game.Fabros.EcsModules.Box2D.Client.Systems
+namespace Fabros.EcsModules.Box2D.Client.Systems
 {
     public class Box2dDebugViewSystem : IEcsInitSystem, IEcsDestroySystem
     {
@@ -14,11 +14,15 @@ namespace Game.Fabros.EcsModules.Box2D.Client.Systems
         private Box2DApi.DrawDbgTransformCallback _transformCallback;
         private Box2DApi.DrawDbgPolygonCallback _polygonCallback;
 
+        private Box2dGizmosView _gizmosView;
+
         public void Init(EcsSystems systems)
         {
             var world = systems.GetWorld();
 
-            if (!world.HasUnique<PhysicsWorldComponent>()) return;
+            if (!world.HasUnique<PhysicsWorldComponent>()) 
+                return;
+            
             var physicsWorld = world.GetUnique<PhysicsWorldComponent>().WorldReference;
 
             _circleCallback = DrawCircle;
@@ -33,7 +37,17 @@ namespace Game.Fabros.EcsModules.Box2D.Client.Systems
                                                 Box2dDebugDrawFlags.AabbBit | Box2dDebugDrawFlags.PairBit |
                                                 Box2dDebugDrawFlags.CenterOfMassBit | Box2dDebugDrawFlags.ContactBit);
             Box2DApi.SetFlagsForDebugDraw(physicsWorld, box2dDebugDrawFlags);
+
+            _gizmosView = GameObject.FindObjectOfType<Box2dGizmosView>();
+
+            if (!_gizmosView)
+            {
+                var go = new GameObject("[Box2DGizmosView]");
+                _gizmosView = go.AddComponent<Box2dGizmosView>();
+            }
+            _gizmosView.SetBox2D(physicsWorld);
         }
+        
         public void Destroy(EcsSystems systems)
         {
             //todo impl destroy

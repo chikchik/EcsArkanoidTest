@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
+namespace Fabros.EcsModules.Box2D.ClientServer.Api
 {
     public static class Box2DApi
     {
@@ -11,6 +11,22 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
 #else
         private const string DllName = "libbox2d";
 #endif
+        
+        public enum JointType
+        {
+            UnknownJoint = 0,
+            RevoluteJoint,
+            PrismaticJoint,
+            DistanceJoint,
+            PulleyJoint,
+            MouseJoint,
+            GearJoint,
+            WheelJoint,
+            WeldJoint,
+            FrictionJoint,
+            MotorJoint
+        };
+        
         public delegate void DbgCallback(string str);
         public delegate void CollisionCallback(CollisionCallbackData callbackData);
         public delegate void DrawDbgCircleCallback(Vector2 center, float radius, Box2dColor color);

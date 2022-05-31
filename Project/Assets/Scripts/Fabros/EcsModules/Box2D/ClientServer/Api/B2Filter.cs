@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
+namespace Fabros.EcsModules.Box2D.ClientServer.Api
 {
     public struct B2Filter
     {

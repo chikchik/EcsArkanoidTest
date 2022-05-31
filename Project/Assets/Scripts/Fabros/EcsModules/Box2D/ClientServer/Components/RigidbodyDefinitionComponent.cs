@@ -1,8 +1,8 @@
 using System;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
+using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Leopotam.EcsLite;
 
-namespace Game.Fabros.EcsModules.Box2D.ClientServer.Components
+namespace Fabros.EcsModules.Box2D.ClientServer.Components
 {
     [System.Serializable]
     public struct RigidbodyDefinitionComponent : IEcsAutoReset<RigidbodyDefinitionComponent>

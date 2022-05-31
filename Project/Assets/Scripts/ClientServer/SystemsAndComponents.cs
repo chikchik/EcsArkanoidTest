@@ -2,6 +2,9 @@
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.Ecs.ClientServer.Systems;
+using Fabros.EcsModules.Box2D.ClientServer.Components;
+using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
+using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Tick;
 using Game.Ecs.ClientServer.Components;
@@ -10,9 +13,6 @@ using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Inventory;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Components.Other;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Systems;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
@@ -22,11 +22,11 @@ using Leopotam.EcsLite.ExtendedSystems;
 using UnityEngine;
 
 #if CLIENT
-using Game.Fabros.EcsModules.Box2D.Client.Systems;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
 using Game.Fabros.EcsModules.Fire.Client.Systems;
 using Game.Fabros.Net.Client;
+using Fabros.EcsModules.Box2D.Client.Systems;
 #endif
 
 namespace Game.ClientServer
@@ -107,6 +107,8 @@ namespace Game.ClientServer
             pool.AddComponent<PolygonColliderComponent>();
             pool.AddComponent<ChainColliderComponent>();
             pool.AddComponent<RotationComponent>();
+            pool.AddComponent<JointTestComponent>();
+            
             
             pool.AddComponent<MoveSimpleDirectionComponent>();
             pool.AddComponent<DestroyWhenTimeIsOutComponent>();
@@ -160,11 +162,13 @@ namespace Game.ClientServer
             AddClient(new InitSceneSystem());
 #endif
             
+
+            systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, new Vector2(0,0)));
+            
 #if CLIENT
             systems.Add(new Box2dDebugViewSystem());
 #endif
-            systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, new Vector2(0,0)));
-
+            
             AddServer(new AIPlayerSystem());
 
             systems.Add(new MoveToTargetPositionSystem());

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
+using Fabros.EcsModules.Box2D.ClientServer.Api;
+using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Leopotam.EcsLite;
 
-namespace Game.Fabros.EcsModules.Box2D.ClientServer
+namespace Fabros.EcsModules.Box2D.ClientServer
 {
     public static class Box2DServices
     {

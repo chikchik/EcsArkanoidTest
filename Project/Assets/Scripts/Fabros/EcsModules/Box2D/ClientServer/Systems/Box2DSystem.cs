@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Box2D.ClientServer.Api;
+using Fabros.EcsModules.Box2D.ClientServer.Components;
+using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Fabros.EcsModules.Tick.Other;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Api;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Components;
-using Game.Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Leopotam.EcsLite;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace Game.Fabros.EcsModules.Box2D.ClientServer.Systems
+namespace Fabros.EcsModules.Box2D.ClientServer.Systems
 {
     public class Box2DSystem : IEcsInitSystem, IEcsRunSystem, IEcsDestroySystem, IEcsWorldChangedSystem
     {
@@ -266,6 +266,8 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Systems
             var poolBodyCreated = world.GetPool<BodyCreatedComponent>();
             var poolRigidBody = world.GetPool<RigidbodyComponent>();
             var poolBodyReference = world.GetPool<BodyReferenceComponent>();
+            
+            var poolJoint = world.GetPool<JointTestComponent>();
 
             foreach (var entity in filter)
             {
@@ -313,6 +315,16 @@ namespace Game.Fabros.EcsModules.Box2D.ClientServer.Systems
                 
                 poolBodyReference.Add(entity).BodyReference = bodyReference;
                 poolRigidBody.Replace(entity).BodyType = def.BodyType;
+            }
+
+            filter = world.Filter<JointTestComponent>().End();
+            foreach (var entity in filter)
+            {
+                var joint = poolJoint.Get(entity);
+                Box2DApi.CreateJoint(physicsWorld, (int)Box2DApi.JointType.DistanceJoint, 
+                    poolBodyReference.Get(entity).BodyReference,
+                    poolBodyReference.Get(joint.Entity).BodyReference,
+                    true);
             }
         }
 

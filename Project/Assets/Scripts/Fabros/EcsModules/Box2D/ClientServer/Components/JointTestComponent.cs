@@ -1,8 +1,8 @@
 namespace Fabros.EcsModules.Box2D.ClientServer.Components
 {
     [System.Serializable]
-    public struct CircleColliderComponent
+    public struct JointTestComponent
     {
-        public float Radius;
+        public int Entity;
     }
 }

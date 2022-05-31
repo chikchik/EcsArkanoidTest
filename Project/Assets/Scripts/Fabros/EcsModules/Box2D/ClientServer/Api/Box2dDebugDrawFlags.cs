@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.Fabros.EcsModules.Box2D.ClientServer.Api
+namespace Fabros.EcsModules.Box2D.ClientServer.Api
 {
     [Flags]
     public enum Box2dDebugDrawFlags
