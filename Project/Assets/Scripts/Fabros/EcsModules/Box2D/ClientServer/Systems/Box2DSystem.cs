@@ -263,11 +263,13 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             var poolPositionComponent = world.GetPool<PositionComponent>();
             var poolRotationComponent = world.GetPool<RotationComponent>();
             
-            var poolBodyCreated = world.GetPool<BodyCreatedComponent>();
             var poolRigidBody = world.GetPool<RigidbodyComponent>();
             var poolBodyReference = world.GetPool<BodyReferenceComponent>();
             
             var poolJoint = world.GetPool<JointTestComponent>();
+            
+            var poolBodyCreated = world.GetPool<BodyCreatedComponent>();
+            var poolJointCreated = world.GetPool<JointCreatedComponent>();
 
             foreach (var entity in filter)
             {
@@ -317,7 +319,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
                 poolRigidBody.Replace(entity).BodyType = def.BodyType;
             }
 
-            filter = world.Filter<JointTestComponent>().End();
+            filter = world.Filter<JointTestComponent>().Exc<JointCreatedComponent>().End();
             foreach (var entity in filter)
             {
                 var joint = poolJoint.Get(entity);
@@ -325,6 +327,8 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
                     poolBodyReference.Get(entity).BodyReference,
                     poolBodyReference.Get(joint.Entity).BodyReference,
                     true);
+
+                poolJointCreated.Add(entity);
             }
         }
 

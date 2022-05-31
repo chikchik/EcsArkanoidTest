@@ -27,6 +27,14 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
             MotorJoint
         };
         
+        public struct RaycastOutputReturnType
+        {
+            public IntPtr Body;
+            public Vector2 Normal;
+            public Vector2 Point;
+            public float Fraction;
+        }
+        
         public delegate void DbgCallback(string str);
         public delegate void CollisionCallback(CollisionCallbackData callbackData);
         public delegate void DrawDbgCircleCallback(Vector2 center, float radius, Box2dColor color);

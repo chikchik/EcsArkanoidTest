@@ -6,4 +6,9 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Components
     public struct BodyCreatedComponent
     {
     }
+    
+    [EmptyComponent]
+    public struct JointCreatedComponent
+    {
+    }
 }
