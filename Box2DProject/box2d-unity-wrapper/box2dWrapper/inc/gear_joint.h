@@ -16,12 +16,4 @@ DllExport b2Joint* GetJoint2(b2Joint* joint);
 
 DllExport void SetJointRatio(b2Joint* joint, float ratio);
 
-DllExport int GetMotorJointTypeA(b2Joint* joint);
-
-DllExport int GetMotorJointTypeB(b2Joint* joint);
-
-DllExport b2Body* GetMotorJointBodyC(b2Joint* joint);
-
-DllExport b2Body* GetMotorJointBodyD(b2Joint* joint);
-
 #endif

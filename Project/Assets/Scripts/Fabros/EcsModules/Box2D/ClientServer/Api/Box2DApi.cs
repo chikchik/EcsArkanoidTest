@@ -4,29 +4,13 @@ using UnityEngine;
 
 namespace Fabros.EcsModules.Box2D.ClientServer.Api
 {
-    public static class Box2DApi
+    public static partial class Box2DApi
     {
 #if UNITY_IPHONE && !UNITY_EDITOR
         private const string DllName = "__Internal";
 #else
         private const string DllName = "libbox2d";
 #endif
-
-        public enum JointType
-        {
-            UnknownJoint = 0,
-            RevoluteJoint = 1,
-            PrismaticJoin = 2,
-            DistanceJoint = 3,
-            PulleyJoint = 4,
-            MouseJoint = 5,
-            GearJoint = 6,
-            WheelJoint = 7,
-            WeldJoint = 8,
-            FrictionJoint = 9,
-            MotorJoint = 10
-        };
-        
         public struct RaycastOutputReturnType
         {
             public IntPtr Body;
@@ -258,8 +242,46 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         [DllImport(DllName)]
         public static extern void TryGetJointListFromBody(IntPtr body, ListOfPointersCallback cb);
 
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, JointType jointType,
+                ref b2JointDef def);
+        
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2JointDef def);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2DistanceJointDef def);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2FrictionJointDef def);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2GearJointDef def);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2MotorJointDef def);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2MouseJointDef def);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2PrismaticJointDef def);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2PulleyJointDef def);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2RevoluteJointDef def);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2WeldJointDef def);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateJoint(IntPtr world, b2WheelJointDef def);
+
+
         [DllImport(DllName)]
-        public static extern IntPtr CreateJoint(IntPtr world, int jointType,
+        public static extern IntPtr CreateDistanceJoint(IntPtr world, int jointType,
                     IntPtr bodyA, IntPtr bodyB, bool isCollideConnected);
 
         [DllImport(DllName)]
@@ -397,19 +419,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
 
         [DllImport(DllName)]
         public static extern void SetJointRatio(IntPtr joint, float ratio);
-
-        [DllImport(DllName)]
-        public static extern int GetMotorJointTypeA(IntPtr joint);
-
-        [DllImport(DllName)]
-        public static extern int GetMotorJointTypeB(IntPtr joint);
-
-        [DllImport(DllName)]
-        public static extern IntPtr GetMotorJointBodyC(IntPtr joint);
-
-        [DllImport(DllName)]
-        public static extern IntPtr GetMotorJointBodyD(IntPtr joint);
-
+        
 // DISTANCE JOINT
         [DllImport(DllName)]
         public static extern float GetJointLength(IntPtr joint);

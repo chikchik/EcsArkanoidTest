@@ -145,8 +145,8 @@ void CloneWorldInfo::Move(b2Joint* obj)
 		Move(obj->m_bodyB);
 	}
 
-	Move(&obj->m_edgeA);
-	Move(&obj->m_edgeB);
+	IterateMove2(&obj->m_edgeA);
+	IterateMove2(&obj->m_edgeB);
 
 	if (auto gearJoint = dynamic_cast<b2GearJoint*>(obj))
 	{

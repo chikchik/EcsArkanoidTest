@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
@@ -323,11 +324,16 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             foreach (var entity in filter)
             {
                 var joint = poolJoint.Get(entity);
-                Box2DApi.CreateJoint(physicsWorld, (int)Box2DApi.JointType.DistanceJoint, 
-                    poolBodyReference.Get(entity).BodyReference,
-                    poolBodyReference.Get(joint.Entity).BodyReference,
-                    true);
-
+                Box2DApi.b2DistanceJointDef def =
+                    new Box2DApi.b2DistanceJointDef(
+                        poolBodyReference.Get(entity).BodyReference,
+                        poolBodyReference.Get(joint.Entity).BodyReference,
+                        false
+                    );
+                def.minLength = 3;
+                def.maxLength = 3;
+                
+                Box2DApi.CreateJoint(physicsWorld, def);
                 poolJointCreated.Add(entity);
             }
         }

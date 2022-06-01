@@ -6,6 +6,7 @@
 #include "Box2DToUnityWrapper.h"
 #include "distance_joint.h"
 #include "joint.h"
+#include "mouse_joint.h"
 
 #include <stdio.h>
 #include <string>
@@ -23,16 +24,34 @@ b2Body* CreateBox(b2World* world, Vector2 pos)
     return box;
 }
 
-b2Body** CreateBoxes(int boxCount, b2World* world, Vector2 startPos, float offset)
+void CreateBoxes(void** arrayOldRefs, int boxCount, b2World* world, Vector2 startPos, float offset)
 {
-    b2Body** bodies = new b2Body*[boxCount];
     for (int i = 0; i < boxCount; ++i)
     {
-        bodies[i] = CreateBox(world, startPos);
+        arrayOldRefs[i] = (void*)CreateBox(world, startPos);
         startPos.x += startPos.x + offset;
         startPos.y += startPos.y + offset;
     }
-    return bodies;
+}
+
+void callbackCircle(Vector2, float, Box2dColor)
+{
+
+}
+
+void callbackSegment(Vector2, Vector2, Box2dColor)
+{
+
+}
+
+void callbackTransform(Vector2, Vector2, Box2dColor)
+{
+
+}
+
+void callbackPolygon(Vector2[b2_maxPolygonVertices], int32, Box2dColor)
+{
+
 }
 
 int main()
@@ -51,9 +70,9 @@ int main()
          1,
          0, 0, 1, false, b2Filter());
 
-     
+     void** arrayOldRefs = new void* [4];
 
-     b2Body** boxes = CreateBoxes(3, world, Vector2 {10, 10}, 5);
+     CreateBoxes(arrayOldRefs, 3, world, Vector2 {10, 10}, 5);
 
      float timeStep = 1.0f / 60.0f;
      int32 velocityIterations = 6;
@@ -62,28 +81,44 @@ int main()
      Vector2 scale{ 1, 1 };
      Vector2 force{ 0, -200 };
 
-     cout << boxes[1] << endl << boxes[2] << endl;
+     cout << arrayOldRefs[1] << endl << arrayOldRefs[2] << endl;
 
-     b2Body* b1 = boxes[1];
-     b2Body* b2 = boxes[2];
+     b2Body* b1 = (b2Body*)arrayOldRefs[1];
+     b2Body* b2 = (b2Body*)arrayOldRefs[2];
 
-     b2Joint* j = CreateJoint(world, b2JointType::e_mouseJoint, boxes[1], boxes[2], true);
-     SetJointStiffness(j, 10);
-     SetJointMaxLength(j, 50);
-
-
-     SetLinearVelocity(boxes[1], force);
-     SetAngularVelocity(boxes[1], 20);
-
-     auto bodiesRef = reinterpret_cast<void**>(boxes);
+     b2Joint* j = CreateJoint(world, b2JointType::e_distanceJoint,
+         (b2Body*)arrayOldRefs[1], (b2Body*)arrayOldRefs[2], true);
+     arrayOldRefs[3] = (void*)j;
+     cout << GetJointMaxLength(j) << endl;
 
 
-     for(int32 i = 0; i < 1000; i++)
+
+     SetLinearVelocity((b2Body*)arrayOldRefs[1], force);
+     SetAngularVelocity((b2Body*)arrayOldRefs[1], 20);
+
+
+     b2Draw* debugDraw = CreateBox2dDebugDraw(callbackCircle,
+         callbackCircle, callbackSegment, callbackTransform, callbackPolygon);
+     SetDebugDraw(world, debugDraw);
+
+
+     for(int32 i = 0; i < 500; i++)
      {
+         Vector2 position = GetJointAnchorA((b2Joint*)arrayOldRefs[3]);
+         float angle = GetAngle((b2Body*)arrayOldRefs[2]);
+
+         fprintf(file, "%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
+         //fprintf(file, "%p\n", arrayOldRefs[3]);
+         fflush(file);
+
          UpdateWorld(world, timeStep, velocityIterations, positionIterations);
-         world = CloneWorld(bodiesRef, 2, world);
-         Vector2 position = GetPosition(boxes[2]);
-         float angle = GetAngle(boxes[2]);
+         b2World* cloneWorld = CloneWorld(arrayOldRefs, 3, world);
+         DestroyWorld(world);
+         world = cloneWorld;
+
+         //fprintf(file, "%p\n", arrayOldRefs[3]);
+         //fflush(file);
+         SetDebugDraw(world, debugDraw);
 
          
          //ApplyForceToCenter(box, force, true);
@@ -108,14 +143,13 @@ int main()
          //cout << dt << endl;
          //cout << position.x << " " << position.y << " " << angle << endl;
 
-         fprintf(file, "%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
+         
      }
-     fflush(file);
 
      fclose(file);
 
-     delete boxes;
-     boxes = nullptr;
+     delete arrayOldRefs;
+     arrayOldRefs = nullptr;
      DestroyWorld(world);
      return 0;
 }

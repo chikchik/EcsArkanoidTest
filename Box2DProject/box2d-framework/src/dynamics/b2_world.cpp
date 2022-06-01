@@ -83,7 +83,7 @@ b2World::b2World(void** arrayOfReferences, const int& count,
 	: m_blockAllocator(world.m_blockAllocator, cloneService),
 	m_contactManager(world.m_contactManager),
 	m_bodyList(world.m_bodyList), m_jointList(world.m_jointList), m_locked(world.m_locked)
-{	
+{
 	m_destructionListener = nullptr;
 	m_debugDraw = nullptr;
 	m_bodyCount = world.m_bodyCount;
@@ -95,7 +95,6 @@ b2World::b2World(void** arrayOfReferences, const int& count,
 	m_allowSleep = world.m_allowSleep;
 	m_gravity = world.m_gravity;
 	m_newContacts = world.m_newContacts;
-	m_locked = world.m_locked;
 	m_clearForces = world.m_clearForces;
 	m_inv_dt0 = world.m_inv_dt0;
 
@@ -109,6 +108,7 @@ b2World::b2World(void** arrayOfReferences, const int& count,
 
 b2World::~b2World()
 {
+	m_debugDraw = nullptr;
 	// Some shapes allocate using b2Alloc.
 	b2Body* b = m_bodyList;
 	while (b)
