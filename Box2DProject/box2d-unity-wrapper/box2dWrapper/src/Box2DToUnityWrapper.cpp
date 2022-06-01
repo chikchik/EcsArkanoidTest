@@ -1,7 +1,5 @@
 #include <Box2DToUnityWrapper.h>
 
-#include <stdio.h>
-
 extern "C"
 {
     DllExport void SetBeginContactCallback(b2World* world, CollisionCallback callback)
@@ -250,15 +248,9 @@ extern "C"
         delete world;
     }
 
-    DllExport b2Joint* CreateJoint(b2World* world, int jointType,
-        b2Body* bodyA, b2Body* bodyB, bool isCollideConnected)
+    DllExport b2Joint* CreateJoint(b2World* world, b2JointDef* def)
     {
-        b2JointDef def;
-        def.type = (b2JointType)jointType;
-        def.bodyA = bodyA;
-        def.bodyB = bodyB;
-        def.collideConnected = isCollideConnected;
-        return world->CreateJoint(&def);
+        return world->CreateJoint(def);
     }
 
     DllExport void DestroyJoint(b2World* world, b2Joint* joint)

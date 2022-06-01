@@ -40,7 +40,6 @@ extern "C"
 
     DllExport void SetFlagsForDebugDraw(b2World* world, uint32 mask);
 
-
     DllExport b2World* UpdateWorld(b2World* world,
         float timeStep, int velocityIterations, int positionIterations);
 
@@ -76,8 +75,7 @@ extern "C"
 
     DllExport void TryGetJointListFromBody(b2Body* body, ListOfPointersCallback cb);
 
-    DllExport b2Joint* CreateJoint(b2World* world, int jointType,
-        b2Body* bodyA, b2Body* bodyB, bool isCollideConnected);
+    DllExport b2Joint* CreateJoint(b2World* world, b2JointDef* def);
 
     DllExport void DestroyJoint(b2World* world, b2Joint* joint);
 

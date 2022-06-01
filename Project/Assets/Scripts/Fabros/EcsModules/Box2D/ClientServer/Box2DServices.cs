@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Leopotam.EcsLite;
+using UnityEngine;
 
 namespace Fabros.EcsModules.Box2D.ClientServer
 {
@@ -13,6 +14,22 @@ namespace Fabros.EcsModules.Box2D.ClientServer
     private const string DllName = "__Internal";
 #else
         private const string DllName = "libbox2d";
+#endif
+
+
+#if CLIENT
+        public static void PrintClassOffsets<T>()
+        {
+            string str = String.Empty;
+            str += "Offsets:\n";
+            foreach (var fieldInfo in typeof(T).GetFields())
+            {
+                str += $"{fieldInfo.Name} = {Marshal.OffsetOf<T>(fieldInfo.Name)}\n";
+            }
+            Debug.Log(str);
+
+            // Debug.Log($"{Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("type")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("userData")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("bodyA")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("bodyB")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("collideConnected")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("localAnchorA")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("localAnchorB")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("length")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("minLength")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("maxLength")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("stiffness")}, {Marshal.OffsetOf<Box2DApi.b2DistanceJointDef>("damping")} ");
+        }
 #endif
 
         // Clone current physicsWorld, delete old, change all old body references to the new ones, return cloned world

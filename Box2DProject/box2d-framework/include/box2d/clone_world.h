@@ -24,9 +24,6 @@ struct CloneWorldInfo
 
 	b2World* m_newWorld;
 
-	template<class T>
-	T* GetMovedAdress(T* ptr);
-
 	CloneWorldInfo(void** arrayOfReferences,
 		const int& count,
 		const b2BlockAllocator& newAllocator,
