@@ -24,7 +24,9 @@ namespace Fabros.EcsModules.Box2D.Client
                     DrawPolygon);
             }
 
-            Box2DApi.SetDebugDraw(box2d, debugDraw);
+            if (box2d != default)
+                Box2DApi.SetDebugDraw(box2d, debugDraw);
+            
             this.box2d = box2d;
         }
         
