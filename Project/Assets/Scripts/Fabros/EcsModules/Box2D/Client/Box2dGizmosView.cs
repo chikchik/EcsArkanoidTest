@@ -6,14 +6,14 @@ namespace Fabros.EcsModules.Box2D.Client
 {
     public class Box2dGizmosView : MonoBehaviour
     {
-        private IntPtr box2d;
+        private IntPtr box2dWorld;
         
         [SerializeField]
         private bool draw = true;
 
         private IntPtr debugDraw;
 
-        public void SetBox2D(IntPtr box2d)
+        public void SetBox2D(IntPtr box2dWorld)
         {
             if (debugDraw == default)
             {
@@ -24,20 +24,20 @@ namespace Fabros.EcsModules.Box2D.Client
                     DrawPolygon);
             }
 
-            if (box2d != default)
-                Box2DApi.SetDebugDraw(box2d, debugDraw);
+            if (box2dWorld != default)
+                Box2DApi.SetDebugDraw(box2dWorld, debugDraw);
             
-            this.box2d = box2d;
+            this.box2dWorld = box2dWorld;
         }
         
         private void OnDrawGizmos()
         {
-            if (box2d == default)
+            if (box2dWorld == default)
                 return;
             if (!draw)
                 return;
 
-            Box2DApi.DebugDraw(box2d);
+            Box2DApi.DebugDraw(box2dWorld);
         }
         
         static void DrawPolygon(Vector2[] v, Int32 vCount, Box2dColor color)
