@@ -29,7 +29,7 @@ namespace Fabros.EcsModules.Box2D.Client
         {
             if (debugDraw == default)
             {
-                debugDraw = Box2DApi.CreateBox2DDebugDraw(DrawCircle,
+                debugDraw = Box2DApi.CreateBox2dDebugDraw(DrawCircle,
                     DrawPoint, 
                     DrawSegment,
                     DrawTransform,

@@ -160,7 +160,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         public static extern void SetDebugDraw(IntPtr world, IntPtr debugDraw);
         
         [DllImport(DllName)]
-        public static extern IntPtr CreateBox2DDebugDraw(DrawDbgCircleCallback drawCircle,
+        public static extern IntPtr CreateBox2dDebugDraw(DrawDbgCircleCallback drawCircle,
                 DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
                 DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
 
