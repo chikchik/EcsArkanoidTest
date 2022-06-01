@@ -6,7 +6,7 @@
 		<RootNamespace>ServerApp</RootNamespace>
 		
 		<FabrosEcsPackage>..\..\module-ecs\FabrosEcsPackage</FabrosEcsPackage>
-		<Scripts>..\project\Assets\Scripts</Scripts>
+		<UnityScripts>..\project\Assets\Scripts</UnityScripts>
 		
 	</PropertyGroup>
 
@@ -23,85 +23,31 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="$(FabrosEcsPackage)\Leopotam\ecslite\**\*.cs">
-			<Link>External\Leopotam\ecslite\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		<Compile Include="$(FabrosEcsPackage)\**\*.cs">
+			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
+		<Compile Remove="$(FabrosEcsPackage)\Leopotam\ecslite-unityeditor\**"></Compile>
+		<Compile Remove="$(FabrosEcsPackage)\Leopotam\ecslite-unileo\**"></Compile>		
+		<Compile Remove="$(FabrosEcsPackage)\Fabros\Ecs\Client\**"></Compile>
 	</ItemGroup>
 
-    <ItemGroup>
-        <Compile Remove="$(FabrosEcsPackage)\Leopotam\ecslite-unityeditor\**\*.cs"></Compile>
-    </ItemGroup>
-
 	<ItemGroup>
-		<Compile Include="$(FabrosEcsPackage)\Leopotam\ecslite-extendedsystems\**\*.cs">
-			<Link>External\Leopotam\ecslite-extendedsystems\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		<Compile Include="$(UnityScripts)\Fabros\**\*.cs">
+			<Link>External\FabrosScripts\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
-	</ItemGroup>
-	
-
-	<ItemGroup>
-		<Compile Include="$(FabrosEcsPackage)\Fabros\P2P\**\*.cs">
-			<Link>Fabros\P2P\%(RecursiveDir)/%(FileName)%(Extension)</Link>
-		</Compile>
+		<Compile Remove="$(UnityScripts)\Fabros\EcsModules\Fire\Client\**" />
+		<Compile Remove="$(UnityScripts)\Fabros\EcsModules\Box2D\Client\**" />
+		<Compile Remove="$(UnityScripts)\Fabros\Net\Client\**" />
 	</ItemGroup>
 
 
 
 	<ItemGroup>
-		<Compile Include="$(FabrosEcsPackage)\Fabros\Ecs\ClientServer\**\*.cs">
-			<Link>External\Fabros\Ecs\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		<Compile Include="$(UnityScripts)\ClientServer\**\*.cs">
+			<Link>UnityScripts\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Include="$(FabrosEcsPackage)\Fabros\Ecs\Utils\**\*.cs">
-			<Link>External\Fabros\Ecs\Utils\%(RecursiveDir)/%(FileName)%(Extension)</Link>
-		</Compile>
-	</ItemGroup>
-
-
-	<ItemGroup>
-		<Compile Include="$(FabrosEcsPackage)\Fabros\EcsModules\**\*.cs">
-			<Link>External\Fabros\EcsModules\%(RecursiveDir)/%(FileName)%(Extension)</Link>
-		</Compile>
-	</ItemGroup>
-
-
-
-
-	<ItemGroup>
-		<Compile Include="$(FabrosEcsPackage)\UnityEngine\**\*.cs">
-			<Link>External\UnityEngine\%(RecursiveDir)/%(FileName)%(Extension)</Link>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Include="$(Scripts)\ClientServer\**\*.cs">
-			<Link>ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Include="$(Scripts)\Ecs\ClientServer\**\*.cs">
-			<Link>Ecs\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Include="$(Scripts)\Fabros\Net\ClientServer\**\*.cs">
-			<Link>FabrosX\Net\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Include="$(Scripts)\Fabros\EcsModules\Fire\ClientServer\**\*.cs">
-			<Link>FabrosX\EcsModules\Fire\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Include="$(Scripts)\Fabros\EcsModules\Box2D\ClientServer\**\*.cs">
-			<Link>FabrosX\EcsModules\Fire\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		<Compile Include="$(UnityScripts)\Ecs\ClientServer\**\*.cs">
+			<Link>UnityScripts\Ecs\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
 	</ItemGroup>
 
