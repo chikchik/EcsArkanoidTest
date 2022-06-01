@@ -49,12 +49,14 @@ namespace Game.ClientServer
             var pool = new ComponentsPool(new JsonComponentSerializer());
 #endif
 
+            TickModule.AddSerializableComponents(pool);
+            GridModule.AddSerializableComponents(pool);
+            Box2DModule.AddSerializableComponents(pool);
+            
+            
             pool.AddComponent<MoveDirectionComponent>();
             pool.AddComponent<PlayerComponent>();
             pool.AddComponent<TickrateConfigComponent>();
-
-            TickModule.AddSerializableComponents(pool);
-            GridModule.AddSerializableComponents(pool);
 
             pool.AddComponent<FireComponent>();
             pool.AddComponent<BurnedOutComponent>();
@@ -101,8 +103,7 @@ namespace Game.ClientServer
             pool.AddComponent<GateOpenedComponent>();
             pool.AddComponent<LookDirectionComponent>();
 
-
-            Box2DModule.AddSerializableComponents(pool);
+           
 
 
             pool.AddComponent<MoveSimpleDirectionComponent>();

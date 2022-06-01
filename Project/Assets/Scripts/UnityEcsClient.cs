@@ -3,6 +3,7 @@ using Fabros.Ecs;
 using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
+using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
@@ -35,8 +36,7 @@ namespace Game.Client
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
             
-            
-            client = new NetClient(world);
+            client = new NetClient(world, SystemsAndComponents.CreateComponentsPool());
             
             viewSystems = new EcsSystems(world);
             viewSystems.Add(new SyncTransformSystem(false));

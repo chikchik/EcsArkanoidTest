@@ -59,11 +59,9 @@ namespace Game.Fabros.Net.Client
         private float stepOffset = 0.001f;
 
 
-        public NetClient(EcsWorld world)
+        public NetClient(EcsWorld world, ComponentsPool pool)
         {
             Application.targetFrameRate = 60;
-
-            var pool = SystemsAndComponents.CreateComponentsPool();
 
             Leo = new LeoContexts(Config.TMP_HASHES_PATH,
                 pool,
