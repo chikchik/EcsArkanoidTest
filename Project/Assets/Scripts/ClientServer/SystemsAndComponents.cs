@@ -2,6 +2,7 @@
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.Ecs.ClientServer.Systems;
+using Fabros.EcsModules.Box2D;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
@@ -99,26 +100,15 @@ namespace Game.ClientServer
             pool.AddComponent<ButtonPushCompleted>();
             pool.AddComponent<GateOpenedComponent>();
             pool.AddComponent<LookDirectionComponent>();
-            
-            pool.AddComponent<RigidbodyDefinitionComponent>();
-            pool.AddComponent<RigidbodyComponent>();
-            pool.AddComponent<BoxColliderComponent>();
-            pool.AddComponent<CircleColliderComponent>();
-            pool.AddComponent<PolygonColliderComponent>();
-            pool.AddComponent<ChainColliderComponent>();
-            pool.AddComponent<RotationComponent>();
-            pool.AddComponent<JointTestComponent>();
-            
-            
+
+
+            Box2DModule.AddSerializableComponents(pool);
+
+
             pool.AddComponent<MoveSimpleDirectionComponent>();
             pool.AddComponent<DestroyWhenTimeIsOutComponent>();
             pool.AddComponent<TimeComponent>();
             pool.AddComponent<StartSimpleMoveAtComponent>();
-            
-            //pool.AddComponent<BeginContactComponent>();
-            //pool.AddComponent<EndContactComponent>();
-            //pool.AddComponent<PreSolveComponent>();
-            //pool.AddComponent<PostSolveComponent>();
             
             pool.AddComponent<AverageSpeedComponent>();
             pool.AddComponent<ButtonCustomComponent>();
