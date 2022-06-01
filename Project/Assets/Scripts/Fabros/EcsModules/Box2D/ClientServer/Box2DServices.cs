@@ -43,7 +43,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer
             for (int i = 0; i < srcEntities.Count; i++)
                 arrayOfReferences[i] = srcPool.Get(srcEntities[i]).BodyReference;
 
-            var srcWorld = src.GetUnique<PhysicsWorldComponent>().WorldReference;
+            var srcWorld = src.GetUnique<Box2DWorldComponent>().WorldReference;
             if (srcWorld == default)
                 return;
             var newDestWorld = Box2DApi.CloneWorld(ref arrayOfReferences, srcEntities.Count, srcWorld);
@@ -53,9 +53,9 @@ namespace Fabros.EcsModules.Box2D.ClientServer
             var destPoolBodyCreated = dest.GetPool<BodyCreatedComponent>();
             
             
-            if (dest.HasUnique<PhysicsWorldComponent>())
+            if (dest.HasUnique<Box2DWorldComponent>())
             {
-                var oldDestWorld = dest.ReplaceUnique<PhysicsWorldComponent>().WorldReference;
+                var oldDestWorld = dest.ReplaceUnique<Box2DWorldComponent>().WorldReference;
                 if (oldDestWorld != default)
                     Box2DApi.DestroyWorld(oldDestWorld);
                 
@@ -70,7 +70,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer
                 }
             }
             
-            dest.ReplaceUnique<PhysicsWorldComponent>().WorldReference = newDestWorld;
+            dest.ReplaceUnique<Box2DWorldComponent>().WorldReference = newDestWorld;
 
             for (int i = 0; i < srcEntities.Count; i++)
             {

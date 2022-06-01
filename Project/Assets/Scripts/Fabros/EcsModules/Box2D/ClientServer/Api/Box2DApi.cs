@@ -23,16 +23,16 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
 
         public delegate void CollisionCallback(CollisionCallbackData callbackData);
 
-        public delegate void DrawDbgCircleCallback(Vector2 center, float radius, Box2dColor color);
+        public delegate void DrawDbgCircleCallback(Vector2 center, float radius, Box2DColor color);
 
-        public delegate void DrawDbgSegmentCallback(Vector2 v1, Vector2 v2, Box2dColor color);
+        public delegate void DrawDbgSegmentCallback(Vector2 v1, Vector2 v2, Box2DColor color);
 
-        public delegate void DrawDbgTransformCallback(Vector2 v, Vector2 angle, Box2dColor color);
+        public delegate void DrawDbgTransformCallback(Vector2 v, Vector2 angle, Box2DColor color);
 
         public delegate void DrawDbgPolygonCallback(
             [MarshalAs(UnmanagedType.LPArray, SizeConst = 10)] [Out]
             Vector2[] v,
-            int vCount, Box2dColor color);
+            int vCount, Box2DColor color);
 
         public delegate void ListOfPointersCallback(int count,
             [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]
@@ -160,7 +160,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         public static extern void SetDebugDraw(IntPtr world, IntPtr debugDraw);
         
         [DllImport(DllName)]
-        public static extern IntPtr CreateBox2dDebugDraw(DrawDbgCircleCallback drawCircle,
+        public static extern IntPtr CreateBox2DDebugDraw(DrawDbgCircleCallback drawCircle,
                 DrawDbgCircleCallback drawPoint, DrawDbgSegmentCallback drawSegment,
                 DrawDbgTransformCallback drawTransform, DrawDbgPolygonCallback drawPolygon);
 

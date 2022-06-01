@@ -171,7 +171,7 @@ namespace Game.ClientServer
             systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, new Vector2(0,0)));
             
 #if CLIENT
-            AddClient(new Box2dDebugViewSystem());
+            AddClient(new Box2DDebugViewSystem());
 #endif
             
             AddServer(new AIPlayerSystem());

@@ -5,6 +5,8 @@ using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Box2D.Client;
+using Fabros.EcsModules.Box2D.Client.Systems;
 using Fabros.EcsModules.Box2D.ClientServer;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Tick.Components;
@@ -181,6 +183,9 @@ namespace Game.Fabros.Net.Client
             Profiler.BeginSample("replicate2");
             Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld);
             Profiler.EndSample();
+            
+            Box2DDebugViewSystem.ReplaceBox2D(MainWorld);
+            
             
             copyServerSystems.Destroy();
             Profiler.EndSample();

@@ -58,10 +58,10 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
         public void Init(EcsSystems systems)
         {
             world = systems.GetWorld();
-            if (!world.HasUnique<PhysicsWorldComponent>())
-                world.AddUnique<PhysicsWorldComponent>().WorldReference = Box2DApi.CreateWorld(graviti);
+            if (!world.HasUnique<Box2DWorldComponent>())
+                world.AddUnique<Box2DWorldComponent>().WorldReference = Box2DApi.CreateWorld(graviti);
 
-            var b2world = world.GetUnique<PhysicsWorldComponent>().WorldReference;
+            var b2world = world.GetUnique<Box2DWorldComponent>().WorldReference;
             if (b2world == default)
             {
                 throw new Exception("b2world is null");
@@ -197,7 +197,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
 
         private void UpdateBox2D()
         {
-            var physicsWorld = world.GetUnique<PhysicsWorldComponent>();
+            var physicsWorld = world.GetUnique<Box2DWorldComponent>();
             var deltaTime = world.GetDeltaSeconds();
 
             Box2DApi.UpdateWorld(
@@ -250,10 +250,10 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
         }
         private void CreateBodies()
         {
-            if(!world.HasUnique<PhysicsWorldComponent>()) 
+            if(!world.HasUnique<Box2DWorldComponent>()) 
                 return;
             
-            var physicsWorld = world.GetUnique<PhysicsWorldComponent>().WorldReference;
+            var physicsWorld = world.GetUnique<Box2DWorldComponent>().WorldReference;
             var filter = world
                 .Filter<RigidbodyDefinitionComponent>()
                 .Inc<RotationComponent>()
@@ -357,9 +357,9 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
 
         public void Destroy(EcsSystems systems)
         {
-            var box2d = world.GetUnique<PhysicsWorldComponent>();
+            var box2d = world.GetUnique<Box2DWorldComponent>();
             Box2DApi.DestroyWorld(box2d.WorldReference);
-            world.DelUnique<PhysicsWorldComponent>();
+            world.DelUnique<Box2DWorldComponent>();
 
             var poolRefs = world.GetPool<BodyReferenceComponent>();
             var poolCreated = world.GetPool<BodyReferenceComponent>();

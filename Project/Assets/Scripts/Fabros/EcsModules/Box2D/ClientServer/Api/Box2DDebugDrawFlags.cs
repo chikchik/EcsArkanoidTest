@@ -3,7 +3,7 @@
 namespace Fabros.EcsModules.Box2D.ClientServer.Api
 {
     [Flags]
-    public enum Box2dDebugDrawFlags
+    public enum Box2DDebugDrawFlags
     {
         ShapeBit			= 1,	// draw shapes
         JointBit			= 2,	// draw joint connections

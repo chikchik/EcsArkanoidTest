@@ -1,6 +1,6 @@
 ﻿namespace Fabros.EcsModules.Box2D.ClientServer.Api
 {
-    public struct Box2dColor
+    public struct Box2DColor
     {
         public float R;
         public float Q;
