@@ -1,4 +1,5 @@
-﻿using Fabros.Ecs;
+﻿using System.Collections.Generic;
+using Fabros.Ecs;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.Ecs.ClientServer.Systems;
@@ -16,6 +17,7 @@ using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Systems;
+using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Systems;
 using Leopotam.EcsLite;
@@ -117,9 +119,21 @@ namespace Game.ClientServer
             return pool;
         }
 
-       
-        public static void AddSystems(ComponentsPool pool, EcsSystems systems, bool client, bool server)
+    }
+    
+    public class EcsSystemsFactory : IEcsSystemsFactory
+    {
+        private ComponentsPool pool;
+        public EcsSystemsFactory(ComponentsPool pool) 
         {
+            this.pool = pool;
+        }
+
+        public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)
+        {
+            var client = settings.client;
+            var server = settings.server;
+
 #if CLIENT
             void AddClient(IEcsSystem system)
             {

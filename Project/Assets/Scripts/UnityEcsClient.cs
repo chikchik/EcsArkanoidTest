@@ -35,8 +35,9 @@ namespace Game.Client
         {
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
-            
-            client = new NetClient(world, SystemsAndComponents.CreateComponentsPool());
+
+            var pool = SystemsAndComponents.CreateComponentsPool();
+            client = new NetClient(world, pool, new EcsSystemsFactory(pool));
             
             viewSystems = new EcsSystems(world);
             viewSystems.Add(new SyncTransformSystem(false));

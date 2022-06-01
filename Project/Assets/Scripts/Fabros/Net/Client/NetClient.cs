@@ -58,10 +58,13 @@ namespace Game.Fabros.Net.Client
         private float stepMult = 1f;
         private float stepOffset = 0.001f;
 
+        private IEcsSystemsFactory systemsFactory;
 
-        public NetClient(EcsWorld world, ComponentsPool pool)
+        public NetClient(EcsWorld world, ComponentsPool pool, IEcsSystemsFactory systemsFactory)
         {
             Application.targetFrameRate = 60;
+
+            this.systemsFactory = systemsFactory;
 
             Leo = new LeoContexts(Config.TMP_HASHES_PATH,
                 pool,
@@ -139,7 +142,9 @@ namespace Game.Fabros.Net.Client
             
             var copyServerSystems = new EcsSystems(copyServerWorld);
             copyServerSystems.AddWorld(InputWorld, "input");
-            SystemsAndComponents.AddSystems(Leo.Pool, copyServerSystems, false, false);
+            
+            systemsFactory.AddNewSystems(copyServerSystems, new IEcsSystemsFactory.Settings(false, false));
+            
             copyServerSystems.Init();
             
             
@@ -203,7 +208,8 @@ namespace Game.Fabros.Net.Client
 
             clientSystems = new EcsSystems(MainWorld);
             clientSystems.AddWorld(InputWorld, "input");
-            SystemsAndComponents.AddSystems(Leo.Pool, clientSystems, true, false);
+            
+            systemsFactory.AddNewSystems(clientSystems, new IEcsSystemsFactory.Settings(true, false));
 
             WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif);
 

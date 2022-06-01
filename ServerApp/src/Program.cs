@@ -111,7 +111,10 @@ namespace ConsoleApp
 
                 systems = new EcsSystems(world);
                 systems.AddWorld(inputWorld, "input");
-                SystemsAndComponents.AddSystems(pool, systems, false, true);
+
+                var factory = new EcsSystemsFactory(pool);
+                factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings(false, true));
+
 
                 leo = new LeoContexts(Config.TMP_HASHES_PATH, pool, 
                     new SyncLog(Config.SYNC_LOG_PATH), InputService.ApplyInput);

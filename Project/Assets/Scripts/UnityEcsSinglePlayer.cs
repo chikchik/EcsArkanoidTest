@@ -8,6 +8,8 @@ using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
+using Game.Fabros.Net.Client;
+using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Game.UI;
@@ -66,7 +68,11 @@ namespace Game.Client
             systems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
 
-            SystemsAndComponents.AddSystems(null, systems, true, true);
+            var systemsFactory = new EcsSystemsFactory(null);
+            
+            systemsFactory.AddNewSystems(systems, 
+                new IEcsSystemsFactory.Settings{client = true, server = true});
+
             systems.Init();
             
             viewSystems = new EcsSystems(world);
