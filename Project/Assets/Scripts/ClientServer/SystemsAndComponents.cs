@@ -107,6 +107,7 @@ namespace Game.ClientServer
 
            
             pool.AddComponent<ApplyForceComponent>();
+            pool.AddComponent<PushingComponent>();
 
 
             pool.AddComponent<MoveSimpleDirectionComponent>();

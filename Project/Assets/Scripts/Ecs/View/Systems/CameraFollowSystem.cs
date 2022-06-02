@@ -8,7 +8,7 @@ namespace Game.Ecs.Client.Systems
 {
     public class CameraFollowSystem : IEcsRunSystem
     {
-        private readonly Vector3 CameraOffset = new Vector3(-4, 8, 4) * 2;
+        private readonly Vector3 CameraOffset = new Vector3(-4, 8, 4) * 1.5f;
 
         private Camera camera;
         public CameraFollowSystem(Camera camera)
