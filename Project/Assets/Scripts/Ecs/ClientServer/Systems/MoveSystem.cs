@@ -1,6 +1,5 @@
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
@@ -9,11 +8,6 @@ using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-    public struct MovingComponent
-    {
-    }
-
-
     public class MoveSystem : IEcsRunSystem
     {
         public void Run(EcsSystems systems)
@@ -40,31 +34,13 @@ namespace Game.Ecs.ClientServer.Systems
                 var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).Value;
                 //var dir = moveDirectionComponent.value * deltaTime * speedComponent.speed;
                 var dir = moveDirectionComponent.value * deltaTime * speed; //speedComponent.speed;
-                if (dir.sqrMagnitude > 0)
+                if (dir.sqrMagnitude > 0.0f)
                 {
                     poolPosition.GetRef(entity).value += dir;
                     poolMoving.Replace(entity, new MovingComponent());
                 }
                 else
                     poolMoving.Del(entity);
-            }
-        }
-    }
-
-    public class AddLerpSystem : IEcsRunSystem
-    {
-        public void Run(EcsSystems systems)
-        {
-            var world = systems.GetWorld();
-            var filter = world.Filter<PositionComponent>().IncAdded<Box2DBodyComponent>().End();
-            var poolLerp = world.GetPool<LerpComponent>();
-            
-            foreach (var entity in filter)
-            {
-                if (entity.EntityHas<LerpComponent>(world))
-                    continue;
-                
-                poolLerp.Add(entity).value = 0.5f;
             }
         }
     }

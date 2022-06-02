@@ -431,6 +431,11 @@ namespace Game.Utils
         {
             return new Vector2(x, v.y);
         }
+        
+        public static Vector3 ToVector3XZ(this Vector2 v)
+        {
+            return new Vector3(v.x, 0, v.y);
+        }
 
         public static Vector2 WithY(this Vector2 v, float y)
         {
@@ -476,6 +481,16 @@ namespace Game.Utils
         public static Vector3 WithMultipliedX(this Vector3 v, float s)
         {
             return new Vector3(v.x * s, v.y, v.z);
+        }
+        
+        public static Vector2 ToVector2XZ(this Vector3 v)
+        {
+            return new Vector3(v.x ,v.z);
+        }
+        
+        public static Vector2 ToVector2XY(this Vector3 v)
+        {
+            return new Vector3(v.x ,v.y);
         }
 
         public static Vector3 WithMultiplied(this Vector3 v, float s)

@@ -13,7 +13,7 @@ namespace Game.Ecs.Client.Systems
             var world = systems.GetWorld();
             var filter = world
                 .Filter<UnitComponent>()
-                .Inc<MoveDirectionComponent>()
+                .Inc<LookDirectionComponent>()
                 .Inc<TransformComponent>()
                 .End();
 
@@ -24,14 +24,14 @@ namespace Game.Ecs.Client.Systems
             foreach (var entity in filter)
             {
                 var transform = poolTransform.Get(entity).Transform;
-                var direction = poolLookDirection.Get(entity).value;
+                var lookDirection = poolLookDirection.Get(entity).value;
 
-                if (Mathf.Approximately(direction.magnitude, 0))
+                if (Mathf.Approximately(lookDirection.magnitude, 0))
                     continue;
 
                 var lerp = poolLerp.GetNullable(entity)?.value??1f;
                 
-                var quat = Quaternion.LookRotation(direction);
+                var quat = Quaternion.LookRotation(lookDirection);
                 transform.localRotation = Quaternion.Lerp(transform.localRotation, quat, lerp);
             }
         }

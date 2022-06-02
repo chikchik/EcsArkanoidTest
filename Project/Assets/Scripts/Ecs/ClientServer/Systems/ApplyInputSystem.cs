@@ -10,8 +10,10 @@ using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer;
+using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Random = System.Random;
 
 namespace Game.Ecs.ClientServer.Systems
@@ -31,11 +33,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolInputAction = inputWorld.GetPool<InputActionComponent>();
             var poolPosition = inputWorld.GetPool<PositionComponent>();
 
-
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
-            var poolLookDirection = world.GetPool<LookDirectionComponent>();
-            
-            
 
 
             foreach (var inputEntity in filter)
@@ -50,8 +48,6 @@ namespace Game.Ecs.ClientServer.Systems
                         var inputMoveComponent = poolInputMove.Get(inputEntity);
 
                         poolMoveDirection.GetRef(unitEntity).value = inputMoveComponent.Dir;
-                        if (inputMoveComponent.Dir.magnitude > 0)
-                            poolLookDirection.GetRef(unitEntity).value = inputMoveComponent.Dir;
 
                         unitEntity.EntityDel<TargetPositionComponent>(world);
 
@@ -114,11 +110,27 @@ namespace Game.Ecs.ClientServer.Systems
                 
             unitEntity.EntityAdd<PushingComponent>(world).EndTime = 1.3f;
 
-            if (result.Count > 0)
+            //if (result.Count > 0)
             {
-                var targetEntity = result[0];
+              //  var targetEntity = result[0];
                 //targetEntity.EntityGet<Box2DRigidbodyComponent>(world).
+
+                var worldReference = world.GetUnique<Box2DWorldComponent>().WorldReference;
                 
+                Box2DApi.RaycastOutputReturnType ret = new Box2DApi.RaycastOutputReturnType();
+                var pos = unitEntity.EntityGet<PositionComponent>(world).value;
+                var dir = unitEntity.EntityGet<LookDirectionComponent>(world).value;
+
+                if (dir.magnitude > 0.1f)
+                {
+                    if (Box2DApi.RayCast(worldReference, pos.ToVector2XZ(), dir.ToVector2XZ(), ref ret, 10))
+                    {
+                        Debug.Log("raycast ok");
+                        var ent = world.NewEntity();
+                        ent.EntityAdd<PositionComponent>(world).value = ret.Point.ToVector3XZ();
+                    }
+                }
+
             }
             
             /*

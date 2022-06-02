@@ -178,6 +178,7 @@ namespace Game.ClientServer
 
             systems.Add(new MoveToTargetPositionSystem());
             systems.Add(new MoveSystem());
+            systems.Add(new LookDirectionSystem());
             systems.Add(new SimpleMoveSystem());
             systems.Add(new UnitMoveSystem());
             systems.Add(new PushingSystem());

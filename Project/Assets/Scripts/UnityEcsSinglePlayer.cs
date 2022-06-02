@@ -129,6 +129,8 @@ namespace Game.Client
 
         public void FixedUpdate()
         {
+            if (!Application.isPlaying)
+                return;
             systems.Run();
         }
         
