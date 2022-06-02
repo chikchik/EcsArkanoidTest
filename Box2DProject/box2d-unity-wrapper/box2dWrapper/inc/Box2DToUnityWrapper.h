@@ -68,7 +68,7 @@ extern "C"
 
 
     // BODY
-    DllExport b2Body* CreateBody(b2World* world, int bodyType,
+    DllExport b2Body* CreateBody(b2World* world, b2BodyType bodyType,
         Vector2 position, float angle, int entity);
 
     DllExport int GetJointListCount(b2Body* body);

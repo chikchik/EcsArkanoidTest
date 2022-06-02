@@ -283,7 +283,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             
                 var bodyReference = Box2DApi.CreateBody(
                     physicsWorld,
-                    (int) def.BodyType,
+                    def.BodyType,
                     new Vector2(positionComponent.value.x, positionComponent.value.z),
                     bodyAngle,
                     entity);
@@ -326,12 +326,10 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             foreach (var entity in filter)
             {
                 var joint = poolJoint.Get(entity);
-                Box2DApi.b2DistanceJointDef def =
-                    new Box2DApi.b2DistanceJointDef(
-                        poolBodyReference.Get(entity).BodyReference,
-                        poolBodyReference.Get(joint.Entity).BodyReference,
-                        false
-                    );
+                Box2DApi.b2DistanceJointDef def = Box2DApi.b2DistanceJointDef.Null;
+                def.baseClass.bodyA = poolBodyReference.Get(entity).BodyReference;
+                def.baseClass.bodyB = poolBodyReference.Get(joint.Entity).BodyReference;
+                def.baseClass.collideConnected = false;
                 def.minLength = 3;
                 def.maxLength = 3;
                 

@@ -53,7 +53,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
         public static extern void DestroyWorld(IntPtr world);
 
         [DllImport(DllName)]
-        public static extern IntPtr CreateBody(IntPtr world, int bodyType, Vector2 position, float angle, int entity);
+        public static extern IntPtr CreateBody(IntPtr world, BodyType bodyType, Vector2 position, float angle, int entity);
 
         [DllImport(DllName)]
         public static extern void AddFixtureToBody(IntPtr body, IntPtr shape, float density,
