@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Box2D.ClientServer;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Grid.Other;
@@ -10,10 +12,9 @@ using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer;
-using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 using Random = System.Random;
 
 namespace Game.Ecs.ClientServer.Systems
@@ -101,63 +102,21 @@ namespace Game.Ecs.ClientServer.Systems
                 return;
             }
          
-            
-            world.GetNearestEntities(
-                unitEntity,
-                position,
-                1, ref result, entity=> entity.EntityHas<Box2DRigidbodyComponent>(world));
-            
                 
             unitEntity.EntityAdd<PushingComponent>(world).EndTime = 1.3f;
 
-            //if (result.Count > 0)
+            if (unitEntity.EntityHas<LookDirectionComponent>(world) && 
+                !unitEntity.EntityHas<ApplyForceComponent>(world))
             {
-              //  var targetEntity = result[0];
-                //targetEntity.EntityGet<Box2DRigidbodyComponent>(world).
-
-                var worldReference = world.GetUnique<Box2DWorldComponent>().WorldReference;
-                
-                Box2DApi.RaycastOutputReturnType ret = new Box2DApi.RaycastOutputReturnType();
-                var pos = unitEntity.EntityGet<PositionComponent>(world).value;
+                ref var component = ref unitEntity.EntityAdd<ApplyForceComponent>(world);
+                component.Time = world.GetTime() + 1f;
                 var dir = unitEntity.EntityGet<LookDirectionComponent>(world).value;
-
-                if (dir.magnitude > 0.1f)
-                {
-                    if (Box2DApi.RayCast(worldReference, pos.ToVector2XZ(), dir.ToVector2XZ(), ref ret, 10))
-                    {
-                        Debug.Log("raycast ok");
-                        var ent = world.NewEntity();
-                        ent.EntityAdd<PositionComponent>(world).value = ret.Point.ToVector3XZ();
-                    }
-                }
-
+                var angle = Math.PI / 8f;
+                var rotated = new Vector3();
+                rotated.x = (float)(dir.x * Math.Cos(angle) - dir.z * Math.Sin(angle));
+                rotated.z = (float)(dir.x * Math.Sin(angle) + dir.z * Math.Cos(angle));
+                component.Direction = rotated;
             }
-            
-            /*
-            var kickEntity = world.NewEntity();
-            
-            ref var rb = ref kickEntity.EntityAdd<RigidbodyDefinitionComponent>(world);
-            
-            rb.BodyType = BodyType.Kinematic;
-            rb.Density = 985f;
-            rb.Friction = 0.3f;
-            rb.Restitution = 0;
-            rb.RestitutionThreshold = 0.5f;
-            
-
-            //ref var collider = ref kickEntity.EntityAddComponent<CircleColliderComponent>(world);
-            //collider.Radius = 0.1f;
-
-            kickEntity.EntityAdd<PositionComponent>(world).value = position;
-            kickEntity.EntityAdd<Rotation2DComponent>(world);
-
-            var lookDir = unitEntity.EntityGet<LookDirectionComponent>(world).value.normalized;
-            kickEntity.EntityAdd<StartSimpleMoveAtComponent>(world).Time = world.GetTime() + 1f;
-            var dir = lookDir * 12;
-            kickEntity.EntityAdd<MoveSimpleDirectionComponent>(world).value = dir;
-            kickEntity.EntityAdd<DestroyWhenTimeIsOutComponent>(world);
-            kickEntity.EntityAdd<TimeComponent>(world).time = world.GetTime() + 1.1f;
-            */
         }
     }
 }

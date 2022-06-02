@@ -1,5 +1,6 @@
 ﻿using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
+using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Utils;
 using Leopotam.EcsLite;
@@ -40,6 +41,12 @@ namespace Game.Client
                 {
                     Gizmos.color = Color.green;
                     Gizmos.DrawRay(pos, data.value);
+                });
+
+                entity.EntityWith<ApplyForceComponent>(world, data =>
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawRay(pos, data.Direction);
                 });
             }
         }

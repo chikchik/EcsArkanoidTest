@@ -8,4 +8,12 @@ namespace Game.Ecs.ClientServer.Components
     {
         public Vector3 value;
     }
+    
+    
+    [Serializable]
+    public struct ApplyForceComponent
+    {
+        public float Time;
+        public Vector3 Direction;
+    }
 }

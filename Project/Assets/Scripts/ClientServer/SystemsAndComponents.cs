@@ -106,6 +106,7 @@ namespace Game.ClientServer
             pool.AddComponent<LookDirectionComponent>();
 
            
+            pool.AddComponent<ApplyForceComponent>();
 
 
             pool.AddComponent<MoveSimpleDirectionComponent>();
@@ -222,6 +223,8 @@ namespace Game.ClientServer
             systems.Add(new RemoveInventoryItemSystem());
 
             systems.Add(new FireSystem());
+
+            systems.Add(new ApplyForceSystem());
 
 #if CLIENT
             AddClient(new CreateViewSystem());
