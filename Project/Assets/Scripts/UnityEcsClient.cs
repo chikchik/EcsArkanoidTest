@@ -104,6 +104,11 @@ namespace Game.Client
 
         private void Update()
         {
+            #if UNITY_EDITOR
+            if (!Application.isPlaying)
+                return;
+            #endif
+            
             if (!client.Connected)
                 return;
 

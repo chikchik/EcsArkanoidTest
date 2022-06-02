@@ -138,6 +138,7 @@ namespace Game.Fabros.Net.Client
             
             
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
+            copyServerWorld.SetDebugName("copyServerWorld");
             copyServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
        
             Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
@@ -145,7 +146,8 @@ namespace Game.Fabros.Net.Client
             var copyServerSystems = new EcsSystems(copyServerWorld);
             copyServerSystems.AddWorld(InputWorld, "input");
             
-            systemsFactory.AddNewSystems(copyServerSystems, new IEcsSystemsFactory.Settings(false, false));
+            systemsFactory.AddNewSystems(copyServerSystems,
+                new IEcsSystemsFactory.Settings(false, false));
             
             copyServerSystems.Init();
             
@@ -154,6 +156,7 @@ namespace Game.Fabros.Net.Client
             var serverTick = Leo.GetCurrentTick(copyServerWorld);
             var clientTick = Leo.GetCurrentTick(MainWorld);
             
+            Debug.Log($"pr srv:{Leo.GetCurrentTick(ServerWorld).Value} client: {Leo.GetCurrentTick(MainWorld).Value}");
             Profiler.BeginSample("SimServerWorld");
             while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
             {
@@ -168,6 +171,7 @@ namespace Game.Fabros.Net.Client
                 iterations++;
             }
             Profiler.EndSample();
+            Debug.Log("pr end");
             
             
 
@@ -225,6 +229,7 @@ namespace Game.Fabros.Net.Client
 
 
             ServerWorld = WorldUtils.CopyWorld(Leo.Pool, MainWorld);
+            ServerWorld.SetDebugName("ServerWorld");
             ServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
 
 

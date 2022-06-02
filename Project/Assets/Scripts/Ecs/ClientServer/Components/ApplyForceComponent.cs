@@ -4,8 +4,9 @@ using UnityEngine;
 namespace Game.Ecs.ClientServer.Components
 {
     [Serializable]
-    public struct MoveSimpleDirectionComponent
+    public struct ApplyForceComponent
     {
-        public Vector3 value;
+        public float Time;
+        public Vector3 Direction;
     }
 }

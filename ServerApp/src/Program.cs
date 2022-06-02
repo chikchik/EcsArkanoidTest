@@ -226,8 +226,8 @@ namespace ConsoleApp
 
             if (!packet.isPing)
             {
-                Console.WriteLine($"got input from {client.ID}, {packet.input.time} at {currentTick}");
-                leo.SyncLog.WriteLine($"got input from {client.ID}, {packet.input.time} at {currentTick}");
+                //Console.WriteLine($"got input from {client.ID}, {packet.input.time} at {currentTick}");
+                //leo.SyncLog.WriteLine($"got input from {client.ID}, {packet.input.time} at {currentTick}");
             }
 
 
