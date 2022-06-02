@@ -1,5 +1,7 @@
 ﻿using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Box2D.ClientServer.Api;
+using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.ClientServer.Components;
 using Leopotam.EcsLite;
@@ -18,6 +20,12 @@ namespace Game.Ecs.ClientServer.Systems
                 .End();
             
             var deltaTime = world.GetDeltaSeconds();
+
+            var b2world = world.GetUnique<Box2DWorldComponent>().WorldReference;
+            
+            //Box2DApi.app
+            
+            
             
             var poolPosition = world.GetPool<PositionComponent>();
             var poolMoveDirection = world.GetPool<MoveSimpleDirectionComponent>();
@@ -29,10 +37,18 @@ namespace Game.Ecs.ClientServer.Systems
                 var startTime = poolStartTime.Get(entity).Time;
                 if (startTime > world.GetTime())
                     continue;
+                
+                var direction = poolMoveDirection.Get(entity).value;
+                var pos = poolPosition.Get(entity).value;
+
+                Box2DApi.RaycastOutputReturnType ret = new Box2DApi.RaycastOutputReturnType();
+                Box2DApi.RayCast(b2world, pos, direction, ref ret, 10);
+                //if (ret == )
+                    
                 var time = poolTime.Get(entity).time;
                 if (time > world.GetTime())
                 {
-                    var direction = poolMoveDirection.Get(entity).value;
+                    
                     poolPosition.GetRef(entity).value += direction * deltaTime;
                 }
                 else

@@ -5,7 +5,7 @@ using Leopotam.EcsLite;
 namespace Fabros.EcsModules.Box2D.ClientServer.Components
 {
     [System.Serializable]
-    public struct RigidbodyDefinitionComponent : IEcsAutoReset<RigidbodyDefinitionComponent>
+    public struct Box2DRigidbodyDefinitionComponent : IEcsAutoReset<Box2DRigidbodyDefinitionComponent>
     {
         public BodyType BodyType;
         public float Density;
@@ -19,7 +19,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Components
         public Int16 GroupIndex;
         public bool IsTrigger;
         
-        public void AutoReset(ref RigidbodyDefinitionComponent c)
+        public void AutoReset(ref Box2DRigidbodyDefinitionComponent c)
         {
             c.BodyType = BodyType.Dynamic;
             c.Density = 1f;

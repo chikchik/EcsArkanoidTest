@@ -108,6 +108,115 @@
     ],
     "Groups": [
         {
+            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.Box2DRigidbodyDefinitionComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false}]}",
+            "ChangedEntities": [
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51
+            ],
+            "RemovedFromEntities": []
+        },
+        {
+            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.Box2DBoxColliderComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":1.0,\"y\":1.0}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":0.9999999403953552,\"y\":1.0}},{\"Size\":{\"x\":1.0,\"y\":1.0}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":1.0000004768371583,\"y\":1.0}},{\"Size\":{\"x\":0.9999998211860657,\"y\":1.0}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":1.0,\"y\":1.0}}]}",
+            "ChangedEntities": [
+                32,
+                33,
+                34,
+                35,
+                37,
+                39,
+                40,
+                41,
+                42,
+                45,
+                46,
+                47,
+                48
+            ],
+            "RemovedFromEntities": []
+        },
+        {
+            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.Box2DCircleColliderComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"Radius\":0.5},{\"Radius\":0.5},{\"Radius\":0.5}]}",
+            "ChangedEntities": [
+                43,
+                44,
+                50
+            ],
+            "RemovedFromEntities": []
+        },
+        {
+            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.Box2DPolygonColliderComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"Anchors\":[2,4,4,2],\"Vertices\":[{\"x\":1.1698691844940186,\"y\":0.37627989053726199},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.7240702509880066,\"y\":-1.6647471189498902},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486},{\"x\":-0.7124106287956238,\"y\":-1.6796637773513795},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-1.16986882686615,\"y\":0.37627965211868288},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486}]},{\"Anchors\":[2,4,4,2],\"Vertices\":[{\"x\":1.1698691844940186,\"y\":0.37627989053726199},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.7240702509880066,\"y\":-1.6647471189498902},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486},{\"x\":-0.7124106287956238,\"y\":-1.6796637773513795},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-1.16986882686615,\"y\":0.37627965211868288},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486}]},{\"Anchors\":[2,4,4,2],\"Vertices\":[{\"x\":1.1698691844940186,\"y\":0.37627989053726199},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.7240702509880066,\"y\":-1.6647471189498902},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486},{\"x\":-0.7124106287956238,\"y\":-1.6796637773513795},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-1.16986882686615,\"y\":0.37627965211868288},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486}]},{\"Anchors\":[2,4,4,2],\"Vertices\":[{\"x\":1.1698691844940186,\"y\":0.37627989053726199},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.7240702509880066,\"y\":-1.6647471189498902},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486},{\"x\":-0.7124106287956238,\"y\":-1.6796637773513795},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-1.16986882686615,\"y\":0.37627965211868288},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486}]}]}",
+            "ChangedEntities": [
+                36,
+                38,
+                49,
+                51
+            ],
+            "RemovedFromEntities": []
+        },
+        {
+            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.Rotation2DComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"Angle\":0.0},{\"Angle\":0.0},{\"Angle\":-3.1415867805480959},{\"Angle\":0.0},{\"Angle\":-0.6734876036643982},{\"Angle\":-0.2617988586425781},{\"Angle\":-0.6734876036643982},{\"Angle\":-0.7853966951370239},{\"Angle\":0.0},{\"Angle\":0.0},{\"Angle\":-2.0239994525909426},{\"Angle\":0.0},{\"Angle\":0.0},{\"Angle\":-4.887623310089111},{\"Angle\":0.0},{\"Angle\":0.0},{\"Angle\":0.0},{\"Angle\":-0.6734876036643982},{\"Angle\":0.0},{\"Angle\":-0.6734876036643982}]}",
+            "ChangedEntities": [
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51
+            ],
+            "RemovedFromEntities": []
+        },
+        {
+            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.JointTestComponent",
+            "Id": 0,
+            "Components": "{\"data\":[{\"Entity\":36}]}",
+            "ChangedEntities": [
+                51
+            ],
+            "RemovedFromEntities": []
+        },
+        {
             "FullComponentName": "Game.Fabros.EcsModules.Fire.ClientServer.Components.FlammableComponent",
             "Id": 0,
             "Components": "{\"data\":[{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0},{\"Power\":3.0}]}",
@@ -501,115 +610,6 @@
                 29,
                 30,
                 31
-            ],
-            "RemovedFromEntities": []
-        },
-        {
-            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.RigidbodyDefinitionComponent",
-            "Id": 0,
-            "Components": "{\"data\":[{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false},{\"BodyType\":2,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false}]}",
-            "ChangedEntities": [
-                32,
-                33,
-                34,
-                35,
-                36,
-                37,
-                38,
-                39,
-                40,
-                41,
-                42,
-                43,
-                44,
-                45,
-                46,
-                47,
-                48,
-                49,
-                50,
-                51
-            ],
-            "RemovedFromEntities": []
-        },
-        {
-            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.BoxColliderComponent",
-            "Id": 0,
-            "Components": "{\"data\":[{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":1.0,\"y\":1.0}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":0.9999999403953552,\"y\":1.0}},{\"Size\":{\"x\":1.0,\"y\":1.0}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":1.0000004768371583,\"y\":1.0}},{\"Size\":{\"x\":0.9999998211860657,\"y\":1.0}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":15.657999992370606,\"y\":15.657999992370606}},{\"Size\":{\"x\":1.0,\"y\":1.0}}]}",
-            "ChangedEntities": [
-                32,
-                33,
-                34,
-                35,
-                37,
-                39,
-                40,
-                41,
-                42,
-                45,
-                46,
-                47,
-                48
-            ],
-            "RemovedFromEntities": []
-        },
-        {
-            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.CircleColliderComponent",
-            "Id": 0,
-            "Components": "{\"data\":[{\"Radius\":0.5},{\"Radius\":0.5},{\"Radius\":0.5}]}",
-            "ChangedEntities": [
-                43,
-                44,
-                50
-            ],
-            "RemovedFromEntities": []
-        },
-        {
-            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.PolygonColliderComponent",
-            "Id": 0,
-            "Components": "{\"data\":[{\"Anchors\":[2,4,4,2],\"Vertices\":[{\"x\":1.1698691844940186,\"y\":0.37627989053726199},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.7240702509880066,\"y\":-1.6647471189498902},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486},{\"x\":-0.7124106287956238,\"y\":-1.6796637773513795},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-1.16986882686615,\"y\":0.37627965211868288},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486}]},{\"Anchors\":[2,4,4,2],\"Vertices\":[{\"x\":1.1698691844940186,\"y\":0.37627989053726199},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.7240702509880066,\"y\":-1.6647471189498902},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486},{\"x\":-0.7124106287956238,\"y\":-1.6796637773513795},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-1.16986882686615,\"y\":0.37627965211868288},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486}]},{\"Anchors\":[2,4,4,2],\"Vertices\":[{\"x\":1.1698691844940186,\"y\":0.37627989053726199},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.7240702509880066,\"y\":-1.6647471189498902},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486},{\"x\":-0.7124106287956238,\"y\":-1.6796637773513795},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-1.16986882686615,\"y\":0.37627965211868288},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486}]},{\"Anchors\":[2,4,4,2],\"Vertices\":[{\"x\":1.1698691844940186,\"y\":0.37627989053726199},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.7240702509880066,\"y\":-1.6647471189498902},{\"x\":0.6189758777618408,\"y\":-0.43860355019569399},{\"x\":0.4463776648044586,\"y\":0.5944058895111084},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":0.0,\"y\":1.6521064043045045},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486},{\"x\":-0.7124106287956238,\"y\":-1.6796637773513795},{\"x\":-0.0041871401481330399,\"y\":-1.1510353088378907},{\"x\":-0.4051589071750641,\"y\":0.6269991993904114},{\"x\":-1.16986882686615,\"y\":0.37627965211868288},{\"x\":-0.618371307849884,\"y\":-0.45595189929008486}]}]}",
-            "ChangedEntities": [
-                36,
-                38,
-                49,
-                51
-            ],
-            "RemovedFromEntities": []
-        },
-        {
-            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.RotationComponent",
-            "Id": 0,
-            "Components": "{\"data\":[{\"value\":0.0},{\"value\":0.0},{\"value\":-3.1415867805480959},{\"value\":0.0},{\"value\":-0.6734876036643982},{\"value\":-0.2617988586425781},{\"value\":-0.6734876036643982},{\"value\":-0.7853966951370239},{\"value\":0.0},{\"value\":0.0},{\"value\":-2.0239994525909426},{\"value\":0.0},{\"value\":0.0},{\"value\":-4.887623310089111},{\"value\":0.0},{\"value\":0.0},{\"value\":0.0},{\"value\":-0.6734876036643982},{\"value\":0.0},{\"value\":-0.6734876036643982}]}",
-            "ChangedEntities": [
-                32,
-                33,
-                34,
-                35,
-                36,
-                37,
-                38,
-                39,
-                40,
-                41,
-                42,
-                43,
-                44,
-                45,
-                46,
-                47,
-                48,
-                49,
-                50,
-                51
-            ],
-            "RemovedFromEntities": []
-        },
-        {
-            "FullComponentName": "Fabros.EcsModules.Box2D.ClientServer.Components.JointTestComponent",
-            "Id": 0,
-            "Components": "{\"data\":[{\"Entity\":36}]}",
-            "ChangedEntities": [
-                51
             ],
             "RemovedFromEntities": []
         },

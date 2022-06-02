@@ -30,7 +30,7 @@ namespace Game.Client
             entity.EntityReplace<Rotation2DComponent>(world).Angle = - go.transform.eulerAngles.y * Mathf.Deg2Rad;
 
             ref var rigidBodyDefinitionComponent =
-                ref entity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
+                ref entity.EntityAddComponent<Box2DRigidbodyDefinitionComponent>(world);
             
             if (go.TryGetComponent(out Box2dPhysicsExtend rigidbodyExtend))
             {
@@ -60,19 +60,19 @@ namespace Game.Client
             
             if (collider is BoxCollider2D)
             {
-                ref var boxColliderComponent = ref entity.EntityAddComponent<BoxColliderComponent>(world);
+                ref var boxColliderComponent = ref entity.EntityAddComponent<Box2DBoxColliderComponent>(world);
                 boxColliderComponent.Size = go.transform.lossyScale;
             }
 
             if (collider is CircleCollider2D)
             {
-                ref var circleColliderComponent = ref entity.EntityAddComponent<CircleColliderComponent>(world);
+                ref var circleColliderComponent = ref entity.EntityAddComponent<Box2DCircleColliderComponent>(world);
                 circleColliderComponent.Radius = collider.transform.lossyScale.x / 2;
             }
 
             if (collider is PolygonCollider2D)
             {
-                ref var polygonColliderComponent = ref entity.EntityAddComponent<PolygonColliderComponent>(world);
+                ref var polygonColliderComponent = ref entity.EntityAddComponent<Box2DPolygonColliderComponent>(world);
                 
                 //todo PhysicsShapeGroup2D?
                 PhysicsShapeGroup2D physicsShapeGroup2D = new PhysicsShapeGroup2D();

@@ -3,12 +3,12 @@ using Leopotam.EcsLite;
 namespace Fabros.EcsModules.Box2D.ClientServer.Components
 {
     [EmptyComponent]
-    public struct BodyCreatedComponent
+    public struct Box2DBodyCreatedComponent
     {
     }
     
     [EmptyComponent]
-    public struct JointCreatedComponent
+    public struct Box2DJointCreatedComponent
     {
     }
 }

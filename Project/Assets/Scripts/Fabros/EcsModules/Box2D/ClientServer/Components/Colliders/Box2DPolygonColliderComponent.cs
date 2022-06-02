@@ -3,7 +3,7 @@
 namespace Fabros.EcsModules.Box2D.ClientServer.Components
 {
     [System.Serializable]
-    public struct PolygonColliderComponent
+    public struct Box2DPolygonColliderComponent
     {
         public int[] Anchors;
         //public List<Vector2> Vertices;//todo, refactor to array[]

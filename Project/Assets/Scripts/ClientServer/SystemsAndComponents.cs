@@ -183,10 +183,10 @@ namespace Game.ClientServer
             systems.Add(new PushingSystem());
             
             
-            systems.DelHere<BeginContactComponent>();
-            systems.DelHere<EndContactComponent>();
-            systems.DelHere<PreSolveComponent>();
-            systems.DelHere<PostSolveComponent>();
+            systems.DelHere<Box2DBeginContactComponent>();
+            systems.DelHere<Box2DEndContactComponent>();
+            systems.DelHere<Box2DPreSolveComponent>();
+            systems.DelHere<Box2DPostSolveComponent>();
             
             
             systems.Add(new EntitiesLifeTimeSystem());
@@ -245,7 +245,7 @@ namespace Game.ClientServer
 
             systems.Add(new AddLerpSystem());
 
-            systems.Add(new EventsSystem<BodyReferenceComponent>());
+            systems.Add(new EventsSystem<Box2DBodyComponent>());
             systems.Add(new EventsSystem<FireComponent>());
             systems.Add(new EventsSystem<ButtonPressedComponent>());
             systems.Add(new EventsSystem<PlayerComponent>());

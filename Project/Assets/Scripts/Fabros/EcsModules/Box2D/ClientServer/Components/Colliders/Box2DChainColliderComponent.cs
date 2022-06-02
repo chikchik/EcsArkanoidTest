@@ -3,7 +3,7 @@
 namespace Fabros.EcsModules.Box2D.ClientServer.Components
 {
     [System.Serializable]
-    public struct ChainColliderComponent
+    public struct Box2DChainColliderComponent
     {
         public Vector2[] Points;
     }

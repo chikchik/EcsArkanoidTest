@@ -28,7 +28,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolButton = world.GetPool<ButtonComponent>();
             var poolPressed = world.GetPool<ButtonPressedComponent>();
             var poolSpeed = world.GetPool<SpeedComponent>();
-            var poolBody = world.GetPool<RigidbodyComponent>();
+            var poolBody = world.GetPool<Box2DRigidbodyComponent>();
             
             var deltaTime = world.GetDeltaSeconds();
 

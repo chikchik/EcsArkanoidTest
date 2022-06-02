@@ -105,26 +105,36 @@ namespace Game.Ecs.ClientServer.Systems
                 return;
             }
          
-            /*
+            
             world.GetNearestEntities(
                 unitEntity,
                 position,
-                1, ref result, entity=> entity.EntityHas<RigidbodyComponent>(world));
-            */
+                1, ref result, entity=> entity.EntityHas<Box2DRigidbodyComponent>(world));
+            
                 
             unitEntity.EntityAdd<PushingComponent>(world).EndTime = 1.3f;
+
+            if (result.Count > 0)
+            {
+                var targetEntity = result[0];
+                //targetEntity.EntityGet<Box2DRigidbodyComponent>(world).
+                
+            }
             
+            /*
             var kickEntity = world.NewEntity();
+            
             ref var rb = ref kickEntity.EntityAdd<RigidbodyDefinitionComponent>(world);
             
             rb.BodyType = BodyType.Kinematic;
             rb.Density = 985f;
             rb.Friction = 0.3f;
             rb.Restitution = 0;
-            rb.RestitutionThreshold = 0.5f;   
+            rb.RestitutionThreshold = 0.5f;
+            
 
-            ref var collider = ref kickEntity.EntityAddComponent<CircleColliderComponent>(world);
-            collider.Radius = 0.1f;
+            //ref var collider = ref kickEntity.EntityAddComponent<CircleColliderComponent>(world);
+            //collider.Radius = 0.1f;
 
             kickEntity.EntityAdd<PositionComponent>(world).value = position;
             kickEntity.EntityAdd<Rotation2DComponent>(world);
@@ -135,8 +145,7 @@ namespace Game.Ecs.ClientServer.Systems
             kickEntity.EntityAdd<MoveSimpleDirectionComponent>(world).value = dir;
             kickEntity.EntityAdd<DestroyWhenTimeIsOutComponent>(world);
             kickEntity.EntityAdd<TimeComponent>(world).time = world.GetTime() + 1.1f;
-        
-
+            */
         }
     }
 }

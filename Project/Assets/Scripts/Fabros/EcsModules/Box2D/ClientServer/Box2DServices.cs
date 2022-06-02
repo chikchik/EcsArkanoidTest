@@ -36,8 +36,8 @@ namespace Fabros.EcsModules.Box2D.ClientServer
         public static void ReplicateBox2D(EcsWorld src, EcsWorld dest)
         {
             var srcEntities = new List<int>();
-            src.GetPool<BodyReferenceComponent>().GetEntities(srcEntities);
-            var srcPool = src.GetPool<BodyReferenceComponent>();
+            src.GetPool<Box2DBodyComponent>().GetEntities(srcEntities);
+            var srcPool = src.GetPool<Box2DBodyComponent>();
             
             IntPtr[] arrayOfReferences = new IntPtr[srcEntities.Count + 1];
             for (int i = 0; i < srcEntities.Count; i++)
@@ -49,8 +49,8 @@ namespace Fabros.EcsModules.Box2D.ClientServer
             var newDestWorld = Box2DApi.CloneWorld(ref arrayOfReferences, srcEntities.Count, srcWorld);
 
             
-            var destPool = dest.GetPool<BodyReferenceComponent>();
-            var destPoolBodyCreated = dest.GetPool<BodyCreatedComponent>();
+            var destPool = dest.GetPool<Box2DBodyComponent>();
+            var destPoolBodyCreated = dest.GetPool<Box2DBodyCreatedComponent>();
             
             
             if (dest.HasUnique<Box2DWorldComponent>())
@@ -85,7 +85,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer
         {
             IntPtr bodyRef = IntPtr.Zero;
 
-            var ecsPool = world.GetPool<BodyReferenceComponent>();
+            var ecsPool = world.GetPool<Box2DBodyComponent>();
 
             if (ecsPool.Has(entity))
             {

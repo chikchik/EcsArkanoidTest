@@ -15,11 +15,11 @@ namespace Game.Ecs.ClientServer.Systems
                 .Filter<MoveDirectionComponent>()
                 .Inc<SpeedComponent>()
                 .Inc<UnitComponent>()
-                .Inc<BodyReferenceComponent>()
+                .Inc<Box2DBodyComponent>()
                 .End();
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
             var poolSpeed = world.GetPool<SpeedComponent>();
-            var poolBodyReference = world.GetPool<BodyReferenceComponent>();
+            var poolBodyReference = world.GetPool<Box2DBodyComponent>();
 
             foreach (var entity in filter)
             {
@@ -27,7 +27,7 @@ namespace Game.Ecs.ClientServer.Systems
             }
         }
 
-        private void SetLinearVelToBody(int entity, EcsPool<BodyReferenceComponent> poolBodyReference,
+        private void SetLinearVelToBody(int entity, EcsPool<Box2DBodyComponent> poolBodyReference,
             EcsPool<MoveDirectionComponent> poolMoveDirection, EcsPool<SpeedComponent> poolSpeed)
         {
             var bodyReference = poolBodyReference.Get(entity).BodyReference;

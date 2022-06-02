@@ -40,14 +40,14 @@ namespace Game.ClientServer
             ref var speedComponent = ref entity.EntityAddComponent<SpeedComponent>(world);
             speedComponent.speed = 2f;
             
-            ref var rigidBodyDefinitionComponent = ref entity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
+            ref var rigidBodyDefinitionComponent = ref entity.EntityAddComponent<Box2DRigidbodyDefinitionComponent>(world);
             rigidBodyDefinitionComponent.BodyType = BodyType.Kinematic;
             rigidBodyDefinitionComponent.Density = 985f;
             rigidBodyDefinitionComponent.Friction = 0.3f;
             rigidBodyDefinitionComponent.Restitution = 0;
             rigidBodyDefinitionComponent.RestitutionThreshold = 0.5f;   
 
-            ref var collider = ref entity.EntityAddComponent<CircleColliderComponent>(world);
+            ref var collider = ref entity.EntityAddComponent<Box2DCircleColliderComponent>(world);
             collider.Radius = 0.4f;
 
             entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();

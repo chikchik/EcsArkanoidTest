@@ -53,10 +53,10 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if (custom.Shake)
                 {
-                    var bodies = world.Filter<BodyReferenceComponent>().End();
+                    var bodies = world.Filter<Box2DBodyComponent>().End();
                     foreach (var bodyEntity in bodies)
                     {
-                        var b2d = bodyEntity.EntityGet<BodyReferenceComponent>(world).BodyReference;
+                        var b2d = bodyEntity.EntityGet<Box2DBodyComponent>(world).BodyReference;
                         var dir = new Vector2(NextFloat(-1,1), NextFloat(-1,1));
                         dir.Normalize();
                         Box2DApi.ApplyForce(b2d, dir * NextFloat(5,20), new Vector2(0.4f,0));

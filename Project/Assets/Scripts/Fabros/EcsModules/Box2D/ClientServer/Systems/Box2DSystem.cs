@@ -89,28 +89,28 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
         public void SetBeginContactCallback(CollisionCallbackData callbackData)
         {
             var newEntity = world.NewEntity();
-            ref var contact = ref newEntity.EntityAddComponent<BeginContactComponent>(world);
+            ref var contact = ref newEntity.EntityAddComponent<Box2DBeginContactComponent>(world);
             contact.CollisionCallbackData = callbackData;
         }
         
         public void SetEndContactCallback(CollisionCallbackData callbackData)
         {
             var newEntity = world.NewEntity();
-            ref var contact = ref newEntity.EntityAddComponent<EndContactComponent>(world);
+            ref var contact = ref newEntity.EntityAddComponent<Box2DEndContactComponent>(world);
             contact.CollisionCallbackData = callbackData;
         }
         
         public void SetPreSolveCallback(CollisionCallbackData callbackData)
         {
             var newEntity = world.NewEntity();
-            ref var contact = ref newEntity.EntityAddComponent<PreSolveComponent>(world);
+            ref var contact = ref newEntity.EntityAddComponent<Box2DPreSolveComponent>(world);
             contact.CollisionCallbackData = callbackData;
         }
         
         public void SetPostSolveCallback(CollisionCallbackData callbackData)
         {
             var newEntity = world.NewEntity();
-            ref var contact = ref newEntity.EntityAddComponent<PostSolveComponent>(world);
+            ref var contact = ref newEntity.EntityAddComponent<Box2DPostSolveComponent>(world);
             contact.CollisionCallbackData = callbackData;
         }
 
@@ -129,14 +129,14 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             }*/
 
             var filter = world
-                .Filter<BodyReferenceComponent>()
-                .Inc<RigidbodyComponent>()
+                .Filter<Box2DBodyComponent>()
+                .Inc<Box2DRigidbodyComponent>()
                 .Inc<PositionComponent>()
                 .Inc<Rotation2DComponent>()
                 .End();
             
-            var bodyReferenceComponent = world.GetPool<BodyReferenceComponent>();
-            var poolRigidBodyComponent = world.GetPool<RigidbodyComponent>();
+            var bodyReferenceComponent = world.GetPool<Box2DBodyComponent>();
+            var poolRigidBodyComponent = world.GetPool<Box2DRigidbodyComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
             var poolRotation = world.GetPool<Rotation2DComponent>(); 
             
@@ -165,12 +165,12 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             Profiler.BeginSample("UpdateInternalBox2D");
             
             var filter = world
-                .Filter<BodyReferenceComponent>()
-                .Inc<RigidbodyComponent>()
+                .Filter<Box2DBodyComponent>()
+                .Inc<Box2DRigidbodyComponent>()
                 .Inc<PositionComponent>()
                 .End();
-            var poolBodyReference = world.GetPool<BodyReferenceComponent>();
-            var poolRigidbody = world.GetPool<RigidbodyComponent>();
+            var poolBodyReference = world.GetPool<Box2DBodyComponent>();
+            var poolRigidbody = world.GetPool<Box2DRigidbodyComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
             var poolRotation = world.GetPool<Rotation2DComponent>(); 
             
@@ -229,16 +229,16 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
 
         private static IntPtr CreateSimpleShape(EcsWorld world, int entity)
         {
-            var boxCollider = entity.EntityGetNullable<BoxColliderComponent>(world);
+            var boxCollider = entity.EntityGetNullable<Box2DBoxColliderComponent>(world);
             if (boxCollider.HasValue)
                 return Box2DApi.CreateBoxShape(boxCollider.Value.Size / 2f);
 
-            var circleCollider = entity.EntityGetNullable<CircleColliderComponent>(world);
+            var circleCollider = entity.EntityGetNullable<Box2DCircleColliderComponent>(world);
             
             if (circleCollider.HasValue)
                 return Box2DApi.CreateCircleShape(circleCollider.Value.Radius);
             
-            var chainCollider = entity.EntityGetNullable<ChainColliderComponent>(world);
+            var chainCollider = entity.EntityGetNullable<Box2DChainColliderComponent>(world);
             
             if (chainCollider.HasValue)
             {
@@ -255,22 +255,22 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             
             var physicsWorld = world.GetUnique<Box2DWorldComponent>().WorldReference;
             var filter = world
-                .Filter<RigidbodyDefinitionComponent>()
+                .Filter<Box2DRigidbodyDefinitionComponent>()
                 .Inc<Rotation2DComponent>()
-                .Exc<BodyCreatedComponent>()
+                .Exc<Box2DBodyCreatedComponent>()
                 .End();
 
-            var poolRigidbodyDefinition = world.GetPool<RigidbodyDefinitionComponent>();
+            var poolRigidbodyDefinition = world.GetPool<Box2DRigidbodyDefinitionComponent>();
             var poolPositionComponent = world.GetPool<PositionComponent>();
             var poolRotationComponent = world.GetPool<Rotation2DComponent>();
             
-            var poolRigidBody = world.GetPool<RigidbodyComponent>();
-            var poolBodyReference = world.GetPool<BodyReferenceComponent>();
+            var poolRigidBody = world.GetPool<Box2DRigidbodyComponent>();
+            var poolBodyReference = world.GetPool<Box2DBodyComponent>();
             
             var poolJoint = world.GetPool<JointTestComponent>();
             
-            var poolBodyCreated = world.GetPool<BodyCreatedComponent>();
-            var poolJointCreated = world.GetPool<JointCreatedComponent>();
+            var poolBodyCreated = world.GetPool<Box2DBodyCreatedComponent>();
+            var poolJointCreated = world.GetPool<Box2DJointCreatedComponent>();
 
             foreach (var entity in filter)
             {
@@ -290,7 +290,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
                 poolBodyCreated.Add(entity);
                 
                 
-                var polygonCollider = entity.EntityGetNullable<PolygonColliderComponent>(world);
+                var polygonCollider = entity.EntityGetNullable<Box2DPolygonColliderComponent>(world);
                 if (polygonCollider.HasValue)
                 {
                     var vertices = polygonCollider.Value.Vertices;
@@ -320,7 +320,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
                 poolRigidBody.Replace(entity).BodyType = def.BodyType;
             }
 
-            filter = world.Filter<JointTestComponent>().Exc<JointCreatedComponent>().End();
+            filter = world.Filter<JointTestComponent>().Exc<Box2DJointCreatedComponent>().End();
             foreach (var entity in filter)
             {
                 var joint = poolJoint.Get(entity);
@@ -339,19 +339,19 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
         }
 
         private void AddFixtureToBody(IntPtr bodyReference, IntPtr shape,
-            RigidbodyDefinitionComponent rigidbodyDefinitionComponent)
+            Box2DRigidbodyDefinitionComponent box2DRigidbodyDefinitionComponent)
         {
             B2Filter filter;
-            filter.CategoryBits = rigidbodyDefinitionComponent.CategoryBits;
-            filter.MaskBits = rigidbodyDefinitionComponent.MaskBits;
-            filter.GroupIndex = rigidbodyDefinitionComponent.GroupIndex;
+            filter.CategoryBits = box2DRigidbodyDefinitionComponent.CategoryBits;
+            filter.MaskBits = box2DRigidbodyDefinitionComponent.MaskBits;
+            filter.GroupIndex = box2DRigidbodyDefinitionComponent.GroupIndex;
             
             Box2DApi.AddFixtureToBody(bodyReference, shape,
-                rigidbodyDefinitionComponent.Density,
-                rigidbodyDefinitionComponent.Friction,
-                rigidbodyDefinitionComponent.Restitution,
-                rigidbodyDefinitionComponent.RestitutionThreshold,
-                rigidbodyDefinitionComponent.IsTrigger,
+                box2DRigidbodyDefinitionComponent.Density,
+                box2DRigidbodyDefinitionComponent.Friction,
+                box2DRigidbodyDefinitionComponent.Restitution,
+                box2DRigidbodyDefinitionComponent.RestitutionThreshold,
+                box2DRigidbodyDefinitionComponent.IsTrigger,
                 filter);
         }
 
@@ -361,8 +361,8 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             Box2DApi.DestroyWorld(box2d.WorldReference);
             world.DelUnique<Box2DWorldComponent>();
 
-            var poolRefs = world.GetPool<BodyReferenceComponent>();
-            var poolCreated = world.GetPool<BodyReferenceComponent>();
+            var poolRefs = world.GetPool<Box2DBodyComponent>();
+            var poolCreated = world.GetPool<Box2DBodyComponent>();
             
             poolRefs.GetEntities().ForEach(entity =>
             {

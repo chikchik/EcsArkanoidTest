@@ -3,7 +3,7 @@
 namespace Fabros.EcsModules.Box2D.ClientServer.Components.Other
 {
     //[System.Serializable]
-    public struct EndContactComponent
+    public struct Box2DBeginContactComponent
     {
         public CollisionCallbackData CollisionCallbackData;
     }

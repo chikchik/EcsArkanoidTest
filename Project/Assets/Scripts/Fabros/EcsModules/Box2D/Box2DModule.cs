@@ -9,12 +9,12 @@ namespace Fabros.EcsModules.Box2D
     {
         public static void AddSerializableComponents(ComponentsPool pool)
         {
-            pool.AddComponent<RigidbodyDefinitionComponent>();
-            pool.AddComponent<RigidbodyComponent>();
-            pool.AddComponent<BoxColliderComponent>();
-            pool.AddComponent<CircleColliderComponent>();
-            pool.AddComponent<PolygonColliderComponent>();
-            pool.AddComponent<ChainColliderComponent>();
+            pool.AddComponent<Box2DRigidbodyDefinitionComponent>();
+            pool.AddComponent<Box2DRigidbodyComponent>();
+            pool.AddComponent<Box2DBoxColliderComponent>();
+            pool.AddComponent<Box2DCircleColliderComponent>();
+            pool.AddComponent<Box2DPolygonColliderComponent>();
+            pool.AddComponent<Box2DChainColliderComponent>();
             pool.AddComponent<Rotation2DComponent>();
             pool.AddComponent<JointTestComponent>();
         }

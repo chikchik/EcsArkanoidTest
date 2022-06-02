@@ -56,7 +56,7 @@ namespace Game.Ecs.ClientServer.Systems
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
-            var filter = world.Filter<PositionComponent>().IncAdded<BodyReferenceComponent>().End();
+            var filter = world.Filter<PositionComponent>().IncAdded<Box2DBodyComponent>().End();
             var poolLerp = world.GetPool<LerpComponent>();
             
             foreach (var entity in filter)
