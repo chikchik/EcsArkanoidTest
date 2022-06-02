@@ -15,7 +15,7 @@ namespace Fabros.EcsModules.Box2D
             pool.AddComponent<CircleColliderComponent>();
             pool.AddComponent<PolygonColliderComponent>();
             pool.AddComponent<ChainColliderComponent>();
-            pool.AddComponent<RotationComponent>();
+            pool.AddComponent<Rotation2DComponent>();
             pool.AddComponent<JointTestComponent>();
         }
 

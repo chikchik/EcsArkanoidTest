@@ -27,7 +27,7 @@ namespace Game.ClientServer
             entity.EntityAddComponent<FoodCollectedComponent>(world).Value = 0;
             entity.EntityAddComponent<AnimationStateComponent>(world).id = "angry";
             
-            entity.EntityAddComponent<RotationComponent>(world);
+            entity.EntityAddComponent<Rotation2DComponent>(world);
 
 
             ref var radiusComponent = ref entity.EntityAddComponent<RadiusComponent>(world);

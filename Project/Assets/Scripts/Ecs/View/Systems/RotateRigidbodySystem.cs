@@ -16,18 +16,18 @@ namespace Game.Ecs.Client.Systems
             var filter = world
                 .Filter<RigidbodyComponent>()
                 .Inc<TransformComponent>()
-                .Inc<RotationComponent>()
+                .Inc<Rotation2DComponent>()
                 .Exc<UnitComponent>()
                 .End();
 
             var poolTransform = world.GetPool<TransformComponent>();
             var poolLerp = world.GetPool<LerpComponent>();
-            var poolRotation = world.GetPool<RotationComponent>();
+            var poolRotation = world.GetPool<Rotation2DComponent>();
 
             foreach (var entity in filter)
             {
                 var transform = poolTransform.Get(entity).Transform;
-                var angle = poolRotation.Get(entity).value;
+                var angle = poolRotation.Get(entity).Angle;
                 
                 var eulerAngle = transform.eulerAngles;
 

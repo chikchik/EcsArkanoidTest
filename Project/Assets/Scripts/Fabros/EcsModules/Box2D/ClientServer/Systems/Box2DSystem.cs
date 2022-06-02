@@ -132,13 +132,13 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
                 .Filter<BodyReferenceComponent>()
                 .Inc<RigidbodyComponent>()
                 .Inc<PositionComponent>()
-                .Inc<RotationComponent>()
+                .Inc<Rotation2DComponent>()
                 .End();
             
             var bodyReferenceComponent = world.GetPool<BodyReferenceComponent>();
             var poolRigidBodyComponent = world.GetPool<RigidbodyComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
-            var poolRotation = world.GetPool<RotationComponent>(); 
+            var poolRotation = world.GetPool<Rotation2DComponent>(); 
             
             foreach (var entity in filter)
             {
@@ -155,7 +155,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
                     rigidBodyComponent.LinearVelocity = bodyInfo.LinearVelocity;
                     rigidBodyComponent.AngularVelocity = bodyInfo.AngularVelocity;
                     
-                    poolRotation.GetRef(entity).value = bodyInfo.Angle;
+                    poolRotation.GetRef(entity).Angle = bodyInfo.Angle;
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             var poolBodyReference = world.GetPool<BodyReferenceComponent>();
             var poolRigidbody = world.GetPool<RigidbodyComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
-            var poolRotation = world.GetPool<RotationComponent>(); 
+            var poolRotation = world.GetPool<Rotation2DComponent>(); 
             
             foreach (var entity in filter)
             {
@@ -185,7 +185,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
                 {
                     LinearVelocity = rigidBodyComponent.LinearVelocity,
                     AngularVelocity = rigidBodyComponent.AngularVelocity,
-                    Angle = rotationComponent.value,
+                    Angle = rotationComponent.Angle,
                     Awake = true
                 };
                 bodyInfo.Position.x = positionComponent.value.x;
@@ -256,13 +256,13 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             var physicsWorld = world.GetUnique<Box2DWorldComponent>().WorldReference;
             var filter = world
                 .Filter<RigidbodyDefinitionComponent>()
-                .Inc<RotationComponent>()
+                .Inc<Rotation2DComponent>()
                 .Exc<BodyCreatedComponent>()
                 .End();
 
             var poolRigidbodyDefinition = world.GetPool<RigidbodyDefinitionComponent>();
             var poolPositionComponent = world.GetPool<PositionComponent>();
-            var poolRotationComponent = world.GetPool<RotationComponent>();
+            var poolRotationComponent = world.GetPool<Rotation2DComponent>();
             
             var poolRigidBody = world.GetPool<RigidbodyComponent>();
             var poolBodyReference = world.GetPool<BodyReferenceComponent>();
@@ -277,7 +277,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
                 var def = poolRigidbodyDefinition.Get(entity);
 
                 var positionComponent = poolPositionComponent.Get(entity);
-                var bodyAngle = poolRotationComponent.Get(entity).value;
+                var bodyAngle = poolRotationComponent.Get(entity).Angle;
             
                 var bodyReference = Box2DApi.CreateBody(
                     physicsWorld,

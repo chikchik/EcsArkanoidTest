@@ -127,7 +127,7 @@ namespace Game.Ecs.ClientServer.Systems
             collider.Radius = 0.1f;
 
             kickEntity.EntityAdd<PositionComponent>(world).value = position;
-            kickEntity.EntityAdd<RotationComponent>(world);
+            kickEntity.EntityAdd<Rotation2DComponent>(world);
 
             var lookDir = unitEntity.EntityGet<LookDirectionComponent>(world).value.normalized;
             kickEntity.EntityAdd<StartSimpleMoveAtComponent>(world).Time = world.GetTime() + 1f;

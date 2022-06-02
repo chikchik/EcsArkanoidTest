@@ -27,7 +27,7 @@ namespace Game.Client
             
 
             entity.EntityReplace<PositionComponent>(world).value = go.transform.position;
-            entity.EntityReplace<RotationComponent>(world).value = - go.transform.eulerAngles.y * Mathf.Deg2Rad;
+            entity.EntityReplace<Rotation2DComponent>(world).Angle = - go.transform.eulerAngles.y * Mathf.Deg2Rad;
 
             ref var rigidBodyDefinitionComponent =
                 ref entity.EntityAddComponent<RigidbodyDefinitionComponent>(world);
