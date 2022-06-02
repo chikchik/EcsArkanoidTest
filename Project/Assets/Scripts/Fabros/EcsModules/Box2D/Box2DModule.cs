@@ -1,5 +1,7 @@
 ﻿using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
+using Fabros.EcsModules.Box2D.ClientServer.Components.Colliders;
+using Fabros.EcsModules.Box2D.ClientServer.Components.Joints;
 using Fabros.EcsModules.Grid.Systems;
 using Leopotam.EcsLite;
 

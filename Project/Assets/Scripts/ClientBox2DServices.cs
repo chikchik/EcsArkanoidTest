@@ -3,6 +3,7 @@ using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
+using Fabros.EcsModules.Box2D.ClientServer.Components.Colliders;
 using Game.View;
 using Leopotam.EcsLite;
 using UnityEngine;

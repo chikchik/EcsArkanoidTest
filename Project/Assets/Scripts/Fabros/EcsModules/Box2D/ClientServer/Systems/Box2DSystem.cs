@@ -5,6 +5,8 @@ using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
+using Fabros.EcsModules.Box2D.ClientServer.Components.Colliders;
+using Fabros.EcsModules.Box2D.ClientServer.Components.Joints;
 using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Fabros.EcsModules.Tick.Other;
 using Leopotam.EcsLite;

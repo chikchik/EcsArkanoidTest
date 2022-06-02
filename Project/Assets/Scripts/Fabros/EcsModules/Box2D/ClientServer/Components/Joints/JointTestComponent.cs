@@ -1,4 +1,4 @@
-namespace Fabros.EcsModules.Box2D.ClientServer.Components
+namespace Fabros.EcsModules.Box2D.ClientServer.Components.Joints
 {
     [System.Serializable]
     public struct JointTestComponent
