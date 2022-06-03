@@ -66,6 +66,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
                 throw new Exception("b2world is null");
             }
 
+            if (false)
             if (createContacts)
             {
 

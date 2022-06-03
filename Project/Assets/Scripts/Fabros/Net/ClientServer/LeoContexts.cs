@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Fabros.Ecs;
 using Fabros.Ecs.ClientServer.Serializer;
+using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.ClientServer.Components;
@@ -78,6 +80,68 @@ namespace Game.Fabros.Net.ClientServer
             Inputs = Inputs.Where(input => input.time >= time).ToList();
         }
 
+        private string DumpEntity(int entity, EcsWorld world)
+        {
+            var raw = world.GetRawEntities();
+            
+            var str = $"entity #{entity} gen={raw[entity].Gen}\n";
+            object[] list = null;
+
+            for (int i = 0; i < Pool.Components.Count; ++i)
+            {
+                var spool = Pool.Components[i];
+                var pool = world.GetPoolByType(spool.GetComponentType());
+                if (pool == null)
+                    continue;
+                var tp = spool.GetComponentType();
+                var fields = tp.GetFields();
+                
+                if (!pool.Has(entity))
+                    continue;
+                    
+
+                var component = pool.GetReadRaw(entity);
+                var componentStr = "";
+                for (int f = 0; f < fields.Length; ++f)
+                {
+                    var name = fields[f];
+                    var field = tp.GetField(name.Name);
+                    
+                    var val = field.GetValue(component);
+                    if (field.FieldType == typeof(float))
+                    {
+                        float fl = Convert.ToSingle(val);
+                        val = fl.ToString("F2", CultureInfo.InvariantCulture.NumberFormat);
+                    }
+
+                    componentStr += $"    {name.Name} = {val}\n";
+                }
+                
+                if (componentStr.Length > 1)
+                {
+                    componentStr = componentStr.Remove(componentStr.Length - 2, 2);
+                }
+                
+                str += $"  {tp.Name}\n{componentStr}\n";
+            }
+            
+
+            return str;
+        }
+        
+        public string DumpWorld(EcsWorld world)
+        {
+            int[] entities = null;
+            int count = world.GetAllEntities(ref entities);
+            string str = "";
+            for (int i = 0; i < count; ++i)
+            {
+                int entity = entities[i];
+                str += $"{DumpEntity(entity, world)}\n\n";
+            }
+
+            return str;
+        }
 
         public void Tick(EcsSystems systems, EcsWorld inputWorld, EcsWorld world, UserInput[] inputs, bool writeToLog)
         {
@@ -87,6 +151,14 @@ namespace Game.Fabros.Net.ClientServer
             if (writeToLog) SyncLog.WriteLine($"tick {time.Value} ->");
 
             ProcessUserInput(inputWorld, world, inputs);
+
+            var strStateDebug = "";
+            if (writeHashes)
+            {
+                strStateDebug += DumpWorld(inputWorld);
+                strStateDebug += "\n\n\n";
+            }
+            
             
             //тик мира
             systems.ChangeDefaultWorld(world);
@@ -99,21 +171,35 @@ namespace Game.Fabros.Net.ClientServer
             time = GetCurrentTick(world);
 
             //отладочный код, который умеет писать в файлы hash мира и его diff
-            var empty = WorldUtils.CreateWorld("empty", Pool);
-            var dif = WorldUtils.BuildDiff(Pool, empty, world, true);
-
-            var str = JsonUtility.ToJson(dif, true);
-            var hash = CreateMD5(str);
-
-
-            SyncLog.WriteLine($"<- tick {time.Value}\n");
-            //SyncLog.WriteLine($"hash: {hash}\n");
+            //var empty = WorldUtils.CreateWorld("empty", Pool);
+            //var dif = WorldUtils.BuildDiff(Pool, empty, world, true);
+            
+            
+            
 
             if (writeHashes)
-                using (var file = new StreamWriter($"{hashDir}/{hash}-{time.Value}-{world.GetDebugName()}.txt"))
+            {
+                //var str = JsonUtility.ToJson(dif, true);
+                var strWorldDebug = DumpWorld(world);
+                var hash = CreateMD5(strWorldDebug);
+
+
+                SyncLog.WriteLine($"<- tick {time.Value}\n");
+                //SyncLog.WriteLine($"hash: {hash}\n");
+
+                var str = strStateDebug + "\n>>>>>>\n" +  strWorldDebug;
+                var tick = time.Value.ToString("D4");
+                
+                using (var file = new StreamWriter($"{hashDir}/{hash}-{tick}-{world.GetDebugName()}.txt"))
                 {
                     file.Write(str);
                 }
+                
+                using (var file = new StreamWriter($"{hashDir}/{tick}-{world.GetDebugName()}-{hash}.txt"))
+                {
+                    file.Write(str);
+                }
+            }
         }
 
         public Tick GetCurrentTick(EcsWorld w)
@@ -156,7 +242,7 @@ namespace Game.Fabros.Net.ClientServer
                 if (input.time < time)
                     continue;
                 if (input.time >= nextTick)
-                    break;
+                    break;                
                 applyInput(inputWorld, input.player, input);
             }
         }

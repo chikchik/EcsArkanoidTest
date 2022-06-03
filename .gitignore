@@ -43,3 +43,4 @@ Box2DProject/box2d-console/out
 *.exe
 *.apk
 *.pdb
+tmp/

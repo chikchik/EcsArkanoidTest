@@ -6,10 +6,10 @@ namespace Game.ClientServer
     public static class Config
     {
 #if CLIENT
-        public static string SYNC_LOG_PATH = "../../../server.log";
-        public static string TMP_HASHES_PATH = "../../../tmp";
+        public static string SYNC_LOG_PATH = "../client.log"; 
+        public static string TMP_HASHES_PATH = "../tmp";
 #else
-        public static string SYNC_LOG_PATH = "../../../client.log";
+        public static string SYNC_LOG_PATH = "../server.log";
         public static string TMP_HASHES_PATH = "../tmp";
 #endif
 
@@ -30,5 +30,8 @@ namespace Game.ClientServer
         //public static string url = $"wss://dev1.ecs.fbpub.net/XsZubnMOTHC0JRDTS95S/{ROOM}";
         //public static string url = $"ws://localhost:9096/XsZubnMOTHC0JRDTS95S/{ROOM}";
         public static string url = $"ws://dev1.ecs.fbpub.net:9096/XsZubnMOTHC0JRDTS95S/{ROOM}";
+
+
+        public static bool debugMode = true;
     }
 }

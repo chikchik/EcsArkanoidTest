@@ -3,6 +3,7 @@ using Fabros.Ecs.Utils;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
+using UnityEngine;
 
 namespace Game.ClientServer
 {
@@ -10,9 +11,14 @@ namespace Game.ClientServer
     {
         public static void ApplyInput(EcsWorld inputWorld, int playerID, UserInput input)
         {
+            if (!input.hasMove && !input.hasInteraction && !input.hasUnitPos)
+                return;
+
+            Debug.Log($"apply input {input.time.Value}");
+
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAddComponent<InputPlayerComponent>(inputWorld).PlayerID = playerID;
-            inputEntity.EntityAddComponent<InputComponent>(inputWorld);
+            inputEntity.EntityAddComponent<InputComponent>(inputWorld).tick = input.time.Value;
 
             if (input.hasMove)
             {
