@@ -238,6 +238,7 @@ namespace Game.Fabros.Net.Client
             serverSystems.AddWorld(InputWorld, "input");
             serverSystems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, 
                 new Vector2(0,0)));
+            serverSystems.Add(new Box2DWriteStateToComponentsSystem());
 
             //SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
             serverSystems.Init();

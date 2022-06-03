@@ -23,7 +23,8 @@ namespace Game.ClientServer
             entity.EntityAddComponent<LookDirectionComponent>(world).value = new Vector3(0,0,1);
 
             //entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(-1.5f, 0, 9f);
-            entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(2, 0, 8.5f);
+            //entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(2, 0, 8.5f);
+            entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(0, 0, 0);
 
             entity.EntityAddComponent<FoodCollectedComponent>(world).Value = 0;
             entity.EntityAddComponent<AnimationStateComponent>(world).id = "angry";
@@ -56,20 +57,6 @@ namespace Game.ClientServer
             Console.WriteLine($"GenerateUnitEntity {entity}");
 
             return entity;
-        }
-
-        public static void ResetUnitEntity(EcsWorld world, int unitEntity)
-        {
-            ref var healthComponent = ref unitEntity.EntityGetRefComponent<HealthComponent>(world);
-            healthComponent.maxHealth = 100;
-            healthComponent.health = 50;
-            
-            unitEntity.EntityReplace<PositionComponent>(world).value = new Vector3(-1.5f, 0, 9f);
-        }
-
-        public static void MoveUnit(EcsWorld world, int entity)
-        {
-            
         }
     }
 }

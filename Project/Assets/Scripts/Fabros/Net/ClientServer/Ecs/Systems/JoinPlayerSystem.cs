@@ -28,16 +28,14 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
                 {
                     var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerID);
                     if (unitEntity != -1)
-                        unitEntity.EntityWithRef(world, (ref PlayerComponent data) => { data.id = -1; });
+                    {
+                        world.DelEntity(unitEntity);
+                        //unitEntity.EntityWithRef(world, (ref PlayerComponent data) => { data.id = -1; });
+                    }
                 }
                 else
                 {
-                    var freeUnitEntity = BaseServices.GetFreeUnitEntity(world);
-                    if (freeUnitEntity != -1)
-                        UnitService.ResetUnitEntity(world, freeUnitEntity);
-                    else
-                        freeUnitEntity = UnitService.CreateUnitEntity(world);
-
+                    var freeUnitEntity = UnitService.CreateUnitEntity(world);
                     freeUnitEntity.EntityReplace<PlayerComponent>(world).id = playerID;
                 }
             }
