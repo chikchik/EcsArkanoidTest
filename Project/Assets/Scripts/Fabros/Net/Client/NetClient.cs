@@ -55,7 +55,6 @@ namespace Game.Fabros.Net.Client
         private int prevDelay;
 
         private Stats stats = new Stats();
-        private AllocMemoryHandler allocMemoryHandler = new AllocMemoryHandler();
         
         private UnitySocket socket;
 
@@ -405,8 +404,6 @@ namespace Game.Fabros.Net.Client
 
             //stepMult = 1;
             //stepOffset = 0;
-
-            CalculateAllocMemory(allocMemoryHandler);
         }
 
         public void AddUserInput(UserInput input)
@@ -454,12 +451,6 @@ namespace Game.Fabros.Net.Client
             }
         }
 
-        private void CalculateAllocMemory(AllocMemoryHandler memoryHandler)
-        {
-            const int bytesInKBytes = 1024; 
-            memoryHandler.memoryInKBytes = MainWorld.GetAllocMemorySizeInBytes() / bytesInKBytes;
-        }
-
         public void OnGUI()
         {
             if (!Connected)
@@ -481,7 +472,10 @@ namespace Game.Fabros.Net.Client
             GUILayout.Label($"prevDelay {prevDelay}");
 
             GUILayout.Label($"diffSize {stats.diffSize}");
-            GUILayout.Label($"alloc size {allocMemoryHandler.memoryInKBytes} kb");
+
+            var size = MainWorld.GetAllocMemorySizeInBytes() / 1024;
+                
+            GUILayout.Label($"EcsWorld size {size} kb");
 
             //WorldMono.OnGui(currentWorld);
             GUILayout.EndVertical();
