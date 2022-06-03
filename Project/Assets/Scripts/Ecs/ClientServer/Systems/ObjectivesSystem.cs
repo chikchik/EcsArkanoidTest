@@ -42,10 +42,14 @@ namespace Game.Ecs.ClientServer.Systems
             }
 
 
+            var chestWallEntity = GetTargetEntityByName("ChestWall");
+            if (chestWallEntity == -1)
+                return;
+            
             int objEntity, objEntityA;
-
             objEntity = world.NewEntity();
-            objEntity.EntityAdd<ObjectiveTargetComponent>(world).entity = GetTargetEntityByName("ChestWall");
+
+            objEntity.EntityAdd<ObjectiveTargetComponent>(world).entity = chestWallEntity;
             objEntity.EntityAdd<ObjectiveOpenedComponent>(world);
             objEntity.EntityAdd<ObjectiveDescriptionComponent>(world).text = "Remove Red Wall";
             objEntityA = objEntity;

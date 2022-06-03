@@ -19,7 +19,8 @@ namespace Game.ClientServer
 
             //Console.WriteLine($"Generate LeoPlayerEntity: {entity} with PlayerID: {playerId}");
             entity.EntityAddComponent<UnitComponent>(world);
-            entity.EntityAddComponent<MoveDirectionComponent>(world);
+            entity.EntityAddComponent<MoveDirectionComponent>(world).value = new Vector3(0,0,1);
+            entity.EntityAddComponent<LookDirectionComponent>(world).value = new Vector3(0,0,1);
 
             //entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(-1.5f, 0, 9f);
             entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(2, 0, 8.5f);
