@@ -29,7 +29,6 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
         private bool createBodies;
         private bool updateBox2d;
         private bool updateInternalObjects;
-        private bool writeToComponents;
         private bool createContacts;
         
         private int positionIterations;
@@ -43,7 +42,6 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             bool createBodies = true, 
             bool updateBox2d = true, 
             bool updateInternalObjects = true,
-            bool writeToComponents = true, 
             bool createContacts = true)
         {
             this.positionIterations = positionIterations;
@@ -53,7 +51,6 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             this.createBodies = createBodies;
             this.updateBox2d = updateBox2d;
             this.updateInternalObjects = updateInternalObjects;
-            this.writeToComponents = writeToComponents;
             this.createContacts = createContacts;
         }
         
@@ -115,53 +112,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             ref var contact = ref newEntity.EntityAddComponent<Box2DPostSolveComponent>(world);
             contact.CollisionCallbackData = callbackData;
         }
-
-
-        private void UpdateEcsComponents()
-        {
-            /*
-            {
-                //crash                
-                PhysicsServices.ReplicateBox2D(world, world);
-                var b2world = world.GetUnique<PhysicsWorldComponent>().WorldReference;
-                Box2DPhysics.SetBeginContactCallback(b2world, _cbkBeginContactDelegate);
-                Box2DPhysics.SetEndContactCallback(b2world, _cbkEndContactDelegate);
-                Box2DPhysics.SetPostSolveCallback(b2world, _cbkPostSolveDelegate);
-                Box2DPhysics.SetPreSolveCallback(b2world, _cbkPreSolveDelegate);
-            }*/
-
-            var filter = world
-                .Filter<Box2DBodyComponent>()
-                .Inc<Box2DRigidbodyComponent>()
-                .Inc<PositionComponent>()
-                .Inc<Rotation2DComponent>()
-                .End();
-            
-            var bodyReferenceComponent = world.GetPool<Box2DBodyComponent>();
-            var poolRigidBodyComponent = world.GetPool<Box2DRigidbodyComponent>();
-            var poolPosition = world.GetPool<PositionComponent>();
-            var poolRotation = world.GetPool<Rotation2DComponent>(); 
-            
-            foreach (var entity in filter)
-            {
-                var bodyReference = bodyReferenceComponent.Get(entity).BodyReference;
-                var bodyInfo = Box2DApi.GetBodyInfo(bodyReference);
-                
-                ref var rigidBodyComponent = ref poolRigidBodyComponent.GetRef(entity);
-                if (rigidBodyComponent.BodyType == BodyType.Dynamic)
-                {
-                    ref var positionComponent = ref poolPosition.GetRef(entity);
-                    positionComponent.value.x = bodyInfo.Position.x;
-                    positionComponent.value.z = bodyInfo.Position.y;
-                    
-                    rigidBodyComponent.LinearVelocity = bodyInfo.LinearVelocity;
-                    rigidBodyComponent.AngularVelocity = bodyInfo.AngularVelocity;
-                    
-                    poolRotation.GetRef(entity).Angle = bodyInfo.Angle;
-                }
-            }
-        }
-
+        
         private void UpdateInternalBox2DObjects()
         {
             Profiler.BeginSample("UpdateInternalBox2D");
@@ -222,9 +173,6 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             if (updateBox2d)
                 UpdateBox2D();
             
-            //write body -> ecs components
-            if (writeToComponents)
-                UpdateEcsComponents();
             Profiler.EndSample();
         }
 

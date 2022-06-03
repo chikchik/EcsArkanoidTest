@@ -19,7 +19,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
             WheelJoint = 7,
             WeldJoint = 8,
             FrictionJoint = 9,
-            MotorJoint = 10
+            MotorJoint = int.MaxValue
         };
         
 
@@ -84,7 +84,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Api
                 localAnchorB = Vector2.zero,
                 length = 1.0f,
                 minLength = 0.0f,
-                maxLength = FLT_MAX,
+                maxLength = float.MaxValue,
                 stiffness = 0.0f,
                 damping = 0.0f
             };

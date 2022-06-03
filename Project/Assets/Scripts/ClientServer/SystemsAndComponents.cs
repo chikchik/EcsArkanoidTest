@@ -170,7 +170,8 @@ namespace Game.ClientServer
 #endif
             
 
-            systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, new Vector2(0,0)));
+            systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, 
+                new Vector2(0,0)));
             
 #if CLIENT
             AddClient(new Box2DDebugViewSystem());
@@ -265,6 +266,10 @@ namespace Game.ClientServer
             systems.Add(new EventsSystem<AnimationStateComponent>());
             systems.Add(new EventsSystem<MovingComponent>());
 #endif
+
+
+            //write final Box2d transforms to components
+            systems.Add(new Box2DWriteStateToComponentsSystem());
         }
     }
 }
