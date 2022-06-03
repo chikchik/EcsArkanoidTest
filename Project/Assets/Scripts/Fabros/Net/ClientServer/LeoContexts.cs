@@ -110,7 +110,7 @@ namespace Game.Fabros.Net.ClientServer
             //SyncLog.WriteLine($"hash: {hash}\n");
 
             if (writeHashes)
-                using (var file = new StreamWriter($"{hashDir}/{hash}.txt"))
+                using (var file = new StreamWriter($"{hashDir}/{hash}-{time.Value}-{world.GetDebugName()}.txt"))
                 {
                     file.Write(str);
                 }
