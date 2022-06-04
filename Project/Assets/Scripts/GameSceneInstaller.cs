@@ -16,23 +16,23 @@ namespace Game
             Container.Bind<Global>().FromComponentsOn(GameObject.Find("Global")).AsSingle();
             Container.Bind<Objectives>().AsSingle().NonLazy();
 
-            var world = new EcsWorld("main");
-            Container.Bind<EcsWorld>().FromInstance(world).AsSingle();
+            //var world = new EcsWorld("main");
+            Container.Bind<EcsWorld>().FromInstance(new EcsWorld("main")).AsSingle();
+            Container.Bind<EcsInputWorld>().AsSingle();
 
-            var ui = FindObjectOfType<MainUI>();
-            Container.Bind<MainUI>().FromInstance(ui).AsSingle();
+            var mainUI = FindObjectOfType<MainUI>();
+            Container.Bind<MainUI>().FromInstance(mainUI).AsSingle();
+
+            Container.Bind<Client.UI>().AsSingle().NonLazy();
+            
             //Container.Bind<UnityEcsClient>().FromComponentsOn(GameObject.Find("Client")).AsSingle();
 
-            InstallPlayerInput(ui);
-        }
-
-        private void InstallPlayerInput(MainUI mainUI)
-        {
             if (Application.isEditor ||
                 Application.platform is RuntimePlatform.OSXPlayer or RuntimePlatform.WindowsPlayer)
             {
                 Container.BindInterfacesAndSelfTo<PlayerInput.PlayerInput>().FromInstance(new DesktopInput())
                     .AsSingle();
+                
             }
             else if (Application.platform is RuntimePlatform.Android or RuntimePlatform.IPhonePlayer)
             {

@@ -7,4 +7,10 @@ namespace Game.Ecs.ClientServer.Systems
     {
         public float EndTime;
     }
+    
+    [Serializable]
+    public struct ShootingComponent
+    {
+        //public float EndTime;
+    }
 }

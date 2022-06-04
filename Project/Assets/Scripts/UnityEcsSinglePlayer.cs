@@ -20,12 +20,12 @@ using Zenject;
 
 namespace Game.Client
 {
-    public class UnityEcsSinglePlayer: MonoBehaviour, EventsSystem<FoodCollectedComponent>.IAnyComponentChangedListener
+    public class UnityEcsSinglePlayer: MonoBehaviour
     {
         [Inject] private Camera camera;
         [Inject] private Global global;
         [Inject] private PlayerInput.PlayerInput playerInput;
-        [Inject] private MainUI ui;
+        [Inject] private UI ui;
         [Inject] private EcsWorld world;
         
         
@@ -87,22 +87,6 @@ namespace Game.Client
             world.AddUnique(new MainPlayerIdComponent{value = playerId});
             unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
             
-            
-            ui.InteractionButton.onClick.AddListener(() =>
-            {
-                var input = new UserInput
-                {
-                    hasInteraction = true,
-                    action = new UserInput.Action()
-                };
-
-                InputService.ApplyInput(inputWorld, playerId, input);
-            });
-
-            ui.FoodText.text = "";
-
-            var globalListenerEntity = world.NewLocalEntity();
-            globalListenerEntity.AddAnyChangedListener<FoodCollectedComponent>(world, this);
         }
         
         public void Update()
@@ -134,17 +118,6 @@ namespace Game.Client
             systems.Run();
         }
         
-        public void OnAnyComponentChanged(EcsWorld world, int entity, FoodCollectedComponent data, bool added)
-        {
-            if (!world.HasUnique<ClientPlayerComponent>())
-                return;
-            
-            var unitEntity = world.GetUnique<ClientPlayerComponent>().entity;
-            if (unitEntity != entity)
-                return;
-
-            ui.FoodText.text = $"Food Collected {data.Value}";       
-        }
 
         public void OnDrawGizmos()
         {

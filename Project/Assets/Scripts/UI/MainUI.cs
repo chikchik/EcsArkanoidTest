@@ -7,7 +7,7 @@ namespace Game.UI
 {
     public class MainUI : MonoBehaviour
     {
-        public Button UseButton;
+        public Button ShotButton;
         public Button InteractionButton;
 
         public RectTransform ObjectivesRectTransform;
