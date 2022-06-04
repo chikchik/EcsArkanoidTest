@@ -197,8 +197,7 @@ namespace Game.ClientServer
             systems.Add(new ApplyInputSystem());
 
 
-            if (!Config.debugMode)
-                AddServer(new FootprintSystem());
+            AddServer(new FootprintSystem());
 
 #if CLIENT
             AddClient(new FootprintViewSystem());

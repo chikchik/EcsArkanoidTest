@@ -14,7 +14,7 @@ namespace Game.ClientServer
 #endif
 
 #if DEBUG
-        public static readonly bool SyncDataLogging = true;
+        public static readonly bool SyncDataLogging = false;
 #else
         public static readonly bool SyncDataLogging = false;
 #endif
@@ -30,8 +30,5 @@ namespace Game.ClientServer
         //public static string url = $"wss://dev1.ecs.fbpub.net/XsZubnMOTHC0JRDTS95S/{ROOM}";
         //public static string url = $"ws://localhost:9096/XsZubnMOTHC0JRDTS95S/{ROOM}";
         public static string url = $"ws://dev1.ecs.fbpub.net:9096/XsZubnMOTHC0JRDTS95S/{ROOM}";
-
-
-        public static bool debugMode = true;
     }
 }

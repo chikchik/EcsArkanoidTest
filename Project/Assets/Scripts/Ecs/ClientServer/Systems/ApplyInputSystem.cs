@@ -103,7 +103,7 @@ namespace Game.Ecs.ClientServer.Systems
             }
          
                 
-            unitEntity.EntityAdd<PushingComponent>(world).EndTime = 1.3f;
+            unitEntity.EntityAdd<PushingComponent>(world).EndTime = world.GetTime() + 1.3f;
 
             if (unitEntity.EntityHas<LookDirectionComponent>(world) && 
                 !unitEntity.EntityHas<ApplyForceComponent>(world))

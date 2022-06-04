@@ -163,7 +163,7 @@ namespace Game.Fabros.Net.Client
             Profiler.BeginSample("SimServerWorld");
             while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
             {
-                Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), true, debug);
+                Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), Config.SyncDataLogging, debug);
                 if (iterations > 500)
                 {
                     Debug.LogWarning(
