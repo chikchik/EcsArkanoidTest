@@ -45,6 +45,14 @@ namespace Game.Fabros.Net.ClientServer
 #if UNITY_EDITOR || UNITY_STANDALONE || SERVER
             //используется для отладки
             writeHashes = Directory.Exists(hashDir);
+            if (writeHashes &&
+                (hashDir.Contains("temp") || hashDir.Contains("tmp")))
+            {
+                var files = Directory.GetFiles(hashDir);
+                Array.ForEach(files, file => {
+                    File.Delete(file);
+                });
+            }
 #endif
         }
 
@@ -80,70 +88,9 @@ namespace Game.Fabros.Net.ClientServer
             Inputs = Inputs.Where(input => input.time >= time).ToList();
         }
 
-        private string DumpEntity(int entity, EcsWorld world)
-        {
-            var raw = world.GetRawEntities();
-            
-            var str = $"entity #{entity} gen={raw[entity].Gen}\n";
-            object[] list = null;
-
-            for (int i = 0; i < Pool.Components.Count; ++i)
-            {
-                var spool = Pool.Components[i];
-                var pool = world.GetPoolByType(spool.GetComponentType());
-                if (pool == null)
-                    continue;
-                var tp = spool.GetComponentType();
-                var fields = tp.GetFields();
-                
-                if (!pool.Has(entity))
-                    continue;
-                    
-
-                var component = pool.GetReadRaw(entity);
-                var componentStr = "";
-                for (int f = 0; f < fields.Length; ++f)
-                {
-                    var name = fields[f];
-                    var field = tp.GetField(name.Name);
-                    
-                    var val = field.GetValue(component);
-                    if (field.FieldType == typeof(float))
-                    {
-                        float fl = Convert.ToSingle(val);
-                        val = fl.ToString("F2", CultureInfo.InvariantCulture.NumberFormat);
-                    }
-
-                    componentStr += $"    {name.Name} = {val}\n";
-                }
-                
-                if (componentStr.Length > 1)
-                {
-                    componentStr = componentStr.Remove(componentStr.Length - 2, 2);
-                }
-                
-                str += $"  {tp.Name}\n{componentStr}\n";
-            }
-            
-
-            return str;
-        }
         
-        public string DumpWorld(EcsWorld world)
-        {
-            int[] entities = null;
-            int count = world.GetAllEntities(ref entities);
-            string str = "";
-            for (int i = 0; i < count; ++i)
-            {
-                int entity = entities[i];
-                str += $"{DumpEntity(entity, world)}\n\n";
-            }
 
-            return str;
-        }
-
-        public void Tick(EcsSystems systems, EcsWorld inputWorld, EcsWorld world, UserInput[] inputs, bool writeToLog)
+        public void Tick(EcsSystems systems, EcsWorld inputWorld, EcsWorld world, UserInput[] inputs, bool writeToLog, string debug="")
         {
             //обновляем мир 1 раз
             
@@ -155,7 +102,7 @@ namespace Game.Fabros.Net.ClientServer
             var strStateDebug = "";
             if (writeHashes)
             {
-                strStateDebug += DumpWorld(inputWorld);
+                strStateDebug += WorldDumpUtils.DumpWorld(Pool, inputWorld);
                 strStateDebug += "\n\n\n";
             }
             
@@ -180,7 +127,7 @@ namespace Game.Fabros.Net.ClientServer
             if (writeHashes)
             {
                 //var str = JsonUtility.ToJson(dif, true);
-                var strWorldDebug = DumpWorld(world);
+                var strWorldDebug = WorldDumpUtils.DumpWorld(Pool, world);
                 var hash = CreateMD5(strWorldDebug);
 
 
@@ -189,13 +136,15 @@ namespace Game.Fabros.Net.ClientServer
 
                 var str = strStateDebug + "\n>>>>>>\n" +  strWorldDebug;
                 var tick = time.Value.ToString("D4");
+
+                //var tt = DateTime.UtcNow.Ticks % 10000000;
                 
-                using (var file = new StreamWriter($"{hashDir}/{hash}-{tick}-{world.GetDebugName()}.txt"))
+                using (var file = new StreamWriter($"{hashDir}/{hash}-{tick}-{world.GetDebugName()}-{debug}.txt"))
                 {
                     file.Write(str);
                 }
                 
-                using (var file = new StreamWriter($"{hashDir}/{tick}-{world.GetDebugName()}-{hash}.txt"))
+                using (var file = new StreamWriter($"{hashDir}/{tick}-{world.GetDebugName()}-{hash}-{debug}.txt"))
                 {
                     file.Write(str);
                 }

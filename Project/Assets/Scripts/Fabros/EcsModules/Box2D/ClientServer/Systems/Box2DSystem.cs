@@ -15,6 +15,10 @@ using UnityEngine.Profiling;
 
 namespace Fabros.EcsModules.Box2D.ClientServer.Systems
 {
+    /**
+     * ВАЖНО Box2DSystem должна быть в конце списка - после всех основных систем которые что-то двигают, толкают и тд
+     * иначе может произойти рассинхрон на пару кадров
+     */
     public class Box2DSystem : IEcsInitSystem, IEcsRunSystem, IEcsDestroySystem, IEcsWorldChangedSystem
     {
         private Box2DApi.CollisionCallback _cbkBeginContactDelegate;

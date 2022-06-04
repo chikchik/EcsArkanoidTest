@@ -103,7 +103,7 @@ namespace ConsoleApp
                 //это надо учесть при симуляции
                 var config = new TickrateConfigComponent { clientTickrate = 30, serverSyncStep = 1, serverTickrate = 30 };
 
-                world = WorldUtils.CreateWorld("server", pool);
+                world = WorldUtils.CreateWorld("serv", pool);
 
                 inputWorld = new EcsWorld("input");
 

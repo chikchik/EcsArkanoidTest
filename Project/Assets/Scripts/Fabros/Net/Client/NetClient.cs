@@ -139,7 +139,7 @@ namespace Game.Fabros.Net.Client
             
             
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
-            copyServerWorld.SetDebugName("copyServerWorld");
+            copyServerWorld.SetDebugName("copy");
             copyServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
        
             Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
@@ -157,11 +157,13 @@ namespace Game.Fabros.Net.Client
             var serverTick = Leo.GetCurrentTick(copyServerWorld);
             var clientTick = Leo.GetCurrentTick(MainWorld);
             
+            string debug = $"{ServerWorld.GetUnique<TickComponent>().Value.Value}";
+            
             Debug.Log($"pr srv:{Leo.GetCurrentTick(ServerWorld).Value} client: {Leo.GetCurrentTick(MainWorld).Value}");
             Profiler.BeginSample("SimServerWorld");
             while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
             {
-                Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), false);
+                Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), true, debug);
                 if (iterations > 500)
                 {
                     Debug.LogWarning(
@@ -230,14 +232,14 @@ namespace Game.Fabros.Net.Client
 
 
             ServerWorld = WorldUtils.CopyWorld(Leo.Pool, MainWorld);
-            ServerWorld.SetDebugName("ServerWorld");
+            ServerWorld.SetDebugName("rsrv");
             ServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
 
 
             serverSystems = new EcsSystems(ServerWorld);
             serverSystems.AddWorld(InputWorld, "input");
             serverSystems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, 
-                new Vector2(0,0)));
+                new Vector2(0,0), true, false, true));
             serverSystems.Add(new Box2DWriteStateToComponentsSystem());
 
             //SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
@@ -376,7 +378,7 @@ namespace Game.Fabros.Net.Client
                 //    return;
                     
                 //leo.ApplyUserInput(world);
-                Leo.Tick(clientSystems, InputWorld, MainWorld, Leo.Inputs.ToArray(), Config.SyncDataLogging);
+                Leo.Tick(clientSystems, InputWorld, MainWorld, Leo.Inputs.ToArray(), Config.SyncDataLogging, "");
 
 
                // if (Leo.GetCurrentTick(MainWorld).Value % 5 == 0)

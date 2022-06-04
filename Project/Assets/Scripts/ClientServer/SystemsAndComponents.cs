@@ -170,8 +170,6 @@ namespace Game.ClientServer
 #endif
             
 
-            systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, 
-                new Vector2(0,0)));
             
 #if CLIENT
             AddClient(new Box2DDebugViewSystem());
@@ -252,6 +250,11 @@ namespace Game.ClientServer
 
             systems.Add(new AddLerpSystem());
 
+            
+            systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, 
+                new Vector2(0,0)));
+            
+            
             systems.Add(new EventsSystem<Box2DBodyComponent>());
             systems.Add(new EventsSystem<FireComponent>());
             systems.Add(new EventsSystem<ButtonPressedComponent>());

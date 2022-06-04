@@ -16,7 +16,7 @@ namespace Game
             Container.Bind<Global>().FromComponentsOn(GameObject.Find("Global")).AsSingle();
             Container.Bind<Objectives>().AsSingle().NonLazy();
 
-            var world = new EcsWorld("mainWorld");
+            var world = new EcsWorld("main");
             Container.Bind<EcsWorld>().FromInstance(world).AsSingle();
 
             var ui = FindObjectOfType<MainUI>();
