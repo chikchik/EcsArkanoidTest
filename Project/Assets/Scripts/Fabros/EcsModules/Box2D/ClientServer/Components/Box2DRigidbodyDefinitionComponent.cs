@@ -18,6 +18,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Components
         public UInt16 MaskBits;
         public Int16 GroupIndex;
         public bool IsTrigger;
+        public bool Bullet;
         
         public void AutoReset(ref Box2DRigidbodyDefinitionComponent c)
         {
@@ -32,6 +33,7 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Components
             c.MaskBits = 0x0001;
             c.GroupIndex = 0;
             c.IsTrigger = false;
+            c.Bullet = false;
         }
     }
 }

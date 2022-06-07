@@ -104,6 +104,8 @@ namespace Fabros.EcsModules.Box2D.ClientServer
                 new Vector2(positionComponent.value.x, positionComponent.value.z),
                 bodyAngle,
                 entity);
+            
+            Box2DApi.SetBullet(bodyReference, def.Bullet);
 
 
             poolBodyCreated.Add(entity);

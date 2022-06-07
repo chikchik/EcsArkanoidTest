@@ -32,9 +32,9 @@ namespace Game.Ecs.Client.Systems
 
                 if (entity.EntityHasComponent<CollectableComponent>(world))
                 {
-                    var bushView = go.GetComponent<BushView>();
+                    var view = go.GetComponent<BushView>();
                     ref var collectableTargetComponent = ref entity.EntityAddComponent<CollectableTargetComponent>(world);
-                    collectableTargetComponent.targetObject = bushView.Berries.gameObject;
+                    collectableTargetComponent.targetObject = view.Berries.gameObject;
                 }
             }
 
@@ -43,19 +43,29 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filterUnits)
             {
-                var characterView = Object.Instantiate(viewComponent.Global.characterPrefab);
-                characterView.transform.position = characterView.transform.position.WithX(0).WithZ(0); 
+                var view = Object.Instantiate(viewComponent.Global.characterPrefab);
+                view.transform.position = view.transform.position.WithX(0).WithZ(0); 
 
                 ref var component = ref entity.EntityAddComponent<TransformComponent>(world);
-                component.Transform = characterView.transform;
+                component.Transform = view.transform;
                 
                 ref var animatorComponent = ref entity.EntityAddComponent<AnimatorComponent>(world);
-                animatorComponent.animator = characterView.Animator;
+                animatorComponent.animator = view.Animator;
 
-                //var position = entity.EntityGet<PositionComponent>(world).value;
-                //entity.EntityAdd<RootMotionComponent>(world).Position = position;
+                entity.EntityReplaceComponent<LerpComponent>(world).value = 0.5f;
+            }
+            
+            var filterBullets = world.Filter<BulletComponent>()
+                .Exc<TransformComponent>().End();
 
-                //component.Transform.position = position;
+            foreach (var entity in filterBullets)
+            {
+                var view = Object.Instantiate(viewComponent.Global.BulletPrefab);
+                view.transform.position = entity.EntityGet<PositionComponent>(world).value; 
+
+                ref var component = ref entity.EntityAddComponent<TransformComponent>(world);
+                component.Transform = view.transform;
+
 
                 entity.EntityReplaceComponent<LerpComponent>(world).value = 0.5f;
             }
