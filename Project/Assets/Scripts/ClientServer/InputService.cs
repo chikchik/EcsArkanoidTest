@@ -11,10 +11,10 @@ namespace Game.ClientServer
     {
         public static void ApplyInput(EcsWorld inputWorld, int playerID, UserInput input)
         {
-            if (!input.hasMove && !input.hasInteraction && !input.hasUnitPos)
+            if (!input.hasMove && !input.hasAction && !input.hasUnitPos && !input.hasShot)
                 return;
 
-            Debug.Log($"apply input {input.time.Value}");
+//            Debug.Log($"apply input {input.time.Value}");
 
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAddComponent<InputPlayerComponent>(inputWorld).PlayerID = playerID;
@@ -29,13 +29,14 @@ namespace Game.ClientServer
                     inputEntity.EntityAddComponent<InputMoveToPointComponent>(inputWorld).Value = input.move.value;
             }
 
-            if (input.hasInteraction) 
+            if (input.hasAction) 
                 inputEntity.EntityAddComponent<InputActionComponent>(inputWorld);
+            
+            if (input.hasShot) 
+                inputEntity.EntityAddComponent<InputShotComponent>(inputWorld);
 
             if (input.hasUnitPos)
-            {
                 inputEntity.EntityAdd<PositionComponent>(inputWorld).value = input.unitPos;
-            }
         }
     }
 }

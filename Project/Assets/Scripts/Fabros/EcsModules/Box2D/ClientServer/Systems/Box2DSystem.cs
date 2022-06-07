@@ -181,100 +181,38 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
             Profiler.EndSample();
         }
 
-
-        private static IntPtr CreateSimpleShape(EcsWorld world, int entity)
-        {
-            var boxCollider = entity.EntityGetNullable<Box2DBoxColliderComponent>(world);
-            if (boxCollider.HasValue)
-                return Box2DApi.CreateBoxShape(boxCollider.Value.Size / 2f);
-
-            var circleCollider = entity.EntityGetNullable<Box2DCircleColliderComponent>(world);
-            
-            if (circleCollider.HasValue)
-                return Box2DApi.CreateCircleShape(circleCollider.Value.Radius);
-            
-            var chainCollider = entity.EntityGetNullable<Box2DChainColliderComponent>(world);
-            
-            if (chainCollider.HasValue)
-            {
-                var vertices = chainCollider.Value.Points;
-                return Box2DApi.CreateChainShape(vertices, vertices.Length);
-            }
-
-            return default;
-        }
         private void CreateBodies()
         {
             if(!world.HasUnique<Box2DWorldComponent>()) 
                 return;
             
-            var physicsWorld = world.GetUnique<Box2DWorldComponent>().WorldReference;
+            
             var filter = world
                 .Filter<Box2DRigidbodyDefinitionComponent>()
                 .Inc<Rotation2DComponent>()
                 .Exc<Box2DBodyCreatedComponent>()
                 .End();
 
+            var physicsWorld = world.GetUnique<Box2DWorldComponent>().WorldReference;
+            var poolBodyReference = world.GetPool<Box2DBodyComponent>();
+            
+            /*
             var poolRigidbodyDefinition = world.GetPool<Box2DRigidbodyDefinitionComponent>();
             var poolPositionComponent = world.GetPool<PositionComponent>();
             var poolRotationComponent = world.GetPool<Rotation2DComponent>();
-            
             var poolRigidBody = world.GetPool<Box2DRigidbodyComponent>();
-            var poolBodyReference = world.GetPool<Box2DBodyComponent>();
-            
-            var poolJoint = world.GetPool<JointTestComponent>();
-            
             var poolBodyCreated = world.GetPool<Box2DBodyCreatedComponent>();
-            var poolJointCreated = world.GetPool<Box2DJointCreatedComponent>();
+            */
 
             foreach (var entity in filter)
             {
-                var def = poolRigidbodyDefinition.Get(entity);
-
-                var positionComponent = poolPositionComponent.Get(entity);
-                var bodyAngle = poolRotationComponent.Get(entity).Angle;
-            
-                var bodyReference = Box2DApi.CreateBody(
-                    physicsWorld,
-                    def.BodyType,
-                    new Vector2(positionComponent.value.x, positionComponent.value.z),
-                    bodyAngle,
-                    entity);
-
-
-                poolBodyCreated.Add(entity);
-                
-                
-                var polygonCollider = entity.EntityGetNullable<Box2DPolygonColliderComponent>(world);
-                if (polygonCollider.HasValue)
-                {
-                    var vertices = polygonCollider.Value.Vertices;
-                    var anchors = polygonCollider.Value.Anchors;
-
-                    int index = 0;
-                    
-                    foreach (var anchor in anchors)
-                    {
-                        shapeVertices.Clear();
-                        for (int offset = index; index <= anchor + offset; index++)
-                            shapeVertices.Add(vertices[index]);
-                        var shape = Box2DApi.CreatePolygonShape(shapeVertices.ToArray(), shapeVertices.Count);
-                        AddFixtureToBody(bodyReference, shape, def);
-                    }
-                }
-                else
-                {
-                    var shape = CreateSimpleShape(world, entity);
-                    AddFixtureToBody(bodyReference, shape, def);
-                }
-
-                Box2DApi.SetLinearDamping(bodyReference, def.LinearDamping);
-                Box2DApi.SetAngularDamping(bodyReference, def.AngularDamping);
-                
-                poolBodyReference.Add(entity).BodyReference = bodyReference;
-                poolRigidBody.Replace(entity).BodyType = def.BodyType;
+                //todo, optimize reuse Pools
+                Box2DServices.CreateBodyNow(world, entity, shapeVertices);
             }
 
+            var poolJoint = world.GetPool<JointTestComponent>();
+            var poolJointCreated = world.GetPool<Box2DJointCreatedComponent>();
+            
             filter = world.Filter<JointTestComponent>().Exc<Box2DJointCreatedComponent>().End();
             foreach (var entity in filter)
             {
@@ -289,23 +227,6 @@ namespace Fabros.EcsModules.Box2D.ClientServer.Systems
                 Box2DApi.CreateJoint(physicsWorld, def);
                 poolJointCreated.Add(entity);
             }
-        }
-
-        private void AddFixtureToBody(IntPtr bodyReference, IntPtr shape,
-            Box2DRigidbodyDefinitionComponent box2DRigidbodyDefinitionComponent)
-        {
-            B2Filter filter;
-            filter.CategoryBits = box2DRigidbodyDefinitionComponent.CategoryBits;
-            filter.MaskBits = box2DRigidbodyDefinitionComponent.MaskBits;
-            filter.GroupIndex = box2DRigidbodyDefinitionComponent.GroupIndex;
-            
-            Box2DApi.AddFixtureToBody(bodyReference, shape,
-                box2DRigidbodyDefinitionComponent.Density,
-                box2DRigidbodyDefinitionComponent.Friction,
-                box2DRigidbodyDefinitionComponent.Restitution,
-                box2DRigidbodyDefinitionComponent.RestitutionThreshold,
-                box2DRigidbodyDefinitionComponent.IsTrigger,
-                filter);
         }
 
         public void Destroy(EcsSystems systems)

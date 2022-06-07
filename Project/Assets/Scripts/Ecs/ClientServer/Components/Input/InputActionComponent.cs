@@ -3,4 +3,8 @@
     public struct InputActionComponent
     {
     }
+    
+    public struct InputShotComponent
+    {
+    }
 }

@@ -17,14 +17,24 @@ namespace Game.Fabros.Net.ClientServer.Protocol
         public int player;
 
         public Action action;
-        public bool hasInteraction;
+        public bool hasAction;
 
         public Move move;
         public bool hasMove;
 
+
+        public Shot shot;
+        public bool hasShot;
+        
         [Serializable]
         public class Action
         {
+        }
+        
+        [Serializable]
+        public class Shot
+        {
+            //public Vector3 direction;
         }
 
         [Serializable]

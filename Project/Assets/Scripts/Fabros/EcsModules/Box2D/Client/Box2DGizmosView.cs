@@ -77,7 +77,7 @@ namespace Fabros.EcsModules.Box2D.Client
         static void DrawPoint(Vector2 center, float radius, Box2DColor color)
         {
             Gizmos.color = new Color(color.R, color.Q, color.B, color.A);
-            Gizmos.DrawSphere(new Vector3(center.x, radius, center.y), 0.1f);
+            Gizmos.DrawSphere(new Vector3(center.x, radius, center.y), 0.02f);
         }
         
         static void DrawSegment(Vector2 v1, Vector2 v2, Box2DColor color)

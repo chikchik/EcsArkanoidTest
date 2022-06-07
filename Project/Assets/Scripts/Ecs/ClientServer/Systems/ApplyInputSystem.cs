@@ -28,11 +28,14 @@ namespace Game.Ecs.ClientServer.Systems
 
             var filter = inputWorld.Filter<InputPlayerComponent>().End();
 
-            var poolInputMove = inputWorld.GetPool<InputMoveComponent>();
+            var poolInputMove   = inputWorld.GetPool<InputMoveComponent>();
             var poolInputMoveTo = inputWorld.GetPool<InputMoveToPointComponent>();
             var poolInputPlayer = inputWorld.GetPool<InputPlayerComponent>();
             var poolInputAction = inputWorld.GetPool<InputActionComponent>();
+            var poolInputShot   = inputWorld.GetPool<InputShotComponent>();
+            
             var poolPosition = inputWorld.GetPool<PositionComponent>();
+            
 
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
 
@@ -72,8 +75,32 @@ namespace Game.Ecs.ClientServer.Systems
                         var pos = poolPosition.Get(inputEntity).value; 
                         unitEntity.EntityReplace<PositionComponent>(world).value = pos;
                     }
+
+                    if (poolInputShot.Has(inputEntity))
+                    {
+                        var shotComponent = poolInputShot.Get(inputEntity);
+                        Shot(world, unitEntity);
+                    }
                 }
             }
+        }
+
+        public void Shot(EcsWorld world, int unitEntity)
+        {
+            if (unitEntity.EntityHas<MakeShotComponent>(world))
+                return;
+            
+            ref var component = ref unitEntity.EntityAdd<MakeShotComponent>(world);
+            component.Time = world.GetTime() + 0.2f;
+            
+            /*
+            var dir = unitEntity.EntityGet<LookDirectionComponent>(world).value;
+            var angle = Math.PI / 8f;
+            var rotated = new Vector3();
+            rotated.x = (float)(dir.x * Math.Cos(angle) - dir.z * Math.Sin(angle));
+            rotated.z = (float)(dir.x * Math.Sin(angle) + dir.z * Math.Cos(angle));
+            component.Direction = rotated;
+            */
         }
 
         public void Interract(EcsWorld world, int unitEntity)

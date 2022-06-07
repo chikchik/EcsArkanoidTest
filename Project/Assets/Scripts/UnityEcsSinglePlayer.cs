@@ -27,9 +27,9 @@ namespace Game.Client
         [Inject] private PlayerInput.PlayerInput playerInput;
         [Inject] private UI ui;
         [Inject] private EcsWorld world;
+        [Inject(Id = "input")] private EcsWorld inputWorld;
         
         
-        private EcsWorld inputWorld;
         private EcsSystems systems;
         private EcsSystems viewSystems;
 
@@ -41,7 +41,6 @@ namespace Game.Client
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
             
-            inputWorld = new EcsWorld("input");
             
             
             systems = new EcsSystems(world);
@@ -105,7 +104,7 @@ namespace Game.Client
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                var input = new UserInput{player = playerId, hasInteraction = true};
+                var input = new UserInput{player = playerId, hasAction = true};
                 InputService.ApplyInput(inputWorld, playerId, input);
             }
             viewSystems.Run();

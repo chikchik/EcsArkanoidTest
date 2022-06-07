@@ -27,7 +27,7 @@ namespace Game.Client
             {
                 var input = new UserInput
                 {
-                    hasInteraction = true,
+                    hasAction = true,
                     action = new UserInput.Action()
                 };
 
@@ -38,8 +38,8 @@ namespace Game.Client
             {
                 var input = new UserInput
                 {
-                    hasInteraction = true,
-                    action = new UserInput.Action()
+                    hasShot = true,
+                    shot = new UserInput.Shot{}
                 };
 
                 InputService.ApplyInput(inputWorld, 1, input);

@@ -9,4 +9,11 @@ namespace Game.Ecs.ClientServer.Components
         public float Time;
         public Vector3 Direction;
     }
+    
+    [Serializable]
+    public struct MakeShotComponent
+    {
+        public float Time;
+        public Vector3 Direction;
+    }
 }
