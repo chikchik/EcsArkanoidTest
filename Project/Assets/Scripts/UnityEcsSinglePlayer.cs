@@ -86,6 +86,19 @@ namespace Game.Client
             world.AddUnique(new MainPlayerIdComponent{value = playerId});
             unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
             
+            
+            ui.ApplyInputAction = (input) =>
+            {
+                var id = world.GetUnique<MainPlayerIdComponent>().value;
+                var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, id);
+                if (input.hasShot)
+                {
+                    var direction = unitEntity.EntityGet<LookDirectionComponent>(world).value;
+                    input.shot = new UserInput.Shot { direction = direction };
+                }
+
+                InputService.ApplyInput(inputWorld, id, input);
+            };
         }
         
         public void Update()

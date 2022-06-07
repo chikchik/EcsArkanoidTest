@@ -33,7 +33,7 @@ namespace Game.ClientServer
                 inputEntity.EntityAddComponent<InputActionComponent>(inputWorld);
             
             if (input.hasShot) 
-                inputEntity.EntityAddComponent<InputShotComponent>(inputWorld);
+                inputEntity.EntityAddComponent<InputShotComponent>(inputWorld).dir = input.shot.direction;
 
             if (input.hasUnitPos)
                 inputEntity.EntityAdd<PositionComponent>(inputWorld).value = input.unitPos;

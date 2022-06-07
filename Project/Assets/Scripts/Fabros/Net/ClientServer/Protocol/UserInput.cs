@@ -34,7 +34,7 @@ namespace Game.Fabros.Net.ClientServer.Protocol
         [Serializable]
         public class Shot
         {
-            //public Vector3 direction;
+            public Vector3 direction;
         }
 
         [Serializable]

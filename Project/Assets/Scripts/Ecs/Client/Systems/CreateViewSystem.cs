@@ -44,7 +44,7 @@ namespace Game.Ecs.Client.Systems
             foreach (var entity in filterUnits)
             {
                 var view = Object.Instantiate(viewComponent.Global.characterPrefab);
-                view.transform.position = view.transform.position.WithX(0).WithZ(0); 
+                view.transform.position = entity.EntityGet<PositionComponent>(world).value;; 
 
                 ref var component = ref entity.EntityAddComponent<TransformComponent>(world);
                 component.Transform = view.transform;

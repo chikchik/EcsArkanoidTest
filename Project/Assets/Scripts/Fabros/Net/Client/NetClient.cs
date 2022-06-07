@@ -159,7 +159,7 @@ namespace Game.Fabros.Net.Client
             
             string debug = $"{ServerWorld.GetUnique<TickComponent>().Value.Value}";
             
-            Debug.Log($"pr srv:{Leo.GetCurrentTick(ServerWorld).Value} client: {Leo.GetCurrentTick(MainWorld).Value}");
+            //Debug.Log($"pr srv:{Leo.GetCurrentTick(ServerWorld).Value} client: {Leo.GetCurrentTick(MainWorld).Value}");
             Profiler.BeginSample("SimServerWorld");
             while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
             {
@@ -174,7 +174,7 @@ namespace Game.Fabros.Net.Client
                 iterations++;
             }
             Profiler.EndSample();
-            Debug.Log("pr end");
+            //Debug.Log("pr end");
             
             
 

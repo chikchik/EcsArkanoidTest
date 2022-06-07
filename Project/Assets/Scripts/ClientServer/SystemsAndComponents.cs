@@ -101,6 +101,9 @@ namespace Game.ClientServer
             
             pool.AddComponent<AverageSpeedComponent>();
             pool.AddComponent<ButtonCustomComponent>();
+            
+            pool.AddComponent<BulletComponent>();
+            pool.AddComponent<MakeShotComponent>();
 
             return pool;
         }

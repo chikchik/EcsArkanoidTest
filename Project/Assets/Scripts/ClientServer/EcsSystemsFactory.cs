@@ -1,19 +1,16 @@
 ﻿using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.Ecs.ClientServer.Systems;
-using Fabros.EcsModules.Box2D.Client.Systems;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Tick;
 using Game.Ecs.Client.Systems;
-using Game.Ecs.Client.Systems.Inventory;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
-using Game.Fabros.EcsModules.Fire.Client.Systems;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Systems;
 using Game.Fabros.Net.ClientServer;
@@ -22,6 +19,12 @@ using Game.Fabros.Net.ClientServer.Ecs.Systems;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.ExtendedSystems;
 using UnityEngine;
+
+#if CLIENT
+using Game.Ecs.Client.Systems.Inventory;
+using Game.Fabros.EcsModules.Fire.Client.Systems;
+using Fabros.EcsModules.Box2D.Client.Systems;
+#endif
 
 namespace Game.ClientServer
 {

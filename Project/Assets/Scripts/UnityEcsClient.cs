@@ -29,6 +29,7 @@ namespace Game.Client
         [Inject] private UI ui;
         //[Inject] private KeyboardController keyboard;
         [Inject] private EcsWorld world;
+        [Inject(Id="input")] private EcsWorld inputWorld;
 
         private EcsSystems viewSystems;
 
@@ -50,7 +51,7 @@ namespace Game.Client
 #if UNITY_EDITOR
             viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
-
+            
             client.ConnectedAction = () =>
             {
                 viewSystems.Init();
@@ -84,6 +85,18 @@ namespace Game.Client
             };
 
             client.Start();
+            
+            
+            ui.ApplyInputAction = (input) =>
+            {
+                var id = world.GetUnique<MainPlayerIdComponent>().value;
+                var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, id);
+                if (input.hasShot)
+                    input.shot = new UserInput.Shot {direction = unitEntity.EntityGet<LookDirectionComponent>(world).value};
+                
+                InputService.ApplyInput(inputWorld, id, input);
+                client.AddUserInput(input);
+            };
         }
 
         private void Update()

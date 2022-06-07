@@ -21,11 +21,12 @@ namespace Game.Ecs.ClientServer.Systems
             var filter = world.Filter<MakeShotComponent>().End();
             foreach (var entity in filter)
             {
-                if (entity.EntityGet<MakeShotComponent>(world).Time < world.GetTime())
+                //if (entity.EntityGet<MakeShotComponent>(world).Time < world.GetTime())
                 {
+                    var dir = entity.EntityGet<MakeShotComponent>(world).Direction;
                     entity.EntityDel<MakeShotComponent>(world);
 
-                    var dir = entity.EntityGet<LookDirectionComponent>(world).value;
+                    
                     var shotEntity = world.NewEntity();
                     shotEntity.EntityAdd<BulletComponent>(world);
 

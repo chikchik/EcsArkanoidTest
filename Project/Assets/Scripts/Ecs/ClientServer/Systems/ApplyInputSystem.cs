@@ -79,20 +79,21 @@ namespace Game.Ecs.ClientServer.Systems
                     if (poolInputShot.Has(inputEntity))
                     {
                         var shotComponent = poolInputShot.Get(inputEntity);
-                        Shot(world, unitEntity);
+                        Shot(world, unitEntity, shotComponent.dir);
                     }
                 }
             }
         }
 
-        public void Shot(EcsWorld world, int unitEntity)
+        public void Shot(EcsWorld world, int unitEntity, Vector3 dir)
         {
             if (unitEntity.EntityHas<MakeShotComponent>(world))
                 return;
             
             ref var component = ref unitEntity.EntityAdd<MakeShotComponent>(world);
             component.Time = world.GetTime() + 0.2f;
-            
+            component.Direction = dir;
+
             /*
             var dir = unitEntity.EntityGet<LookDirectionComponent>(world).value;
             var angle = Math.PI / 8f;

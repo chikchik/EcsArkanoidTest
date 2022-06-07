@@ -1,4 +1,5 @@
-﻿using Fabros.Ecs.ClientServer.Components;
+﻿using System;
+using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
 using Game.ClientServer;
 using Game.Ecs.Client.Components;
@@ -14,6 +15,7 @@ namespace Game.Client
     {
         private MainUI view;
         private EcsWorld world;
+        public Action<UserInput> ApplyInputAction; 
         
         public UI(
             EcsWorld world, 
@@ -28,10 +30,9 @@ namespace Game.Client
                 var input = new UserInput
                 {
                     hasAction = true,
-                    action = new UserInput.Action()
                 };
 
-                InputService.ApplyInput(inputWorld, 1, input);
+                ApplyInputAction(input);
             });
             
             view.ShotButton.onClick.AddListener(() =>
@@ -39,20 +40,17 @@ namespace Game.Client
                 var input = new UserInput
                 {
                     hasShot = true,
-                    shot = new UserInput.Shot{}
                 };
-
-                InputService.ApplyInput(inputWorld, 1, input);
+                
+                ApplyInputAction(input);
             });
 
             view.FoodText.text = "";
 
-            var globalListenerEntity = world.NewEntity();
+            var globalListenerEntity = world.NewLocalEntity();
             globalListenerEntity.AddAnyChangedListener<FoodCollectedComponent>(world, this);
-
-
         }
-        
+
         
         public void OnAnyComponentChanged(EcsWorld world, int entity, FoodCollectedComponent data, bool added)
         {
