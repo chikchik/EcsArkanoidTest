@@ -96,7 +96,7 @@ namespace ConsoleApp
                 Console.WriteLine($"connected to host\n{url}");
 
 
-                var pool = SystemsAndComponents.CreateComponentsPool();
+                var pool = SharedComponents.CreateComponentsPool();
 
     
                 //на сервере может быть tickrate отличный от клиента, например 20 вместо 60
