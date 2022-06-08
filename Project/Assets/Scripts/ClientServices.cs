@@ -23,18 +23,13 @@ namespace Game.Client
 {
     public class ClientServices
     {
-        public static void ConfigureCollectableUnit(EcsWorld world, GameObject gameObject, int entity)
-        {
-            var bushView = gameObject.GetComponent<BushView>();
-            ref var collectableTargetComponent = ref entity.EntityAddComponent<CollectableTargetComponent>(world);
-
-            collectableTargetComponent.targetObject = bushView.Berries.gameObject;
-        }
-
-        private static void forEachObject<T>(Action<T> fn) where T : Component//it is UNITY Mono Component
+        private static void ForEachObject<T>(Action<T> fn) where T : Component//it is UNITY Mono Component
         {
             var items = Object.FindObjectsOfType<T>();
-            items.ForEach(fn);
+            foreach (var item in items)
+            {
+                fn(item);
+            }
         }
 
         public static void InitializeNewWorldFromScene(EcsWorld world)
@@ -61,7 +56,7 @@ namespace Game.Client
             }
 
 
-            forEachObject<BushView>(view =>
+            ForEachObject<BushView>(view =>
             {
                 var bushEntity = GetOrCreateGameEntity(view.gameObject);
                 ref var bushComponent = ref bushEntity.EntityAdd<BushComponent>(world);
@@ -87,7 +82,7 @@ namespace Game.Client
                 bushEntity.EntityAdd<FlammableComponent>(world).Power = 3;
             });
 
-            forEachObject<BoxView>(view =>
+            ForEachObject<BoxView>(view =>
             {
                 var boxEntity = GetOrCreateGameEntity(view.gameObject);
                 boxEntity.EntityAdd<BoxComponent>(world);
@@ -104,7 +99,7 @@ namespace Game.Client
                 radiusComponent.radius = view.transform.lossyScale.x / 2f;
             });
 
-            forEachObject<ButtonView>(view =>
+            ForEachObject<ButtonView>(view =>
             {
                 var buttonEntity = GetOrCreateGameEntity(view.gameObject);
 
@@ -136,7 +131,7 @@ namespace Game.Client
                     buttonEntity.EntityReplace<ButtonCustomComponent>(world).Shake = true;
             });
 
-            forEachObject<GateView>(view =>
+            ForEachObject<GateView>(view =>
             {
                 var gateEntity = GetOrCreateGameEntity(view.gameObject);
                 ref var gateComponent = ref gateEntity.EntityAdd<GateComponent>(world);
@@ -165,7 +160,7 @@ namespace Game.Client
                 moveInfoComponent.endPoint = view.EndPosition;
             });
 
-            forEachObject<CharacterView>(view =>
+            ForEachObject<CharacterView>(view =>
             {
                 var characterEntity = GetOrCreateGameEntity(view.gameObject);
 
@@ -183,7 +178,7 @@ namespace Game.Client
                 speedComponent.speed = 2f;
             });
             
-            forEachObject<Collider2D>(collider =>
+            ForEachObject<Collider2D>(collider =>
             {
                 if (!collider.enabled)
                     return;
@@ -191,7 +186,7 @@ namespace Game.Client
                 ClientBox2DServices.CreateBody(world, entity, collider);
             });
             
-            forEachObject<JointConnect>(joint =>
+            ForEachObject<JointConnect>(joint =>
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
                 var entityB = GetOrCreateGameEntity(joint.Connect);
@@ -201,7 +196,7 @@ namespace Game.Client
             var unit = Object.FindObjectOfType<Global>().characterPrefab;
             
             var clips = unit.Animator.runtimeAnimatorController.animationClips;
-            var clip = clips.First(clip => clip.name == "Walking");
+            //var clip = clips.First(clip => clip.name == "Walking");
             //todo calculate exact speed
 
             world.AddUnique<AverageSpeedComponent>().Value = 1.72f; //clip.averageSpeed;

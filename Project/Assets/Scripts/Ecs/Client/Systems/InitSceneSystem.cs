@@ -43,10 +43,10 @@ namespace Game.Ecs.Client.Systems
              * все кто остался в sceneEntitiesByName можно удалить со сцены
              */
 
-            sceneEntitiesByName.Values.ForEach(tr =>
+            foreach (var tr in sceneEntitiesByName.Values)
             {
                 Object.Destroy(tr.gameObject);
-            });
+            }
         }
     }
 }

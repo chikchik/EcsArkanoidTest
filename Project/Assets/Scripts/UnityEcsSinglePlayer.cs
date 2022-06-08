@@ -136,7 +136,7 @@ namespace Game.Client
             if (!Application.isPlaying)
                 return;
         
-            DebugDraw.Draw(world);
+            EcsWorldDebugDraw.Draw(world);
         }
     }
 }

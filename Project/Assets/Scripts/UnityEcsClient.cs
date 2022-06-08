@@ -68,7 +68,7 @@ namespace Game.Client
 
             client.DeleteEntitiesAction = (world, entities) =>
             {
-                entities.ForEach(entity =>
+                foreach (var entity in entities)
                 {
                     if (entity.EntityHasComponent<TransformComponent>(world))
                     {
@@ -81,7 +81,7 @@ namespace Game.Client
                         var go = entity.EntityGetComponent<FireViewComponent>(world).view.gameObject;
                         Destroy(go);
                     }
-                });
+                };
             };
 
             client.Start();
@@ -133,7 +133,7 @@ namespace Game.Client
         {
             if (!Application.isPlaying)
                 return;
-            DebugDraw.Draw(world);
+            EcsWorldDebugDraw.Draw(world);
         }
 
 
