@@ -1,5 +1,4 @@
-﻿using Fabros.Ecs;
-using Fabros.Ecs.ClientServer.Serializer;
+﻿using Fabros.Ecs.ClientServer.Serializer;
 using UnityEngine;
 
 namespace Game.Fabros.Net.Client

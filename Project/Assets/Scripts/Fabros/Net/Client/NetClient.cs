@@ -1,12 +1,10 @@
 using System;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Fabros.Ecs;
 using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Box2D.Client;
 using Fabros.EcsModules.Box2D.Client.Systems;
 using Fabros.EcsModules.Box2D.ClientServer;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
@@ -14,14 +12,11 @@ using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
-using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-using Game.Fabros.EcsModules.Fire.Client.Components;
 using Game.Fabros.Net.Client.Socket;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
-using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -81,6 +76,11 @@ namespace Game.Fabros.Net.Client
             playerID = Random.Range(1000, 9999);
 
             MainWorld = world;
+            /*
+             * это нужно чтоб GEN на клиенте у entity отличался от серверного и в в момент применении дифа удалялся,
+             * а не считался своим из-за совпадающих Gen с серверным
+             */
+            MainWorld.SetDefaultGen(15000);
             MainWorld.AddUnique<MainPlayerIdComponent>().value = playerID;
         }
 
@@ -99,6 +99,12 @@ namespace Game.Fabros.Net.Client
                 AsyncMain(connection.Response);
             };
             connection.Start();
+        }
+        
+        public static void ForEach<T>(IEnumerable<T> source, Action<T> action)
+        {
+            foreach (var item in source) 
+                action(item);
         }
 
         private void Sim(int delay)
@@ -288,7 +294,7 @@ namespace Game.Fabros.Net.Client
                          * если клиент создал сам entity с такими же id, то их надо удалить прежде чем применять dif
                          * иначе может получиться так, что останется висеть какой-то чужой view component 
                          */
-                        dif.CreatedEntities.ForEach(entity =>
+                        ForEach(dif.CreatedEntities, entity =>
                         {
                             if (!MainWorld.IsEntityAliveInternal(entity))
                                 return;

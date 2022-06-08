@@ -1,5 +1,4 @@
-﻿using Fabros.Ecs.ClientServer.Serializer;
-using Leopotam.EcsLite;
+﻿using Leopotam.EcsLite;
 
 namespace Game.Fabros.Net.ClientServer
 {

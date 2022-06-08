@@ -5240,7 +5240,6 @@ GameObject:
   - component: {fileID: 1175984248}
   - component: {fileID: 1175984252}
   - component: {fileID: 1175984253}
-  - component: {fileID: 1175984254}
   m_Layer: 0
   m_Name: ChestWall
   m_TagString: Untagged
@@ -5319,7 +5318,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1175984247}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 16.44, y: 3.6536405, z: -11.33}
+  m_LocalPosition: {x: 16.35, y: 3.6536405, z: -11.36}
   m_LocalScale: {x: 3.5242383, y: 3.5242383, z: 3.5242383}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5358,18 +5357,6 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
---- !u!114 &1175984254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1175984247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b79bde823b7b9b43a238869f86c86d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1244888967
 GameObject:
   m_ObjectHideFlags: 0

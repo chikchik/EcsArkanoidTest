@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Fabros.Ecs;
-using Fabros.Ecs.ClientServer.Components;
+﻿using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.EcsModules.Box2D;
 using Fabros.EcsModules.Grid;
@@ -18,7 +16,7 @@ using Game.Fabros.Net.Client;
 
 namespace Game.ClientServer
 {
-    public class SystemsAndComponents
+    public class SharedComponents
     {
         //public LeoContexts leo { get; set; }
 
