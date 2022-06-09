@@ -7,6 +7,7 @@
 		
 		<FabrosEcsPackage>..\..\module-ecs\FabrosEcsPackage</FabrosEcsPackage>
 		<UnityScripts>..\project\Assets\Scripts</UnityScripts>
+		<Box2D>..\..\module-ecs-box2d\FabrosEcsBox2DPackage\Fabros\EcsModules\Box2D</Box2D>
 		
 	</PropertyGroup>
 
@@ -38,6 +39,13 @@
 		<Compile Remove="$(UnityScripts)\Fabros\EcsModules\Fire\Client\**" />
 		<Compile Remove="$(UnityScripts)\Fabros\EcsModules\Box2D\Client\**" />
 		<Compile Remove="$(UnityScripts)\Fabros\Net\Client\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(Box2D)\**\*.cs">
+			<Link>External\Box2D\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+		<Compile Remove="$(Box2D)\Client\**" />
 	</ItemGroup>
 
 
