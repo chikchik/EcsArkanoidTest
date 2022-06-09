@@ -71,7 +71,7 @@ namespace Game.ClientServer
             AddServer(new JoinPlayerSystem());
 
 
-            systems.Add(new ApplyInput0System());
+            //systems.Add(new ApplyInput0System());
             
 #if CLIENT
             AddClient(new InitSceneSystem());

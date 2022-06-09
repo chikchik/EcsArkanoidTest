@@ -27,6 +27,8 @@ namespace Game
 
 
             Container.Bind<PlayerInputService>().AsSingle();
+            Container.Bind<BaseInputService>().AsSingle();
+            
         }
     }
 }

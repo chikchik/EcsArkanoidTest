@@ -19,8 +19,7 @@ using Random = System.Random;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-
-    public class ApplyInput0System : IEcsRunSystem
+    public class ApplyInputSystem : IEcsRunSystem
     {
         public void Run(EcsSystems systems)
         {
@@ -37,6 +36,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolPlayer      = inputWorld.GetPool<InputPlayerComponent>();
             var poolInputMoveDir= inputWorld.GetPool<InputMoveDirectionComponent>();
             var poolInputMoveTo = inputWorld.GetPool<InputMoveToPointComponent>();
+            var poolInputAction = inputWorld.GetPool<InputActionComponent>();
             
             var filter = inputWorld.Filter<InputComponent>().End();
             
@@ -50,7 +50,7 @@ namespace Game.Ecs.ClientServer.Systems
                 
                 if (poolInputShot.Has(inputEntity))
                 {
-                    var dir = unitEntity.EntityGet<LookDirectionComponent>(world).value;
+                    var dir = poolInputShot.Get(inputEntity).dir;
                     Shot(world, unitEntity, dir);
                 }
 
@@ -79,100 +79,14 @@ namespace Game.Ecs.ClientServer.Systems
                     ref var targetPositionComponent = ref unitEntity.EntityReplace<TargetPositionComponent>(world);
                     targetPositionComponent.Value = inputMoveToPointComponent.Value;
                 }
-            }
-        }
-        
-        public void Shot(EcsWorld world, int unitEntity, Vector3 dir)
-        {
-            if (unitEntity.EntityHas<MakeShotComponent>(world))
-                return;
-            
-            ref var component = ref unitEntity.EntityAdd<MakeShotComponent>(world);
-            component.Time = world.GetTime() + 0.2f;
-            component.Direction = dir;
-        }
-        
-    }
-    
-    public class ApplyInputSystem : IEcsRunSystem
-    {
-        public void Run(EcsSystems systems)
-        {
-            var world = systems.GetWorld();
-            var inputWorld = systems.GetWorld("input");
-
-            var filter = inputWorld.Filter<InputPlayerComponent>().End();
-
-            var poolInputMove   = inputWorld.GetPool<InputMoveDirectionComponent>();
-            var poolInputMoveTo = inputWorld.GetPool<InputMoveToPointComponent>();
-            var poolInputPlayer = inputWorld.GetPool<InputPlayerComponent>();
-            var poolInputAction = inputWorld.GetPool<InputActionComponent>();
-            var poolInputShot   = inputWorld.GetPool<InputShotComponent>();
-            
-            var poolPosition = inputWorld.GetPool<PositionComponent>();
-            
-
-            var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
-
-
-            foreach (var inputEntity in filter)
-            {
-                var playerID = poolInputPlayer.Get(inputEntity).PlayerID;
-                var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerID);
-
-                if (unitEntity != -1)
+                
+                if (poolInputAction.Has(inputEntity))
                 {
-                    /*
-                    if (poolInputMove.Has(inputEntity))
-                    {
-                        var inputMoveComponent = poolInputMove.Get(inputEntity);
-
-                        poolMoveDirection.GetRef(unitEntity).value = inputMoveComponent.Dir;
-
-                        unitEntity.EntityDel<TargetPositionComponent>(world);
-
-                    }*/
-
-                    if (poolInputAction.Has(inputEntity))
-                    {
-                        Interract(world, unitEntity);
-                    } 
- 
-                    /*
-                    if (poolInputMoveTo.Has(inputEntity))
-                    {
-                        var inputMoveToPointComponent = poolInputMoveTo.Get(inputEntity);
-
-                        ref var targetPositionComponent = ref unitEntity.EntityReplace<TargetPositionComponent>(world);
-                        targetPositionComponent.Value = inputMoveToPointComponent.Value;
-                    }*/
-
-                    if (poolPosition.Has(inputEntity))
-                    {
-                        var pos = poolPosition.Get(inputEntity).value; 
-                        unitEntity.EntityReplace<PositionComponent>(world).value = pos;
-                    }
-
-                    /*
-                    if (poolInputShot.Has(inputEntity))
-                    {
-                        var shotComponent = poolInputShot.Get(inputEntity);
-                        Shot(world, unitEntity, shotComponent.dir);
-                    }*/
+                    Interract(world, unitEntity);
                 }
             }
         }
-
-        public void Shot(EcsWorld world, int unitEntity, Vector3 dir)
-        {
-            if (unitEntity.EntityHas<MakeShotComponent>(world))
-                return;
-            
-            ref var component = ref unitEntity.EntityAdd<MakeShotComponent>(world);
-            component.Time = world.GetTime() + 0.2f;
-            component.Direction = dir;
-        }
-
+        
         public void Interract(EcsWorld world, int unitEntity)
         {
             var result = new List<int>();
@@ -214,6 +128,16 @@ namespace Game.Ecs.ClientServer.Systems
                 rotated.z = (float)(dir.x * Math.Sin(angle) + dir.z * Math.Cos(angle));
                 component.Direction = rotated;
             }
+        }
+        
+        public void Shot(EcsWorld world, int unitEntity, Vector3 dir)
+        {
+            if (unitEntity.EntityHas<MakeShotComponent>(world))
+                return;
+            
+            ref var component = ref unitEntity.EntityAdd<MakeShotComponent>(world);
+            component.Time = world.GetTime() + 0.2f;
+            component.Direction = dir;
         }
     }
 }
