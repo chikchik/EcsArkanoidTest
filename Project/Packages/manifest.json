@@ -2,6 +2,7 @@
   "dependencies": {
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
     "com.fabros.ecs": "file:../../../module-ecs/FabrosEcsPackage",
+    "com.fabros.ecs.box2d": "file:../../../module-ecs-box2d/FabrosEcsBox2DPackage",
     "com.unity.cinemachine": "2.8.4",
     "com.unity.collab-proxy": "1.15.16",
     "com.unity.ext.nunit": "1.0.6",
