@@ -37,12 +37,7 @@ namespace Game.Client
             
             view.ShotButton.onClick.AddListener(() =>
             {
-                var input = new UserInput
-                {
-                    hasShot = true,
-                };
-                
-                ApplyInputAction(input);
+                PlayerInputService.AddShot(inputWorld);
             });
 
             view.FoodText.text = "";

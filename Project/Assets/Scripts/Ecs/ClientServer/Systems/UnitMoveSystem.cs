@@ -10,6 +10,7 @@ namespace Game.Ecs.ClientServer.Systems
     {
         public void Run(EcsSystems systems)
         {
+            return;
             var world = systems.GetWorld();
             var filter = world
                 .Filter<MoveDirectionComponent>()

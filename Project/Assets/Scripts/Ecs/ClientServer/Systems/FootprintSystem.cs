@@ -19,9 +19,11 @@ namespace Game.Ecs.ClientServer.Systems
             var filter = world
                 .Filter<UnitComponent>()
                 .Inc<PositionComponent>()
+                .Inc<LookDirectionComponent>()
                 .End();
             var poolPosition = world.GetPool<PositionComponent>();
-            var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
+            //var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
+            var poolLookDirection = world.GetPool<LookDirectionComponent>();
             var poolLastFootprint = world.GetPool<LastFootprintComponent>();
 
             foreach (var entity in filter)
@@ -36,7 +38,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if ((poolLastFootprint.Get(entity).position - currentPosition).magnitude > FootprintDelta)
                 {
-                    var direction = poolMoveDirection.Get(entity).value;
+                    var direction = poolLookDirection.Get(entity).value;
                     ref var lastFootprint = ref poolLastFootprint.GetRef(entity);
 
                     lastFootprint.position = currentPosition;

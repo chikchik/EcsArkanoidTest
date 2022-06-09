@@ -15,6 +15,7 @@ using Game.UI;
 using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Zenject;
 
 namespace Game.Client
@@ -112,15 +113,25 @@ namespace Game.Client
             client.Update();
             
             var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, client.GetPlayerID());
-            CheckInput(world, 
+            CheckInput(inputWorld, world, 
                 unitEntity, playerInput, camera,
                 input => client.AddUserInput(input));
+
+
+            if (Input.GetMouseButtonDown(0) && !(EventSystem.current.IsPointerOverGameObject() &&
+                                                 EventSystem.current.currentSelectedGameObject != null))
+            {
+                PlayerInputService.AddMoveToPoint(inputWorld, Input.mousePosition);
+            }
+            
             
             viewSystems.Run();
         }
 
         private void OnDestroy()
         {
+            if (client == null)
+                return;
             client.OnDestroy();
         }
 
@@ -137,12 +148,13 @@ namespace Game.Client
         }
 
 
-        public static void CheckInput(EcsWorld world, 
+        public static void CheckInput(EcsWorld inputWorld, EcsWorld world, 
             int unitEntity, 
             PlayerInput.PlayerInput playerInput,
             Camera camera, Action<UserInput> addUserInput
             )
         {
+            /*
             if (unitEntity == -1)
                 return;
             
@@ -180,18 +192,8 @@ namespace Game.Client
 
             if (moveDirection != lastDirection)
             {
-                if (unitEntity.EntityHas<TargetPositionComponent>(world))
-                    if (moveDirection.magnitude < 0.001f)
-                        return;
-
-                var input = new UserInput
-                {
-                    hasMove = true,
-                    move = new UserInput.Move {value = moveDirection, moveType = UserInput.MoveType.MoveToDirection}
-                };
-
-                addUserInput(input);
-            }
+                PlayerInputService.AddMoveToDirection(inputWorld, moveDirection);
+            }*/
         }
     }
 }

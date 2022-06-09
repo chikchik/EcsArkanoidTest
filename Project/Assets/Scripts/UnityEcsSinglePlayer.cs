@@ -16,6 +16,7 @@ using Game.UI;
 using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Zenject;
 
 namespace Game.Client
@@ -103,7 +104,7 @@ namespace Game.Client
         
         public void Update()
         {
-            UnityEcsClient.CheckInput(world, unitEntity, playerInput, camera, input =>
+            UnityEcsClient.CheckInput(inputWorld, world, unitEntity, playerInput, camera, input =>
             {
                 if (world.HasUnique<RootMotionComponent>())
                 {
@@ -117,9 +118,49 @@ namespace Game.Client
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                var input = new UserInput{player = playerId, hasAction = true};
-                InputService.ApplyInput(inputWorld, playerId, input);
+                //var input = new UserInput{player = playerId, hasAction = true};
+                //InputService.ApplyInput(inputWorld, playerId, input);
+                
+                //var direction = unitEntity.EntityGet<LookDirectionComponent>(world).value;
+                //InputService.AddShot(inputWorld, direction);
             }
+            
+            
+            if (Input.GetMouseButtonDown(0) && !(EventSystem.current.IsPointerOverGameObject() &&
+                                                 EventSystem.current.currentSelectedGameObject != null))
+            {
+                var ray = camera.ScreenPointToRay(Input.mousePosition);
+                var plane = new Plane(new Vector3(0, 1, 0), 0);
+                plane.Raycast(ray, out var dist);
+
+                var point = ray.GetPoint(dist);
+                
+                PlayerInputService.AddMoveToPoint(inputWorld, point);
+            }
+
+            var hor = Input.GetAxis("Horizontal");
+            var ver = Input.GetAxis("Vertical");
+            
+            if (Mathf.Abs(hor) > 0.1f || Mathf.Abs(ver) > 0.1f)
+            {
+                Debug.Log($"{hor} {ver}");
+                var forward = camera.transform.forward;
+                forward.y = 0;
+                forward.Normalize();
+
+                var right = camera.transform.right;
+                right.y = 0;
+                right.Normalize();
+
+                var dir = forward * ver + right * hor;
+                
+                PlayerInputService.AddMoveToDirection(inputWorld, dir);
+            }
+            else
+            {
+                PlayerInputService.StopMoveToDirection(inputWorld);
+            }
+            
             viewSystems.Run();
         }
 

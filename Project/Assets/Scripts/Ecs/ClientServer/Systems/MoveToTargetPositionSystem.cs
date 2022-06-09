@@ -1,4 +1,7 @@
 using Fabros.Ecs.ClientServer.Components;
+using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Tick.Other;
+using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -13,40 +16,48 @@ namespace Game.Ecs.ClientServer.Systems
             var filter = world
                 .Filter<TargetPositionComponent>()
                 .Inc<PositionComponent>()
-                .Inc<MoveDirectionComponent>()
                 .End();
             
             var poolTargetPosition = world.GetPool<TargetPositionComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
-            var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
-            //var poolLookDirection = world.GetPool<LookDirectionComponent>();
+            //var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
+            var poolLookDirection = world.GetPool<LookDirectionComponent>();
             var poolMoving = world.GetPool<MovingComponent>();
+            
+
+            var deltaTime = world.GetDeltaSeconds();
 
             foreach (var entity in filter)
             {
                 var targetPositionComponent = poolTargetPosition.Get(entity);
                 var positionComponent = poolPosition.Get(entity);
 
-                var direction = targetPositionComponent.Value - positionComponent.value;
+                var direction = (targetPositionComponent.Value - positionComponent.value).WithY(0);
                 var distance = direction.magnitude;
-                var moveDirection = new Vector3
-                {
-                    x = direction.normalized.x,
-                    y = 0,
-                    z = direction.normalized.z
-                };
-
-                poolMoveDirection.GetRef(entity).value = moveDirection;
-                //poolLookDirection.GetRef(entity).value = moveDirection;
 
                 if (distance < 0.1f)
                 {
                     poolTargetPosition.Del(entity);
                     poolMoving.Del(entity);
+                    //poolMoveDirection.Del(entity);
                 }
                 else
                 {
                     poolMoving.Replace(entity, new MovingComponent());
+                    direction.Normalize();
+                    
+                    var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).Value;
+
+                    //poolMoveDirection.Replace(entity).value = direction;
+
+                    var dir = direction * deltaTime * speed; //speedComponent.speed;
+                    poolPosition.GetRef(entity).value += dir;
+                    
+                    if (dir.magnitude > 0.001f)
+                    {
+                        //if delta and speed not 0
+                        poolLookDirection.Replace(entity).value = dir.normalized;
+                    }
                 }
             }
         }

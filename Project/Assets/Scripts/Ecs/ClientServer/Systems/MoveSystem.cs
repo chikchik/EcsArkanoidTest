@@ -17,29 +17,31 @@ namespace Game.Ecs.ClientServer.Systems
                 .Inc<PositionComponent>()
                 .Inc<SpeedComponent>()
                 .Inc<AverageSpeedComponent>()
-                //.Inc<AIPlayerComponent>()
                 .End();
+            
             var deltaTime = world.GetDeltaSeconds();
             var poolPosition = world.GetPool<PositionComponent>();
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
-            var poolSpeed = world.GetPool<SpeedComponent>();
+            var poolLookDirection = world.GetPool<LookDirectionComponent>();
+            //var poolSpeed = world.GetPool<SpeedComponent>();
             var poolMoving = world.GetPool<MovingComponent>();
 
             foreach (var entity in filter)
             {
                 var moveDirectionComponent = poolMoveDirection.Get(entity);
-                //var speedComponent = poolSpeed.Get(entity);
+                /*
+                if (moveDirectionComponent.value.sqrMagnitude < 0.0001f)
+                {
+                    poolMoving.Del(entity);
+                    poolMoveDirection.Del(entity);
+                    continue;
+                }*/
 
                 var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).Value;
-                //var dir = moveDirectionComponent.value * deltaTime * speedComponent.speed;
                 var dir = moveDirectionComponent.value * deltaTime * speed; //speedComponent.speed;
-                if (dir.sqrMagnitude > 0.0f)
-                {
-                    poolPosition.GetRef(entity).value += dir;
-                    poolMoving.Replace(entity, new MovingComponent());
-                }
-                else
-                    poolMoving.Del(entity);
+                poolPosition.GetRef(entity).value += dir;
+                poolMoving.Replace(entity, new MovingComponent());
+                poolLookDirection.Replace(entity).value = dir.normalized;
             }
         }
     }

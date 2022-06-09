@@ -70,6 +70,9 @@ namespace Game.ClientServer
             //AddServer(new SpawnBotSystem());
             AddServer(new JoinPlayerSystem());
 
+
+            systems.Add(new ApplyInput0System());
+            
 #if CLIENT
             AddClient(new InitSceneSystem());
 #endif

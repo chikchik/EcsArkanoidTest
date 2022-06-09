@@ -18,12 +18,12 @@ namespace Game.ClientServer
 
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAddComponent<InputPlayerComponent>(inputWorld).PlayerID = playerID;
-            inputEntity.EntityAddComponent<InputComponent>(inputWorld).tick = input.time.Value;
+            inputEntity.EntityAddComponent<InputComponent>(inputWorld);//.tick = input.time.Value;
 
             if (input.hasMove)
             {
                 if (input.move.moveType == UserInput.MoveType.MoveToDirection)
-                    inputEntity.EntityAddComponent<InputMoveComponent>(inputWorld).Dir = input.move.value;
+                    inputEntity.EntityAddComponent<InputMoveDirectionComponent>(inputWorld).Dir = input.move.value;
 
                 if (input.move.moveType == UserInput.MoveType.MoveToPoint)
                     inputEntity.EntityAddComponent<InputMoveToPointComponent>(inputWorld).Value = input.move.value;
@@ -37,6 +37,38 @@ namespace Game.ClientServer
 
             if (input.hasUnitPos)
                 inputEntity.EntityAdd<PositionComponent>(inputWorld).value = input.unitPos;
+        }
+
+    }
+
+    internal static class PlayerInputService
+    {
+        public static void AddShot(EcsWorld inputWorld)
+        {
+            var inputEntity = inputWorld.NewEntity();
+            inputEntity.EntityAddComponent<InputComponent>(inputWorld);
+            inputEntity.EntityAddComponent<InputShotComponent>(inputWorld);//.dir = dir;
+        }
+        
+        public static void AddMoveToDirection(EcsWorld inputWorld, Vector3 dir)
+        {
+            var inputEntity = inputWorld.NewEntity();
+            inputEntity.EntityAddComponent<InputComponent>(inputWorld);
+            inputEntity.EntityAddComponent<InputMoveDirectionComponent>(inputWorld).Dir = dir;
+        }
+        
+        public static void StopMoveToDirection(EcsWorld inputWorld)
+        {
+            var inputEntity = inputWorld.NewEntity();
+            inputEntity.EntityAddComponent<InputComponent>(inputWorld);
+            inputEntity.EntityAddComponent<InputMoveDirectionComponent>(inputWorld).Dir = Vector3.zero;
+        }
+        
+        public static void AddMoveToPoint(EcsWorld inputWorld, Vector3 pos)
+        {
+            var inputEntity = inputWorld.NewEntity();
+            inputEntity.EntityAddComponent<InputComponent>(inputWorld);
+            inputEntity.EntityAddComponent<InputMoveToPointComponent>(inputWorld).Value = pos;
         }
     }
 }
