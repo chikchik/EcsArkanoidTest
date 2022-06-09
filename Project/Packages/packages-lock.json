@@ -13,6 +13,12 @@
       "source": "local",
       "dependencies": {}
     },
+	"com.fabros.ecs.box2d": {
+      "version": "file:../../../module-ecs-box2d/FabrosEcsBox2DPackage",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.burst": {
       "version": "1.6.5",
       "depth": 1,
