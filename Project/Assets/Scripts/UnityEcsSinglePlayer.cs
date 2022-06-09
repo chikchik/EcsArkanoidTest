@@ -25,9 +25,10 @@ namespace Game.Client
     {
         [Inject] private Camera camera;
         [Inject] private Global global;
-        [Inject] private PlayerInput.PlayerInput playerInput;
         [Inject] private UI ui;
         [Inject] private EcsWorld world;
+        [Inject] private Joystick joystick;
+        
         [Inject(Id = "input")] private EcsWorld inputWorld;
         
         
@@ -41,7 +42,6 @@ namespace Game.Client
         {
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
-            
             
             
             systems = new EcsSystems(world);
@@ -104,6 +104,7 @@ namespace Game.Client
         
         public void Update()
         {
+            /*
             UnityEcsClient.CheckInput(inputWorld, world, unitEntity, playerInput, camera, input =>
             {
                 if (world.HasUnique<RootMotionComponent>())
@@ -114,7 +115,7 @@ namespace Game.Client
                 }
 
                 InputService.ApplyInput(inputWorld, playerId, input);
-            });
+            });*/
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -143,25 +144,35 @@ namespace Game.Client
             
             if (Mathf.Abs(hor) > 0.1f || Mathf.Abs(ver) > 0.1f)
             {
-                Debug.Log($"{hor} {ver}");
-                var forward = camera.transform.forward;
-                forward.y = 0;
-                forward.Normalize();
-
-                var right = camera.transform.right;
-                right.y = 0;
-                right.Normalize();
-
-                var dir = forward * ver + right * hor;
-                
-                PlayerInputService.AddMoveToDirection(inputWorld, dir);
+                MoveDir(hor, ver);
             }
-            else
+            else if (joystick.Direction.magnitude > 0)
+            {
+                MoveDir(joystick.Direction.x, joystick.Direction.y);
+            }else
             {
                 PlayerInputService.StopMoveToDirection(inputWorld);
             }
             
+            
             viewSystems.Run();
+        }
+
+
+        private void MoveDir(float hor, float ver)
+        {
+            Debug.Log($"{hor} {ver}");
+            var forward = camera.transform.forward;
+            forward.y = 0;
+            forward.Normalize();
+
+            var right = camera.transform.right;
+            right.y = 0;
+            right.Normalize();
+
+            var dir = forward * ver + right * hor;
+                
+            PlayerInputService.AddMoveToDirection(inputWorld, dir);
         }
 
         public void FixedUpdate()

@@ -9,6 +9,7 @@ namespace Game.UI
     {
         public Button ShotButton;
         public Button InteractionButton;
+        public FixedJoystick Joystick;
 
         public RectTransform ObjectivesRectTransform;
         public GridLayoutGroup InventoryGrid;

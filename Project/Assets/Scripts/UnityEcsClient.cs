@@ -26,7 +26,6 @@ namespace Game.Client
 
         [Inject] private Camera camera;
         [Inject] private Global global;
-        [Inject] private PlayerInput.PlayerInput playerInput;
         [Inject] private UI ui;
         //[Inject] private KeyboardController keyboard;
         [Inject] private EcsWorld world;
@@ -112,6 +111,7 @@ namespace Game.Client
 
             client.Update();
             
+            /*
             var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, client.GetPlayerID());
             CheckInput(inputWorld, world, 
                 unitEntity, playerInput, camera,
@@ -123,7 +123,7 @@ namespace Game.Client
             {
                 PlayerInputService.AddMoveToPoint(inputWorld, Input.mousePosition);
             }
-            
+            */
             
             viewSystems.Run();
         }
@@ -150,7 +150,6 @@ namespace Game.Client
 
         public static void CheckInput(EcsWorld inputWorld, EcsWorld world, 
             int unitEntity, 
-            PlayerInput.PlayerInput playerInput,
             Camera camera, Action<UserInput> addUserInput
             )
         {

@@ -1,4 +1,3 @@
-using Game.PlayerInput;
 using Game.UI;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -22,25 +21,8 @@ namespace Game
 
             var mainUI = FindObjectOfType<MainUI>();
             Container.Bind<MainUI>().FromInstance(mainUI).AsSingle();
-
+            Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();
             Container.Bind<Client.UI>().AsSingle().NonLazy();
-            
-            //Container.Bind<UnityEcsClient>().FromComponentsOn(GameObject.Find("Client")).AsSingle();
-
-            if (Application.isEditor ||
-                Application.platform is RuntimePlatform.OSXPlayer or RuntimePlatform.WindowsPlayer)
-            {
-                Container.BindInterfacesAndSelfTo<PlayerInput.PlayerInput>().FromInstance(new DesktopInput())
-                    .AsSingle();
-                
-            }
-            else if (Application.platform is RuntimePlatform.Android or RuntimePlatform.IPhonePlayer)
-            {
-                var joystick = Instantiate(joystickPrefab, mainUI.transform);
-                Container.BindInterfacesAndSelfTo<PlayerInput.PlayerInput>()
-                    .FromInstance(new MobileInput(joystick, mainUI))
-                    .AsSingle();
-            }
         }
     }
 }
