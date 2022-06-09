@@ -15,29 +15,22 @@ namespace Game.Client
     {
         private MainUI view;
         private EcsWorld world;
-        public Action<UserInput> ApplyInputAction; 
+        private PlayerInputService inputService;
         
         public UI(
-            EcsWorld world, 
-            [Inject(Id = "input")] EcsWorld inputWorld, 
-            MainUI view)
+            EcsWorld world, [Inject(Id = "input")]  EcsWorld inputWorld, MainUI view, PlayerInputService inputService)
         {
             this.view = view;
             this.world = world;
 
             view.InteractionButton.onClick.AddListener(() =>
             {
-                var input = new UserInput
-                {
-                    hasAction = true,
-                };
-
-                ApplyInputAction(input);
+                
             });
             
             view.ShotButton.onClick.AddListener(() =>
             {
-                PlayerInputService.AddShot(inputWorld);
+                inputService.Shot();
             });
 
             view.FoodText.text = "";

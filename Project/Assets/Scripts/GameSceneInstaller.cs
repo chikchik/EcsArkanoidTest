@@ -1,3 +1,4 @@
+using Game.ClientServer;
 using Game.UI;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -23,6 +24,9 @@ namespace Game
             Container.Bind<MainUI>().FromInstance(mainUI).AsSingle();
             Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();
             Container.Bind<Client.UI>().AsSingle().NonLazy();
+
+
+            Container.Bind<PlayerInputService>().AsSingle();
         }
     }
 }

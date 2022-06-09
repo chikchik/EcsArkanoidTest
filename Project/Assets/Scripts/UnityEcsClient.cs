@@ -87,6 +87,7 @@ namespace Game.Client
             client.Start();
             
             
+            /*
             ui.ApplyInputAction = (input) =>
             {
                 var id = world.GetUnique<MainPlayerIdComponent>().value;
@@ -96,7 +97,7 @@ namespace Game.Client
                 
                 InputService.ApplyInput(inputWorld, id, input);
                 client.AddUserInput(input);
-            };
+            };*/
         }
 
         private void Update()

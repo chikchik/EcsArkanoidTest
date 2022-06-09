@@ -30,10 +30,11 @@ namespace Game.Client
         [Inject] private Joystick joystick;
         
         [Inject(Id = "input")] private EcsWorld inputWorld;
-        
+        [Inject] private PlayerInputService inputService;
         
         private EcsSystems systems;
         private EcsSystems viewSystems;
+        
 
         private int unitEntity = -1;
         private int playerId = 1;
@@ -86,20 +87,6 @@ namespace Game.Client
             
             world.AddUnique(new MainPlayerIdComponent{value = playerId});
             unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
-            
-            
-            ui.ApplyInputAction = (input) =>
-            {
-                var id = world.GetUnique<MainPlayerIdComponent>().value;
-                var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, id);
-                if (input.hasShot)
-                {
-                    var direction = unitEntity.EntityGet<LookDirectionComponent>(world).value;
-                    input.shot = new UserInput.Shot { direction = direction };
-                }
-
-                InputService.ApplyInput(inputWorld, id, input);
-            };
         }
         
         public void Update()
@@ -136,22 +123,22 @@ namespace Game.Client
 
                 var point = ray.GetPoint(dist);
                 
-                PlayerInputService.AddMoveToPoint(inputWorld, point);
+                inputService.MoveToPoint(point);
             }
 
             var hor = Input.GetAxis("Horizontal");
             var ver = Input.GetAxis("Vertical");
             
-            if (Mathf.Abs(hor) > 0.1f || Mathf.Abs(ver) > 0.1f)
+            if (Mathf.Abs(hor) > 0.01f || Mathf.Abs(ver) > 0.01f)
             {
                 MoveDir(hor, ver);
             }
-            else if (joystick.Direction.magnitude > 0)
+            else if (joystick.Direction.magnitude > 0.01f)
             {
                 MoveDir(joystick.Direction.x, joystick.Direction.y);
             }else
             {
-                PlayerInputService.StopMoveToDirection(inputWorld);
+                inputService.StopMoveToDirection();
             }
             
             
@@ -161,8 +148,7 @@ namespace Game.Client
 
         private void MoveDir(float hor, float ver)
         {
-            Debug.Log($"{hor} {ver}");
-            var forward = camera.transform.forward;
+            var forward = -Vector3.Cross(Vector3.up,camera.transform.right) ;
             forward.y = 0;
             forward.Normalize();
 
@@ -172,7 +158,7 @@ namespace Game.Client
 
             var dir = forward * ver + right * hor;
                 
-            PlayerInputService.AddMoveToDirection(inputWorld, dir);
+            inputService.MoveToDirection(dir);
         }
 
         public void FixedUpdate()

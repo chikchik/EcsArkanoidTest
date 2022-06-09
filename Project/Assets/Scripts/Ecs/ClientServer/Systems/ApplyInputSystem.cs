@@ -68,12 +68,6 @@ namespace Game.Ecs.ClientServer.Systems
                         {
                             unitEntity.EntityDel<MoveDirectionComponent>(world);
                             unitEntity.EntityDel<MovingComponent>(world);
-                            /*
-                            if (unitEntity.EntityGet<MoveDirectionComponent>(world).value.sqrMagnitude > 0.01f)
-                            {
-                                unitEntity.EntityDel<MoveDirectionComponent>(world);
-                                unitEntity.EntityDel<MovingComponent>(world);
-                            }*/
                         }
                     }
                 }

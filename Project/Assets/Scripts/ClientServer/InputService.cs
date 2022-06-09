@@ -4,6 +4,7 @@ using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
 using UnityEngine;
+using Zenject;
 
 namespace Game.ClientServer
 {
@@ -41,30 +42,36 @@ namespace Game.ClientServer
 
     }
 
-    internal static class PlayerInputService
+    public class PlayerInputService
     {
-        public static void AddShot(EcsWorld inputWorld)
+        private EcsWorld inputWorld;
+        public PlayerInputService([Inject(Id = "input")]EcsWorld inputWorld)
+        {
+            this.inputWorld = inputWorld;
+        }
+        
+        public void Shot()
         {
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAddComponent<InputComponent>(inputWorld);
             inputEntity.EntityAddComponent<InputShotComponent>(inputWorld);//.dir = dir;
         }
         
-        public static void AddMoveToDirection(EcsWorld inputWorld, Vector3 dir)
+        public void MoveToDirection(Vector3 dir)
         {
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAddComponent<InputComponent>(inputWorld);
             inputEntity.EntityAddComponent<InputMoveDirectionComponent>(inputWorld).Dir = dir;
         }
         
-        public static void StopMoveToDirection(EcsWorld inputWorld)
+        public void StopMoveToDirection()
         {
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAddComponent<InputComponent>(inputWorld);
             inputEntity.EntityAddComponent<InputMoveDirectionComponent>(inputWorld).Dir = Vector3.zero;
         }
         
-        public static void AddMoveToPoint(EcsWorld inputWorld, Vector3 pos)
+        public void MoveToPoint(Vector3 pos)
         {
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAddComponent<InputComponent>(inputWorld);
