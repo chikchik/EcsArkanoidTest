@@ -18,7 +18,6 @@ namespace Game.Ecs.ClientServer.Systems
             var poolButtonLink = world.GetPool<ButtonLinkComponent>();
             var poolButtonPressed = world.GetPool<ButtonPressedComponent>();
             var poolProgress = world.GetPool<ProgressComponent>();
-            var poolSpeed = world.GetPool<SpeedComponent>();
             var poolOpened = world.GetPool<GateOpenedComponent>();
 
             var deltaTime = world.GetDeltaSeconds();
@@ -34,9 +33,9 @@ namespace Game.Ecs.ClientServer.Systems
                     continue;
 
                 var progressComponent = poolProgress.Get(gateEntity);
-                var speedComponent = poolSpeed.Get(gateEntity);
+               // var speedComponent = poolSpeed.Get(gateEntity);
 
-                var progress = progressComponent.progress + speedComponent.speed * deltaTime;
+                var progress = progressComponent.progress + deltaTime;
 
                 if (progress >= 1f)
                     poolOpened.Add(gateEntity);

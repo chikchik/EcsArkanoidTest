@@ -38,9 +38,6 @@ namespace Game.ClientServer
             ref var healthComponent = ref entity.EntityAddComponent<HealthComponent>(world);
             healthComponent.maxHealth = 100;
             healthComponent.health = 50;
-
-            ref var speedComponent = ref entity.EntityAddComponent<SpeedComponent>(world);
-            speedComponent.speed = 2f;
             
             ref var rigidBodyDefinitionComponent = ref entity.EntityAddComponent<Box2DRigidbodyDefinitionComponent>(world);
             rigidBodyDefinitionComponent.BodyType = BodyType.Kinematic;

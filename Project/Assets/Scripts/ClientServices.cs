@@ -114,9 +114,6 @@ namespace Game.Client
 
                 buttonEntity.EntityAdd<InteractableComponent>(world);
                 
-                
-                ref var speedComponent = ref buttonEntity.EntityAddComponent<SpeedComponent>(world);
-                speedComponent.speed = view.speed;
 
                 ref var progressComponent = ref buttonEntity.EntityAddComponent<ProgressComponent>(world);
                 progressComponent.progress = 0;
@@ -149,9 +146,6 @@ namespace Game.Client
                 ref var radiusComponent = ref gateEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = 1f;
 
-                ref var speedComponent = ref gateEntity.EntityAdd<SpeedComponent>(world);
-                speedComponent.speed = view.OpenSpeed;
-
                 ref var progressComponent = ref gateEntity.EntityAddComponent<ProgressComponent>(world);
                 progressComponent.progress = 0;
 
@@ -173,9 +167,6 @@ namespace Game.Client
                 
                 ref var radiusComponent = ref characterEntity.EntityAddComponent<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
-
-                ref var speedComponent = ref characterEntity.EntityAddComponent<SpeedComponent>(world);
-                speedComponent.speed = 2f;
             });
             
             ForEachObject<Collider2D>(collider =>

@@ -15,7 +15,6 @@ namespace Game.Ecs.ClientServer.Systems
             var filter = world
                 .Filter<MoveDirectionComponent>()
                 .Inc<PositionComponent>()
-                .Inc<SpeedComponent>()
                 .Inc<AverageSpeedComponent>()
                 .End();
             

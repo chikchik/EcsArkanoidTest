@@ -19,13 +19,13 @@ namespace Game.Ecs.Client.Systems
                 .End();
             var poolAnimator = world.GetPool<AnimatorComponent>();
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
-            var poolSpeed = world.GetPool<SpeedComponent>();
+            //var poolSpeed = world.GetPool<SpeedComponent>();
             //var context = world.GetUnique<LeoSharedComponent>().Context;
 
             foreach (var entity in filter)
             {
                 var animatorComponent = poolAnimator.Get(entity);
-                var speedComponent = poolSpeed.Get(entity);
+                //var speedComponent = poolSpeed.Get(entity);
                 var moveDirectionComponent = poolMoveDirection.Get(entity);
                 var animator = animatorComponent.animator;
                 

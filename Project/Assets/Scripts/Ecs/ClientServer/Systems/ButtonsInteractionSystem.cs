@@ -27,7 +27,6 @@ namespace Game.Ecs.ClientServer.Systems
             var poolUnit = world.GetPool<UnitComponent>();
             var poolButton = world.GetPool<ButtonComponent>();
             var poolPressed = world.GetPool<ButtonPressedComponent>();
-            var poolSpeed = world.GetPool<SpeedComponent>();
             var poolBody = world.GetPool<Box2DRigidbodyComponent>();
             
             var deltaTime = world.GetDeltaSeconds();
@@ -47,11 +46,10 @@ namespace Game.Ecs.ClientServer.Systems
                 else
                     poolPressed.Del(buttonEntity);
                     
-                var speedComponent = poolSpeed.Get(buttonEntity);
                 var progressComponent = poolProgress.Get(buttonEntity);
                 
                 var direction = pressed ? 1f : -1f;
-                var progress = progressComponent.progress + speedComponent.speed * deltaTime * direction;
+                var progress = progressComponent.progress + deltaTime * direction * 4;
                 
                 poolProgress.ReplaceIfChanged(buttonEntity, new ProgressComponent{progress = Math.Clamp(progress, 0, 1)});
             }

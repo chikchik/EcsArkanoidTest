@@ -66,7 +66,7 @@ namespace Game.ClientServer
             pool.AddComponent<PositionComponent>();
             pool.AddComponent<RadiusComponent>();
             pool.AddComponent<ResourceComponent>();
-            pool.AddComponent<SpeedComponent>();
+            
 
             pool.AddComponent<InventoryItemComponent>();
             pool.AddComponent<InventorySlotComponent>();

@@ -14,12 +14,12 @@ namespace Game.Ecs.ClientServer.Systems
             var world = systems.GetWorld();
             var filter = world
                 .Filter<MoveDirectionComponent>()
-                .Inc<SpeedComponent>()
+                .Inc<AverageSpeedComponent>()
                 .Inc<UnitComponent>()
                 .Inc<Box2DBodyComponent>()
                 .End();
             var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
-            var poolSpeed = world.GetPool<SpeedComponent>();
+            var poolSpeed = world.GetPool<AverageSpeedComponent>();
             var poolBodyReference = world.GetPool<Box2DBodyComponent>();
 
             foreach (var entity in filter)
@@ -29,7 +29,7 @@ namespace Game.Ecs.ClientServer.Systems
         }
 
         private void SetLinearVelToBody(int entity, EcsPool<Box2DBodyComponent> poolBodyReference,
-            EcsPool<MoveDirectionComponent> poolMoveDirection, EcsPool<SpeedComponent> poolSpeed)
+            EcsPool<MoveDirectionComponent> poolMoveDirection, EcsPool<AverageSpeedComponent> poolSpeed)
         {
             var bodyReference = poolBodyReference.Get(entity).BodyReference;
             var moveDirectionComponent = poolMoveDirection.Get(entity);
@@ -37,7 +37,7 @@ namespace Game.Ecs.ClientServer.Systems
 
             Box2DApi.SetLinearVelocity(bodyReference,
                 new Vector2(moveDirectionComponent.value.x, moveDirectionComponent.value.z) *
-                speedComponent.speed);
+                speedComponent.Value);
         }
     }
 }
