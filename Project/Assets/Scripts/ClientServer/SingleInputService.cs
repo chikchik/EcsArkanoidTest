@@ -1,10 +1,11 @@
 ﻿using Fabros.Ecs.Utils;
 using Game.Ecs.ClientServer.Components.Input;
+using Game.Fabros.Net.ClientServer;
 using Leopotam.EcsLite;
 
 namespace Game.ClientServer
 {
-    public class BaseInputService
+    public class SingleInputService: IInputService
     {
         public void Input(EcsWorld inputWorld, int playerId, IInputComponent inp)
         {
@@ -12,8 +13,7 @@ namespace Game.ClientServer
             inputEntity.EntityAdd<InputComponent>(inputWorld);
             inputEntity.EntityAdd<InputPlayerComponent>(inputWorld).PlayerID = playerId;
             
-            var tp = inp.GetType();
-            var pool = inputWorld.GetOrCreatePoolByType(tp);
+            var pool = inputWorld.GetOrCreatePoolByType(inp.GetType());
             pool.AddRaw(inputEntity, inp);
         }
     }

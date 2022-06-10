@@ -47,6 +47,7 @@ namespace ConsoleApp
         private EcsSystems systems;
         private List<Client> clients = new List<Client>();
         private List<int> missingClients = new List<int>();
+        private SingleInputService inputService = new SingleInputService();
 
         //private List<byte[]> receivedMessages = new List<byte[]>();
 
@@ -117,7 +118,7 @@ namespace ConsoleApp
 
 
                 leo = new LeoContexts(Config.TMP_HASHES_PATH, pool, 
-                    new SyncLog(Config.SYNC_LOG_PATH), InputService.ApplyInput);
+                    new SyncLog(Config.SYNC_LOG_PATH), inputService);
                 /*
                 leo.WriteToConsole = (string str) =>
                 {
@@ -255,7 +256,8 @@ namespace ConsoleApp
                 delay = -1;
             }
 
-            leo.Inputs.Add(packet.input);
+            if (packet.hasInput)
+                leo.Inputs.Add(packet.input);
                 
             world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
             //var inputs = component.data.ToList();

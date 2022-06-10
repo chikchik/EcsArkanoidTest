@@ -2,8 +2,7 @@
 
 namespace Game.Ecs.ClientServer.Components.Input
 {
-    [Serializable]
-    public struct InputActionComponent:IInputComponent
+    public interface IInputComponent
     {
     }
 }

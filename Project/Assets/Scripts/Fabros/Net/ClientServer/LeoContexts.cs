@@ -6,6 +6,7 @@ using System.Text;
 using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
+using Game.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
@@ -22,17 +23,16 @@ namespace Game.Fabros.Net.ClientServer
         public List<UserInput> Inputs { get; private set; } = new List<UserInput>();
         
         
-        private readonly Action<EcsWorld, int, UserInput> applyInput;
+        private readonly IInputService inputService;
         private readonly string hashDir;
         private readonly bool writeHashes;
 
         //private EcsWorld inputWorld;
 
-        public LeoContexts(string hashDir, ComponentsPool pool, SyncLog syncLog,
-            Action<EcsWorld, int, UserInput> applyInput)
+        public LeoContexts(string hashDir, ComponentsPool pool, SyncLog syncLog, IInputService inputService)
         {
             this.hashDir = hashDir;
-            this.applyInput = applyInput;
+            this.inputService = inputService;
 
             Pool = pool;
             SyncLog = syncLog;
@@ -40,8 +40,7 @@ namespace Game.Fabros.Net.ClientServer
 #if UNITY_EDITOR || UNITY_STANDALONE || SERVER
             //используется для отладки
             writeHashes = Directory.Exists(hashDir);
-            if (writeHashes &&
-                (hashDir.Contains("temp") || hashDir.Contains("tmp")))
+            if (writeHashes && (hashDir.Contains("temp") || hashDir.Contains("tmp")))
             {
                 var files = Directory.GetFiles(hashDir);
                 Array.ForEach(files, file => {
@@ -186,8 +185,8 @@ namespace Game.Fabros.Net.ClientServer
                 if (input.time < time)
                     continue;
                 if (input.time >= nextTick)
-                    break;                
-                applyInput(inputWorld, input.player, input);
+                    break;
+                inputService.Input(inputWorld, input.player, input.data);
             }
         }
     }

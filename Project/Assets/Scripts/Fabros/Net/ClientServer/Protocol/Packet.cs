@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Ecs.ClientServer.Components.Input;
 using UnityEngine;
 
 namespace Game.Fabros.Net.ClientServer.Protocol
@@ -10,6 +11,7 @@ namespace Game.Fabros.Net.ClientServer.Protocol
         public int playerID;
 
         public UserInput input;
+        public bool hasInput;
 
         public WorldUpdateProto WorldUpdate;
         public bool hasWorldUpdate;
@@ -18,5 +20,7 @@ namespace Game.Fabros.Net.ClientServer.Protocol
         public Hello hello;
         public bool hasHello;
         public bool isPing;
+
+
     }
 }

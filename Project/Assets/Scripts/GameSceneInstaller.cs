@@ -1,4 +1,7 @@
+using Game.Client;
 using Game.ClientServer;
+using Game.Fabros.Net.Client;
+using Game.Fabros.Net.ClientServer;
 using Game.UI;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -9,6 +12,7 @@ namespace Game
     public class GameSceneInstaller : MonoInstaller
     {
         [SerializeField] private Joystick joystickPrefab;
+        [SerializeField] private GameSettings settings;
 
         public override void InstallBindings()
         {
@@ -25,10 +29,16 @@ namespace Game
             Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();
             Container.Bind<Client.UI>().AsSingle().NonLazy();
 
-
+            Container.Bind<MPInputService>().AsSingle();
+            Container.Bind<SingleInputService>().AsSingle();
             Container.Bind<PlayerInputService>().AsSingle();
-            Container.Bind<BaseInputService>().AsSingle();
-            
+
+            if (settings.SinglePlayer)
+                settings.GetComponent<UnityEcsSinglePlayer>().enabled = true;
+            else
+                settings.GetComponent<UnityEcsClient>().enabled = true;
+
+            Container.Bind<NetClient>().AsSingle();
         }
     }
 }

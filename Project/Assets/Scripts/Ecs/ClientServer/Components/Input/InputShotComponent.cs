@@ -1,10 +1,11 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Components.Input
 {
     [Serializable]
-    public struct InputPlayerComponent
+    public struct InputShotComponent:IInputComponent
     {
-        public int PlayerID;
+        public Vector3 dir;
     }
 }

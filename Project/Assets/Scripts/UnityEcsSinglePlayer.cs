@@ -30,7 +30,12 @@ namespace Game.Client
         [Inject] private Joystick joystick;
         
         [Inject(Id = "input")] private EcsWorld inputWorld;
-        [Inject] private PlayerInputService inputService;
+        
+        [Inject] 
+        private PlayerInputService playerInputService;
+        
+        [Inject] 
+        private SingleInputService inputService;
         
         private EcsSystems systems;
         private EcsSystems viewSystems;
@@ -43,7 +48,9 @@ namespace Game.Client
         {
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
-            
+
+            playerInputService = new PlayerInputService(inputWorld, world);
+            playerInputService.SetInputService(inputService);
             
             systems = new EcsSystems(world);
             systems.AddWorld(inputWorld, "input");
@@ -88,31 +95,23 @@ namespace Game.Client
             world.AddUnique(new MainPlayerIdComponent{value = playerId});
             unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
         }
-        
-        public void Update()
+
+        public static void CheckInput(Camera camera, Joystick joystick, PlayerInputService inputService)
         {
-            /*
-            UnityEcsClient.CheckInput(inputWorld, world, unitEntity, playerInput, camera, input =>
+            void MoveDir(float hor, float ver)
             {
-                if (world.HasUnique<RootMotionComponent>())
-                {
-                    //todo, dublicated code
-                    input.hasUnitPos = true;
-                    input.unitPos = world.GetUnique<RootMotionComponent>().Position;
-                }
+                var forward = -Vector3.Cross(Vector3.up,camera.transform.right) ;
+                forward.y = 0;
+                forward.Normalize();
 
-                InputService.ApplyInput(inputWorld, playerId, input);
-            });*/
+                var right = camera.transform.right;
+                right.y = 0;
+                right.Normalize();
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                //var input = new UserInput{player = playerId, hasAction = true};
-                //InputService.ApplyInput(inputWorld, playerId, input);
+                var dir = forward * ver + right * hor;
                 
-                //var direction = unitEntity.EntityGet<LookDirectionComponent>(world).value;
-                //InputService.AddShot(inputWorld, direction);
+                inputService.MoveToDirection(dir);
             }
-            
             
             if (Input.GetMouseButtonDown(0) && !(EventSystem.current.IsPointerOverGameObject() &&
                                                  EventSystem.current.currentSelectedGameObject != null))
@@ -140,26 +139,30 @@ namespace Game.Client
             {
                 inputService.StopMoveToDirection();
             }
-            
+        }
+        public void Update()
+        {
+            /*
+            UnityEcsClient.CheckInput(inputWorld, world, unitEntity, playerInput, camera, input =>
+            {
+                if (world.HasUnique<RootMotionComponent>())
+                {
+                    //todo, dublicated code
+                    input.hasUnitPos = true;
+                    input.unitPos = world.GetUnique<RootMotionComponent>().Position;
+                }
+
+                InputService.ApplyInput(inputWorld, playerId, input);
+            });*/
+
+
+            CheckInput(camera, joystick, playerInputService);
             
             viewSystems.Run();
         }
 
 
-        private void MoveDir(float hor, float ver)
-        {
-            var forward = -Vector3.Cross(Vector3.up,camera.transform.right) ;
-            forward.y = 0;
-            forward.Normalize();
-
-            var right = camera.transform.right;
-            right.y = 0;
-            right.Normalize();
-
-            var dir = forward * ver + right * hor;
-                
-            inputService.MoveToDirection(dir);
-        }
+        
 
         public void FixedUpdate()
         {

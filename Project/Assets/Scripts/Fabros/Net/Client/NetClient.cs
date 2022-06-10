@@ -13,6 +13,7 @@ using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.Client.Socket;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
@@ -58,7 +59,7 @@ namespace Game.Fabros.Net.Client
 
         private IEcsSystemsFactory systemsFactory;
 
-        public NetClient(EcsWorld world, ComponentsPool pool, IEcsSystemsFactory systemsFactory)
+        public NetClient(EcsWorld world, ComponentsPool pool, IEcsSystemsFactory systemsFactory, IInputService inputService)
         {
             Application.targetFrameRate = 60;
 
@@ -66,10 +67,7 @@ namespace Game.Fabros.Net.Client
 
             Leo = new LeoContexts(Config.TMP_HASHES_PATH,
                 pool,
-                new SyncLog(Config.SYNC_LOG_PATH), (inputWorld, playerID, userInput) =>
-                {
-                    InputService.ApplyInput(inputWorld, playerID, userInput);
-                });
+                new SyncLog(Config.SYNC_LOG_PATH), inputService);
 
 
             //генерируем случайный id игрока с которым нас будет ассоциировать сервер
@@ -417,6 +415,7 @@ namespace Game.Fabros.Net.Client
 
         public void AddUserInput(UserInput input)
         {
+            /*
             input.time = GetNextInputTick();
             input.player = playerID;
             
@@ -429,7 +428,27 @@ namespace Game.Fabros.Net.Client
 
             socket.Send( P2P.BuildRequest(P2P.ADDR_SERVER, packet));
             if (packet.input != null)
+                Leo.SyncLog.WriteLine($"send input {packet.input.time}");*/
+        }
+        
+        public void AddUserInput(IInputComponent inputComponent)
+        {
+            var input = new UserInput();
+            input.time = GetNextInputTick();
+            input.player = playerID;
+            input.data = inputComponent;
+
+            var packet = new Packet();
+            packet.playerID = playerID;
+            packet.hasInput = true;
+            packet.input = input;
+            packet.playerID = playerID;
+            Leo.Inputs.Add(input);
+
+            socket.Send( P2P.BuildRequest(P2P.ADDR_SERVER, packet));
+            if (packet.input != null)
                 Leo.SyncLog.WriteLine($"send input {packet.input.time}");
+                
         }
 
 

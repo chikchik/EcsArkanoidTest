@@ -16,16 +16,19 @@ namespace Game
         private EcsWorld inputWorld;
         private EcsWorld world;
 
-        private BaseInputService input;
+        private IInputService input;
         
         public PlayerInputService(
-            BaseInputService input,
             [Inject(Id = "input")] EcsWorld inputWorld, 
             EcsWorld world)
         {
-            this.input = input;
             this.inputWorld = inputWorld;
             this.world = world;
+        }
+
+        public void SetInputService(IInputService inputService)
+        {
+            this.input = inputService;
         }
         
 
@@ -48,6 +51,12 @@ namespace Game
         
         public void StopMoveToDirection()
         {
+            if (unitEntity == -1)
+                return;
+            
+            if (!unitEntity.EntityHas<MoveDirectionComponent>(world))
+                return;
+            
             var component = new InputMoveDirectionComponent();
             component.Dir = Vector3.zero;
             input.Input(inputWorld, playerId, component);

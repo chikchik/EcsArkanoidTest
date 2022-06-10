@@ -27,7 +27,11 @@ namespace Game.Client
         [Inject] private Camera camera;
         [Inject] private Global global;
         [Inject] private UI ui;
-        //[Inject] private KeyboardController keyboard;
+        [Inject] private Joystick joystick;
+        
+        [Inject] private MPInputService inputService;
+        [Inject] private PlayerInputService playerInputService;
+        
         [Inject] private EcsWorld world;
         [Inject(Id="input")] private EcsWorld inputWorld;
 
@@ -38,8 +42,10 @@ namespace Game.Client
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
 
+            playerInputService.SetInputService(inputService);
+            
             var pool = SharedComponents.CreateComponentsPool();
-            client = new NetClient(world, pool, new EcsSystemsFactory(pool));
+            client = new NetClient(world, pool, new EcsSystemsFactory(pool), inputService);
             
             viewSystems = new EcsSystems(world);
             viewSystems.Add(new SyncTransformSystem(false));
@@ -51,6 +57,8 @@ namespace Game.Client
 #if UNITY_EDITOR
             viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
+            
+            inputService.SetNetClient(client);
             
             client.ConnectedAction = () =>
             {
@@ -111,6 +119,8 @@ namespace Game.Client
                 return;
 
             client.Update();
+            
+            UnityEcsSinglePlayer.CheckInput(camera, joystick, playerInputService);
             
             /*
             var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, client.GetPlayerID());
