@@ -937,6 +937,7 @@ GameObject:
   - component: {fileID: 310098417}
   - component: {fileID: 310098420}
   - component: {fileID: 310098419}
+  - component: {fileID: 310098421}
   m_Layer: 0
   m_Name: '[SETUP]'
   m_TagString: Untagged
@@ -978,7 +979,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 310098415}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a40d8f6d3964305bf43266306f0b9c0, type: 3}
   m_Name: 
@@ -995,6 +996,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e2d1c66bd77411eb4f2b3068d08afad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &310098421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310098415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 418edcff6ff32674a957080cdb9e61d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SinglePlayer: 0
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -6564,6 +6578,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   joystickPrefab: {fileID: 2929252283123773951, guid: aaa2c939c0359ac4dbce3f49e8b90252,
     type: 3}
+  settings: {fileID: 310098421}
 --- !u!114 &1361244438
 MonoBehaviour:
   m_ObjectHideFlags: 0

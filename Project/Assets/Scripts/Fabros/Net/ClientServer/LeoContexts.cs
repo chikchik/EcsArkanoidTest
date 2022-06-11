@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Fabros.Ecs.ClientServer.Serializer;
+using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
+using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
@@ -81,8 +83,6 @@ namespace Game.Fabros.Net.ClientServer
         {
             Inputs = Inputs.Where(input => input.time >= time).ToList();
         }
-
-        
 
         public void Tick(EcsSystems systems, EcsWorld inputWorld, EcsWorld world, UserInput[] inputs, bool writeToLog, string debug="")
         {
@@ -186,7 +186,15 @@ namespace Game.Fabros.Net.ClientServer
                     continue;
                 if (input.time >= nextTick)
                     break;
-                inputService.Input(inputWorld, input.player, input.data);
+                
+                var inputEntity = inputWorld.NewEntity();
+                inputEntity.EntityAdd<InputComponent>(inputWorld);
+                inputEntity.EntityAdd<InputPlayerComponent>(inputWorld).PlayerID = input.player;
+            
+                var pool = inputWorld.GetOrCreatePoolByType(input.data.GetType());
+                pool.AddRaw(inputEntity, input.data);
+                
+                //inputService.Input(inputWorld, input.player, input.data);
             }
         }
     }

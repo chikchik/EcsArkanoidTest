@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 using Cysharp.Threading.Tasks;
 using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
@@ -58,6 +60,8 @@ namespace Game.Fabros.Net.Client
         private float stepOffset = 0.001f;
 
         private IEcsSystemsFactory systemsFactory;
+
+        private HGlobalWriter writer = new HGlobalWriter();
 
         public NetClient(EcsWorld world, ComponentsPool pool, IEcsSystemsFactory systemsFactory, IInputService inputService)
         {
@@ -385,51 +389,23 @@ namespace Game.Fabros.Net.Client
                 Leo.Tick(clientSystems, InputWorld, MainWorld, Leo.Inputs.ToArray(), Config.SyncDataLogging, "");
 
 
-               // if (Leo.GetCurrentTick(MainWorld).Value % 5 == 0)
+                if (Leo.GetCurrentTick(MainWorld).Value % 5 == 0)
                 {
-                    //ping
-                    var packet = new Packet();
-                    packet.playerID = playerID;
-                    packet.input = new UserInput();
-                    packet.isPing = true;
+                    writer.Reset()
+                        .Write(P2P.ADDR_SERVER.Address)
+                        .WriteInt32(0xff)
+                        .WriteInt32(playerID)
+                        .WriteInt32(GetNextInputTick().Value)
+                        .WriteInt32(0);
                     
-                    //packet.input.time = Leo.GetCurrentTick(ServerWorld) + prevDelay;
-                    packet.input.time = Leo.GetCurrentTick(MainWorld);
-                    
-                    if (MainWorld.HasUnique<RootMotionComponent>())
-                    {
-                        packet.input.player = playerID;
-                        packet.input.hasUnitPos = true;
-                        packet.input.unitPos = MainWorld.GetUnique<RootMotionComponent>().Position;
-                    }
-
-
-                    var data = P2P.BuildRequest(P2P.ADDR_SERVER, packet);
-                    socket.Send(data);
+                    socket.Send(writer.CopyToByteArray());
                 }
             });
 
             //stepMult = 1;
             //stepOffset = 0;
         }
-
-        public void AddUserInput(UserInput input)
-        {
-            /*
-            input.time = GetNextInputTick();
-            input.player = playerID;
-            
-            var packet = new Packet
-            {
-                input = input
-            };
-            packet.playerID = playerID;
-            Leo.Inputs.Add(input);
-
-            socket.Send( P2P.BuildRequest(P2P.ADDR_SERVER, packet));
-            if (packet.input != null)
-                Leo.SyncLog.WriteLine($"send input {packet.input.time}");*/
-        }
+        
         
         public void AddUserInput(IInputComponent inputComponent)
         {
@@ -438,17 +414,54 @@ namespace Game.Fabros.Net.Client
             input.player = playerID;
             input.data = inputComponent;
 
-            var packet = new Packet();
-            packet.playerID = playerID;
-            packet.hasInput = true;
-            packet.input = input;
-            packet.playerID = playerID;
+            if (Leo.Inputs.Count > 100)
+            {
+                throw new Exception("leo size");
+            }
+            
             Leo.Inputs.Add(input);
 
-            socket.Send( P2P.BuildRequest(P2P.ADDR_SERVER, packet));
-            if (packet.input != null)
-                Leo.SyncLog.WriteLine($"send input {packet.input.time}");
-                
+            using (var writer = new HGlobalWriter())
+            {
+                writer
+                    .Write(P2P.ADDR_SERVER.Address)
+                    .Write(0xff)
+                    .Write(playerID)
+                    .Write(GetNextInputTick().Value);
+
+                if (inputComponent is PingComponent aa)
+                {
+                    writer.WriteInt32(0);
+                }
+
+                if (inputComponent is InputActionComponent a2)
+                {
+                    writer.WriteInt32(1);
+                    writer.Write(a2);
+                }
+
+                if (inputComponent is InputMoveDirectionComponent a1)
+                {
+                    writer.WriteInt32(2);
+                    writer.Write(a1);
+                }
+
+                if (inputComponent is InputMoveToPointComponent a3)
+                {
+                    writer.WriteInt32(3);
+                    writer.Write(a3);
+                }
+
+                if (inputComponent is InputShotComponent a4)
+                {
+                    writer.WriteInt32(4);
+                    writer.Write(a4);
+                }
+
+                var array = writer.CopyToByteArray();
+
+                socket.Send(array);
+            }
         }
 
 

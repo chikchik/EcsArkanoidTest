@@ -8,21 +8,13 @@ namespace Game.Fabros.Net.ClientServer.Protocol
     [Serializable]
     public class UserInput
     {
-        public enum InputType
-        {
-            Shot,
-            Action,
-            MoveToPoint,
-            MoveToDirection
-        }
-
-        public Tick time;
+        public Tick time { get; set; }
         public int player;
-        public InputType inputType;
+        //public InputType inputType;
         public IInputComponent data;
 
 
-        public bool hasUnitPos;
-        public Vector3 unitPos;
+        //public bool hasUnitPos;
+        //public Vector3 unitPos;
     }
 }

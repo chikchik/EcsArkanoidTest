@@ -157,53 +157,5 @@ namespace Game.Client
                 return;
             EcsWorldDebugDraw.Draw(world);
         }
-
-
-        public static void CheckInput(EcsWorld inputWorld, EcsWorld world, 
-            int unitEntity, 
-            Camera camera, Action<UserInput> addUserInput
-            )
-        {
-            /*
-            if (unitEntity == -1)
-                return;
-            
-            var forward = camera.transform.forward;
-            forward.y = 0;
-            forward.Normalize();
-
-            var right = camera.transform.right;
-            right.y = 0;
-            right.Normalize();
-
-            var moveDirection = playerInput.Movement;
-            moveDirection = forward * moveDirection.z + right * moveDirection.x;
-
-
-            if (playerInput.HasTouch)
-            {
-                var ray = camera.ScreenPointToRay(playerInput.TouchPosition);
-                var plane = new Plane(new Vector3(0, 1, 0), 0);
-                plane.Raycast(ray, out var dist);
-
-                var point = ray.GetPoint(dist);
-
-                var input = new UserInput
-                {
-                    hasMove = true,
-                    move = new UserInput.Move {value = point, moveType = UserInput.MoveType.MoveToPoint}
-                };
-
-                addUserInput(input);
-                return;
-            }
-
-            var lastDirection = unitEntity.EntityGetComponent<MoveDirectionComponent>(world).value;
-
-            if (moveDirection != lastDirection)
-            {
-                PlayerInputService.AddMoveToDirection(inputWorld, moveDirection);
-            }*/
-        }
     }
 }

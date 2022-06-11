@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
@@ -185,7 +187,18 @@ namespace ConsoleApp
                 return;
             }
 
+            if (msgBytes[0] == 0xff && msgBytes[1] == 0 && msgBytes[2] == 0 && msgBytes[3] == 0)
+            {
+                GotInput(msgBytes);
+                return;
+            }
+
             var packet = P2P.ParseResponse<Packet>(msgBytes);
+
+            if (packet.isPing)
+            {
+
+            }
 
             if (packet.hasHello)
             {
@@ -216,7 +229,7 @@ namespace ConsoleApp
             Client client = clients.FirstOrDefault(client => client.ID == packet.playerID);
             if (client == null)
             {
-                if (!missingClients.Contains(packet.playerID)) 
+                if (!missingClients.Contains(packet.playerID))
                 {
                     missingClients.Add(packet.playerID);
                     Console.WriteLine($"not found player {packet.playerID}");
@@ -232,7 +245,7 @@ namespace ConsoleApp
             }
 
 
-            var step = world.GetUnique<TickDeltaComponent>().Value;            
+            var step = world.GetUnique<TickDeltaComponent>().Value;
             //на сколько тиков мы опередили сервер или отстали
             var delay = packet.input.time - currentTick;
 
@@ -247,7 +260,7 @@ namespace ConsoleApp
 
             var sentWorldTick = leo.GetCurrentTick(sentWorld) - step;
 
-            if (delay == 0 && sentWorldTick == packet.input.time) 
+            if (delay == 0 && sentWorldTick == packet.input.time)
             {
                 Console.WriteLine($"state already sent");
                 leo.SyncLog.WriteLine($"state already sent, {packet.input.time} - {leo.GetCurrentTick(sentWorld)}");
@@ -258,7 +271,7 @@ namespace ConsoleApp
 
             if (packet.hasInput)
                 leo.Inputs.Add(packet.input);
-                
+
             world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
             //var inputs = component.data.ToList();
             //component.data = inputs.ToArray();
@@ -268,6 +281,115 @@ namespace ConsoleApp
             else
                 client.Delay = -999;
             //Debug.Log($"rtt player={client.playerID} {client.ping}");
+        }
+        
+        private int FixTick(int time)
+        {
+            var currentTick = leo.GetCurrentTick(world);
+            var step = world.GetUnique<TickDeltaComponent>().Value;
+            //на сколько тиков мы опередили сервер или отстали
+            var delay = time - currentTick.Value;
+
+            //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
+            if (delay < 0)            
+               time = currentTick.Value;
+            
+
+            var sentWorldTick = leo.GetCurrentTick(sentWorld) - step;
+
+            if (delay == 0 && sentWorldTick == time)            
+                time = currentTick.Value + step.Value;
+
+            return time;
+        }
+
+        private void GotInput(byte[] data)
+        {
+            //var buffer = Marshal.AllocHGlobal(data.Length);
+            var allocatedBuffer = Marshal.AllocHGlobal(data.Length);
+            var buffer = allocatedBuffer;
+
+            Marshal.Copy(data, 0, buffer, data.Length);
+
+            try            
+            {
+                buffer += 4;//0xff
+
+                var playerId = Marshal.ReadInt32(buffer);
+                buffer += 4;
+
+                var time = Marshal.ReadInt32(buffer);
+                buffer += 4;
+
+                var type = Marshal.ReadInt32(buffer);
+                buffer += 4;
+
+
+                Client client = clients.FirstOrDefault(client => client.ID == playerId);
+                if (client == null)
+                {
+                    if (!missingClients.Contains(playerId))
+                    {
+                        missingClients.Add(playerId);
+                        Console.WriteLine($"not found player {playerId}");
+                    }
+                    return;
+                }
+
+
+                var currentTick = leo.GetCurrentTick(world);
+                var step = world.GetUnique<TickDeltaComponent>().Value;
+                //на сколько тиков мы опередили сервер или отстали
+                var delay = time - currentTick.Value;
+
+                //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
+                if (delay < 0)
+                    time = currentTick.Value;
+
+
+                var sentWorldTick = leo.GetCurrentTick(sentWorld) - step;
+
+                if (delay == 0 && sentWorldTick == time)
+                    time = currentTick.Value + step.Value;
+
+
+                if (type == 0)//ping
+                {
+                    client.Delay =  delay;
+                }
+                else
+                {
+
+                    IInputComponent component = null;
+                    if (type == 1)
+                    {
+                        component = Marshal.PtrToStructure<InputActionComponent>(buffer);
+                    }
+                    if (type == 2)
+                    {
+                        component = Marshal.PtrToStructure<InputMoveDirectionComponent>(buffer);
+                    }
+                    if (type == 3)
+                    {
+                        component = Marshal.PtrToStructure<InputMoveToPointComponent>(buffer);
+                    }
+                    if (type == 4)
+                    {
+                        component = Marshal.PtrToStructure<InputShotComponent>(buffer);
+                    }
+
+                    var input = new UserInput();
+                    input.data = component;
+                    input.time = new Tick(time);
+                    input.player = playerId;
+                    leo.Inputs.Add(input);
+
+                    world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
+                }
+            } finally
+            {
+                Marshal.FreeHGlobal(allocatedBuffer);
+            }
         }
 
         private void Tick()
