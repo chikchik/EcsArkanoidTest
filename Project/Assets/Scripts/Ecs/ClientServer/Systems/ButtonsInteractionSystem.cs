@@ -28,6 +28,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolButton = world.GetPool<ButtonComponent>();
             var poolPressed = world.GetPool<ButtonPressedComponent>();
             var poolBody = world.GetPool<Box2DRigidbodyComponent>();
+            var poolBullet = world.GetPool<BulletComponent>();
             
             var deltaTime = world.GetDeltaSeconds();
 
@@ -36,7 +37,8 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 var pos = buttonEntity.EntityGet<PositionComponent>(world).value;
 
-                world.GetNearestEntities(buttonEntity, pos, 0.5f, ref entities, entity => poolUnit.Has(entity) || poolBody.Has(entity));
+                world.GetNearestEntities(buttonEntity, pos, 0.5f, ref entities, entity =>
+                    !poolBullet.Has(entity) &&(poolUnit.Has(entity) || poolBody.Has(entity)));
                 
                 var pressed = entities.Count > 0;
                 poolButton.ReplaceIfChanged(buttonEntity, new ButtonComponent{isActivated = pressed});
