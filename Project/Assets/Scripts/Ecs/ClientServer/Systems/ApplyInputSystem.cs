@@ -38,7 +38,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolInputMoveTo = inputWorld.GetPool<InputMoveToPointComponent>();
             var poolInputAction = inputWorld.GetPool<InputActionComponent>();
             
-            var filter = inputWorld.Filter<InputComponent>().End();
+            var filter = inputWorld.Filter<InputOneFrameComponent>().End();
             
             foreach (var inputEntity in filter)
             {

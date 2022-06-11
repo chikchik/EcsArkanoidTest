@@ -195,11 +195,6 @@ namespace ConsoleApp
 
             var packet = P2P.ParseResponse<Packet>(msgBytes);
 
-            if (packet.isPing)
-            {
-
-            }
-
             if (packet.hasHello)
             {
                 var client = new Client(packet.playerID);
@@ -217,90 +212,6 @@ namespace ConsoleApp
                 clients.Add(client);
                 BaseServices.JoinPlayer(inputWorld, packet.playerID);                
             }
-
-            if (packet.input != null && packet.input.time.Value != 0)
-            {
-                GotInput(packet);
-            }
-        }
-
-        private void GotInput(Packet packet)
-        {
-            Client client = clients.FirstOrDefault(client => client.ID == packet.playerID);
-            if (client == null)
-            {
-                if (!missingClients.Contains(packet.playerID))
-                {
-                    missingClients.Add(packet.playerID);
-                    Console.WriteLine($"not found player {packet.playerID}");
-                }
-                return;
-            }
-            var currentTick = leo.GetCurrentTick(world);// + world.GetUnique<TickDelta>().Value;
-
-            if (!packet.isPing)
-            {
-                //Console.WriteLine($"got input from {client.ID}, {packet.input.time} at {currentTick}");
-                //leo.SyncLog.WriteLine($"got input from {client.ID}, {packet.input.time} at {currentTick}");
-            }
-
-
-            var step = world.GetUnique<TickDeltaComponent>().Value;
-            //на сколько тиков мы опередили сервер или отстали
-            var delay = packet.input.time - currentTick;
-
-            //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
-            if (delay < 0)
-            {
-                //Console.WriteLine($"delay {delay}");
-                leo.SyncLog.WriteLine($"input from {client.ID}, {packet.input.time} at {currentTick} too late {delay}");
-
-                packet.input.time = currentTick;
-            }
-
-            var sentWorldTick = leo.GetCurrentTick(sentWorld) - step;
-
-            if (delay == 0 && sentWorldTick == packet.input.time)
-            {
-                Console.WriteLine($"state already sent");
-                leo.SyncLog.WriteLine($"state already sent, {packet.input.time} - {leo.GetCurrentTick(sentWorld)}");
-                //мир уже отправлен без инпута, значит мы опоздали и применим на след тик
-                packet.input.time = currentTick + world.GetUnique<TickDeltaComponent>().Value;
-                delay = -1;
-            }
-
-            if (packet.hasInput)
-                leo.Inputs.Add(packet.input);
-
-            world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
-            //var inputs = component.data.ToList();
-            //component.data = inputs.ToArray();
-
-            if (packet.isPing)
-                client.Delay = delay;
-            else
-                client.Delay = -999;
-            //Debug.Log($"rtt player={client.playerID} {client.ping}");
-        }
-        
-        private int FixTick(int time)
-        {
-            var currentTick = leo.GetCurrentTick(world);
-            var step = world.GetUnique<TickDeltaComponent>().Value;
-            //на сколько тиков мы опередили сервер или отстали
-            var delay = time - currentTick.Value;
-
-            //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
-            if (delay < 0)            
-               time = currentTick.Value;
-            
-
-            var sentWorldTick = leo.GetCurrentTick(sentWorld) - step;
-
-            if (delay == 0 && sentWorldTick == time)            
-                time = currentTick.Value + step.Value;
-
-            return time;
         }
 
         private void GotInput(byte[] data)

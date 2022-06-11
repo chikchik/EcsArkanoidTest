@@ -188,7 +188,7 @@ namespace Game.Fabros.Net.ClientServer
                     break;
                 
                 var inputEntity = inputWorld.NewEntity();
-                inputEntity.EntityAdd<InputComponent>(inputWorld);
+                inputEntity.EntityAdd<InputOneFrameComponent>(inputWorld);
                 inputEntity.EntityAdd<InputPlayerComponent>(inputWorld).PlayerID = input.player;
             
                 var pool = inputWorld.GetOrCreatePoolByType(input.data.GetType());

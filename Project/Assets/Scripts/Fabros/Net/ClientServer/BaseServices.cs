@@ -38,7 +38,7 @@ namespace Game.Fabros.Net.ClientServer
             var entity = world.NewEntity();
             entity.EntityAddComponent<InputJoinPlayerComponent>(world) = new InputJoinPlayerComponent
                 {leave = false, playerID = playerID};
-            entity.EntityAddComponent<InputComponent>(world);
+            entity.EntityAddComponent<InputOneFrameComponent>(world);
         }
 
         public static void LeavePlayer(EcsWorld world, int playerID)
@@ -47,7 +47,7 @@ namespace Game.Fabros.Net.ClientServer
             var entity = world.NewEntity();
             entity.EntityAddComponent<InputJoinPlayerComponent>(world) = new InputJoinPlayerComponent
                 {leave = true, playerID = playerID};
-            entity.EntityAddComponent<InputComponent>(world);
+            entity.EntityAddComponent<InputOneFrameComponent>(world);
         }
     }
 }

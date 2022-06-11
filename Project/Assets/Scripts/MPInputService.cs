@@ -3,6 +3,7 @@ using Game.ClientServer;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
+using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Leopotam.EcsLite;
 
 namespace Game
@@ -23,7 +24,7 @@ namespace Game
         public void Input(EcsWorld inputWorld, int playerId, IInputComponent inp)
         {
             var inputEntity = inputWorld.NewEntity();
-            inputEntity.EntityAdd<InputComponent>(inputWorld);
+            inputEntity.EntityAdd<InputOneFrameComponent>(inputWorld);
             inputEntity.EntityAdd<InputPlayerComponent>(inputWorld).PlayerID = playerId;
             
             var pool = inputWorld.GetOrCreatePoolByType(inp.GetType());

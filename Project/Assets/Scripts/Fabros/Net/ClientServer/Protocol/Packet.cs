@@ -10,17 +10,11 @@ namespace Game.Fabros.Net.ClientServer.Protocol
     {
         public int playerID;
 
-        public UserInput input;
-        public bool hasInput;
-
         public WorldUpdateProto WorldUpdate;
         public bool hasWorldUpdate;
         public bool hasWelcomeFromServer;
 
         public Hello hello;
         public bool hasHello;
-        public bool isPing;
-
-
     }
 }
