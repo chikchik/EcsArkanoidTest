@@ -25,7 +25,7 @@ namespace Game.Fabros.Net.ClientServer
         public List<UserInput> Inputs { get; private set; } = new List<UserInput>();
         
         
-        private readonly IInputService applyInputService;
+        private readonly IInputService inputService;
         private readonly string hashDir;
         private readonly bool writeHashes;
 
@@ -34,7 +34,7 @@ namespace Game.Fabros.Net.ClientServer
         public LeoContexts(string hashDir, ComponentsPool pool, SyncLog syncLog, IInputService inputService)
         {
             this.hashDir = hashDir;
-            this.applyInputService = inputService;
+            this.inputService = inputService;
 
             Pool = pool;
             SyncLog = syncLog;
@@ -187,7 +187,7 @@ namespace Game.Fabros.Net.ClientServer
                 if (input.Tick >= nextTick)
                     break;
 
-                applyInputService.Input(inputWorld, input.PlayerID, input.Component);
+                inputService.Input(inputWorld, input.PlayerID, input.Component);
             }
         }
     }
