@@ -59,8 +59,7 @@ namespace Game.Client
             ForEachObject<BushView>(view =>
             {
                 var bushEntity = GetOrCreateGameEntity(view.gameObject);
-                ref var bushComponent = ref bushEntity.EntityAdd<BushComponent>(world);
-                bushComponent.name = "Berries";
+                bushEntity.EntityAdd<BushComponent>(world);
 
                 ref var positionComponent = ref bushEntity.EntityAdd<PositionComponent>(world);
                 positionComponent.value = view.transform.position;

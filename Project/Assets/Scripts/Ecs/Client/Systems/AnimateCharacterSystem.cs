@@ -36,10 +36,7 @@ namespace Game.Ecs.Client.Systems
                 //animator.SetFloat("speed", speedComponent.speed / 2f);
             }
 
-            filter = world.Filter<AnimationStateComponent>().IncChanges<AnimationStateComponent>().End();
-
-
-             
+        
             filter = world.Filter<FoodCollectedComponent>().IncChanges<FoodCollectedComponent>().End();
 
             foreach (var entity in filter)

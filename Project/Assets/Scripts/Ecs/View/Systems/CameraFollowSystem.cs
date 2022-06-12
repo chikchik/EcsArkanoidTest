@@ -1,10 +1,9 @@
 using Fabros.Ecs.Client.Components;
-using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.Client.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace Game.Ecs.Client.Systems
+namespace Game.Ecs.View.Systems
 {
     public class CameraFollowSystem : IEcsRunSystem
     {

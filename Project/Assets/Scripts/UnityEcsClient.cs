@@ -7,6 +7,7 @@ using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.View.Systems;
 using Game.Fabros.EcsModules.Fire.Client.Components;
 using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
@@ -22,18 +23,15 @@ namespace Game.Client
 {
     public class UnityEcsClient : MonoBehaviour
     {
-        private NetClient client;
-
         [Inject] private Camera camera;
         [Inject] private Global global;
         [Inject] private UI ui;
         [Inject] private Joystick joystick;
+        [Inject] private NetClient client;
         
-        [Inject] private MPInputService inputService;
-        [Inject] private PlayerInputService playerInputService;
+        [Inject] private PlayerControlService controlService;
         
         [Inject] private EcsWorld world;
-        [Inject(Id="input")] private EcsWorld inputWorld;
 
         private EcsSystems viewSystems;
 
@@ -42,10 +40,6 @@ namespace Game.Client
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
 
-            playerInputService.SetInputService(inputService);
-            
-            var pool = SharedComponents.CreateComponentsPool();
-            client = new NetClient(world, pool, new EcsSystemsFactory(pool), inputService);
             
             viewSystems = new EcsSystems(world);
             viewSystems.Add(new SyncTransformSystem(false));
@@ -58,7 +52,6 @@ namespace Game.Client
             viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
             
-            inputService.SetNetClient(client);
             
             client.ConnectedAction = () =>
             {
@@ -93,19 +86,6 @@ namespace Game.Client
             };
 
             client.Start();
-            
-            
-            /*
-            ui.ApplyInputAction = (input) =>
-            {
-                var id = world.GetUnique<MainPlayerIdComponent>().value;
-                var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, id);
-                if (input.hasShot)
-                    input.shot = new UserInput.Shot {direction = unitEntity.EntityGet<LookDirectionComponent>(world).value};
-                
-                InputService.ApplyInput(inputWorld, id, input);
-                client.AddUserInput(input);
-            };*/
         }
 
         private void Update()
@@ -120,21 +100,7 @@ namespace Game.Client
 
             client.Update();
             
-            UnityEcsSinglePlayer.CheckInput(camera, joystick, playerInputService);
-            
-            /*
-            var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, client.GetPlayerID());
-            CheckInput(inputWorld, world, 
-                unitEntity, playerInput, camera,
-                input => client.AddUserInput(input));
-
-
-            if (Input.GetMouseButtonDown(0) && !(EventSystem.current.IsPointerOverGameObject() &&
-                                                 EventSystem.current.currentSelectedGameObject != null))
-            {
-                PlayerInputService.AddMoveToPoint(inputWorld, Input.mousePosition);
-            }
-            */
+            UnityEcsSinglePlayer.CheckInput(camera, joystick, controlService);
             
             viewSystems.Run();
         }

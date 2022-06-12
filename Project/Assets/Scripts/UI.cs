@@ -15,13 +15,14 @@ namespace Game.Client
     {
         private MainUI view;
         private EcsWorld world;
-        private PlayerInputService inputService;
+        private PlayerControlService controlService;
         
         public UI(
-            EcsWorld world, [Inject(Id = "input")]  EcsWorld inputWorld, MainUI view, PlayerInputService inputService)
+            EcsWorld world, MainUI view, PlayerControlService controlService)
         {
             this.view = view;
             this.world = world;
+            this.controlService = controlService;
 
             view.InteractionButton.onClick.AddListener(() =>
             {
@@ -30,7 +31,7 @@ namespace Game.Client
             
             view.ShotButton.onClick.AddListener(() =>
             {
-                inputService.Shot();
+                controlService.Shot();
             });
 
             view.FoodText.text = "";

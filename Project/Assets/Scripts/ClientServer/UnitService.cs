@@ -4,7 +4,6 @@ using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components.Colliders;
-using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -27,7 +26,6 @@ namespace Game.ClientServer
             entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(0, 0, 0);
 
             entity.EntityAddComponent<FoodCollectedComponent>(world).Value = 0;
-            entity.EntityAddComponent<AnimationStateComponent>(world).id = "angry";
             
             entity.EntityAddComponent<Rotation2DComponent>(world);
 

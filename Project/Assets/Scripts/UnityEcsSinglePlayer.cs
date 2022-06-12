@@ -8,6 +8,7 @@ using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.View.Systems;
 using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
@@ -26,17 +27,15 @@ namespace Game.Client
         [Inject] private Camera camera;
         [Inject] private Global global;
         [Inject] private UI ui;
-        [Inject] private EcsWorld world;
+        
         [Inject] private Joystick joystick;
         
+        [Inject] private EcsWorld world;
         [Inject(Id = "input")] private EcsWorld inputWorld;
         
         [Inject] 
-        private PlayerInputService playerInputService;
-        
-        [Inject] 
-        private SingleInputService inputService;
-        
+        private PlayerControlService controlService;
+
         private EcsSystems systems;
         private EcsSystems viewSystems;
         
@@ -49,8 +48,6 @@ namespace Game.Client
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
 
-            playerInputService = new PlayerInputService(inputWorld, world);
-            playerInputService.SetInputService(inputService);
             
             systems = new EcsSystems(world);
             systems.AddWorld(inputWorld, "input");
@@ -96,7 +93,7 @@ namespace Game.Client
             unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
         }
 
-        public static void CheckInput(Camera camera, Joystick joystick, PlayerInputService inputService)
+        public static void CheckInput(Camera camera, Joystick joystick, PlayerControlService controlService)
         {
             void MoveDir(float hor, float ver)
             {
@@ -110,7 +107,7 @@ namespace Game.Client
 
                 var dir = forward * ver + right * hor;
                 
-                inputService.MoveToDirection(dir);
+                controlService.MoveToDirection(dir);
             }
             
             if (Input.GetMouseButtonDown(0) && !(EventSystem.current.IsPointerOverGameObject() &&
@@ -122,7 +119,7 @@ namespace Game.Client
 
                 var point = ray.GetPoint(dist);
                 
-                inputService.MoveToPoint(point);
+                controlService.MoveToPoint(point);
             }
 
             var hor = Input.GetAxis("Horizontal");
@@ -137,7 +134,7 @@ namespace Game.Client
                 MoveDir(joystick.Direction.x, joystick.Direction.y);
             }else
             {
-                inputService.StopMoveToDirection();
+                controlService.StopMoveToDirection();
             }
         }
         public void Update()
@@ -156,7 +153,7 @@ namespace Game.Client
             });*/
 
 
-            CheckInput(camera, joystick, playerInputService);
+            CheckInput(camera, joystick, controlService);
             
             viewSystems.Run();
         }

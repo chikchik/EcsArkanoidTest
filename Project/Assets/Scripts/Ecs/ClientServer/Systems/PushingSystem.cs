@@ -1,5 +1,6 @@
 ﻿using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Tick.Other;
+using Game.Ecs.ClientServer.Components;
 using Leopotam.EcsLite;
 
 namespace Game.Ecs.ClientServer.Systems

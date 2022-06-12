@@ -16,6 +16,7 @@ using Fabros.P2P;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Input;
+using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Fabros.Net.Client.Socket;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
@@ -54,7 +55,7 @@ namespace Game.Fabros.Net.Client
 
         private Stats stats = new Stats();
         
-        private UnitySocket socket;
+        public UnitySocket Socket { get; private set; }
 
         private float stepMult = 1f;
         private float stepOffset = 0.001f;
@@ -63,7 +64,10 @@ namespace Game.Fabros.Net.Client
 
         private HGlobalWriter writer = new HGlobalWriter();
 
-        public NetClient(EcsWorld world, ComponentsPool pool, IEcsSystemsFactory systemsFactory, IInputService inputService)
+        public NetClient(EcsWorld world, 
+            ComponentsPool pool, 
+            IEcsSystemsFactory systemsFactory, 
+            IInputService inputService)
         {
             Application.targetFrameRate = 60;
 
@@ -97,7 +101,7 @@ namespace Game.Fabros.Net.Client
             var connection = new WebSocketConnection(hello, url, P2P.ADDR_SERVER);
             connection.OnConnected += () =>
             {
-                socket = connection.ExtractSocket();
+                Socket = connection.ExtractSocket();
                 AsyncMain(connection.Response);
             };
             connection.Start();
@@ -210,7 +214,7 @@ namespace Game.Fabros.Net.Client
             Leo.Pool.RemapOrder(packet.hello.Components);
             while (!packet.hasWelcomeFromServer)
             {
-                var msg = await socket.AsyncWaitMessage();
+                var msg = await Socket.AsyncWaitMessage();
                 packet = P2P.ParseResponse<Packet>(msg.buffer);
             }
             
@@ -274,7 +278,7 @@ namespace Game.Fabros.Net.Client
                     bool updated = false;
                     while (true)
                     {
-                        var msg = socket.PopMessage();
+                        var msg = Socket.PopMessage();
                         if (msg == null)
                         {
                             break;
@@ -398,7 +402,7 @@ namespace Game.Fabros.Net.Client
                         .WriteInt32(GetNextInputTick().Value)
                         .WriteInt32(0);
                     
-                    socket.Send(writer.CopyToByteArray());
+                    Socket.Send(writer.CopyToByteArray());
                 }
             });
 
@@ -409,59 +413,7 @@ namespace Game.Fabros.Net.Client
         
         public void AddUserInput(IInputComponent inputComponent)
         {
-            var input = new UserInput();
-            input.time = GetNextInputTick();
-            input.player = playerID;
-            input.data = inputComponent;
-
-            if (Leo.Inputs.Count > 100)
-            {
-                throw new Exception("leo size");
-            }
             
-            Leo.Inputs.Add(input);
-
-            using (var writer = new HGlobalWriter())
-            {
-                writer
-                    .Write(P2P.ADDR_SERVER.Address)
-                    .Write(0xff)
-                    .Write(playerID)
-                    .Write(GetNextInputTick().Value);
-
-                if (inputComponent is PingComponent aa)
-                {
-                    writer.WriteInt32(0);
-                }
-
-                if (inputComponent is InputActionComponent a2)
-                {
-                    writer.WriteInt32(1);
-                    writer.Write(a2);
-                }
-
-                if (inputComponent is InputMoveDirectionComponent a1)
-                {
-                    writer.WriteInt32(2);
-                    writer.Write(a1);
-                }
-
-                if (inputComponent is InputMoveToPointComponent a3)
-                {
-                    writer.WriteInt32(3);
-                    writer.Write(a3);
-                }
-
-                if (inputComponent is InputShotComponent a4)
-                {
-                    writer.WriteInt32(4);
-                    writer.Write(a4);
-                }
-
-                var array = writer.CopyToByteArray();
-
-                socket.Send(array);
-            }
         }
 
 
@@ -492,6 +444,21 @@ namespace Game.Fabros.Net.Client
             }
         }
 
+        public void AddPlayerInput(IInputComponent inputComponent)
+        {
+            var input = new UserInput();
+            input.Tick = GetNextInputTick();
+            input.PlayerID = playerID;
+            input.Component = inputComponent;
+            
+            if (Leo.Inputs.Count > 100)
+            {
+                throw new Exception("wtf leo size");
+            }
+            
+            Leo.Inputs.Add(input);
+        }
+
         public void OnGUI()
         {
             if (!Connected)
@@ -520,11 +487,6 @@ namespace Game.Fabros.Net.Client
 
             //WorldMono.OnGui(currentWorld);
             GUILayout.EndVertical();
-        }
-
-        public void OnDrawGizmos()
-        {
-            
         }
     }
 }

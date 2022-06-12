@@ -1,15 +1,12 @@
-﻿using System;
-using Fabros.EcsModules.Tick.Other;
-using Game.Ecs.ClientServer.Components.Input;
+﻿using Fabros.EcsModules.Tick.Other;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
-using UnityEngine;
 
-namespace Game.Fabros.Net.ClientServer.Protocol
+namespace Game.Fabros.Net.ClientServer
 {
     public struct UserInput
     {
-        public Tick time { get; set; }
-        public int player;
-        public IInputComponent data;
+        public Tick Tick { get; set; }
+        public int PlayerID;
+        public IInputComponent Component;
     }
 }

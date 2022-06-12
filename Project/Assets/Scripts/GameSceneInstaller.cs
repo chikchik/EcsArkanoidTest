@@ -1,3 +1,4 @@
+using Fabros.Ecs.ClientServer.Serializer;
 using Game.Client;
 using Game.ClientServer;
 using Game.Fabros.Net.Client;
@@ -29,16 +30,32 @@ namespace Game
             Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();
             Container.Bind<Client.UI>().AsSingle().NonLazy();
 
-            Container.Bind<MPInputService>().AsSingle();
-            Container.Bind<SingleInputService>().AsSingle();
-            Container.Bind<PlayerInputService>().AsSingle();
+            Container.Bind<PlayerControlService>().AsSingle();
 
-            if (settings.SinglePlayer)
-                settings.GetComponent<UnityEcsSinglePlayer>().enabled = true;
-            else
-                settings.GetComponent<UnityEcsClient>().enabled = true;
 
             Container.Bind<NetClient>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EcsSystemsFactory>().AsSingle();
+            Container.Bind<ComponentsPool>().FromInstance(SharedComponents.CreateComponentsPool()).AsSingle();
+
+
+
+            if (settings.SinglePlayer)
+            {
+                Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
+                    .AsSingle().WhenInjectedInto<PlayerControlService>();
+                
+                Container.InstantiateComponent<UnityEcsSinglePlayer>(settings.gameObject);
+            }
+            else
+            {
+                Container.Bind<IInputService>().To<ClientInputService>()
+                    .AsSingle().WhenInjectedInto<PlayerControlService>();
+                
+                Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
+                    .AsSingle().WhenInjectedInto<NetClient>();
+                
+                Container.InstantiateComponent<UnityEcsClient>(settings.gameObject);
+            }
         }
     }
 }

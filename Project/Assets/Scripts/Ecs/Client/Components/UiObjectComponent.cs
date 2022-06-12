@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 
-public struct UiObjectComponent
+namespace Game.Ecs.Client.Components
 {
-    public GameObject gameObject;
+    public struct UiObjectComponent
+    {
+        public GameObject gameObject;
+    }
 }

@@ -1,4 +1,4 @@
-﻿namespace Game.Ecs.ClientServer.Systems
+﻿namespace Game.Ecs.ClientServer.Components
 {
     public struct MovingComponent
     {

@@ -1,12 +1,11 @@
 using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
-using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace Game.Ecs.Client.Systems
+namespace Game.Ecs.View.Systems
 {
     public class SyncTransformSystem : IEcsRunSystem
     {

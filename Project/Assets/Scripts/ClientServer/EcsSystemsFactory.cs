@@ -5,7 +5,7 @@ using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Tick;
-using Game.Ecs.Client.Systems;
+
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
@@ -21,6 +21,7 @@ using Leopotam.EcsLite.ExtendedSystems;
 using UnityEngine;
 
 #if CLIENT
+using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
 using Game.Fabros.EcsModules.Fire.Client.Systems;
 using Fabros.EcsModules.Box2D.Client.Systems;
@@ -122,14 +123,7 @@ namespace Game.ClientServer
             AddServer(new ButtonCustomSystem());
             systems.Add(new GateSystem());
             systems.Add(new MoveByProgressSystem());
-
-#if CLIENT
-            AddClient(new UseInventoryItemSystem());
-#endif
-
-            systems.Add(new AddInventoryItemSystem());
-            systems.Add(new RemoveInventoryItemSystem());
-
+            
             systems.Add(new FireSystem());
 
             systems.Add(new ApplyForceSystem());
@@ -178,7 +172,6 @@ namespace Game.ClientServer
             systems.Add(new EventsSystem<MakeShotComponent>());
             
 #if CLIENT
-            systems.Add(new EventsSystem<AnimationStateComponent>());
             systems.Add(new EventsSystem<MovingComponent>());
 #endif
 

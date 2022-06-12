@@ -11,6 +11,7 @@ using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Events;
 using Game.Ecs.ClientServer.Components.Input;
+using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Fabros.Net.ClientServer;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -134,6 +135,8 @@ namespace Game.Ecs.ClientServer.Systems
         {
             if (unitEntity.EntityHas<MakeShotComponent>(world))
                 return;
+            
+            Debug.Log($"shot at {world.GetTick()}");
             
             ref var component = ref unitEntity.EntityAdd<MakeShotComponent>(world);
             component.Time = world.GetTime() + 0.2f;

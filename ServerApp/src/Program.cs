@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Fabros.Ecs;
 using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
-using Game.Ecs.ClientServer.Components;
-using Game.Ecs.ClientServer.Components.Input;
+using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
-using Newtonsoft.Json;
 
 namespace ConsoleApp
 {
@@ -49,7 +43,7 @@ namespace ConsoleApp
         private EcsSystems systems;
         private List<Client> clients = new List<Client>();
         private List<int> missingClients = new List<int>();
-        private SingleInputService inputService = new SingleInputService();
+        private ApplyWorldChangesInputService inputService = new ApplyWorldChangesInputService();
 
         //private List<byte[]> receivedMessages = new List<byte[]>();
 
@@ -229,7 +223,8 @@ namespace ConsoleApp
                 var playerId = Marshal.ReadInt32(buffer);
                 buffer += 4;
 
-                var time = Marshal.ReadInt32(buffer);
+                var inputTime = Marshal.ReadInt32(buffer);
+                var time = inputTime;
                 buffer += 4;
 
                 var type = Marshal.ReadInt32(buffer);
@@ -264,13 +259,16 @@ namespace ConsoleApp
                     time = currentTick.Value + step.Value;
 
 
+                client.Delay = delay;
+
                 if (type == 0)//ping
                 {
-                    client.Delay =  delay;
+                    
                 }
                 else
                 {
 
+                    Console.WriteLine($"got input {inputTime} at {currentTick.Value} will be executed at {time}");
                     IInputComponent component = null;
                     if (type == 1)
                     {
@@ -289,10 +287,12 @@ namespace ConsoleApp
                         component = Marshal.PtrToStructure<InputShotComponent>(buffer);
                     }
 
-                    var input = new UserInput();
-                    input.data = component;
-                    input.time = new Tick(time);
-                    input.player = playerId;
+                    var input = new UserInput
+                    {
+                        PlayerID = playerId,
+                        Component = component,
+                        Tick = new Tick(time)
+                    };
                     leo.Inputs.Add(input);
 
                     world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
@@ -324,7 +324,7 @@ namespace ConsoleApp
                 //можно делать это реже, например 20 раз в секунду если serverSyncStep==3
                 SendWorldToClients();
                 //удаляем ввод игрока который устарел
-                var abc = component.data.Where(input => input.time >= time);
+                var abc = component.data.Where(input => input.Tick >= time);
                 component.data = abc.ToArray();
             }
         }

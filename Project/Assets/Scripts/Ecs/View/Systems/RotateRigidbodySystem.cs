@@ -1,12 +1,10 @@
 using Fabros.Ecs.Client.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
-using Fabros.EcsModules.Tick.Other;
-using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace Game.Ecs.Client.Systems
+namespace Game.Ecs.View.Systems
 {
     public class RotateRigidbodySystem : IEcsRunSystem
     {

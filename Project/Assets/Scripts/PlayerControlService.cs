@@ -4,6 +4,7 @@ using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Input;
+using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Fabros.Net.ClientServer;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -11,26 +12,24 @@ using Zenject;
 
 namespace Game
 {
-    public class PlayerInputService
+    public class PlayerControlService
     {
         private EcsWorld inputWorld;
         private EcsWorld world;
 
         private IInputService input;
         
-        public PlayerInputService(
+        public PlayerControlService(
             [Inject(Id = "input")] EcsWorld inputWorld, 
-            EcsWorld world)
+            EcsWorld world,
+            IInputService input
+            )
         {
             this.inputWorld = inputWorld;
             this.world = world;
+            this.input = input;
         }
 
-        public void SetInputService(IInputService inputService)
-        {
-            this.input = inputService;
-        }
-        
 
         private int playerId => world.GetUnique<MainPlayerIdComponent>().value;
         private int unitEntity => BaseServices.GetUnitEntityByPlayerId(world, playerId);

@@ -25,7 +25,7 @@ namespace Game.Fabros.Net.ClientServer
         public List<UserInput> Inputs { get; private set; } = new List<UserInput>();
         
         
-        private readonly IInputService inputService;
+        private readonly IInputService applyInputService;
         private readonly string hashDir;
         private readonly bool writeHashes;
 
@@ -34,7 +34,7 @@ namespace Game.Fabros.Net.ClientServer
         public LeoContexts(string hashDir, ComponentsPool pool, SyncLog syncLog, IInputService inputService)
         {
             this.hashDir = hashDir;
-            this.inputService = inputService;
+            this.applyInputService = inputService;
 
             Pool = pool;
             SyncLog = syncLog;
@@ -81,7 +81,7 @@ namespace Game.Fabros.Net.ClientServer
 
         public void FilterInputs(Tick time)
         {
-            Inputs = Inputs.Where(input => input.time >= time).ToList();
+            Inputs = Inputs.Where(input => input.Tick >= time).ToList();
         }
 
         public void Tick(EcsSystems systems, EcsWorld inputWorld, EcsWorld world, UserInput[] inputs, bool writeToLog, string debug="")
@@ -182,19 +182,12 @@ namespace Game.Fabros.Net.ClientServer
             for (var n = 0; n < inputData.Length; ++n)
             {
                 var input = inputData[n];
-                if (input.time < time)
+                if (input.Tick < time)
                     continue;
-                if (input.time >= nextTick)
+                if (input.Tick >= nextTick)
                     break;
-                
-                var inputEntity = inputWorld.NewEntity();
-                inputEntity.EntityAdd<InputOneFrameComponent>(inputWorld);
-                inputEntity.EntityAdd<InputPlayerComponent>(inputWorld).PlayerID = input.player;
-            
-                var pool = inputWorld.GetOrCreatePoolByType(input.data.GetType());
-                pool.AddRaw(inputEntity, input.data);
-                
-                //inputService.Input(inputWorld, input.player, input.data);
+
+                applyInputService.Input(inputWorld, input.PlayerID, input.Component);
             }
         }
     }

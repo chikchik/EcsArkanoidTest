@@ -6,7 +6,12 @@ using Leopotam.EcsLite;
 
 namespace Game.ClientServer
 {
-    public class SingleInputService: IInputService
+    /**
+     * в конечном счете все изменения в InputWorld будут применяться тут
+     * выполняется на клиенте и сервере, а также в синглплеерной игре.
+     */
+
+    public class ApplyWorldChangesInputService: IInputService
     {
         public void Input(EcsWorld inputWorld, int playerId, IInputComponent inp)
         {
