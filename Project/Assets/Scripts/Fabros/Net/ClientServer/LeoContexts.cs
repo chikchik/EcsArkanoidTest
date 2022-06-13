@@ -12,6 +12,7 @@ using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
+using UnityEngine;
 
 namespace Game.Fabros.Net.ClientServer
 {
@@ -22,19 +23,18 @@ namespace Game.Fabros.Net.ClientServer
          * позволяет сохранять в отдельный файл игровые данные и сравнивать состояния миров между собой
         */
         public SyncLog SyncLog { get; }
-        public List<UserInput> Inputs { get; private set; } = new List<UserInput>();
+        //public List<UserInput> Inputs { get; private set; } = new List<UserInput>();
         
         
-        private readonly IInputService inputService;
         private readonly string hashDir;
         private readonly bool writeHashes;
 
-        //private EcsWorld inputWorld;
+        private EcsWorld inputWorld;
 
-        public LeoContexts(string hashDir, ComponentsPool pool, SyncLog syncLog, IInputService inputService)
+        public LeoContexts(string hashDir, ComponentsPool pool, SyncLog syncLog, EcsWorld inputWorld)
         {
             this.hashDir = hashDir;
-            this.inputService = inputService;
+            this.inputWorld = inputWorld;
 
             Pool = pool;
             SyncLog = syncLog;
@@ -57,7 +57,7 @@ namespace Game.Fabros.Net.ClientServer
         {
             world.AddUnique(cfg);
             world.AddUnique<TickComponent>().Value = new Tick(0);
-            world.AddUnique<PendingInputComponent>().data = new UserInput[0];
+            //world.AddUnique<PendingInputComponent>().data = new UserInput[0];
         }
 
         
@@ -81,17 +81,28 @@ namespace Game.Fabros.Net.ClientServer
 
         public void FilterInputs(Tick time)
         {
-            Inputs = Inputs.Where(input => input.Tick >= time).ToList();
+            var filter = inputWorld.Filter<InputTickComponent>().End();
+            var pool = inputWorld.GetPool<InputTickComponent>();
+            foreach (var entity in filter)
+            {
+                var tick = pool.Get(entity).Tick;
+                if (tick < time.Value)
+                {
+                    inputWorld.DelEntity(entity);
+                }
+            }
+            //Inputs = Inputs.Where(input => input.Tick >= time).ToList();
         }
 
-        public void Tick(EcsSystems systems, EcsWorld inputWorld, EcsWorld world, UserInput[] inputs, bool writeToLog, string debug="")
+        public void Tick(EcsSystems systems, EcsWorld inputWorld, 
+            EcsWorld world, bool writeToLog, string debug="")
         {
             //обновляем мир 1 раз
             
             var time = GetCurrentTick(world);
             if (writeToLog) SyncLog.WriteLine($"tick {time.Value} ->");
 
-            ProcessUserInput(inputWorld, world, inputs);
+            //ProcessUserInput(inputWorld, world, inputs);
 
             var strStateDebug = "";
             if (writeHashes)
@@ -166,6 +177,7 @@ namespace Game.Fabros.Net.ClientServer
             return world.GetUnique<TickrateConfigComponent>();
         }
 
+        /*
         public void ProcessUserInput(EcsWorld inputWorld, EcsWorld world, UserInput[] inputData = null)
         {
             if (inputData == null)
@@ -189,6 +201,6 @@ namespace Game.Fabros.Net.ClientServer
 
                 inputService.Input(inputWorld, input.PlayerID, input.Component);
             }
-        }
+        }*/
     }
 }

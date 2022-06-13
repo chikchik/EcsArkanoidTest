@@ -18,7 +18,6 @@ using Leopotam.EcsLite;
 
 namespace ConsoleApp
 {
-
     class Client
     {
         public int ID;
@@ -45,7 +44,7 @@ namespace ConsoleApp
         private List<int> missingClients = new List<int>();
         private ApplyWorldChangesInputService inputService = new ApplyWorldChangesInputService();
 
-        //private List<byte[]> receivedMessages = new List<byte[]>();
+        private List<byte[]> receivedMessages = new List<byte[]>();
 
         async Task Run()
         {
@@ -73,8 +72,11 @@ namespace ConsoleApp
                     WebSocketReceiveResult rcvResult = await socket.ReceiveAsync(rcvBuffer, ct.Token);
 
                     byte[] msgBytes = rcvBuffer.Skip(rcvBuffer.Offset).Take(rcvResult.Count).ToArray();
-                    ProcessMessage(msgBytes);
-                    //receivedMessages.Add(msgBytes);
+                    //ProcessMessage(msgBytes);
+                    lock (receivedMessages)
+                    {
+                        receivedMessages.Add(msgBytes);
+                    }                    
                 }
             }
             catch (Exception e)
@@ -110,11 +112,11 @@ namespace ConsoleApp
                 systems.AddWorld(inputWorld, "input");
 
                 var factory = new EcsSystemsFactory(pool);
-                factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings(false, true));
+                factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { client = false, server = true });
 
 
                 leo = new LeoContexts(Config.TMP_HASHES_PATH, pool, 
-                    new SyncLog(Config.SYNC_LOG_PATH), inputService);
+                    new SyncLog(Config.SYNC_LOG_PATH), inputWorld);
                 /*
                 leo.WriteToConsole = (string str) =>
                 {
@@ -143,11 +145,15 @@ namespace ConsoleApp
                 var step = 1.0 / config.serverTickrate;
                 while (true)
                 {
-                    //var copy = receivedMessages.ToArray();
-                    //receivedMessages.Clear();
+                    byte[][] receivedCopy = null;
+                    lock (receivedMessages) {
+                        receivedCopy = receivedMessages.ToArray();
+                        receivedMessages.Clear();
+                    }
 
-                    //for (int i = 0; i < copy.Length; ++i)
-                    //    ProcessMessage(copy[i]);
+
+                    for (int i = 0; i < receivedCopy.Length; ++i)
+                        ProcessMessage(receivedCopy[i]);
 
                     if (next <= DateTime.UtcNow)
                     {
@@ -268,7 +274,7 @@ namespace ConsoleApp
                 else
                 {
 
-                    Console.WriteLine($"got input {inputTime} at {currentTick.Value} will be executed at {time}");
+                    Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} got input {inputTime} at {currentTick.Value} will be executed at {time}");
                     IInputComponent component = null;
                     if (type == 1)
                     {
@@ -293,9 +299,10 @@ namespace ConsoleApp
                         Component = component,
                         Tick = new Tick(time)
                     };
-                    leo.Inputs.Add(input);
 
-                    world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
+                    inputService.Input(inputWorld, playerId, time, component);
+                    //leo.Inputs.Add(input);
+                    //world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
                 }
             } finally
             {
@@ -305,13 +312,16 @@ namespace ConsoleApp
 
         private void Tick()
         {
+            //var time0 = leo.GetCurrentTick(world);
+
+            //Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} Tick Begin {time0.Value}");
             var time = leo.GetCurrentTick(world);
             leo.FilterInputs(time);            
 
-            ref var component = ref world.GetUniqueRef<PendingInputComponent>();
+            //ref var component = ref world.GetUniqueRef<PendingInputComponent>();
          
             //обновляем мир 1 раз
-            leo.Tick(systems, inputWorld, world, component.data, Config.SyncDataLogging);
+            leo.Tick(systems, inputWorld, world, Config.SyncDataLogging);
         
             time = leo.GetCurrentTick(world);
 
@@ -324,9 +334,12 @@ namespace ConsoleApp
                 //можно делать это реже, например 20 раз в секунду если serverSyncStep==3
                 SendWorldToClients();
                 //удаляем ввод игрока который устарел
-                var abc = component.data.Where(input => input.Tick >= time);
-                component.data = abc.ToArray();
+                //var abc = component.data.Where(input => input.Tick >= time);
+                //component.data = abc.ToArray();
+                //leo.FilterInputs(time);
             }
+
+           // Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId}  Tick End {time0.Value}");
         }
 
         void SendWorldToClients()

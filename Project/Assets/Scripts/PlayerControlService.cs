@@ -6,6 +6,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Fabros.Net.ClientServer;
+using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
@@ -33,19 +34,22 @@ namespace Game
 
         private int playerId => world.GetUnique<MainPlayerIdComponent>().value;
         private int unitEntity => BaseServices.GetUnitEntityByPlayerId(world, playerId);
+        private int tick => world.GetTick() + 1;//next tick
         
         public void Shot()
         {
             var component = new InputShotComponent();
             component.dir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
-            input.Input(inputWorld, playerId, component);
+            
+            Apply(component);
         }
         
         public void MoveToDirection(Vector3 dir)
         {
             var component = new InputMoveDirectionComponent();
             component.Dir = dir;
-            input.Input(inputWorld, playerId, component);
+            
+            Apply(component);
         }
         
         public void StopMoveToDirection()
@@ -58,14 +62,28 @@ namespace Game
             
             var component = new InputMoveDirectionComponent();
             component.Dir = Vector3.zero;
-            input.Input(inputWorld, playerId, component);
+            
+            Apply(component);
         }
         
         public void MoveToPoint(Vector3 pos)
         {
             var component = new InputMoveToPointComponent();
             component.Value = pos;
-            input.Input(inputWorld, playerId, component);
+            Apply(component);
+        }
+
+        private void Apply(IInputComponent component)
+        {
+            var inputEntity = inputWorld.NewEntity();
+            inputEntity.EntityAdd<InputComponent>(inputWorld);
+            inputEntity.EntityAdd<InputTickComponent>(inputWorld).Tick = tick;
+            inputEntity.EntityAdd<InputPlayerComponent>(inputWorld).PlayerID = playerId;
+            
+            var pool = inputWorld.GetOrCreatePoolByType(component.GetType());
+            pool.AddRaw(inputEntity, component);
+            
+            input.Input(inputWorld, playerId, tick, component);
         }
     }
 }

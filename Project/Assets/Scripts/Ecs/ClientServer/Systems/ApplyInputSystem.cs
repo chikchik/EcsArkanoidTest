@@ -38,11 +38,17 @@ namespace Game.Ecs.ClientServer.Systems
             var poolInputMoveDir= inputWorld.GetPool<InputMoveDirectionComponent>();
             var poolInputMoveTo = inputWorld.GetPool<InputMoveToPointComponent>();
             var poolInputAction = inputWorld.GetPool<InputActionComponent>();
+            var poolInputTick = inputWorld.GetPool<InputTickComponent>();
             
-            var filter = inputWorld.Filter<InputOneFrameComponent>().End();
+            var filter = inputWorld.Filter<InputComponent>().End();
+
+            var tick = world.GetTick();
             
             foreach (var inputEntity in filter)
             {
+                if (poolInputTick.GetNullable(inputEntity)?.Tick != tick)
+                    continue;
+                
                 var playerId = mainPlayerId;
                 if (poolPlayer.Has(inputEntity))
                     playerId = poolPlayer.Get(inputEntity).PlayerID;

@@ -13,10 +13,11 @@ namespace Game.ClientServer
 
     public class ApplyWorldChangesInputService: IInputService
     {
-        public void Input(EcsWorld inputWorld, int playerId, IInputComponent inp)
+        public void Input(EcsWorld inputWorld, int playerId, int tick, IInputComponent inp)
         {
             var inputEntity = inputWorld.NewEntity();
-            inputEntity.EntityAdd<InputOneFrameComponent>(inputWorld);
+            inputEntity.EntityAdd<InputComponent>(inputWorld);
+            inputEntity.EntityAdd<InputTickComponent>(inputWorld).Tick = tick;
             inputEntity.EntityAdd<InputPlayerComponent>(inputWorld).PlayerID = playerId;
             
             var pool = inputWorld.GetOrCreatePoolByType(inp.GetType());

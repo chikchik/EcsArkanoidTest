@@ -6,6 +6,6 @@ namespace Game.Fabros.Net.ClientServer
 {
     public interface IInputService
     {
-        public void Input(EcsWorld inputWorld, int playerId, IInputComponent input);
+        public void Input(EcsWorld inputWorld, int playerId, int tick, IInputComponent input);
     }
 }

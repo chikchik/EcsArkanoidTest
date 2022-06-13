@@ -8,6 +8,7 @@ using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Leopotam.EcsLite;
+using UnityEngine;
 
 namespace Game
 {
@@ -25,11 +26,14 @@ namespace Game
         }
         
         
-        public void Input(EcsWorld inputWorld, int playerID, IInputComponent inputComponent)
+        public void Input(EcsWorld inputWorld, int playerID, int tick, IInputComponent inputComponent)
         {
-            client.AddPlayerInput(inputComponent);
+            if (tick != client.GetNextInputTick().Value)
+            {
+                Debug.LogError($"{tick} != {client.GetNextInputTick().Value}");
+            }
 
-            writer
+            writer.Reset()
                 .Write(P2P.ADDR_SERVER.Address)
                 .Write(0xff)
                 .Write(playerID)

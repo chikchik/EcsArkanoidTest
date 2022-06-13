@@ -20,10 +20,12 @@ using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Fabros.Net.Client.Socket;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
+using Game.Fabros.Net.ClientServer.Ecs.Systems;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
 using UnityEngine;
 using UnityEngine.Profiling;
+using Zenject;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -37,7 +39,7 @@ namespace Game.Fabros.Net.Client
 
 
         public EcsWorld MainWorld { get; }
-        public EcsWorld InputWorld { get; private set; }
+        public EcsWorld InputWorld { get; }
         public EcsWorld ServerWorld { get; private set; }
 
         public LeoContexts Leo { get; }
@@ -64,18 +66,21 @@ namespace Game.Fabros.Net.Client
 
         private HGlobalWriter writer = new HGlobalWriter();
 
-        public NetClient(EcsWorld world, 
+        public NetClient(
+            EcsWorld world, 
+            [Inject (Id = "input")]EcsWorld inputWorld,
             ComponentsPool pool, 
-            IEcsSystemsFactory systemsFactory, 
-            IInputService inputService)
+            IEcsSystemsFactory systemsFactory)
         {
             Application.targetFrameRate = 60;
 
+            this.InputWorld = inputWorld;
+            
             this.systemsFactory = systemsFactory;
 
             Leo = new LeoContexts(Config.TMP_HASHES_PATH,
                 pool,
-                new SyncLog(Config.SYNC_LOG_PATH), inputService);
+                new SyncLog(Config.SYNC_LOG_PATH), inputWorld);
 
 
             //генерируем случайный id игрока с которым нас будет ассоциировать сервер
@@ -160,7 +165,7 @@ namespace Game.Fabros.Net.Client
             copyServerSystems.AddWorld(InputWorld, "input");
             
             systemsFactory.AddNewSystems(copyServerSystems,
-                new IEcsSystemsFactory.Settings(false, false));
+                new IEcsSystemsFactory.Settings{client = false, server = false});
             
             copyServerSystems.Init();
             
@@ -175,7 +180,7 @@ namespace Game.Fabros.Net.Client
             Profiler.BeginSample("SimServerWorld");
             while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
             {
-                Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Leo.Inputs.ToArray(), Config.SyncDataLogging, debug);
+                Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Config.SyncDataLogging, debug);
                 if (iterations > 500)
                 {
                     Debug.LogWarning(
@@ -227,13 +232,13 @@ namespace Game.Fabros.Net.Client
             var dif = packet.WorldUpdate.dif;
 
 
-            InputWorld = new EcsWorld("input");
+            //InputWorld = new EcsWorld("input");
             InitWorldAction(MainWorld);
 
             clientSystems = new EcsSystems(MainWorld);
             clientSystems.AddWorld(InputWorld, "input");
             
-            systemsFactory.AddNewSystems(clientSystems, new IEcsSystemsFactory.Settings(true, false));
+            systemsFactory.AddNewSystems(clientSystems, new IEcsSystemsFactory.Settings{client = true, server = false});
 
             WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif);
 
@@ -252,7 +257,10 @@ namespace Game.Fabros.Net.Client
             serverSystems.AddWorld(InputWorld, "input");
             serverSystems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, 
                 new Vector2(0,0), true, false, true));
+            
             serverSystems.Add(new Box2DWriteStateToComponentsSystem());
+            //после того как нам пришло что-то от сервера старый инпут можно спокойно удалять
+            serverSystems.Add(new DeleteOutdatedInputEntitiesSystem());
 
             //SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
             serverSystems.Init();
@@ -390,7 +398,7 @@ namespace Game.Fabros.Net.Client
                 //    return;
                     
                 //leo.ApplyUserInput(world);
-                Leo.Tick(clientSystems, InputWorld, MainWorld, Leo.Inputs.ToArray(), Config.SyncDataLogging, "");
+                Leo.Tick(clientSystems, InputWorld, MainWorld, Config.SyncDataLogging, "");
 
 
                 if (Leo.GetCurrentTick(MainWorld).Value % 5 == 0)
@@ -446,6 +454,7 @@ namespace Game.Fabros.Net.Client
 
         public void AddPlayerInput(IInputComponent inputComponent)
         {
+            /*
             var input = new UserInput();
             input.Tick = GetNextInputTick();
             input.PlayerID = playerID;
@@ -457,6 +466,7 @@ namespace Game.Fabros.Net.Client
             }
             
             Leo.Inputs.Add(input);
+            */
         }
 
         public void OnGUI()
@@ -465,7 +475,8 @@ namespace Game.Fabros.Net.Client
                 return;
 
             GUILayout.BeginVertical();
-            GUILayout.Label($"entities {MainWorld.GetAllEntitiesCount()}");
+            GUILayout.Label($"main entities {MainWorld.GetAllEntitiesCount()}");
+            GUILayout.Label($"input entities {InputWorld.GetAllEntitiesCount()}");
             GUILayout.Label($"playerID {playerID}");
             //GUILayout.Label($"future {futureTicks}");
             GUILayout.Label($"lags {stats.lags}");

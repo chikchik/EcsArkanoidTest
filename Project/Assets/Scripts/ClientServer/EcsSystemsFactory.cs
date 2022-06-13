@@ -136,7 +136,10 @@ namespace Game.ClientServer
 #endif
 
             systems.Add(new DeleteEntitiesSystemWith<DestroyComponent>());
-            systems.DelHere<InputOneFrameComponent>("input");
+
+            AddServer(new DeleteInputEntitiesSystem());
+            AddServer(new DeleteOutdatedInputEntitiesSystem());
+
             systems.Add(new DeleteEntitiesSystemWith<EventComponent>());
 
 

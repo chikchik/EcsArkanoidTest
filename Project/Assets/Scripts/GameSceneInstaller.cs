@@ -43,18 +43,20 @@ namespace Game
             {
                 Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
                     .AsSingle().WhenInjectedInto<PlayerControlService>();
-                
-                Container.InstantiateComponent<UnityEcsSinglePlayer>(settings.gameObject);
+
+                var comp = settings.gameObject.AddComponent<UnityEcsSinglePlayer>();
+                Container.QueueForInject(comp);
             }
             else
             {
                 Container.Bind<IInputService>().To<ClientInputService>()
                     .AsSingle().WhenInjectedInto<PlayerControlService>();
                 
-                Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
-                    .AsSingle().WhenInjectedInto<NetClient>();
+                //Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
+                //    .AsSingle().WhenInjectedInto<NetClient>();
                 
-                Container.InstantiateComponent<UnityEcsClient>(settings.gameObject);
+                var comp = settings.gameObject.AddComponent<UnityEcsClient>();
+                Container.QueueForInject(comp);
             }
         }
     }

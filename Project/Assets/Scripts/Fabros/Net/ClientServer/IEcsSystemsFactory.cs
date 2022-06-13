@@ -8,12 +8,6 @@ namespace Game.Fabros.Net.ClientServer
         {
             public bool client;
             public bool server;
-
-            public Settings(bool client, bool server)
-            {
-                this.client = client;
-                this.server = server;
-            }
         }
 
         void AddNewSystems(EcsSystems systems, Settings settings);
