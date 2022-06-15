@@ -31,8 +31,8 @@ namespace Game.ClientServer
 {
     public class EcsSystemsFactory : IEcsSystemsFactory
     {
-        private ComponentsPool pool;
-        public EcsSystemsFactory(ComponentsPool pool) 
+        private ComponentsCollection pool;
+        public EcsSystemsFactory(ComponentsCollection pool) 
         {
             this.pool = pool;
         }

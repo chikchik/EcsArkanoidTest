@@ -7,7 +7,7 @@ namespace Game.Fabros.Net.ClientServer
 {
     public class WorldDumpUtils
     {
-        public static string DumpEntity(ComponentsPool Pool, int entity, EcsWorld world)
+        public static string DumpEntity(ComponentsCollection Pool, int entity, EcsWorld world)
         {
             var raw = world.GetRawEntities();
             
@@ -50,7 +50,7 @@ namespace Game.Fabros.Net.ClientServer
             return str;
         }
         
-        public static string DumpWorld(ComponentsPool Pool, EcsWorld world)
+        public static string DumpWorld(ComponentsCollection Pool, EcsWorld world)
         {
             int[] entities = null;
             int count = world.GetAllEntities(ref entities);

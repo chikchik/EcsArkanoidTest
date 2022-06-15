@@ -8,9 +8,9 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
 {
     public class CreateGameSystem : IEcsInitSystem
     {
-        private readonly ComponentsPool pool;
+        private readonly ComponentsCollection pool;
 
-        public CreateGameSystem(ComponentsPool pool)
+        public CreateGameSystem(ComponentsCollection pool)
         {
             this.pool = pool;
         }

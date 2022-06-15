@@ -18,7 +18,7 @@ namespace Game.Fabros.Net.ClientServer
 {
     public class LeoContexts
     {
-        public ComponentsPool Pool { get; }
+        public ComponentsCollection Pool { get; }
         /*
          * позволяет сохранять в отдельный файл игровые данные и сравнивать состояния миров между собой
         */
@@ -31,7 +31,7 @@ namespace Game.Fabros.Net.ClientServer
 
         private EcsWorld inputWorld;
 
-        public LeoContexts(string hashDir, ComponentsPool pool, SyncLog syncLog, EcsWorld inputWorld)
+        public LeoContexts(string hashDir, ComponentsCollection pool, SyncLog syncLog, EcsWorld inputWorld)
         {
             this.hashDir = hashDir;
             this.inputWorld = inputWorld;

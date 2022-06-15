@@ -20,7 +20,7 @@ namespace Game.ClientServer
     {
         //public LeoContexts leo { get; set; }
 
-        public static ComponentsPool CreateComponentsPool()
+        public static ComponentsCollection CreateComponentsPool()
         {
             /*
              * общий код для клиента и сервера
@@ -28,9 +28,9 @@ namespace Game.ClientServer
              * если компонента в списке нет, то он не будет попадать в diff
             */
 #if CLIENT
-            var pool = new ComponentsPool(new UnityJsonComponentSerializer());
+            var pool = new ComponentsCollection(new UnityJsonComponentSerializer());
 #else
-            var pool = new ComponentsPool(new JsonComponentSerializer());
+            var pool = new ComponentsCollection(new JsonComponentSerializer());
 #endif
 
             TickModule.AddSerializableComponents(pool);

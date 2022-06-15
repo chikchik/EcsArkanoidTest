@@ -1,4 +1,5 @@
 ﻿using System;
+using Fabros.Ecs.ClientServer.Serializer;
 using Fabros.Ecs.Utils;
 using Fabros.P2P;
 using Game.ClientServer;
@@ -34,10 +35,10 @@ namespace Game
             }
 
             writer.Reset()
-                .Write(P2P.ADDR_SERVER.Address)
-                .Write(0xff)
-                .Write(playerID)
-                .Write(client.GetNextInputTick().Value);
+                .WriteByteArray(P2P.ADDR_SERVER.Address)
+                .WriteT(0xff)
+                .WriteT(playerID)
+                .WriteT(client.GetNextInputTick().Value);
 
             if (inputComponent is PingComponent)
             {
@@ -47,25 +48,25 @@ namespace Game
             if (inputComponent is InputActionComponent a)
             {
                 writer.WriteInt32(1);
-                writer.Write(a);
+                writer.WriteT(a);
             }
 
             if (inputComponent is InputMoveDirectionComponent b)
             {
                 writer.WriteInt32(2);
-                writer.Write(b);
+                writer.WriteT(b);
             }
 
             if (inputComponent is InputMoveToPointComponent c)
             {
                 writer.WriteInt32(3);
-                writer.Write(c);
+                writer.WriteT(c);
             }
 
             if (inputComponent is InputShotComponent d)
             {
                 writer.WriteInt32(4);
-                writer.Write(d);
+                writer.WriteT(d);
             }
 
             var array = writer.CopyToByteArray();

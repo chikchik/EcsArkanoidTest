@@ -35,7 +35,7 @@ namespace Game
 
             Container.Bind<NetClient>().AsSingle();
             Container.BindInterfacesAndSelfTo<EcsSystemsFactory>().AsSingle();
-            Container.Bind<ComponentsPool>().FromInstance(SharedComponents.CreateComponentsPool()).AsSingle();
+            Container.Bind<ComponentsCollection>().FromInstance(SharedComponents.CreateComponentsPool()).AsSingle();
 
 
 

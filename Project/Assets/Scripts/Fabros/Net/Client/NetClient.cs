@@ -69,7 +69,7 @@ namespace Game.Fabros.Net.Client
         public NetClient(
             EcsWorld world, 
             [Inject (Id = "input")]EcsWorld inputWorld,
-            ComponentsPool pool, 
+            ComponentsCollection pool, 
             IEcsSystemsFactory systemsFactory)
         {
             Application.targetFrameRate = 60;
@@ -114,6 +114,8 @@ namespace Game.Fabros.Net.Client
         
         public static void ForEach<T>(IEnumerable<T> source, Action<T> action)
         {
+            if (source == null)
+                return;
             foreach (var item in source) 
                 action(item);
         }
@@ -198,7 +200,7 @@ namespace Game.Fabros.Net.Client
             Leo.SyncLog.WriteLine("sync end\n");
 
             var dif2 = WorldUtils.BuildDiff(Leo.Pool, MainWorld,
-                copyServerWorld, false);
+                copyServerWorld, false, false);
 
             if (dif2.RemovedEntities != null)
                 DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
@@ -229,7 +231,7 @@ namespace Game.Fabros.Net.Client
                 throw new Exception("async next step for stopped application");
 
             //получили состояние мира с сервера
-            var dif = packet.WorldUpdate.dif;
+            var dif = packet.WorldUpdate.difStr;
 
 
             //InputWorld = new EcsWorld("input");
@@ -302,7 +304,10 @@ namespace Game.Fabros.Net.Client
                         //if (Input.GetKey(KeyCode.A))
                         //     break;
 
-                        dif = packet.WorldUpdate.dif;
+                        var byteArrayDifCompressed = Convert.FromBase64String(packet.WorldUpdate.difBinary);
+                        var byteArrayDif = P2P.Decompress(byteArrayDifCompressed);
+                        stats.diffSize = byteArrayDif.Length;
+                        dif = WorldUtils.BinaryDeserialize(Leo.Pool, byteArrayDif);
 
                         /*
                          * если клиент создал сам entity с такими же id, то их надо удалить прежде чем применять dif
@@ -404,7 +409,7 @@ namespace Game.Fabros.Net.Client
                 if (Leo.GetCurrentTick(MainWorld).Value % 5 == 0)
                 {
                     writer.Reset()
-                        .Write(P2P.ADDR_SERVER.Address)
+                        .WriteByteArray(P2P.ADDR_SERVER.Address)
                         .WriteInt32(0xff)
                         .WriteInt32(playerID)
                         .WriteInt32(GetNextInputTick().Value)

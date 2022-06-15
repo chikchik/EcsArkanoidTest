@@ -45,6 +45,7 @@ namespace ConsoleApp
         private ApplyWorldChangesInputService inputService = new ApplyWorldChangesInputService();
 
         private List<byte[]> receivedMessages = new List<byte[]>();
+        private HGlobalWriter writer = new HGlobalWriter();
 
         async Task Run()
         {
@@ -344,7 +345,11 @@ namespace ConsoleApp
 
         void SendWorldToClients()
         {
-            var dif = WorldUtils.BuildDiff(leo.Pool, sentWorld, world, false);
+            var dif = WorldUtils.BuildDiff(leo.Pool, sentWorld, world, false, true);
+            WorldUtils.BinarySerialize(leo.Pool, dif, writer);
+
+            var difBinary = Convert.ToBase64String(P2P.Compress(writer.CopyToByteArray()));
+
             leo.SyncLog.WriteLine($"send world {leo.GetPrevTick(world)}->{leo.GetCurrentTick(world)} to clients\n");
 
             //clients list could be modified
@@ -355,7 +360,7 @@ namespace ConsoleApp
                     hasWorldUpdate = true,
                     WorldUpdate = new WorldUpdateProto
                     {
-                        dif = dif,
+                        difBinary = difBinary,
                         delay = client.Delay
                     }
                 };
@@ -386,14 +391,14 @@ namespace ConsoleApp
 
         void SendInitialWorld(EcsWorld prevWorld, Client client)
         {
-            var dif = WorldUtils.BuildDiff(leo.Pool, prevWorld, sentWorld, false);
+            var dif = WorldUtils.BuildDiff(leo.Pool, prevWorld, sentWorld, false, false);
 
             var packet = new Packet
             {
                 hasWelcomeFromServer = true,
                 WorldUpdate = new WorldUpdateProto
                 {
-                    dif = dif,
+                    difStr = dif,
                     delay = 1
                 }
             };

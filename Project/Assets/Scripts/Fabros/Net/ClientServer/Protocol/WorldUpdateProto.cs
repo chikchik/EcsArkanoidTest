@@ -7,7 +7,8 @@ namespace Game.Fabros.Net.ClientServer.Protocol
     [Serializable]
     public class WorldUpdateProto
     {
-        public WorldDiff dif;
+        public WorldDiff difStr;
+        public string difBinary;
         public int delay;
     }
 }
