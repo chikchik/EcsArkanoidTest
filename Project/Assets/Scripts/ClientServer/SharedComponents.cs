@@ -27,11 +27,8 @@ namespace Game.ClientServer
              * ComponentsPool необходим, чтобы компоненты правильно передавались через сеть
              * если компонента в списке нет, то он не будет попадать в diff
             */
-#if CLIENT
-            var pool = new ComponentsCollection(new UnityJsonComponentSerializer());
-#else
-            var pool = new ComponentsCollection(new JsonComponentSerializer());
-#endif
+
+            var pool = new ComponentsCollection();
 
             TickModule.AddSerializableComponents(pool);
             GridModule.AddSerializableComponents(pool);
