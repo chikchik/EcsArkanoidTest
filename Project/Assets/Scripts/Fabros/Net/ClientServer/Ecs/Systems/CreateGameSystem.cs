@@ -20,9 +20,8 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
             var world = systems.GetWorld();
 
             var worldJson = File.ReadAllText("world.ecs.json");
-            var dif = JsonUtility.FromJson<WorldDiff>(worldJson);
-
-            WorldUtils.ApplyDiff(pool, world, dif);
+            var dif = WorldDiff.FromJsonString(pool, worldJson);
+            dif.ApplyChanges(world);
         }
     }
 }

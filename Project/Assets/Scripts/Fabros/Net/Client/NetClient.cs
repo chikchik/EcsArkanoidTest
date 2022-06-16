@@ -33,7 +33,7 @@ namespace Game.Fabros.Net.Client
 {
     public class NetClient
     {
-        public Action<EcsWorld, int[]> DeleteEntitiesAction;
+        public Action<EcsWorld, List<int>> DeleteEntitiesAction;
         public Action<EcsWorld> InitWorldAction;
         public Action ConnectedAction;
 
@@ -199,12 +199,10 @@ namespace Game.Fabros.Net.Client
 
             Leo.SyncLog.WriteLine("sync end\n");
 
-            var dif2 = WorldUtils.BuildDiff(Leo.Pool, MainWorld,
-                copyServerWorld, false, false);
-
-            if (dif2.RemovedEntities != null)
-                DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
-            WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif2);
+            var dif2 = WorldDiff.BuildDiff(Leo.Pool, MainWorld, copyServerWorld);
+            
+            DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
+            dif2.ApplyChanges(MainWorld);
             
             Profiler.BeginSample("replicate2");
             Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld);
@@ -231,7 +229,7 @@ namespace Game.Fabros.Net.Client
                 throw new Exception("async next step for stopped application");
 
             //получили состояние мира с сервера
-            var dif = packet.WorldUpdate.difStr;
+            var dif = WorldDiff.FromJsonString(Leo.Pool, packet.WorldUpdate.difStr);
 
 
             //InputWorld = new EcsWorld("input");
@@ -242,7 +240,7 @@ namespace Game.Fabros.Net.Client
             
             systemsFactory.AddNewSystems(clientSystems, new IEcsSystemsFactory.Settings{client = true, server = false});
 
-            WorldUtils.ApplyDiff(Leo.Pool, MainWorld, dif);
+            dif.ApplyChanges(MainWorld);
 
             MainWorld.AddUnique<TickDeltaComponent>() = new TickDeltaComponent
                 {Value = new TickDelta(1, MainWorld.GetUnique<TickrateConfigComponent>().clientTickrate)};
@@ -299,15 +297,15 @@ namespace Game.Fabros.Net.Client
 
                         if (!Application.isPlaying) throw new Exception("async next step for stopped application");
 
-                        stats.diffSize = msg.buffer.Length;
+                        //stats.diffSize = msg.buffer.Length;
 
                         //if (Input.GetKey(KeyCode.A))
                         //     break;
 
                         var byteArrayDifCompressed = Convert.FromBase64String(packet.WorldUpdate.difBinary);
+                        stats.diffSize = byteArrayDifCompressed.Length;
                         var byteArrayDif = P2P.Decompress(byteArrayDifCompressed);
-                        stats.diffSize = byteArrayDif.Length;
-                        dif = WorldUtils.BinaryDeserialize(Leo.Pool, byteArrayDif);
+                        dif = WorldDiff.FromByteArray(Leo.Pool, byteArrayDif);
 
                         /*
                          * если клиент создал сам entity с такими же id, то их надо удалить прежде чем применять dif
@@ -334,7 +332,7 @@ namespace Game.Fabros.Net.Client
                         delay = packet.WorldUpdate.delay;
 
                         //применяем diff к прошлому миру полученному от сервера
-                        WorldUtils.ApplyDiff(Leo.Pool, ServerWorld, dif);
+                        dif.ApplyChanges(ServerWorld);
                         serverSystems.Run();
                     }
 

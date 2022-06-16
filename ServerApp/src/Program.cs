@@ -103,7 +103,7 @@ namespace ConsoleApp
                 //это надо учесть при симуляции
                 var config = new TickrateConfigComponent { clientTickrate = 30, serverSyncStep = 1, serverTickrate = 30 };
 
-                world = WorldUtils.CreateWorld("serv", pool);
+                world = new EcsWorld("serv");
 
                 inputWorld = new EcsWorld("input");
 
@@ -207,7 +207,7 @@ namespace ConsoleApp
 
                 SendAsync(new Packet { hello = hello, hasHello = true }, client.Address);
 
-                var emptyWorld = WorldUtils.CreateWorld("empty", leo.Pool);
+                var emptyWorld = new EcsWorld("empty");
                 SendInitialWorld(emptyWorld, client);
 
                 clients.Add(client);
@@ -345,8 +345,8 @@ namespace ConsoleApp
 
         void SendWorldToClients()
         {
-            var dif = WorldUtils.BuildDiff(leo.Pool, sentWorld, world, false, true);
-            WorldUtils.BinarySerialize(leo.Pool, dif, writer);
+            var dif = WorldDiff.BuildDiff(leo.Pool, sentWorld, world);
+            dif.WriteBinary(writer);
 
             var difBinary = Convert.ToBase64String(P2P.Compress(writer.CopyToByteArray()));
 
@@ -391,14 +391,14 @@ namespace ConsoleApp
 
         void SendInitialWorld(EcsWorld prevWorld, Client client)
         {
-            var dif = WorldUtils.BuildDiff(leo.Pool, prevWorld, sentWorld, false, false);
+            var dif = WorldDiff.BuildDiff(leo.Pool, prevWorld, sentWorld);
 
             var packet = new Packet
             {
                 hasWelcomeFromServer = true,
                 WorldUpdate = new WorldUpdateProto
                 {
-                    difStr = dif,
+                    difStr = dif.ToJsonString(),
                     delay = 1
                 }
             };
