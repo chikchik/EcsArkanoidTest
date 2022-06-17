@@ -20,10 +20,12 @@ namespace Game
     {
         private NetClient client;
         private HGlobalWriter writer = new HGlobalWriter();
+        private ComponentsCollection collection;
 
-        public ClientInputService(NetClient client)
+        public ClientInputService(NetClient client, ComponentsCollection collection)
         {
             this.client = client;
+            this.collection = collection;
         }
         
         
@@ -40,34 +42,8 @@ namespace Game
                 .WriteT(playerID)
                 .WriteT(client.GetNextInputTick().Value);
 
-            if (inputComponent is PingComponent)
-            {
-                writer.WriteInt32(0);
-            }
-
-            if (inputComponent is InputActionComponent a)
-            {
-                writer.WriteInt32(1);
-                writer.WriteT(a);
-            }
-
-            if (inputComponent is InputMoveDirectionComponent b)
-            {
-                writer.WriteInt32(2);
-                writer.WriteT(b);
-            }
-
-            if (inputComponent is InputMoveToPointComponent c)
-            {
-                writer.WriteInt32(3);
-                writer.WriteT(c);
-            }
-
-            if (inputComponent is InputShotComponent d)
-            {
-                writer.WriteInt32(4);
-                writer.WriteT(d);
-            }
+            var cm = collection.GetComponent(inputComponent.GetType());
+            cm.WriteSingle(writer, inputComponent);
 
             var array = writer.CopyToByteArray();
 

@@ -4,6 +4,8 @@ using Fabros.EcsModules.Box2D;
 using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Tick;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Components.Input;
+using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Ecs.ClientServer.Components.Inventory;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
@@ -99,6 +101,14 @@ namespace Game.ClientServer
             
             pool.AddComponent<BulletComponent>();
             pool.AddComponent<MakeShotComponent>();
+            
+            
+            
+            pool.AddComponent<PingComponent>();
+            pool.AddComponent<InputActionComponent>();
+            pool.AddComponent<InputMoveDirectionComponent>();
+            pool.AddComponent<InputMoveToPointComponent>();
+            pool.AddComponent<InputShotComponent>();
 
             return pool;
         }

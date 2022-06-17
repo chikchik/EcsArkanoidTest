@@ -217,25 +217,18 @@ namespace ConsoleApp
 
         private void GotInput(byte[] data)
         {
-            //var buffer = Marshal.AllocHGlobal(data.Length);
-            var allocatedBuffer = Marshal.AllocHGlobal(data.Length);
-            var buffer = allocatedBuffer;
-
-            Marshal.Copy(data, 0, buffer, data.Length);
+            var reader = new HGlobalReader(data);
 
             try            
             {
-                buffer += 4;//0xff
+                reader.ReadInt32();//0xff
 
-                var playerId = Marshal.ReadInt32(buffer);
-                buffer += 4;
+                var playerId = reader.ReadInt32();
 
-                var inputTime = Marshal.ReadInt32(buffer);
+                var inputTime = reader.ReadInt32();
                 var time = inputTime;
-                buffer += 4;
 
-                var type = Marshal.ReadInt32(buffer);
-                buffer += 4;
+                var type = reader.ReadInt32();
 
 
                 Client client = clients.FirstOrDefault(client => client.ID == playerId);
@@ -268,46 +261,32 @@ namespace ConsoleApp
 
                 client.Delay = delay;
 
-                if (type == 0)//ping
+
+                var component = leo.Pool.GetComponent(type);                
+
+                if (component.GetComponentType() == typeof(PingComponent))//ping
                 {
                     
                 }
                 else
                 {
-
                     Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} got input {inputTime} at {currentTick.Value} will be executed at {time}");
-                    IInputComponent component = null;
-                    if (type == 1)
-                    {
-                        component = Marshal.PtrToStructure<InputActionComponent>(buffer);
-                    }
-                    if (type == 2)
-                    {
-                        component = Marshal.PtrToStructure<InputMoveDirectionComponent>(buffer);
-                    }
-                    if (type == 3)
-                    {
-                        component = Marshal.PtrToStructure<InputMoveToPointComponent>(buffer);
-                    }
-                    if (type == 4)
-                    {
-                        component = Marshal.PtrToStructure<InputShotComponent>(buffer);
-                    }
+                    var componentData = component.ReadSingleComponent(reader) as IInputComponent;
 
                     var input = new UserInput
                     {
                         PlayerID = playerId,
-                        Component = component,
+                        Component = componentData,
                         Tick = new Tick(time)
                     };
 
-                    inputService.Input(inputWorld, playerId, time, component);
+                    inputService.Input(inputWorld, playerId, time, componentData);
                     //leo.Inputs.Add(input);
                     //world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
                 }
             } finally
             {
-                Marshal.FreeHGlobal(allocatedBuffer);
+                reader.Dispose();
             }
         }
 
@@ -410,7 +389,7 @@ namespace ConsoleApp
 
         private void SendAsync(Packet packet, ClientAddr addr)
         {
-            var bytes = P2P.BuildRequest(addr, packet);
+            var bytes = P2P.BuildRequest(addr, packet);            
             socket.SendAsync(bytes, WebSocketMessageType.Text, true, new CancellationToken());            
         }
 

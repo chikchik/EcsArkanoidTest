@@ -41,8 +41,8 @@ namespace Game
 
             if (settings.SinglePlayer)
             {
-                Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
-                    .AsSingle().WhenInjectedInto<PlayerControlService>();
+                //Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
+                 //   .AsSingle().WhenInjectedInto<PlayerControlService>();
 
                 var comp = settings.gameObject.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);

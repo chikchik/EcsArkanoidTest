@@ -411,7 +411,7 @@ namespace Game.Fabros.Net.Client
                         .WriteInt32(0xff)
                         .WriteInt32(playerID)
                         .WriteInt32(GetNextInputTick().Value)
-                        .WriteInt32(0);
+                        .WriteInt32(Leo.Pool.GetComponent(typeof(PingComponent)).GetId());
                     
                     Socket.Send(writer.CopyToByteArray());
                 }

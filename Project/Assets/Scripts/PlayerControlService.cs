@@ -23,7 +23,7 @@ namespace Game
         public PlayerControlService(
             [Inject(Id = "input")] EcsWorld inputWorld, 
             EcsWorld world,
-            IInputService input
+            [InjectOptional] IInputService input
             )
         {
             this.inputWorld = inputWorld;
@@ -83,7 +83,7 @@ namespace Game
             var pool = inputWorld.GetOrCreatePoolByType(component.GetType());
             pool.AddRaw(inputEntity, component);
             
-            input.Input(inputWorld, playerId, tick, component);
+            input?.Input(inputWorld, playerId, tick, component);
         }
     }
 }
