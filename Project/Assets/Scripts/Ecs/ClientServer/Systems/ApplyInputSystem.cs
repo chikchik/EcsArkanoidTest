@@ -54,6 +54,17 @@ namespace Game.Ecs.ClientServer.Systems
                     playerId = poolPlayer.Get(inputEntity).PlayerID;
 
                 var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerId);
+                if (!world.IsEntityAliveInternal(unitEntity))
+                {
+                    Debug.LogError($"unit entity {unitEntity} is not alive");
+                    continue;
+                }
+
+                if (!unitEntity.EntityHas<UnitComponent>(world))
+                {
+                    Debug.LogError($"entity {unitEntity} is not unit");
+                    continue;
+                }
                 
                 if (poolInputShot.Has(inputEntity))
                 {

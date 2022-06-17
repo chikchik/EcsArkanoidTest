@@ -18,25 +18,26 @@ namespace Game.Fabros.Net.ClientServer
 {
     public class LeoContexts
     {
-        public ComponentsCollection Pool { get; }
+        public ComponentsCollection Components { get; }
+
+        //compatibility with old code
+        public ComponentsCollection Pool => Components;
         /*
          * позволяет сохранять в отдельный файл игровые данные и сравнивать состояния миров между собой
         */
         public SyncLog SyncLog { get; }
-        //public List<UserInput> Inputs { get; private set; } = new List<UserInput>();
         
         
         private readonly string hashDir;
         private readonly bool writeHashes;
-
         private EcsWorld inputWorld;
 
-        public LeoContexts(string hashDir, ComponentsCollection pool, SyncLog syncLog, EcsWorld inputWorld)
+        public LeoContexts(string hashDir, ComponentsCollection components, SyncLog syncLog, EcsWorld inputWorld)
         {
             this.hashDir = hashDir;
             this.inputWorld = inputWorld;
 
-            Pool = pool;
+            Components = components;
             SyncLog = syncLog;
 
 #if UNITY_EDITOR || UNITY_STANDALONE || SERVER
@@ -87,15 +88,11 @@ namespace Game.Fabros.Net.ClientServer
             {
                 var tick = pool.Get(entity).Tick;
                 if (tick < time.Value)
-                {
                     inputWorld.DelEntity(entity);
-                }
             }
-            //Inputs = Inputs.Where(input => input.Tick >= time).ToList();
         }
 
-        public void Tick(EcsSystems systems, EcsWorld inputWorld, 
-            EcsWorld world, bool writeToLog, string debug="")
+        public void Tick(EcsSystems systems, EcsWorld inputWorld, EcsWorld world, bool writeToLog, string debug="")
         {
             //обновляем мир 1 раз
             
@@ -107,7 +104,7 @@ namespace Game.Fabros.Net.ClientServer
             var strStateDebug = "";
             if (writeHashes)
             {
-                strStateDebug += WorldDumpUtils.DumpWorld(Pool, inputWorld);
+                strStateDebug += WorldDumpUtils.DumpWorld(Components, inputWorld);
                 strStateDebug += "\n\n\n";
             }
             
@@ -132,7 +129,7 @@ namespace Game.Fabros.Net.ClientServer
             if (writeHashes)
             {
                 //var str = JsonUtility.ToJson(dif, true);
-                var strWorldDebug = WorldDumpUtils.DumpWorld(Pool, world);
+                var strWorldDebug = WorldDumpUtils.DumpWorld(Components, world);
                 var hash = CreateMD5(strWorldDebug);
 
 
@@ -161,46 +158,17 @@ namespace Game.Fabros.Net.ClientServer
             return w.GetUnique<TickComponent>().Value;
         }
 
+        
         public Tick GetPrevTick(EcsWorld w)
         {
             return w.GetUnique<TickComponent>().Value - w.GetUnique<TickDeltaComponent>().Value;
         }
 
-        public Tick GetNextTick(EcsWorld w)
-        {
-            return w.GetUnique<TickComponent>().Value + w.GetUnique<TickDeltaComponent>().Value;
-        }
 
         public TickrateConfigComponent GetConfig(EcsWorld world)
         {
             //конфиг сервера
             return world.GetUnique<TickrateConfigComponent>();
         }
-
-        /*
-        public void ProcessUserInput(EcsWorld inputWorld, EcsWorld world, UserInput[] inputData = null)
-        {
-            if (inputData == null)
-                inputData = Inputs.ToArray();
-
-            if (inputData.Length == 0)
-                return;
-
-            //вызывается с клиента и сервера
-            //и применяет ввод только в нужный тик
-
-            var time = GetCurrentTick(world);
-            var nextTick = time + world.GetUnique<TickDeltaComponent>().Value;
-            for (var n = 0; n < inputData.Length; ++n)
-            {
-                var input = inputData[n];
-                if (input.Tick < time)
-                    continue;
-                if (input.Tick >= nextTick)
-                    break;
-
-                inputService.Input(inputWorld, input.PlayerID, input.Component);
-            }
-        }*/
     }
 }

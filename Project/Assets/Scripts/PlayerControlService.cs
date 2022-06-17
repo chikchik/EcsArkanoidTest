@@ -21,10 +21,9 @@ namespace Game
         private IInputService input;
         
         public PlayerControlService(
-            [Inject(Id = "input")] EcsWorld inputWorld, 
-            EcsWorld world,
-            [InjectOptional] IInputService input
-            )
+            [Inject(Id = "input")] EcsWorld inputWorld,
+            [InjectOptional] IInputService input,
+            EcsWorld world)
         {
             this.inputWorld = inputWorld;
             this.world = world;
@@ -75,14 +74,10 @@ namespace Game
 
         private void Apply(IInputComponent component)
         {
-            var inputEntity = inputWorld.NewEntity();
-            inputEntity.EntityAdd<InputComponent>(inputWorld);
-            inputEntity.EntityAdd<InputTickComponent>(inputWorld).Tick = tick;
-            inputEntity.EntityAdd<InputPlayerComponent>(inputWorld).PlayerID = playerId;
+            //reused on server
+            ApplyInputWorldService.CreateInputEntity(inputWorld, playerId, tick, component);
             
-            var pool = inputWorld.GetOrCreatePoolByType(component.GetType());
-            pool.AddRaw(inputEntity, component);
-            
+            //send player input to server
             input?.Input(inputWorld, playerId, tick, component);
         }
     }

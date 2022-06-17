@@ -11,9 +11,14 @@ namespace Game.ClientServer
      * выполняется на клиенте и сервере, а также в синглплеерной игре.
      */
 
-    public class ApplyWorldChangesInputService: IInputService
+    public class ApplyInputWorldService: IInputService
     {
         public void Input(EcsWorld inputWorld, int playerId, int tick, IInputComponent inp)
+        {
+            CreateInputEntity(inputWorld, playerId, tick, inp);
+        }
+
+        public static void CreateInputEntity(EcsWorld inputWorld, int playerId, int tick, IInputComponent inp)
         {
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAdd<InputComponent>(inputWorld);

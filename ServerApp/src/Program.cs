@@ -6,10 +6,12 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Fabros.Ecs.ClientServer.Serializer;
+using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
+using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
@@ -18,6 +20,7 @@ using Leopotam.EcsLite;
 
 namespace ConsoleApp
 {
+
     class Client
     {
         public int ID;
@@ -42,7 +45,7 @@ namespace ConsoleApp
         private EcsSystems systems;
         private List<Client> clients = new List<Client>();
         private List<int> missingClients = new List<int>();
-        private ApplyWorldChangesInputService inputService = new ApplyWorldChangesInputService();
+        private ApplyInputWorldService inputService = new ApplyInputWorldService();
 
         private List<byte[]> receivedMessages = new List<byte[]>();
         private HGlobalWriter writer = new HGlobalWriter();
@@ -347,23 +350,7 @@ namespace ConsoleApp
                 SendAsync(packet, client.Address);
                 client.Delay = -999;
             });
-            
-            
-            /*
-            
-            var packet = new Packet
-            {
-                hasWorldUpdate = true,
-                WorldUpdate = new WorldUpdateProto
-                {
-                    dif = dif,
-                    delay = 1
-                }
-            };
-            sendAsync(packet, P2P.ADDR_BROADCAST);
-            */
-
-                            
+                                        
             //сохраняем отправленный мир чтоб с ним потом считать diff
             sentWorld = WorldUtils.CopyWorld(leo.Pool, world);
         }

@@ -43,7 +43,7 @@ namespace Game
                 .WriteT(client.GetNextInputTick().Value);
 
             var cm = collection.GetComponent(inputComponent.GetType());
-            cm.WriteSingle(writer, inputComponent);
+            cm.WriteSingleComponent(writer, inputComponent);
 
             var array = writer.CopyToByteArray();
 
