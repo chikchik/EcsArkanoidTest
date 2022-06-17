@@ -205,7 +205,7 @@ namespace ConsoleApp
 
                 Console.WriteLine($"got hello from client {packet.playerID}");
 
-                var components = leo.Pool.Components.Select(component => component.GetFullName()).ToArray();
+                var components = leo.Pool.Components.Select(component => component.GetComponentType().FullName).ToArray();
                 var hello = new Hello {Components = components};
 
                 SendAsync(new Packet { hello = hello, hasHello = true }, client.Address);
@@ -273,7 +273,7 @@ namespace ConsoleApp
                 }
                 else
                 {
-                    Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} got input {inputTime} at {currentTick.Value} will be executed at {time}");
+                    Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} got input {inputTime} {component.GetComponentType().FullName} at {currentTick.Value} will be executed at {time}");
                     var componentData = component.ReadSingleComponent(reader) as IInputComponent;
 
                     var input = new UserInput
