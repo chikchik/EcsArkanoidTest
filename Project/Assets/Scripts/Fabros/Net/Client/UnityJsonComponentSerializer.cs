@@ -1,4 +1,4 @@
-﻿using Fabros.Ecs.ClientServer.Serializer;
+﻿using Fabros.Ecs.ClientServer.WorldDiff.Internal;
 using UnityEngine;
 
 namespace Game.Fabros.Net.Client

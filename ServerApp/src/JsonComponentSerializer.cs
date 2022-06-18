@@ -1,6 +1,6 @@
 using Fabros;
 using Fabros.Ecs;
-using Fabros.Ecs.ClientServer.Serializer;
+using Fabros.Ecs.ClientServer.WorldDiff.Internal;
 using Newtonsoft.Json;
 
 

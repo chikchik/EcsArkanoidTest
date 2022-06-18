@@ -1,5 +1,5 @@
 ﻿using System;
-using Fabros.Ecs.ClientServer.Serializer;
+using Fabros.Ecs.ClientServer.WorldDiff;
 using Fabros.Ecs.Utils;
 using Fabros.P2P;
 using Game.ClientServer;

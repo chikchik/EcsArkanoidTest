@@ -1,4 +1,4 @@
-using Fabros.Ecs.ClientServer.Serializer;
+using Fabros.Ecs.ClientServer.WorldDiff;
 using Game.Client;
 using Game.ClientServer;
 using Game.Fabros.Net.Client;

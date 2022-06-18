@@ -1,13 +1,8 @@
-﻿using System;
-using Fabros.Ecs.ClientServer.Components;
-using Fabros.Ecs.Utils;
-using Game.ClientServer;
+﻿using Fabros.Ecs.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-using Game.Fabros.Net.ClientServer.Protocol;
 using Game.UI;
 using Leopotam.EcsLite;
-using Zenject;
 
 namespace Game.Client
 {

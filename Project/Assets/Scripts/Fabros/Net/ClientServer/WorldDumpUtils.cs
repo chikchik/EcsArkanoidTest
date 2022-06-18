@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using Fabros.Ecs.ClientServer.Serializer;
+using Fabros.Ecs.ClientServer.WorldDiff;
 using Leopotam.EcsLite;
 
 namespace Game.Fabros.Net.ClientServer
