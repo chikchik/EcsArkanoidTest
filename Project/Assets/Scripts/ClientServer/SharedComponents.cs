@@ -107,6 +107,8 @@ namespace Game.ClientServer
             pool.AddComponent<InputMoveDirectionComponent>();
             pool.AddComponent<InputMoveToPointComponent>();
             pool.AddComponent<InputShotComponent>();
+            
+            pool.AddComponent<CantMoveComponent>();
 
             return pool;
         }

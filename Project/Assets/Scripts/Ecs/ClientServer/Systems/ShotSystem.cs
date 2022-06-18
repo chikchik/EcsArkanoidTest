@@ -25,7 +25,9 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     var dir = entity.EntityGet<MakeShotComponent>(world).Direction;
                     entity.EntityDel<MakeShotComponent>(world);
+                    entity.EntityDel<CantMoveComponent>(world);
 
+                    
                     
                     var shotEntity = world.NewEntity();
                     shotEntity.EntityAdd<BulletComponent>(world);

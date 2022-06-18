@@ -173,6 +173,7 @@ namespace Game.ClientServer
             systems.Add(new EventsSystem<FoodCollectedComponent>());
             systems.Add(new EventsSystem<PushingComponent>());
             systems.Add(new EventsSystem<MakeShotComponent>());
+            systems.Add(new EventsSystem<CantMoveComponent>());
             
 #if CLIENT
             systems.Add(new EventsSystem<MovingComponent>());

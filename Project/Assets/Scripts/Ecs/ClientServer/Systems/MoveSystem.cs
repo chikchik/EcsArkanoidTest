@@ -23,17 +23,14 @@ namespace Game.Ecs.ClientServer.Systems
             var poolLookDirection = world.GetPool<LookDirectionComponent>();
             //var poolSpeed = world.GetPool<SpeedComponent>();
             var poolMoving = world.GetPool<MovingComponent>();
+            var poolCantMove = world.GetPool<CantMoveComponent>();
 
             foreach (var entity in filter)
             {
-                var moveDirectionComponent = poolMoveDirection.Get(entity);
-                /*
-                if (moveDirectionComponent.value.sqrMagnitude < 0.0001f)
-                {
-                    poolMoving.Del(entity);
-                    poolMoveDirection.Del(entity);
+                if (poolCantMove.Has(entity))
                     continue;
-                }*/
+                
+                var moveDirectionComponent = poolMoveDirection.Get(entity);
 
                 var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).Value;
                 var dir = moveDirectionComponent.value * deltaTime * speed; //speedComponent.speed;

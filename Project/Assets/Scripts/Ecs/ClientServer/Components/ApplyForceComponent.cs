@@ -1,4 +1,5 @@
 ﻿using System;
+using Leopotam.EcsLite;
 using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Components
@@ -15,5 +16,12 @@ namespace Game.Ecs.ClientServer.Components
     {
         public float Time;
         public Vector3 Direction;
+    }
+    
+    [EmptyComponent]
+    [Serializable]
+    public struct CantMoveComponent
+    {
+        
     }
 }

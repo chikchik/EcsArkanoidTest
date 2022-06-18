@@ -1,4 +1,5 @@
 ﻿using System;
+using Leopotam.EcsLite;
 
 namespace Game.Ecs.ClientServer.Components
 {
@@ -8,6 +9,7 @@ namespace Game.Ecs.ClientServer.Components
         public float EndTime;
     }
     
+    [EmptyComponent]
     [Serializable]
     public struct ShootingComponent
     {

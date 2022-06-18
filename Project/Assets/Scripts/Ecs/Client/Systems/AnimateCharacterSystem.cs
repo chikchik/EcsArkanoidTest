@@ -53,6 +53,13 @@ namespace Game.Ecs.Client.Systems
                 poolAnimator.Get(entity).animator.CrossFadeInFixedTime("walking", 0.05f);
             }
             
+            filter = world.Filter<UnitComponent>().Inc<MovingComponent>().IncRemoved<CantMoveComponent>().End();
+
+            foreach (var entity in filter)
+            {
+                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("walking", 0.05f);
+            }
+            
             filter = world.Filter<UnitComponent>().IncRemoved<MovingComponent>().End();
             foreach (var entity in filter)
             {

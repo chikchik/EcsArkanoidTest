@@ -23,12 +23,15 @@ namespace Game.Ecs.ClientServer.Systems
             //var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
             var poolLookDirection = world.GetPool<LookDirectionComponent>();
             var poolMoving = world.GetPool<MovingComponent>();
-            
+            var poolCantMove = world.GetPool<CantMoveComponent>();
 
             var deltaTime = world.GetDeltaSeconds();
 
             foreach (var entity in filter)
             {
+                if (poolCantMove.Has(entity))
+                    continue;
+                
                 var targetPositionComponent = poolTargetPosition.Get(entity);
                 var positionComponent = poolPosition.Get(entity);
 

@@ -37,6 +37,9 @@ namespace Game
         
         public void Shot()
         {
+            if (unitEntity == -1)
+                return;
+            
             var component = new InputShotComponent();
             component.dir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
             
@@ -45,6 +48,9 @@ namespace Game
         
         public void MoveToDirection(Vector3 dir)
         {
+            if (unitEntity == -1)
+                return;
+            
             var component = new InputMoveDirectionComponent();
             component.Dir = dir;
             
@@ -67,6 +73,11 @@ namespace Game
         
         public void MoveToPoint(Vector3 pos)
         {
+            if (unitEntity == -1)
+                return;
+            if (unitEntity.EntityHas<MakeShotComponent>(world))
+                return;
+            
             var component = new InputMoveToPointComponent();
             component.Value = pos;
             Apply(component);

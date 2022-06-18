@@ -154,6 +154,8 @@ namespace Game.Ecs.ClientServer.Systems
                 return;
             
             Debug.Log($"shot at {world.GetTick()}");
+
+            unitEntity.EntityAdd<CantMoveComponent>(world);
             
             ref var component = ref unitEntity.EntityAdd<MakeShotComponent>(world);
             component.Time = world.GetTime() + 0.2f;
