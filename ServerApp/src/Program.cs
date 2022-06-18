@@ -273,7 +273,7 @@ namespace ConsoleApp
                 }
                 else
                 {
-                    Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} got input {inputTime} {component.GetComponentType().FullName} at {currentTick.Value} will be executed at {time}");
+                    Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} got input {inputTime} {component.GetComponentType().Name} at {currentTick.Value} will be executed at {time}");
                     var componentData = component.ReadSingleComponent(reader) as IInputComponent;
 
                     var input = new UserInput
