@@ -406,12 +406,12 @@ namespace Game.Fabros.Net.Client
 
                 if (Leo.GetCurrentTick(MainWorld).Value % 5 == 0)
                 {
-                    writer.Reset()
-                        .WriteByteArray(P2P.ADDR_SERVER.Address)
-                        .WriteInt32(0xff)
-                        .WriteInt32(playerID)
-                        .WriteInt32(GetNextInputTick().Value)
-                        .WriteInt32(Leo.Pool.GetComponent(typeof(PingComponent)).GetId());
+                    writer.Reset();
+                    writer.WriteByteArray(P2P.ADDR_SERVER.Address, false);
+                    writer.WriteInt32(0xff);
+                    writer.WriteInt32(playerID);
+                    writer.WriteInt32(GetNextInputTick().Value);
+                    writer.WriteInt32(Leo.Pool.GetComponent(typeof(PingComponent)).GetId());
                     
                     Socket.Send(writer.CopyToByteArray());
                 }

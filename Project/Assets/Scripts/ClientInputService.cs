@@ -36,14 +36,14 @@ namespace Game
                 Debug.LogError($"{tick} != {client.GetNextInputTick().Value}");
             }
 
-            writer.Reset()
-                .WriteByteArray(P2P.ADDR_SERVER.Address)
-                .WriteT(0xff)
-                .WriteT(playerID)
-                .WriteT(client.GetNextInputTick().Value);
+            writer.Reset();
+            writer.WriteByteArray(P2P.ADDR_SERVER.Address, false);
+            writer.WriteSingleT(0xff);
+            writer.WriteSingleT(playerID);
+            writer.WriteSingleT(client.GetNextInputTick().Value);
 
             var cm = collection.GetComponent(inputComponent.GetType());
-            cm.WriteSingleComponent(writer, inputComponent);
+            cm.WriteSingleComponentWithId(writer, inputComponent);
 
             var array = writer.CopyToByteArray();
 
