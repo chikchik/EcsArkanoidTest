@@ -8,11 +8,4 @@ namespace Game.Ecs.ClientServer.Components
     {
         public float EndTime;
     }
-    
-    [EmptyComponent]
-    [Serializable]
-    public struct ShootingComponent
-    {
-        //public float EndTime;
-    }
 }

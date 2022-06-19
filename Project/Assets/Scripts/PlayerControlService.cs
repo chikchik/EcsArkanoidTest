@@ -75,8 +75,6 @@ namespace Game
         {
             if (unitEntity == -1)
                 return;
-            if (unitEntity.EntityHas<MakeShotComponent>(world))
-                return;
             
             var component = new InputMoveToPointComponent();
             component.Value = pos;

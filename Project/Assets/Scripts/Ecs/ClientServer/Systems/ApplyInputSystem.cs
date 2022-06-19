@@ -69,7 +69,7 @@ namespace Game.Ecs.ClientServer.Systems
                 if (poolInputShot.Has(inputEntity))
                 {
                     var dir = poolInputShot.Get(inputEntity).dir;
-                    Shot(world, unitEntity, dir);
+                    Shoot(world, unitEntity, dir);
                 }
 
                 if (poolInputMoveDir.Has(inputEntity))
@@ -148,18 +148,20 @@ namespace Game.Ecs.ClientServer.Systems
             }
         }
         
-        public void Shot(EcsWorld world, int unitEntity, Vector3 dir)
+        private void Shoot(EcsWorld world, int unitEntity, Vector3 dir)
         {
-            if (unitEntity.EntityHas<MakeShotComponent>(world))
+            if (unitEntity.EntityHas<ShootingComponent>(world) && !unitEntity.EntityGet<ShootingComponent>(world).ShootMade)
                 return;
             
             Debug.Log($"shot at {world.GetTick()}");
 
-            unitEntity.EntityAdd<CantMoveComponent>(world);
+            unitEntity.EntityReplace<CantMoveComponent>(world);
+            unitEntity.EntityAdd<ShootStartedComponent>(world);
             
-            ref var component = ref unitEntity.EntityAdd<MakeShotComponent>(world);
-            component.Time = world.GetTime() + 0.2f;
+            ref var component = ref unitEntity.EntityReplace<ShootingComponent>(world);
+            component.ShootAtTime = world.GetTime() + 0.2f;
             component.Direction = dir;
+            component.TotalTime = world.GetTime() + 0.5f;
         }
     }
 }

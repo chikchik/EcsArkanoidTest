@@ -13,21 +13,23 @@ using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-    public class ShotSystem : IEcsRunSystem
+    public class ShootSystem : IEcsRunSystem
     {
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
-            var filter = world.Filter<MakeShotComponent>().End();
+            var filter = world.Filter<ShootingComponent>().End();
+            var poolShooting = world.GetPool<ShootingComponent>();
+
+            var tm = world.GetTime();
             foreach (var entity in filter)
             {
-                if (entity.EntityGet<MakeShotComponent>(world).Time < world.GetTime())
+                ref var shootingComponent = ref poolShooting.GetRef(entity);
+                if (shootingComponent.ShootAtTime < tm && !shootingComponent.ShootMade)
                 {
-                    var dir = entity.EntityGet<MakeShotComponent>(world).Direction;
-                    entity.EntityDel<MakeShotComponent>(world);
-                    entity.EntityDel<CantMoveComponent>(world);
-
+                    shootingComponent.ShootMade = true;
                     
+                    var dir = entity.EntityGet<ShootingComponent>(world).Direction;
                     
                     var shotEntity = world.NewEntity();
                     shotEntity.EntityAdd<BulletComponent>(world);
@@ -40,12 +42,20 @@ namespace Game.Ecs.ClientServer.Systems
                     def.BodyType = BodyType.Dynamic;
                     def.Bullet = true;
                     def.Density = 5;
+                    
+                    
 
                     ref var collider = ref shotEntity.EntityAdd<Box2DCircleColliderComponent>(world);
                     collider.Radius = 0.02f;
                     
                     var body = Box2DServices.CreateBodyNow(world, shotEntity);
                     Box2DApi.ApplyForce(body, dir.ToVector2XZ() * 10, pos.ToVector2XZ());
+                }
+
+                if (shootingComponent.TotalTime < tm)
+                {
+                    entity.EntityDel<ShootingComponent>(world);
+                    entity.EntityDel<CantMoveComponent>(world);
                 }
             }
         }

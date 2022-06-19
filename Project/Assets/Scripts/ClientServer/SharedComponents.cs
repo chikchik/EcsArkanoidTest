@@ -98,7 +98,8 @@ namespace Game.ClientServer
             pool.AddComponent<ButtonCustomComponent>();
             
             pool.AddComponent<BulletComponent>();
-            pool.AddComponent<MakeShotComponent>();
+            pool.AddComponent<ShootingComponent>();
+            pool.AddComponent<ShootStartedComponent>();
             
             
             

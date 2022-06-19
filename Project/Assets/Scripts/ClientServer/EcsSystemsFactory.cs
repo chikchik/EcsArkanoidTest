@@ -103,6 +103,8 @@ namespace Game.ClientServer
             systems.Add(new EntitiesLifeTimeSystem());
             
             systems.Add(GridModule.GetSystems());
+            
+            systems.DeleteComponentHere<ShootStartedComponent>();//если ставить в конец, то на клиент этот компонент даже придет
             systems.Add(new ApplyInputSystem());
 
 
@@ -127,7 +129,8 @@ namespace Game.ClientServer
             systems.Add(new FireSystem());
 
             systems.Add(new ApplyForceSystem());
-            systems.Add(new ShotSystem());
+            
+            systems.Add(new ShootSystem());
 
 #if CLIENT
             AddClient(new CreateViewSystem());
@@ -161,7 +164,6 @@ namespace Game.ClientServer
             systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, 
                 new Vector2(0,0)));
             
-            
             systems.Add(new EventsSystem<Box2DBodyComponent>());
             systems.Add(new EventsSystem<FireComponent>());
             systems.Add(new EventsSystem<ButtonPressedComponent>());
@@ -172,14 +174,12 @@ namespace Game.ClientServer
             systems.Add(new EventsSystem<GateOpenedComponent>());
             systems.Add(new EventsSystem<FoodCollectedComponent>());
             systems.Add(new EventsSystem<PushingComponent>());
-            systems.Add(new EventsSystem<MakeShotComponent>());
             systems.Add(new EventsSystem<CantMoveComponent>());
             
 #if CLIENT
             systems.Add(new EventsSystem<MovingComponent>());
 #endif
-
-
+            
             //write final Box2d transforms to components
             systems.Add(new Box2DWriteStateToComponentsSystem());
         }

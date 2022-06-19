@@ -12,10 +12,18 @@ namespace Game.Ecs.ClientServer.Components
     }
     
     [Serializable]
-    public struct MakeShotComponent
+    public struct ShootingComponent
     {
-        public float Time;
+        public float ShootAtTime;
         public Vector3 Direction;
+        public float TotalTime;
+        public bool ShootMade;
+    }
+    
+    [EmptyComponent]
+    [Serializable]
+    public struct ShootStartedComponent
+    {
     }
     
     [EmptyComponent]
