@@ -150,7 +150,6 @@ namespace Game.ClientServer
 
             AddServer(new ObjectivesSystem());
 
-            systems.Add(TickModule.GetSystems());
             
 #if CLIENT
             AddClient(new AnimateCharacterSystem());
@@ -182,6 +181,9 @@ namespace Game.ClientServer
             
             //write final Box2d transforms to components
             systems.Add(new Box2DWriteStateToComponentsSystem());
+            
+            //тик меняется на следующий в самом конце после всех систем 
+            systems.Add(TickModule.GetSystems());
         }
     }
 }
