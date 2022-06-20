@@ -8,5 +8,7 @@ namespace Game.Fabros.Net.ClientServer.Protocol
         public string difStr;
         public string difBinary;
         public int delay;
+        public int LastClientTick;
+        public int LastServerTick;
     }
 }

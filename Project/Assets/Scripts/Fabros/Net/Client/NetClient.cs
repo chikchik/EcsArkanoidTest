@@ -50,14 +50,13 @@ namespace Game.Fabros.Net.Client
         
         private readonly int playerID;
 
-        private int prevDelay;
-
         private Stats stats = new Stats();
         
         public UnitySocket Socket { get; private set; }
 
         private float stepMult = 1f;
         private float stepOffset = 0.001f;
+        
 
         private IEcsSystemsFactory systemsFactory;
 
@@ -90,6 +89,10 @@ namespace Game.Fabros.Net.Client
              */
             MainWorld.SetDefaultGen(15000);
             MainWorld.AddUnique<MainPlayerIdComponent>().value = playerID;
+            
+            stats.delaysHistory.Add(0);
+            stats.delaysHistory.Add(0);
+            stats.delaysHistory.Add(0);
         }
 
 
@@ -132,18 +135,55 @@ namespace Game.Fabros.Net.Client
 
             //if (leo.GetCurrentTick(serverWorld) < leo.GetCurrentTick(currentWorld))
             
+            
             if (delay != -999)
             {
-                if (delay >= 2) 
+                var prevDelay1 = stats.delaysHistory[stats.delaysHistory.Count - 1];
+                var prevDelay2 = stats.delaysHistory[stats.delaysHistory.Count - 2];
+                var prevDelay3 = stats.delaysHistory[stats.delaysHistory.Count - 2];
+
+                if (delay > 0)
+                {
+                    //игра опережает сервер
+                    if (delay > 1)
+                    {
+                        //delay=1 не считаем за лаг, это ок
+                        stats.oppLags++;
+                    }
+
+                    stepOffset = 0.001f * delay;
+                    
+                    
+                    if (delay == 1)
+                    {
+                        stepOffset = 0;
+                    }
+                }
+
+                if (delay < 0 )
+                {
+                    //инпут клиента отстает от сервера
                     stepOffset = 0.001f * delay;
 
-                if (delay < 0)
-                {
-                    stepOffset = 0.001f * delay;
+                    if (delay == -1 && prevDelay1 == 0 && prevDelay2 == 0 && prevDelay3 == 0)
+                    {
+                        //микролаг?
+                        stepOffset /= 2;
+                    }
+
                     stats.lags++;
                 }
 
-                prevDelay = delay;
+                if (delay == 0)
+                {
+                    //все равно чуть ускорим клиента, чтоб delay стремился быть > 0  и до 1 доходил чаще чем до -1
+                    stepOffset = -0.001f;
+                }
+                
+                
+                stats.delaysHistory.Add(delay);
+                if (stats.delaysHistory.Count > Stats.HISTORY_LEN)
+                    stats.delaysHistory.RemoveAt(0);
             }
 
             //stepOffset = 0;
@@ -177,9 +217,11 @@ namespace Game.Fabros.Net.Client
             
             //Debug.Log($"pr srv:{Leo.GetCurrentTick(ServerWorld).Value} client: {Leo.GetCurrentTick(MainWorld).Value}");
             Profiler.BeginSample("SimServerWorld");
+            stats.simTicksTotal = 0;
             while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
             {
                 Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Config.SyncDataLogging, debug);
+                stats.simTicksTotal++;
                 if (iterations > 500)
                 {
                     Debug.LogWarning(
@@ -479,7 +521,7 @@ namespace Game.Fabros.Net.Client
             GUILayout.Label($"input entities {InputWorld.GetAllEntitiesCount()}");
             GUILayout.Label($"playerID {playerID}");
             //GUILayout.Label($"future {futureTicks}");
-            GUILayout.Label($"lags {stats.lags}");
+            GUILayout.Label($"lags {stats.lags} vs {stats.oppLags}");
             GUILayout.Label($"stepOffset {stepOffset}");
             GUILayout.Label($"stepMult {stepMult}");
             GUILayout.Label($"currentWorldTick {Leo.GetCurrentTick(MainWorld)}");
@@ -488,7 +530,16 @@ namespace Game.Fabros.Net.Client
             GUILayout.Label($"lastReceivedServerTick {stats.lastReceivedServerTick}");
             GUILayout.Label($"lastClientTick {stats.lastClientTick}");
             GUILayout.Label($"delta {stats.lastClientTick - stats.lastReceivedServerTick}");
-            GUILayout.Label($"prevDelay {prevDelay}");
+            GUILayout.Label($"simTicksTotal {stats.simTicksTotal}");
+
+
+            var history = "";
+            foreach (var i in stats.delaysHistory)
+            {
+                history += $"{i.ToString()}".PadLeft(4);
+            }
+            
+            GUILayout.Label($"history {history}");
 
             GUILayout.Label($"diffSize {stats.diffSize}");
 
