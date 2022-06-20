@@ -50,14 +50,20 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filter)
             {
-                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("walking", 0.05f);
+                var animator = poolAnimator.Get(entity).animator;
+                var current = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+                if (current != "walking")
+                    animator.CrossFadeInFixedTime("walking", 0.05f);
             }
             
             filter = world.Filter<UnitComponent>().Inc<MovingComponent>().IncRemoved<CantMoveComponent>().End();
 
             foreach (var entity in filter)
             {
-                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("walking", 0.05f);
+                var animator = poolAnimator.Get(entity).animator;
+                var current = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+                if (current != "walking")
+                    animator.CrossFadeInFixedTime("walking", 0.05f);
             }
             
             filter = world.Filter<UnitComponent>().IncRemoved<MovingComponent>().End();

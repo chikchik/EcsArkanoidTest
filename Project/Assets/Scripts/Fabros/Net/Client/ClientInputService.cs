@@ -1,17 +1,12 @@
-﻿using System;
-using Fabros.Ecs.ClientServer.WorldDiff;
+﻿using Fabros.Ecs.ClientServer.WorldDiff;
 using Fabros.Ecs.Utils;
 using Fabros.P2P;
-using Game.ClientServer;
-using Game.Ecs.ClientServer.Components.Input;
-using Game.Ecs.ClientServer.Components.Input.Proto;
-using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace Game
+namespace Game.Fabros.Net.Client
 {
     /**
      * 
