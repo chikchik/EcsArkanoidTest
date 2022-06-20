@@ -93,11 +93,13 @@ namespace Game.Fabros.Net.ClientServer
         {
             //обновляем мир 1 раз
             
-            var time = GetCurrentTick(world);
-            if (writeToLog) SyncLog.WriteLine($"tick {time.Value} ->");
+            var currentTick = GetCurrentTick(world);
+            if (writeToLog) 
+                SyncLog.WriteLine($"tick {currentTick.Value} ->");
 
             //ProcessUserInput(inputWorld, world, inputs);
 
+            
             var strStateDebug = "";
             if (writeHashes)
             {
@@ -114,7 +116,7 @@ namespace Game.Fabros.Net.ClientServer
             if (!writeToLog)
                 return;
 
-            time = GetCurrentTick(world);
+            currentTick = GetCurrentTick(world);
 
             //отладочный код, который умеет писать в файлы hash мира и его diff
             //var empty = WorldUtils.CreateWorld("empty", Pool);
@@ -122,6 +124,8 @@ namespace Game.Fabros.Net.ClientServer
             
             
             
+            if (writeToLog)
+                SyncLog.WriteLine($"<- tick {currentTick.Value}\n");
 
             if (writeHashes)
             {
@@ -129,12 +133,10 @@ namespace Game.Fabros.Net.ClientServer
                 var strWorldDebug = WorldDumpUtils.DumpWorld(Components, world);
                 var hash = CreateMD5(strWorldDebug);
 
-
-                SyncLog.WriteLine($"<- tick {time.Value}\n");
                 //SyncLog.WriteLine($"hash: {hash}\n");
 
                 var str = strStateDebug + "\n>>>>>>\n" +  strWorldDebug;
-                var tick = time.Value.ToString("D4");
+                var tick = currentTick.Value.ToString("D4");
 
                 //var tt = DateTime.UtcNow.Ticks % 10000000;
                 
