@@ -26,6 +26,8 @@ namespace ConsoleApp
     {
         public int ID;
         public int Delay;
+        public int LastClientTick;
+        public int LastServerTick;
         public ClientAddr Address;
         public Client(int id)
         {
@@ -163,7 +165,9 @@ namespace ConsoleApp
                     if (next <= DateTime.UtcNow)
                     {
                         //Console.WriteLine($"tick {leo.GetCurrentTick(world)}");
-                        next = DateTime.UtcNow.AddSeconds(step);
+                        next = next.AddSeconds(step);
+                        if (next <= DateTime.UtcNow)
+                            next = DateTime.UtcNow.AddSeconds(step);
                         Tick();                        
                     }
 
@@ -251,6 +255,11 @@ namespace ConsoleApp
                 var step = world.GetUnique<TickDeltaComponent>().Value;
                 //на сколько тиков мы опередили сервер или отстали
                 var delay = time - currentTick.Value;
+                /**
+                 * delay > 0 - клиент опережает сервер
+                 * delay == 0 - клиент идет оптимально с сервером
+                 * delay < 0 клиент опоздал и тик на сервере уже прошел
+                 */
 
                 //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
                 if (delay < 0)
@@ -262,15 +271,14 @@ namespace ConsoleApp
                 if (delay == 0 && sentWorldTick == time)
                     time = currentTick.Value + step.Value;
 
-
-                client.Delay = delay;
-
+                client.LastClientTick = inputTime;
+                client.LastServerTick = currentTick.Value;
 
                 var component = leo.Pool.GetComponent(type);                
 
                 if (component.GetComponentType() == typeof(PingComponent))//ping
-                {
-                    
+                {                    
+                    client.Delay = delay;
                 }
                 else
                 {
@@ -344,7 +352,10 @@ namespace ConsoleApp
                     WorldUpdate = new WorldUpdateProto
                     {
                         difBinary = difBinary,
-                        delay = client.Delay
+                        delay = client.Delay,
+                        LastClientTick = client.LastClientTick,
+                        LastServerTick = client.LastServerTick
+
                     }
                 };
                 
