@@ -241,6 +241,10 @@ namespace Game.Fabros.Net.Client
             var dif2 = WorldDiff.BuildDiff(Leo.Pool, MainWorld, copyServerWorld);
             
             DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
+            
+            if (copyServerWorld.GetTick() != MainWorld.GetTick())
+                Debug.LogError($"ticks not equal {copyServerWorld.GetTick()} != {MainWorld.GetTick()}");
+            
             dif2.ApplyChanges(MainWorld);
             
             Profiler.BeginSample("replicate2");
@@ -411,6 +415,8 @@ namespace Game.Fabros.Net.Client
             //клиент же по +1
             //потому надо сделать snap значения ввода чтоб оно попало на корректный серверный тик
 
+
+            return Leo.GetCurrentTick(MainWorld);
             var dt = Leo.GetConfig(MainWorld).clientTickrate / Leo.GetConfig(MainWorld).serverTickrate;
             var a = Leo.GetCurrentTick(MainWorld).Value / dt + 1;
             var tick = new Tick(a * dt);
@@ -440,30 +446,28 @@ namespace Game.Fabros.Net.Client
                 //    return;
                     
                 //leo.ApplyUserInput(world);
+                SendPing(Leo.GetCurrentTick(MainWorld).Value);
                 Leo.Tick(clientSystems, InputWorld, MainWorld, Config.SyncDataLogging, "");
-
-
-                if (Leo.GetCurrentTick(MainWorld).Value % 5 == 0)
-                {
-                    writer.Reset();
-                    writer.WriteByteArray(P2P.ADDR_SERVER.Address, false);
-                    writer.WriteInt32(0xff);
-                    writer.WriteInt32(playerID);
-                    writer.WriteInt32(GetNextInputTick().Value);
-                    writer.WriteInt32(Leo.Pool.GetComponent(typeof(PingComponent)).GetId());
-                    
-                    Socket.Send(writer.CopyToByteArray());
-                }
+                
             });
 
             //stepMult = 1;
             //stepOffset = 0;
         }
-        
-        
-        public void AddUserInput(IInputComponent inputComponent)
+
+        private void SendPing(int currentTick)
         {
+            if (currentTick % 5 != 0)
+                return;
             
+            writer.Reset();
+            writer.WriteByteArray(P2P.ADDR_SERVER.Address, false);
+            writer.WriteInt32(0xff);
+            writer.WriteInt32(playerID);
+            writer.WriteInt32(currentTick);
+            writer.WriteInt32(Leo.Pool.GetComponent(typeof(PingComponent)).GetId());
+                
+            Socket.Send(writer.CopyToByteArray());
         }
 
 

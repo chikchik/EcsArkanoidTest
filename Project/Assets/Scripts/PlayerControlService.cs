@@ -29,16 +29,17 @@ namespace Game
             this.world = world;
             this.input = input;
         }
-
-
+        
         private int playerId => world.GetUnique<MainPlayerIdComponent>().value;
         private int unitEntity => BaseServices.GetUnitEntityByPlayerId(world, playerId);
-        private int tick => world.GetTick() + 1;//next tick
+        private int tick => world.GetTick();// + 1;//next tick
         
         public void Shot()
         {
             if (unitEntity == -1)
                 return;
+            
+            Debug.Log($"shot input {DateTime.UtcNow.Ticks}");
             
             var component = new InputShotComponent();
             component.dir = world.EntityGet<LookDirectionComponent>(unitEntity).value;

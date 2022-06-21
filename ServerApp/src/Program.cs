@@ -64,6 +64,17 @@ namespace ConsoleApp
             }
         }
 
+        static long GetUnixTimeMS()
+        {
+            return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+        }
+
+        private static void log(string str)
+        {
+            var tm = GetUnixTimeMS() - 1655824397105;
+            Console.WriteLine($"{tm} {str}");
+        }
+
         async Task ReceiveData()
         {
 
@@ -99,7 +110,7 @@ namespace ConsoleApp
                 var url = $"{Config.url}/{P2P.ADDR_SERVER.AddressString}";
                 await socket.ConnectAsync(new Uri(url, UriKind.Absolute), new CancellationToken());
 
-                Console.WriteLine($"connected to host\n{url}");
+                log($"connected to host\n{url}");
 
 
                 var pool = SharedComponents.CreateComponentsPool();
@@ -147,7 +158,7 @@ namespace ConsoleApp
                 SendWorldToClients();
 
 
-                Console.WriteLine("loop");
+                log("loop");
                 var next = DateTime.UtcNow;
                 var step = 1.0 / config.serverTickrate;
                 while (true)
@@ -190,7 +201,7 @@ namespace ConsoleApp
                 if (client != null)
                 {
                     clients.Remove(client);
-                    Console.WriteLine($"removed client {client.ID}");
+                    log($"removed client {client.ID}");
                     BaseServices.LeavePlayer(inputWorld, client.ID);
                 }
                 return;
@@ -208,7 +219,7 @@ namespace ConsoleApp
             {
                 var client = new Client(packet.playerID);
 
-                Console.WriteLine($"got hello from client {packet.playerID}");
+                log($"got hello from client {packet.playerID}");
 
                 var components = leo.Pool.Components.Select(component => component.GetComponentType().FullName).ToArray();
                 var hello = new Hello {Components = components};
@@ -245,7 +256,7 @@ namespace ConsoleApp
                     if (!missingClients.Contains(playerId))
                     {
                         missingClients.Add(playerId);
-                        Console.WriteLine($"not found player {playerId}");
+                        log($"not found player {playerId}");
                     }
                     return;
                 }
@@ -285,7 +296,7 @@ namespace ConsoleApp
                     var cname = component.GetComponentType().Name;
                     cname = cname.Replace("Component", "C.");
                     var end = inputTime < currentTick.Value ? "!!!" : "";
-                    Console.WriteLine($"got input {cname}:{inputTime} at {currentTick.Value} {end}");
+                    log($"got input {cname}:{inputTime} at {currentTick.Value} {end}");
                     
                     var componentData = component.ReadSingleComponent(reader) as IInputComponent;
 
