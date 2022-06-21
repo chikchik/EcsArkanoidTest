@@ -39,7 +39,7 @@ namespace Game
             if (unitEntity == -1)
                 return;
             
-            Debug.Log($"shot input {DateTime.UtcNow.Ticks}");
+            Debug.Log($"shot input {TimeUtils.GetUnixTimeMS()}");
             
             var component = new InputShotComponent();
             component.dir = world.EntityGet<LookDirectionComponent>(unitEntity).value;

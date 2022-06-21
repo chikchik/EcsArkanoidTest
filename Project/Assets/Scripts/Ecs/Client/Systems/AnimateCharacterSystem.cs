@@ -9,6 +9,19 @@ namespace Game.Ecs.Client.Systems
 {
     public class AnimateCharacterSystem : IEcsRunSystem
     {
+        private void ContinueAnimation(Animator animator, string anim)
+        {
+            var currentAnimatorClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+            if (currentAnimatorClipInfo.Length != 0)
+            {
+                var current = currentAnimatorClipInfo[0].clip.name;
+                if (current != anim)
+                    animator.CrossFadeInFixedTime(anim, 0.05f);
+                return;
+            }
+            
+            animator.CrossFadeInFixedTime(anim, 0.05f);
+        }
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
@@ -51,9 +64,7 @@ namespace Game.Ecs.Client.Systems
             foreach (var entity in filter)
             {
                 var animator = poolAnimator.Get(entity).animator;
-                var current = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-                if (current != "walking")
-                    animator.CrossFadeInFixedTime("walking", 0.05f);
+                ContinueAnimation(animator, "walking");
             }
             
             filter = world.Filter<UnitComponent>().Inc<MovingComponent>().IncRemoved<CantMoveComponent>().End();
@@ -61,9 +72,7 @@ namespace Game.Ecs.Client.Systems
             foreach (var entity in filter)
             {
                 var animator = poolAnimator.Get(entity).animator;
-                var current = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-                if (current != "walking")
-                    animator.CrossFadeInFixedTime("walking", 0.05f);
+                ContinueAnimation(animator, "walking");
             }
             
             filter = world.Filter<UnitComponent>().IncRemoved<MovingComponent>().End();

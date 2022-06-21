@@ -177,7 +177,7 @@ namespace Game.Fabros.Net.Client
                 if (delay == 0)
                 {
                     //все равно чуть ускорим клиента, чтоб delay стремился быть > 0  и до 1 доходил чаще чем до -1
-                    stepOffset = -0.001f;
+                    stepOffset = -0.0005f;
                 }
                 
                 
