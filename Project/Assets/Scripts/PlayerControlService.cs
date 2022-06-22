@@ -47,6 +47,18 @@ namespace Game
             Apply(component);
         }
         
+        public void Interract()
+        {
+            if (unitEntity == -1)
+                return;
+            
+            Debug.Log($"interract input {TimeUtils.GetUnixTimeMS()}");
+            
+            var component = new InputActionComponent();
+            
+            Apply(component);
+        }
+        
         public void MoveToDirection(Vector3 dir)
         {
             if (unitEntity == -1)

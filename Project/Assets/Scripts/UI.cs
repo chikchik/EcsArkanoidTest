@@ -21,7 +21,7 @@ namespace Game.Client
 
             view.InteractionButton.onClick.AddListener(() =>
             {
-                
+                controlService.Interract();
             });
             
             view.ShotButton.onClick.AddListener(() =>
