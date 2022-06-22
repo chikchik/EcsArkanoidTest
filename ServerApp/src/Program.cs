@@ -64,14 +64,10 @@ namespace ConsoleApp
             }
         }
 
-        static long GetUnixTimeMS()
-        {
-            return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
-        }
 
         private static void log(string str)
         {
-            var tm = GetUnixTimeMS() - 1655824397105;
+            var tm = TimeUtils.GetUnixTimeMS();
             Console.WriteLine($"{tm} {str}");
         }
 
@@ -323,10 +319,11 @@ namespace ConsoleApp
 
             //Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} Tick Begin {time0.Value}");
             var time = leo.GetCurrentTick(world);
-            leo.FilterInputs(time);            
+            leo.FilterInputs(time);
 
             //ref var component = ref world.GetUniqueRef<PendingInputComponent>();
-         
+
+            //Console.WriteLine($"tick {time} at {TimeUtils.GetUnixTimeMS()}");
             //обновляем мир 1 раз
             leo.Tick(systems, inputWorld, world, Config.SyncDataLogging);
         

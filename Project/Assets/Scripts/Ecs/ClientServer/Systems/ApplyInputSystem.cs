@@ -153,7 +153,7 @@ namespace Game.Ecs.ClientServer.Systems
             if (unitEntity.EntityHas<ShootingComponent>(world) && !unitEntity.EntityGet<ShootingComponent>(world).ShootMade)
                 return;
             
-            Debug.Log($"shot at {world.GetTick()} {DateTime.UtcNow.Ticks}");
+            Debug.Log($"shot at {world.GetTick()} tm:{TimeUtils.GetUnixTimeMS()}");
 
             unitEntity.EntityReplace<CantMoveComponent>(world);
             unitEntity.EntityAdd<ShootStartedComponent>(world);

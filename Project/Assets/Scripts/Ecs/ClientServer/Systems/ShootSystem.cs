@@ -31,24 +31,24 @@ namespace Game.Ecs.ClientServer.Systems
                     
                     var dir = entity.EntityGet<ShootingComponent>(world).Direction;
                     
-                    var shotEntity = world.NewEntity();
-                    shotEntity.EntityAdd<BulletComponent>(world);
+                    var bulletEntity = world.NewEntity();
+                    bulletEntity.EntityAdd<BulletComponent>(world);
 
                     var pos = entity.EntityGet<PositionComponent>(world).value;
-                    shotEntity.EntityAdd<PositionComponent>(world).value = (pos + dir/2).WithY(1.35f);
-                    shotEntity.EntityAdd<Rotation2DComponent>(world);
+                    bulletEntity.EntityAdd<PositionComponent>(world).value = (pos + dir/2).WithY(1.35f);
+                    bulletEntity.EntityAdd<Rotation2DComponent>(world);
 
-                    ref var def = ref shotEntity.EntityAdd<Box2DRigidbodyDefinitionComponent>(world);
+                    ref var def = ref bulletEntity.EntityAdd<Box2DRigidbodyDefinitionComponent>(world);
                     def.BodyType = BodyType.Dynamic;
                     def.Bullet = true;
                     def.Density = 5;
                     
                     
 
-                    ref var collider = ref shotEntity.EntityAdd<Box2DCircleColliderComponent>(world);
+                    ref var collider = ref bulletEntity.EntityAdd<Box2DCircleColliderComponent>(world);
                     collider.Radius = 0.02f;
                     
-                    var body = Box2DServices.CreateBodyNow(world, shotEntity);
+                    var body = Box2DServices.CreateBodyNow(world, bulletEntity);
                     Box2DApi.ApplyForce(body, dir.ToVector2XZ() * 10, pos.ToVector2XZ());
                 }
 
