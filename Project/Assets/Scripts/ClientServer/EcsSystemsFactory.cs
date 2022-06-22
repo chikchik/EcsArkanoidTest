@@ -94,12 +94,6 @@ namespace Game.ClientServer
             systems.Add(new PushingSystem());
             
             
-            systems.DelHere<Box2DBeginContactComponent>();
-            systems.DelHere<Box2DEndContactComponent>();
-            systems.DelHere<Box2DPreSolveComponent>();
-            systems.DelHere<Box2DPostSolveComponent>();
-            
-            
             systems.Add(new EntitiesLifeTimeSystem());
             
             systems.Add(GridModule.GetSystems());
@@ -158,10 +152,18 @@ namespace Game.ClientServer
             systems.Add(new AddLerpSystem());
 
             
-
+            //Основная Box2dSystem должна быть в конце после всех основных систем,
+            //иначе в мультиплеере предсказание не будет работать правильно
+            systems.Add(new Box2DCreateBodiesSystem());
             
-            systems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, 
-                new Vector2(0,0)));
+            systems.Add(new Box2DUpdateSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, false));
+            systems.Add(new Box2DUpdateInternalObjectsSystem());      
+            
+            
+            systems.DeleteEntityHere<Box2DBeginContactComponent>();
+            systems.DeleteEntityHere<Box2DEndContactComponent>();
+            systems.DeleteEntityHere<Box2DPreSolveComponent>();
+            systems.DeleteEntityHere<Box2DPostSolveComponent>();
             
             systems.Add(new EventsSystem<Box2DBodyComponent>());
             systems.Add(new EventsSystem<FireComponent>());
@@ -178,9 +180,8 @@ namespace Game.ClientServer
 #if CLIENT
             systems.Add(new EventsSystem<MovingComponent>());
 #endif
-            
             //write final Box2d transforms to components
-            systems.Add(new Box2DWriteStateToComponentsSystem());
+            systems.Add(new Box2DWriteBodiesToComponentsSystem());
             
             //тик меняется на следующий в самом конце после всех систем 
             systems.Add(TickModule.GetSystems());

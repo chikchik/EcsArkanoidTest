@@ -6,6 +6,7 @@ using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.ClientServer.WorldDiff;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Box2D;
 using Fabros.EcsModules.Box2D.Client.Systems;
 using Fabros.EcsModules.Box2D.ClientServer;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
@@ -298,10 +299,8 @@ namespace Game.Fabros.Net.Client
 
             serverSystems = new EcsSystems(ServerWorld);
             serverSystems.AddWorld(InputWorld, "input");
-            serverSystems.Add(new Box2DSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, 
-                new Vector2(0,0), true, false, true));
+            serverSystems.Add(Box2DModule.CreateMainSystems(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
             
-            serverSystems.Add(new Box2DWriteStateToComponentsSystem());
             //после того как нам пришло что-то от сервера старый инпут можно спокойно удалять
             serverSystems.Add(new DeleteOutdatedInputEntitiesSystem());
 
