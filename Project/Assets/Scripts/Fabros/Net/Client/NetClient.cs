@@ -299,8 +299,12 @@ namespace Game.Fabros.Net.Client
 
             serverSystems = new EcsSystems(ServerWorld);
             serverSystems.AddWorld(InputWorld, "input");
-            serverSystems.Add(Box2DModule.CreateMainSystems(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
-            
+            //serverSystems.Add(Box2DModule.CreateMainSystems(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
+            serverSystems.Add(new Box2DInitSystem());
+            serverSystems.Add(new Box2DCreateBodiesSystem());
+            serverSystems.Add(new Box2DUpdateInternalObjectsSystem());
+            serverSystems.Add(new Box2DWriteBodiesToComponentsSystem());
+
             //после того как нам пришло что-то от сервера старый инпут можно спокойно удалять
             serverSystems.Add(new DeleteOutdatedInputEntitiesSystem());
 

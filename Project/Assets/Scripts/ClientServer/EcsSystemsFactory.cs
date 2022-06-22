@@ -154,10 +154,11 @@ namespace Game.ClientServer
             
             //Основная Box2dSystem должна быть в конце после всех основных систем,
             //иначе в мультиплеере предсказание не будет работать правильно
+            systems.Add(new Box2DInitSystem());
             systems.Add(new Box2DCreateBodiesSystem());
-            
+            systems.Add(new Box2DUpdateInternalObjectsSystem());
             systems.Add(new Box2DUpdateSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, false));
-            systems.Add(new Box2DUpdateInternalObjectsSystem());      
+                  
             
             
             systems.DeleteEntityHere<Box2DBeginContactComponent>();
