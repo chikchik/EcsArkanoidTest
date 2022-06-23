@@ -12,6 +12,7 @@ using Fabros.EcsModules.Box2D.ClientServer;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
+using Fabros.EcsModules.Tick.Systems;
 using Fabros.P2P;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
@@ -196,7 +197,7 @@ namespace Game.Fabros.Net.Client
             
             
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
-            copyServerWorld.SetDebugName("copy");
+            copyServerWorld.SetDebugName($"cp{ServerWorld.GetTick()}");
             copyServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
        
             Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
@@ -273,7 +274,7 @@ namespace Game.Fabros.Net.Client
                 throw new Exception("async next step for stopped application");
 
             //получили состояние мира с сервера
-            var dif = WorldDiff.FromJsonString(Leo.Pool, packet.WorldUpdate.difStr);
+            var dif0 = WorldDiff.FromJsonString(Leo.Pool, packet.WorldUpdate.difStr);
 
 
             //InputWorld = new EcsWorld("input");
@@ -284,7 +285,7 @@ namespace Game.Fabros.Net.Client
             
             systemsFactory.AddNewSystems(clientSystems, new IEcsSystemsFactory.Settings{client = true, server = false});
 
-            dif.ApplyChanges(MainWorld);
+            dif0.ApplyChanges(MainWorld);
 
             MainWorld.AddUnique<TickDeltaComponent>() = new TickDeltaComponent
                 {Value = new TickDelta(1, MainWorld.GetUnique<TickrateConfigComponent>().clientTickrate)};
@@ -298,12 +299,15 @@ namespace Game.Fabros.Net.Client
 
 
             serverSystems = new EcsSystems(ServerWorld);
+            serverSystems.Add(new DebugMeSystem(true));
             serverSystems.AddWorld(InputWorld, "input");
             //serverSystems.Add(Box2DModule.CreateMainSystems(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
             serverSystems.Add(new Box2DInitSystem());
             serverSystems.Add(new Box2DCreateBodiesSystem());
             serverSystems.Add(new Box2DUpdateInternalObjectsSystem());
-            serverSystems.Add(new Box2DWriteBodiesToComponentsSystem());
+            //serverSystems.Add(new Box2DWriteBodiesToComponentsSystem());
+            serverSystems.Add(new DebugMeSystem(false));
+            //serverSystems.Add(new TickSystem());
 
             //после того как нам пришло что-то от сервера старый инпут можно спокойно удалять
             serverSystems.Add(new DeleteOutdatedInputEntitiesSystem());
@@ -351,7 +355,7 @@ namespace Game.Fabros.Net.Client
                         var byteArrayDifCompressed = Convert.FromBase64String(packet.WorldUpdate.difBinary);
                         stats.diffSize = byteArrayDifCompressed.Length;
                         var byteArrayDif = P2P.Decompress(byteArrayDifCompressed);
-                        dif = WorldDiff.FromByteArray(Leo.Pool, byteArrayDif);
+                        var dif = WorldDiff.FromByteArray(Leo.Pool, byteArrayDif);
 
                         /*
                          * если клиент создал сам entity с такими же id, то их надо удалить прежде чем применять dif
@@ -376,6 +380,11 @@ namespace Game.Fabros.Net.Client
 
 
                         delay = packet.WorldUpdate.delay;
+
+                        if (dif.CreatedEntities.Count > 0)
+                        {
+                            
+                        }
 
                         //применяем diff к прошлому миру полученному от сервера
                         dif.ApplyChanges(ServerWorld);

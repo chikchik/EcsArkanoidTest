@@ -8,6 +8,8 @@ using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
+using Game.Fabros.Net.ClientServer;
+using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Leopotam.EcsLite;
 using UnityEngine;
 
@@ -42,14 +44,18 @@ namespace Game.Ecs.ClientServer.Systems
                     def.BodyType = BodyType.Dynamic;
                     def.Bullet = true;
                     def.Density = 5;
+
+                    bulletEntity.EntityAdd<DebugMeComponent>(world);
                     
                     
+                    world.Log($"create bullet {dir}");
 
                     ref var collider = ref bulletEntity.EntityAdd<Box2DCircleColliderComponent>(world);
                     collider.Radius = 0.02f;
                     
                     var body = Box2DServices.CreateBodyNow(world, bulletEntity);
-                    Box2DApi.ApplyForce(body, dir.ToVector2XZ() * 10, pos.ToVector2XZ());
+                    Box2DApi.ApplyForce(body, dir.ToVector2XZ() * 3, pos.ToVector2XZ());
+                    var bodyInfo = Box2DApi.GetBodyInfo(body);
                 }
 
                 if (shootingComponent.TotalTime < tm)

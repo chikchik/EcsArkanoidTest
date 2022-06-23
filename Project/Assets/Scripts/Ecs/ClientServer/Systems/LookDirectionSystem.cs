@@ -16,7 +16,7 @@ namespace Game.Ecs.ClientServer.Systems
                 var dir = poolMoveDirection.Get(entity).value;
                 if (dir.sqrMagnitude > 0.001f)
                 {
-                    poolLookDirection.Replace(entity).value = dir.normalized;
+                    poolLookDirection.GetOrCreateRef(entity).value = dir.normalized;
                 }
             }
         }

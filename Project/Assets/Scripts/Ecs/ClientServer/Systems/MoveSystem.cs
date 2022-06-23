@@ -36,7 +36,7 @@ namespace Game.Ecs.ClientServer.Systems
                 var dir = moveDirectionComponent.value * deltaTime * speed; //speedComponent.speed;
                 poolPosition.GetRef(entity).value += dir;
                 poolMoving.Replace(entity, new MovingComponent());
-                poolLookDirection.Replace(entity).value = dir.normalized;
+                poolLookDirection.GetOrCreateRef(entity).value = dir.normalized;
             }
         }
     }

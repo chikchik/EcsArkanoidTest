@@ -78,7 +78,7 @@ namespace Game.Ecs.ClientServer.Systems
                     if (dir.sqrMagnitude > 0.001f)
                     {
                         unitEntity.EntityDel<TargetPositionComponent>(world);
-                        unitEntity.EntityReplace<MoveDirectionComponent>(world).value = dir;
+                        unitEntity.EntityGetOrCreateRef<MoveDirectionComponent>(world).value = dir;
                     }
                     else
                     {
@@ -94,7 +94,7 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     var inputMoveToPointComponent = poolInputMoveTo.Get(inputEntity);
 
-                    ref var targetPositionComponent = ref unitEntity.EntityReplace<TargetPositionComponent>(world);
+                    ref var targetPositionComponent = ref unitEntity.EntityGetOrCreateRef<TargetPositionComponent>(world);
                     targetPositionComponent.Value = inputMoveToPointComponent.Value;
                 }
                 
@@ -120,7 +120,7 @@ namespace Game.Ecs.ClientServer.Systems
                 var entity = result[0];
                 
                 entity.EntityDel<InteractableComponent>(world);
-                unitEntity.EntityReplace<FoodCollectedComponent>(world).Value += 1;
+                unitEntity.EntityGetOrCreateRef<FoodCollectedComponent>(world).Value += 1;
                 ObjectiveService.Triggered(world, entity);
 
                 if (entity.EntityHas<CollectableComponent>(world))
@@ -152,13 +152,12 @@ namespace Game.Ecs.ClientServer.Systems
         {
             if (unitEntity.EntityHas<ShootingComponent>(world) && !unitEntity.EntityGet<ShootingComponent>(world).ShootMade)
                 return;
-            
-            Debug.Log($"shot at {world.GetTick()} tm:{TimeUtils.GetUnixTimeMS()}");
+            world.Log($"shot at {world.GetTick()}");
 
-            unitEntity.EntityReplace<CantMoveComponent>(world);
+            unitEntity.EntityGetOrCreateRef<CantMoveComponent>(world);
             unitEntity.EntityAdd<ShootStartedComponent>(world);
             
-            ref var component = ref unitEntity.EntityReplace<ShootingComponent>(world);
+            ref var component = ref unitEntity.EntityGetOrCreateRef<ShootingComponent>(world);
             component.ShootAtTime = world.GetTime() + 0.2f;
             component.Direction = dir;
             component.TotalTime = world.GetTime() + 0.5f;

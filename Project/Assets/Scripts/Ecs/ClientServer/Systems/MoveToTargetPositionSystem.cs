@@ -59,7 +59,7 @@ namespace Game.Ecs.ClientServer.Systems
                     if (dir.magnitude > 0.001f)
                     {
                         //if delta and speed not 0
-                        poolLookDirection.Replace(entity).value = dir.normalized;
+                        poolLookDirection.GetOrCreateRef(entity).value = dir.normalized;
                     }
                 }
             }

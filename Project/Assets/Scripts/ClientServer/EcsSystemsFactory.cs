@@ -39,6 +39,8 @@ namespace Game.ClientServer
 
         public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)
         {
+            systems.Add(new DebugMeSystem(true));
+            
             var client = settings.client;
             var server = settings.server;
 
@@ -183,6 +185,8 @@ namespace Game.ClientServer
 #endif
             //write final Box2d transforms to components
             systems.Add(new Box2DWriteBodiesToComponentsSystem());
+            
+            systems.Add(new DebugMeSystem(false));
             
             //тик меняется на следующий в самом конце после всех систем 
             systems.Add(TickModule.GetSystems());

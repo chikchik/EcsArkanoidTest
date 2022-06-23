@@ -8,6 +8,7 @@ using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Ecs.ClientServer.Components.Inventory;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
+using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 
 #if CLIENT
@@ -110,6 +111,8 @@ namespace Game.ClientServer
             pool.AddComponent<InputShotComponent>();
             
             pool.AddComponent<CantMoveComponent>();
+            
+            pool.AddComponent<DebugMeComponent>();
 
             return pool;
         }

@@ -44,7 +44,7 @@ namespace Game.Ecs.ClientServer.Systems
                 poolButton.ReplaceIfChanged(buttonEntity, new ButtonComponent{isActivated = pressed});
 
                 if (pressed)
-                    poolPressed.Replace(buttonEntity);
+                    poolPressed.GetOrCreateRef(buttonEntity);
                 else
                     poolPressed.Del(buttonEntity);
                     

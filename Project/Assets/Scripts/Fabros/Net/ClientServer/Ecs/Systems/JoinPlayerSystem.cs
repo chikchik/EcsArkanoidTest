@@ -36,7 +36,7 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
                 else
                 {
                     var freeUnitEntity = UnitService.CreateUnitEntity(world);
-                    freeUnitEntity.EntityReplace<PlayerComponent>(world).id = playerID;
+                    freeUnitEntity.EntityGetOrCreateRef<PlayerComponent>(world).id = playerID;
                 }
             }
         }

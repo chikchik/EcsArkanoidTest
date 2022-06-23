@@ -52,7 +52,7 @@ namespace Game.Ecs.Client.Systems
                 ref var animatorComponent = ref entity.EntityAddComponent<AnimatorComponent>(world);
                 animatorComponent.animator = view.Animator;
 
-                entity.EntityReplaceComponent<LerpComponent>(world).value = 0.5f;
+                entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
             }
             
             var filterBullets = world.Filter<BulletComponent>()
@@ -67,7 +67,7 @@ namespace Game.Ecs.Client.Systems
                 component.Transform = view.transform;
 
 
-                entity.EntityReplaceComponent<LerpComponent>(world).value = 0.5f;
+                entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
             }
         }
     }
