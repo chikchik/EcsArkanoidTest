@@ -150,17 +150,21 @@ namespace Game.Ecs.ClientServer.Systems
         
         private void Shoot(EcsWorld world, int unitEntity, Vector3 dir)
         {
-            if (unitEntity.EntityHas<ShootingComponent>(world) && !unitEntity.EntityGet<ShootingComponent>(world).ShootMade)
+            if (unitEntity.EntityHas<ShootingComponent>(world) &&
+                !unitEntity.EntityGet<ShootingComponent>(world).ShootMade)
+            {
+                Debug.Log("skip");
                 return;
+            }
+
             world.Log($"shot at {world.GetTick()}");
 
             unitEntity.EntityGetOrCreateRef<CantMoveComponent>(world);
             unitEntity.EntityAdd<ShootStartedComponent>(world);
-            
-            ref var component = ref unitEntity.EntityGetOrCreateRef<ShootingComponent>(world);
-            component.ShootAtTime = world.GetTime() + 0.2f;
-            component.Direction = dir;
-            component.TotalTime = world.GetTime() + 0.5f;
+            unitEntity.EntityReplace(world, new ShootingComponent
+            {
+                Direction = dir, ShootAtTime = world.GetTime() + 0.2f, TotalTime = world.GetTime() + 0.5f
+            });
         }
     }
 }
