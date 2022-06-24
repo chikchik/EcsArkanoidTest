@@ -139,9 +139,6 @@ namespace Game.ClientServer
             AddServer(new DeleteInputEntitiesSystem());
             AddServer(new DeleteOutdatedInputEntitiesSystem());
 
-            systems.Add(new DeleteEntitiesSystemWith<EventComponent>());
-
-
             systems.Add(new FireDestroyEntitySystem());
 
             AddServer(new ObjectivesSystem());

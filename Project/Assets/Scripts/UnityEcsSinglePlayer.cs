@@ -2,7 +2,7 @@
 using Fabros.Ecs;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Tick.Components;
+using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.Client.Components;
@@ -55,7 +55,7 @@ namespace Game.Client
             
             world.AddUnique(new TickDeltaComponent
             {
-                Value = new TickDelta(1, (int)(1f/Time.fixedDeltaTime))
+                Value = new TickDelta((int)(1f/Time.fixedDeltaTime))
             });
             
             world.AddUnique(new TickComponent{Value = new Tick(0)});

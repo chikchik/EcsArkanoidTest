@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 using Fabros.Ecs.ClientServer.WorldDiff;
-using Fabros.EcsModules.Tick.Components;
+using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components.Input;

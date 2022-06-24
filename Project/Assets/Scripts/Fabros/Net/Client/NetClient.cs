@@ -10,9 +10,8 @@ using Fabros.EcsModules.Box2D;
 using Fabros.EcsModules.Box2D.Client.Systems;
 using Fabros.EcsModules.Box2D.ClientServer;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
-using Fabros.EcsModules.Tick.Components;
+using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
-using Fabros.EcsModules.Tick.Systems;
 using Fabros.P2P;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
@@ -198,7 +197,6 @@ namespace Game.Fabros.Net.Client
             
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
             copyServerWorld.SetDebugName($"cp{ServerWorld.GetTick()}");
-            copyServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
        
             Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
             
@@ -287,16 +285,11 @@ namespace Game.Fabros.Net.Client
 
             dif0.ApplyChanges(MainWorld);
 
-            MainWorld.AddUnique<TickDeltaComponent>() = new TickDeltaComponent
-                {Value = new TickDelta(1, MainWorld.GetUnique<TickrateConfigComponent>().clientTickrate)};
-
             clientSystems.Init();
 
 
             ServerWorld = WorldUtils.CopyWorld(Leo.Pool, MainWorld);
             ServerWorld.SetDebugName("rsrv");
-            ServerWorld.AddUnique<TickDeltaComponent>() = MainWorld.GetUnique<TickDeltaComponent>();
-
 
             serverSystems = new EcsSystems(ServerWorld);
             serverSystems.Add(new DebugMeSystem(true));
@@ -429,10 +422,12 @@ namespace Game.Fabros.Net.Client
 
 
             return Leo.GetCurrentTick(MainWorld);
+            /*
             var dt = Leo.GetConfig(MainWorld).clientTickrate / Leo.GetConfig(MainWorld).serverTickrate;
             var a = Leo.GetCurrentTick(MainWorld).Value / dt + 1;
             var tick = new Tick(a * dt);
             return tick;
+            */
         }
 
         public LeoContexts GetContexts()

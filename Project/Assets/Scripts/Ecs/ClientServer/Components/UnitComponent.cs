@@ -6,10 +6,4 @@ namespace Game.Ecs.ClientServer.Components
     public struct UnitComponent
     {
     }
-
-    [Serializable]
-    public struct BulletComponent
-    {
-        
-    }
 }

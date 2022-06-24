@@ -2,7 +2,6 @@
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
-using Fabros.EcsModules.Tick.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
@@ -43,7 +42,7 @@ namespace Game.Ecs.ClientServer.Systems
                     {
                         int w = 0;
                     }
-                    Debug.Log($"Apply Force {world.GetDebugName()} - tick={world.GetUnique<TickComponent>().Value}  at {contactPos} from {pos}");
+                    //Debug.Log($"Apply Force {world.GetDebugName()} - tick={world.GetUnique<TickComponent>().Value}  at {contactPos} from {pos}");
                 }
                 
                 poolApplyForce.Del(entity);

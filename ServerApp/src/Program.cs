@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.ClientServer.WorldDiff;
 using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Tick.Components;
+using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
@@ -111,10 +111,8 @@ namespace ConsoleApp
 
                 var pool = SharedComponents.CreateComponentsPool();
 
-    
-                //на сервере может быть tickrate отличный от клиента, например 20 вместо 60
-                //это надо учесть при симуляции
-                var config = new TickrateConfigComponent { clientTickrate = 30, serverSyncStep = 1, serverTickrate = 30 };
+
+                var config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1};
 
                 world = new EcsWorld("serv");
 
@@ -146,7 +144,7 @@ namespace ConsoleApp
                 //leo.Init(world, config);
 
 
-                world.AddUnique(new TickDeltaComponent { Value = new TickDelta (config.clientTickrate / config.serverTickrate, config.serverTickrate) });
+                world.AddUnique(new TickDeltaComponent { Value = new TickDelta (config.Tickrate) });
 
 
                 _ = Task.Factory.StartNew(ReceiveData);
@@ -156,7 +154,7 @@ namespace ConsoleApp
 
                 log("loop");
                 var next = DateTime.UtcNow;
-                var step = 1.0 / config.serverTickrate;
+                var step = 1.0 / config.Tickrate;
                 while (true)
                 {
                     byte[][] receivedCopy = null;
@@ -331,7 +329,7 @@ namespace ConsoleApp
 
             var cfg = leo.GetConfig(world);
 
-            if (leo.GetCurrentTick(world).Value % cfg.serverSyncStep == 0)
+            if (leo.GetCurrentTick(world).Value % cfg.ServerSyncStep == 0)
             {
                 //если у сервера высокий tickrate, например 60
                 //то отправлять миру 60 раз в секунду - накладно

@@ -1,11 +1,10 @@
 using System;
+using Leopotam.EcsLite;
 
 namespace Game.Ecs.ClientServer.Components
 {
-    [Serializable]
+    [EmptyComponent]
     public struct InteractableComponent
     {
-        //public bool isInteractable;
-        //public bool canInteract;
     }
 }

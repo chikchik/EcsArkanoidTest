@@ -4,9 +4,11 @@ using UnityEngine;
 namespace Game.Ecs.ClientServer.Components
 {
     [Serializable]
-    public struct ApplyForceComponent
+    public struct ShootingComponent
     {
-        public float Time;
         public Vector3 Direction;
+        public float ShootAtTime;
+        public float TotalTime;
+        public bool ShootMade;
     }
 }

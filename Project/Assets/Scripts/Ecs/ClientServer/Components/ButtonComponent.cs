@@ -8,17 +8,4 @@ namespace Game.Ecs.ClientServer.Components
     {
         public bool isActivated;
     }
-
-    [Serializable]
-    public struct ButtonPressedComponent
-    {
-    }
-
-    [Serializable]
-    public struct ButtonCustomComponent
-    {
-        public bool Spawn;
-        public bool Shake;
-    }
-    
 }
