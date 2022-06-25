@@ -4,6 +4,7 @@ using Fabros.Ecs.Utils;
 using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
+using Game.Fabros.Net.ClientServer;
 using Game.View;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -60,8 +61,10 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filterBullets)
             {
+                world.Log($"create view {entity}");
                 var view = Object.Instantiate(viewComponent.Global.BulletPrefab);
-                view.transform.position = entity.EntityGet<PositionComponent>(world).value; 
+                view.transform.position = entity.EntityGet<PositionComponent>(world).value;
+                view.name = $"Bullet{entity}";
 
                 ref var component = ref entity.EntityAddComponent<TransformComponent>(world);
                 component.Transform = view.transform;

@@ -1,7 +1,10 @@
 ﻿using System;
 using Fabros.Ecs;
+using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Box2D.ClientServer.Api;
+using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
@@ -48,7 +51,22 @@ namespace Game.Client
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
 
-            
+
+            world.EntityWillBeDestroyedEvent += (world, entity) =>
+            {
+                if (entity.EntityHasComponent<TransformComponent>(world))
+                {
+                    var go = entity.EntityGetComponent<TransformComponent>(world).Transform.gameObject;
+                    Destroy(go);
+                    world.Log($"destroy go {go.name}");
+                }
+                if (entity.EntityHas<Box2DBodyComponent>(world))
+                {
+                    Box2DApi.DestroyBody2(entity.EntityGet<Box2DBodyComponent>(world).BodyReference);
+                }
+            };
+
+
             systems = new EcsSystems(world);
             systems.AddWorld(inputWorld, "input");
             ClientServices.InitializeNewWorldFromScene(world);

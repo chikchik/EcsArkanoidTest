@@ -3,6 +3,8 @@ using Fabros.Ecs;
 using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Box2D.ClientServer.Api;
+using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.Client.Systems;
@@ -51,6 +53,21 @@ namespace Game.Client
 #if UNITY_EDITOR
             viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
+            
+            world.EntityWillBeDestroyedEvent += (world, entity) =>
+            {
+                if (entity.EntityHasComponent<TransformComponent>(world))
+                {
+                    var go = entity.EntityGetComponent<TransformComponent>(world).Transform.gameObject;
+                    Destroy(go);
+                    world.Log($"destroy go {go.name}");
+                }
+
+                if (entity.EntityHas<Box2DBodyComponent>(world))
+                {
+                    Box2DApi.DestroyBody2(entity.EntityGet<Box2DBodyComponent>(world).BodyReference);
+                }
+            };
             
             
             client.ConnectedAction = () =>

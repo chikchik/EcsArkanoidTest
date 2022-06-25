@@ -143,9 +143,11 @@ namespace Game.ClientServer
 
             AddServer(new ObjectivesSystem());
 
+            systems.Add(new DestroyAtTimeSystem());
+
             
 #if CLIENT
-            AddClient(new AnimateCharacterSystem());
+            AddClient(new CharacterAnimationSystem());
 #endif
 
             systems.Add(new AddLerpSystem());

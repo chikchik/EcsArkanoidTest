@@ -45,17 +45,19 @@ namespace Game.Ecs.ClientServer.Systems
                     def.Bullet = true;
                     def.Density = 5;
 
-                    bulletEntity.EntityAdd<DebugMeComponent>(world);
+                    //bulletEntity.EntityAdd<DebugMeComponent>(world);
                     
                     
-                    world.Log($"create bullet {dir}");
+                    world.Log($"create bullet {bulletEntity} {dir}");
 
                     ref var collider = ref bulletEntity.EntityAdd<Box2DCircleColliderComponent>(world);
                     collider.Radius = 0.02f;
                     
                     var body = Box2DServices.CreateBodyNow(world, bulletEntity);
                     Box2DApi.ApplyForce(body, dir.ToVector2XZ() * 3, pos.ToVector2XZ());
-                    var bodyInfo = Box2DApi.GetBodyInfo(body);
+                    //var bodyInfo = Box2DApi.GetBodyInfo(body);
+
+                    bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 1f;
                 }
 
                 if (shootingComponent.TotalTime < tm)

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game.Ecs.Client.Systems
 {
-    public class AnimateCharacterSystem : IEcsRunSystem
+    public class CharacterAnimationSystem : IEcsRunSystem
     {
         private void ContinueAnimation(Animator animator, string anim)
         {

@@ -131,6 +131,8 @@ namespace Game.Ecs.ClientServer.Systems
                 return;
             }
          
+            if (unitEntity.EntityHas<PushingComponent>(world))
+                return;
                 
             unitEntity.EntityAdd<PushingComponent>(world).EndTime = world.GetTime() + 1.3f;
 
