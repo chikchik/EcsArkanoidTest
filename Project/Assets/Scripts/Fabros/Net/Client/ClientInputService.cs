@@ -26,16 +26,17 @@ namespace Game.Fabros.Net.Client
         
         public void Input(EcsWorld inputWorld, int playerID, int tick, IInputComponent inputComponent)
         {
-            if (tick != client.GetNextInputTick().Value)
+            var nextTick = client.GetNextInputTick().Value;
+            if (tick != nextTick)
             {
-                Debug.LogError($"{tick} != {client.GetNextInputTick().Value}");
+                Debug.LogError($"{tick} != {nextTick}");
             }
 
             writer.Reset();
             writer.WriteByteArray(P2P.ADDR_SERVER.Address, false);
             writer.WriteSingleT(0xff);
             writer.WriteSingleT(playerID);
-            writer.WriteSingleT(client.GetNextInputTick().Value);
+            writer.WriteSingleT(tick);
 
             var cm = collection.GetComponent(inputComponent.GetType());
             cm.WriteSingleComponentWithId(writer, inputComponent);

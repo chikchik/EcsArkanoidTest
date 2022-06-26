@@ -32,7 +32,6 @@ namespace Game.Fabros.Net.Client
 {
     public class NetClient
     {
-        public Action<EcsWorld, List<int>> DeleteEntitiesAction;
         public Action<EcsWorld> InitWorldAction;
         public Action ConnectedAction;
 
@@ -77,8 +76,7 @@ namespace Game.Fabros.Net.Client
             this.systemsFactory = systemsFactory;
 
             Leo = new LeoContexts(Config.TMP_HASHES_PATH,
-                pool,
-                new SyncLog(Config.SYNC_LOG_PATH), inputWorld);
+                pool, inputWorld);
 
 
             //генерируем случайный id игрока с которым нас будет ассоциировать сервер
@@ -197,9 +195,7 @@ namespace Game.Fabros.Net.Client
             stepMult = 1;
 
             var iterations = 0;
-
-            Leo.SyncLog.WriteLine("sync begin");
-            
+           
             
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
             copyServerWorld.SetDebugName($"cp{ServerWorld.GetTick()}");
@@ -238,15 +234,9 @@ namespace Game.Fabros.Net.Client
                 iterations++;
             }
             Profiler.EndSample();
-            //Debug.Log("pr end");
             
-            
-
-            Leo.SyncLog.WriteLine("sync end\n");
 
             var dif2 = WorldDiff.BuildDiff(Leo.Pool, MainWorld, copyServerWorld);
-            
-            DeleteEntitiesAction(MainWorld, dif2.RemovedEntities);
             
             if (copyServerWorld.GetTick() != MainWorld.GetTick())
                 Debug.LogError($"ticks not equal {copyServerWorld.GetTick()} != {MainWorld.GetTick()}");
@@ -418,26 +408,9 @@ namespace Game.Fabros.Net.Client
 
         public Tick GetNextInputTick()
         {
-            //эти расчеты имеют смысл когда на клиенте и сервере разный tickrate
-            //например 20 на сервере, 60 на клиенте
-            //тогда сервер за один свой апдейт прибавляет +60/20 = +3 тика
-            //клиент же по +1
-            //потому надо сделать snap значения ввода чтоб оно попало на корректный серверный тик
-
-
             return Leo.GetCurrentTick(MainWorld);
-            /*
-            var dt = Leo.GetConfig(MainWorld).clientTickrate / Leo.GetConfig(MainWorld).serverTickrate;
-            var a = Leo.GetCurrentTick(MainWorld).Value / dt + 1;
-            var tick = new Tick(a * dt);
-            return tick;
-            */
         }
 
-        public LeoContexts GetContexts()
-        {
-            return Leo;
-        }
 
         public void Update()
         {
@@ -484,7 +457,6 @@ namespace Game.Fabros.Net.Client
 
         public void OnDestroy()
         {
-            Leo?.SyncLog?.Close();
         }
 
         public void Tick(float deltaTime, Action action)
@@ -507,23 +479,6 @@ namespace Game.Fabros.Net.Client
                 action();
                 iteration++;
             }
-        }
-
-        public void AddPlayerInput(IInputComponent inputComponent)
-        {
-            /*
-            var input = new UserInput();
-            input.Tick = GetNextInputTick();
-            input.PlayerID = playerID;
-            input.Component = inputComponent;
-            
-            if (Leo.Inputs.Count > 100)
-            {
-                throw new Exception("wtf leo size");
-            }
-            
-            Leo.Inputs.Add(input);
-            */
         }
 
         public void OnGUI()

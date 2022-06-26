@@ -155,7 +155,7 @@ namespace Game.Ecs.ClientServer.Systems
             if (unitEntity.EntityHas<ShootingComponent>(world) &&
                 !unitEntity.EntityGet<ShootingComponent>(world).ShootMade)
             {
-                Debug.Log("skip");
+                //Debug.Log("skip");
                 return;
             }
 

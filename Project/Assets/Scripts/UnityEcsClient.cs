@@ -61,6 +61,9 @@ namespace Game.Client
             viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
             
+            //глобальный обработчик удаления entity, чтоб никакой GameObject не утек
+            //если случайно удалить entity самостоятельно или преждевременно
+            //на сервере он тоже есть
             world.EntityDestroyedListeners.Add(entityDestroyedListener);
             
             
@@ -76,27 +79,7 @@ namespace Game.Client
 
                 world.AddUnique<ClientViewComponent>() = viewComponent;
             };
-
-
-            client.DeleteEntitiesAction = (world, entities) =>
-            {
-                foreach (var entity in entities)
-                {
-                    world.Log($"DeleteEntitiesAction entity {entity}");
-                    if (entity.EntityHasComponent<TransformComponent>(world))
-                    {
-                        var go = entity.EntityGetComponent<TransformComponent>(world).Transform.gameObject;
-                        Destroy(go);
-                        world.Log($"destroy go {go.name}");
-                    }
-
-                    if (entity.EntityHasComponent<FireViewComponent>(world))
-                    {
-                        var go = entity.EntityGetComponent<FireViewComponent>(world).view.gameObject;
-                        Destroy(go);
-                    }
-                };
-            };
+            
 
             string initialWorldJson = null;
             if (true)

@@ -128,7 +128,7 @@ namespace ConsoleApp
             factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { client = false, server = true });
 
 
-            leo = new LeoContexts(Config.TMP_HASHES_PATH, pool, new SyncLog(Config.SYNC_LOG_PATH), inputWorld);
+            leo = new LeoContexts(Config.TMP_HASHES_PATH, pool, inputWorld);
             /*
             leo.WriteToConsole = (string str) =>
             {
@@ -367,7 +367,7 @@ namespace ConsoleApp
 
             var difBinary = Convert.ToBase64String(P2P.Compress(writer.CopyToByteArray()));
 
-            leo.SyncLog.WriteLine($"send world {leo.GetPrevTick(world)}->{leo.GetCurrentTick(world)} to clients\n");
+            //leo.SyncLog.WriteLine($"send world {leo.GetPrevTick(world)}->{leo.GetCurrentTick(world)} to clients\n");
 
             //clients list could be modified
             Array.ForEach(clients.ToArray(), client =>
@@ -422,12 +422,6 @@ namespace ConsoleApp
         {
             var app = new Program();
             app.Run();
-            
-            /*
-            var worldJson = File.ReadAllText("world.ecs");
-            //var world = new EcsWorld();
-            var res = JsonConvert.DeserializeObject<WorldDiff>(worldJson);
-            */
         }
     }
 }

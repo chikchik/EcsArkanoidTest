@@ -12,7 +12,7 @@ namespace Game.Fabros.Net.ClientServer
     {
         public static void Log(this EcsWorld world, string str)
         {
-            
+#if false
             var worldName = world.GetDebugName();
 
             try
@@ -34,6 +34,7 @@ namespace Game.Fabros.Net.ClientServer
             
             var tx = $"{worldName}:{world.GetTick()}) {str}";
             Debug.Log(tx);
+#endif
             
         }
     }

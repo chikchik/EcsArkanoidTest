@@ -22,20 +22,19 @@ namespace Game.Fabros.Net.ClientServer
         /*
          * позволяет сохранять в отдельный файл игровые данные и сравнивать состояния миров между собой
         */
-        public SyncLog SyncLog { get; }
+
         
         
         private readonly string hashDir;
         private readonly bool writeHashes;
         private EcsWorld inputWorld;
 
-        public LeoContexts(string hashDir, ComponentsCollection components, SyncLog syncLog, EcsWorld inputWorld)
+        public LeoContexts(string hashDir, ComponentsCollection components, EcsWorld inputWorld)
         {
             this.hashDir = hashDir;
             this.inputWorld = inputWorld;
 
             Components = components;
-            SyncLog = syncLog;
 
 #if UNITY_EDITOR || UNITY_STANDALONE || SERVER
             //используется для отладки
@@ -87,11 +86,7 @@ namespace Game.Fabros.Net.ClientServer
             //обновляем мир 1 раз
             
             var currentTick = GetCurrentTick(world);
-            if (writeToLog) 
-                SyncLog.WriteLine($"tick {currentTick.Value} ->");
-
-            //ProcessUserInput(inputWorld, world, inputs);
-
+            world.Log($"tick {currentTick.Value} ->");
             
             var strStateDebug = "";
             if (writeHashes)
@@ -117,8 +112,7 @@ namespace Game.Fabros.Net.ClientServer
             
             
             
-            if (writeToLog)
-                SyncLog.WriteLine($"<- tick {currentTick.Value}\n");
+            world.Log($"<- tick {currentTick.Value}\n");
 
             if (writeHashes)
             {
@@ -149,13 +143,7 @@ namespace Game.Fabros.Net.ClientServer
         {
             return w.GetUnique<TickComponent>().Value;
         }
-
         
-        public Tick GetPrevTick(EcsWorld w)
-        {
-            return w.GetUnique<TickComponent>().Value - w.GetUnique<TickDeltaComponent>().Value;
-        }
-
 
         public TickrateConfigComponent GetConfig(EcsWorld world)
         {
