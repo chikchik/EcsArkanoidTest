@@ -13,6 +13,7 @@ using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
+using Game.Client;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.Client.Socket;
@@ -97,12 +98,17 @@ namespace Game.Fabros.Net.Client
         }
 
 
-        public void Start()
+        /**
+         * можно отправить на сервер свой мир и запустить симуляции с ним, вместо предустановленного
+         */
+        public void Start(string sendInitialWorld)
         {
             //произвольный код для подключения к серверу
             //особой важности не имеет после подкл к сокету вызывается asyncmain
             var hello = new Packet {hello = new Hello {Text = "hello"}, playerID = playerID, hasHello = true};
 
+            hello.hello.InitialWorld = sendInitialWorld;
+            
             var url = $"{Config.url}/{playerID}";
             var connection = new WebSocketConnection(hello, url, P2P.ADDR_SERVER);
             connection.OnConnected += () =>

@@ -18,9 +18,9 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
         {
             var world = systems.GetWorld();
 
-            var worldJson = File.ReadAllText("world.ecs.json");
-            var dif = WorldDiff.FromJsonString(pool, worldJson);
-            dif.ApplyChanges(world);
+            //var worldJson = File.ReadAllText("world.ecs.json");
+            //var dif = WorldDiff.FromJsonString(pool, worldJson);
+            //dif.ApplyChanges(world);
         }
     }
 }

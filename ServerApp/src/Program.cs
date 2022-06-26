@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
@@ -51,6 +52,10 @@ namespace ConsoleApp
         private List<byte[]> receivedMessages = new List<byte[]>();
         private HGlobalWriter writer = new HGlobalWriter();
 
+        readonly ComponentsCollection pool = SharedComponents.CreateComponentsPool();
+
+        private TickrateConfigComponent config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1 };
+
         async Task Run()
         {
             socket = new ClientWebSocket();
@@ -97,53 +102,57 @@ namespace ConsoleApp
             }
         }
         
+        private void StartSystems(string initialWorldJson)
+        {
+            if (string.IsNullOrEmpty(initialWorldJson))
+            {
+                //если игрок ничего не прислал то читаем мир из файла
+                initialWorldJson = File.ReadAllText("world.ecs.json");
+            }
+
+
+            world = new EcsWorld("serv");
+            world.EntityDestroyedListeners.Add(destroyedListener);
+
+            inputWorld = new EcsWorld("input");
+
+            world.AddUnique(config);
+            world.AddUnique<TickComponent>().Value = new Tick(0);
+            world.AddUnique(new TickDeltaComponent { Value = new TickDelta(config.Tickrate) });
+
+
+            systems = new EcsSystems(world);
+            systems.AddWorld(inputWorld, "input");
+
+            var factory = new EcsSystemsFactory(pool);
+            factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { client = false, server = true });
+
+
+            leo = new LeoContexts(Config.TMP_HASHES_PATH, pool, new SyncLog(Config.SYNC_LOG_PATH), inputWorld);
+            /*
+            leo.WriteToConsole = (string str) =>
+            {
+                Console.WriteLine(str);
+            };*/
+
+            var dif = WorldDiff.FromJsonString(leo.Components, initialWorldJson);
+            dif.ApplyChanges(world);
+
+            systems.Init();
+
+            sentWorld = WorldUtils.CopyWorld(pool, world);
+        }
+
         async Task AsyncRun()
         {
             try
             {
+                //StartSystems(null);
+
                 var url = $"{Config.url}/{P2P.ADDR_SERVER.AddressString}";
                 await socket.ConnectAsync(new Uri(url, UriKind.Absolute), new CancellationToken());
 
                 log($"connected to host\n{url}");
-
-
-                var pool = SharedComponents.CreateComponentsPool();
-
-
-                var config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1};
-
-                world = new EcsWorld("serv");
-                world.EntityDestroyedListeners.Add(destroyedListener);
-
-                inputWorld = new EcsWorld("input");
-
-                LeoContexts.InitNewWorld(world, config);
-
-                systems = new EcsSystems(world);
-                systems.AddWorld(inputWorld, "input");
-
-                var factory = new EcsSystemsFactory(pool);
-                factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { client = false, server = true });
-
-
-                leo = new LeoContexts(Config.TMP_HASHES_PATH, pool, 
-                    new SyncLog(Config.SYNC_LOG_PATH), inputWorld);
-                /*
-                leo.WriteToConsole = (string str) =>
-                {
-                    Console.WriteLine(str);
-                };*/
-
-
-                systems.Init();
-
-
-                sentWorld = WorldUtils.CopyWorld(pool, world);
-
-                //leo.Init(world, config);
-
-
-                world.AddUnique(new TickDeltaComponent { Value = new TickDelta (config.Tickrate) });
 
 
                 _ = Task.Factory.StartNew(ReceiveData);
@@ -166,7 +175,7 @@ namespace ConsoleApp
                     for (int i = 0; i < receivedCopy.Length; ++i)
                         ProcessMessage(receivedCopy[i]);
 
-                    if (next <= DateTime.UtcNow)
+                    if (next <= DateTime.UtcNow && systems != null)
                     {
                         //Console.WriteLine($"tick {leo.GetCurrentTick(world)}");
                         next = next.AddSeconds(step);
@@ -214,8 +223,13 @@ namespace ConsoleApp
 
                 log($"got hello from client {packet.playerID}");
 
-                var components = leo.Pool.Components.Select(component => component.GetComponentType().FullName).ToArray();
+                var components = pool.Components.Select(component => component.GetComponentType().FullName).ToArray();
                 var hello = new Hello {Components = components};
+                                
+                if (clients.Count == 0 &&  systems == null) {
+                    //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
+                    StartSystems(packet.hello.InitialWorld);
+                }
 
                 SendAsync(new Packet { hello = hello, hasHello = true }, client.Address);
 
@@ -345,6 +359,9 @@ namespace ConsoleApp
 
         void SendWorldToClients()
         {
+            if (clients.Count == 0)
+                return;
+
             var dif = WorldDiff.BuildDiff(leo.Pool, sentWorld, world);
             dif.WriteBinary(writer);
 

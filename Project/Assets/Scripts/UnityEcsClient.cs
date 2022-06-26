@@ -2,6 +2,7 @@
 using Fabros.Ecs;
 using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
+using Fabros.Ecs.ClientServer.WorldDiff;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
@@ -37,6 +38,9 @@ namespace Game.Client
         
         [Inject] 
         private EntityDestroyedListener entityDestroyedListener;
+        
+        [Inject] 
+        private ComponentsCollection components;
 
         private EcsSystems viewSystems;
 
@@ -94,7 +98,16 @@ namespace Game.Client
                 };
             };
 
-            client.Start();
+            string initialWorldJson = null;
+            if (true)
+            {
+                var initialWorld = new EcsWorld("initial");
+                ClientServices.InitializeNewWorldFromScene(initialWorld);
+                var dif = WorldDiff.BuildDiff(components, new EcsWorld("save"), initialWorld);
+                initialWorldJson = dif.ToJsonString(true);
+            }
+
+            client.Start(initialWorldJson);
         }
 
         private void Update()

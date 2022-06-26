@@ -51,13 +51,6 @@ namespace Game.Fabros.Net.ClientServer
         }
 
 
-        public static void InitNewWorld(EcsWorld world, TickrateConfigComponent cfg)
-        {
-            world.AddUnique(cfg);
-            world.AddUnique<TickComponent>().Value = new Tick(0);
-            //world.AddUnique<PendingInputComponent>().data = new UserInput[0];
-        }
-
         
         public static string CreateMD5(string input)
         {

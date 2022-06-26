@@ -7,5 +7,6 @@ namespace Game.Fabros.Net.ClientServer.Protocol
     {
         public string Text;
         public string[] Components;
+        public string InitialWorld;
     }
 }
