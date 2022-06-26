@@ -34,6 +34,9 @@ namespace Game.Client
         [Inject] private PlayerControlService controlService;
         
         [Inject] private EcsWorld world;
+        
+        [Inject] 
+        private EntityDestroyedListener entityDestroyedListener;
 
         private EcsSystems viewSystems;
 
@@ -54,20 +57,7 @@ namespace Game.Client
             viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
             
-            world.EntityWillBeDestroyedEvent += (world, entity) =>
-            {
-                if (entity.EntityHasComponent<TransformComponent>(world))
-                {
-                    var go = entity.EntityGetComponent<TransformComponent>(world).Transform.gameObject;
-                    Destroy(go);
-                    world.Log($"destroy go {go.name}");
-                }
-
-                if (entity.EntityHas<Box2DBodyComponent>(world))
-                {
-                    Box2DApi.DestroyBody2(entity.EntityGet<Box2DBodyComponent>(world).BodyReference);
-                }
-            };
+            world.EntityDestroyedListeners.Add(entityDestroyedListener);
             
             
             client.ConnectedAction = () =>
@@ -88,10 +78,12 @@ namespace Game.Client
             {
                 foreach (var entity in entities)
                 {
+                    world.Log($"DeleteEntitiesAction entity {entity}");
                     if (entity.EntityHasComponent<TransformComponent>(world))
                     {
                         var go = entity.EntityGetComponent<TransformComponent>(world).Transform.gameObject;
                         Destroy(go);
+                        world.Log($"destroy go {go.name}");
                     }
 
                     if (entity.EntityHasComponent<FireViewComponent>(world))

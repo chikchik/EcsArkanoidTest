@@ -25,6 +25,8 @@ namespace Game
             Container.Bind<EcsWorld>().FromInstance(new EcsWorld("main")).AsCached();
             Container.Bind<EcsWorld>().WithId("input").FromInstance(new EcsWorld("input")).AsCached();
 
+            Container.Bind<EntityDestroyedListener>().AsSingle();
+            
             var mainUI = FindObjectOfType<MainUI>();
             Container.Bind<MainUI>().FromInstance(mainUI).AsSingle();
             Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();

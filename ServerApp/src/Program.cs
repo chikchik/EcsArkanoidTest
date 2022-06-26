@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Fabros.Ecs.ClientServer.Utils;
@@ -12,8 +11,6 @@ using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
-using Game.Ecs.ClientServer.Components.Input;
-using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
@@ -49,6 +46,7 @@ namespace ConsoleApp
         private List<Client> clients = new List<Client>();
         private List<int> missingClients = new List<int>();
         private ApplyInputWorldService inputService = new ApplyInputWorldService();
+        private EntityDestroyedListener destroyedListener = new EntityDestroyedListener();
 
         private List<byte[]> receivedMessages = new List<byte[]>();
         private HGlobalWriter writer = new HGlobalWriter();
@@ -115,6 +113,7 @@ namespace ConsoleApp
                 var config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1};
 
                 world = new EcsWorld("serv");
+                world.EntityDestroyedListeners.Add(destroyedListener);
 
                 inputWorld = new EcsWorld("input");
 

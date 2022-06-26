@@ -24,18 +24,7 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 if (poolDestroyAt.Get(entity).Time > tm)
                     continue;
-                world.Log($"time is out bullet {entity}");
-                
-#if CLIENT
-                if (entity.EntityHasComponent<TransformComponent>(world))
-                {
-                    var go = entity.EntityGetComponent<TransformComponent>(world).Transform.gameObject;
-                                
-                    world.Log($"Delete2 Transf {go.name}");
-                    Object.Destroy(go);
-                }
-#endif
-                
+                world.Log($"time is out bullet {entity}");                             
                 world.DelEntity(entity);
             }
         }

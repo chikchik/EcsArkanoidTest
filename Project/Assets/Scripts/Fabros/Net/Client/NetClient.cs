@@ -274,8 +274,6 @@ namespace Game.Fabros.Net.Client
             //получили состояние мира с сервера
             var dif0 = WorldDiff.FromJsonString(Leo.Pool, packet.WorldUpdate.difStr);
 
-
-            //InputWorld = new EcsWorld("input");
             InitWorldAction(MainWorld);
 
             clientSystems = new EcsSystems(MainWorld);
