@@ -13,7 +13,7 @@ namespace Game.ClientServer
     {
         public void Log(EcsWorld world, string str)
         {
-#if true
+#if false
             var worldName = world.GetDebugName();
 
             try

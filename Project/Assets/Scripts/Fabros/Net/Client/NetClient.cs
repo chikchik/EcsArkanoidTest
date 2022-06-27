@@ -70,6 +70,7 @@ namespace Game.Fabros.Net.Client
             IEcsSystemsFactory systemsFactory)
         {
             Application.targetFrameRate = 60;
+            
 
             this.InputWorld = inputWorld;
             
@@ -130,6 +131,7 @@ namespace Game.Fabros.Net.Client
             Profiler.BeginSample("NetClientSim");
             //Debug.Log($"world\n{LeoDebug.e2s(serverWorld)}");
 
+            Profiler.BeginSample("SimServerWorld");
             //удаляем гарантированно устаревший ввод от игрока
             Leo.FilterInputs(Leo.GetCurrentTick(ServerWorld) - 10);
 
@@ -195,8 +197,10 @@ namespace Game.Fabros.Net.Client
             stepMult = 1;
 
             var iterations = 0;
-           
             
+            
+           
+            Profiler.BeginSample("PrepareSimWorld");
             var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
             copyServerWorld.SetDebugName($"cp{ServerWorld.GetTick()}");
        
@@ -211,6 +215,7 @@ namespace Game.Fabros.Net.Client
             copyServerSystems.Init();
             
             
+            Profiler.EndSample();
 
             var serverTick = Leo.GetCurrentTick(copyServerWorld);
             var clientTick = Leo.GetCurrentTick(MainWorld);
@@ -218,11 +223,14 @@ namespace Game.Fabros.Net.Client
             string debug = $"{ServerWorld.GetUnique<TickComponent>().Value.Value}";
             
             //Debug.Log($"pr srv:{Leo.GetCurrentTick(ServerWorld).Value} client: {Leo.GetCurrentTick(MainWorld).Value}");
-            Profiler.BeginSample("SimServerWorld");
+            
             stats.simTicksTotal = 0;
             while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
             {
+                Profiler.BeginSample("SimTick");
                 Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Config.SyncDataLogging, debug);
+                Profiler.EndSample();
+                
                 stats.simTicksTotal++;
                 if (iterations > 500)
                 {
@@ -236,21 +244,25 @@ namespace Game.Fabros.Net.Client
             Profiler.EndSample();
             
 
+            Profiler.BeginSample("Apply Main Dif");
+            
             var dif2 = WorldDiff.BuildDiff(Leo.Pool, MainWorld, copyServerWorld);
             
             if (copyServerWorld.GetTick() != MainWorld.GetTick())
                 Debug.LogError($"ticks not equal {copyServerWorld.GetTick()} != {MainWorld.GetTick()}");
             
             dif2.ApplyChanges(MainWorld);
+            Profiler.EndSample();
             
             Profiler.BeginSample("replicate2");
             Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld);
             Profiler.EndSample();
             
+            Profiler.BeginSample("SimEnd");
             Box2DDebugViewSystem.ReplaceBox2D(MainWorld);
-            
-            
             copyServerSystems.Destroy();
+            Profiler.EndSample();
+            
             Profiler.EndSample();
         }
 
@@ -345,6 +357,8 @@ namespace Game.Fabros.Net.Client
                         {
                             break;
                         }
+                        
+                        Profiler.BeginSample("Packet received");
 
                         updated = true;
                         packet = P2P.ParseResponse<Packet>(msg.buffer);
@@ -356,10 +370,12 @@ namespace Game.Fabros.Net.Client
                         //if (Input.GetKey(KeyCode.A))
                         //     break;
 
+                        Profiler.BeginSample("Packet Diff Decode");
                         var byteArrayDifCompressed = Convert.FromBase64String(packet.WorldUpdate.difBinary);
                         stats.diffSize = byteArrayDifCompressed.Length;
                         var byteArrayDif = P2P.Decompress(byteArrayDifCompressed);
                         var dif = WorldDiff.FromByteArray(Leo.Pool, byteArrayDif);
+                        Profiler.EndSample();
 
                         /*
                          * если клиент создал сам entity с такими же id, то их надо удалить прежде чем применять dif
@@ -393,6 +409,7 @@ namespace Game.Fabros.Net.Client
                         //применяем diff к прошлому миру полученному от сервера
                         dif.ApplyChanges(ServerWorld);
                         serverSystems.Run();
+                        Profiler.EndSample();
                     }
 
                     if (updated)
@@ -480,6 +497,7 @@ namespace Game.Fabros.Net.Client
 
         public void Tick(float deltaTime, Action action)
         {
+            Profiler.BeginSample("Main Tick");
             //хелпер чтоб не обновляться чаще раз в секунду чем заданный tickrate
             var iteration = 0;
             while (true)
@@ -498,6 +516,7 @@ namespace Game.Fabros.Net.Client
                 action();
                 iteration++;
             }
+            Profiler.EndSample();
         }
 
         public void OnGUI()

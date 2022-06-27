@@ -43,6 +43,7 @@ namespace Game.Fabros.Net.ClientServer
             writeHashes = Directory.Exists(hashDir);
             if (writeHashes && (hashDir.Contains("temp") || hashDir.Contains("tmp")))
             {
+                Debug.Log("writeHashes");
                 var files = Directory.GetFiles(hashDir);
                 Array.ForEach(files, file => {
                     File.Delete(file);
