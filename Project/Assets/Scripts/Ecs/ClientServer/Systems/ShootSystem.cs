@@ -37,7 +37,7 @@ namespace Game.Ecs.ClientServer.Systems
                     bulletEntity.EntityAdd<BulletComponent>(world);
 
                     var pos = entity.EntityGet<PositionComponent>(world).value;
-                    bulletEntity.EntityAdd<PositionComponent>(world).value = (pos + dir/2).WithY(1.35f);
+                    bulletEntity.EntityAdd<PositionComponent>(world).value = (pos + dir/2).WithY(1.2f);
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
 
                     ref var def = ref bulletEntity.EntityAdd<Box2DRigidbodyDefinitionComponent>(world);
@@ -63,7 +63,7 @@ namespace Game.Ecs.ClientServer.Systems
                 if (shootingComponent.TotalTime < tm)
                 {
                     entity.EntityDel<ShootingComponent>(world);
-                    entity.EntityDel<CantMoveComponent>(world);
+                    //entity.EntityDel<CantMoveComponent>(world);
                 }
             }
         }

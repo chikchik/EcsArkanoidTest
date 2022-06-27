@@ -68,7 +68,7 @@ namespace Game.Ecs.Client.Systems
             filter = world.Filter<UnitComponent>().Inc<ShootStartedComponent>().End();
             foreach (var entity in filter)
             {
-                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("Shooting", 0.05f);
+                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("Shooting", 0.1f);
             }
         }
     }
