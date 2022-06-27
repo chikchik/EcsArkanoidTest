@@ -102,18 +102,22 @@ namespace ConsoleApp
             }
         }
         
-        private void StartSystems(string initialWorldJson)
+        private void StartSystems(byte[] initialWorld)
         {
-            if (string.IsNullOrEmpty(initialWorldJson))
+            WorldDiff dif = null;
+            if (initialWorld?.Length > 0)
             {
-                //если игрок ничего не прислал то читаем мир из файла
-                initialWorldJson = File.ReadAllText("world.ecs.json");
+                dif = WorldDiff.FromByteArray(pool, initialWorld);
+            }
+            else
+            {
+                dif = WorldDiff.FromJsonString(pool, File.ReadAllText("world.ecs.json"));
             }
 
 
             world = new EcsWorld("serv");
             world.EntityDestroyedListeners.Add(destroyedListener);
-
+             
             inputWorld = new EcsWorld("input");
 
             world.AddUnique(config);
@@ -135,7 +139,7 @@ namespace ConsoleApp
                 Console.WriteLine(str);
             };*/
 
-            var dif = WorldDiff.FromJsonString(leo.Components, initialWorldJson);
+            
             dif.ApplyChanges(world);
 
             systems.Init();
@@ -228,7 +232,7 @@ namespace ConsoleApp
                                 
                 if (clients.Count == 0 &&  systems == null) {
                     //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
-                    StartSystems(packet.hello.InitialWorld);
+                    StartSystems(Convert.FromBase64String(packet.hello.InitialWorld));
                 }
 
                 SendAsync(new Packet { hello = hello, hasHello = true }, client.Address);

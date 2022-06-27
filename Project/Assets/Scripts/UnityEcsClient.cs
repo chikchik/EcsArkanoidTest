@@ -87,7 +87,7 @@ namespace Game.Client
                 var initialWorld = new EcsWorld("initial");
                 ClientServices.InitializeNewWorldFromScene(initialWorld);
                 var dif = WorldDiff.BuildDiff(components, new EcsWorld("save"), initialWorld);
-                initialWorldJson = dif.ToJsonString(true);
+                initialWorldJson = dif.ToBase64String();
             }
 
             client.Start(initialWorldJson);
