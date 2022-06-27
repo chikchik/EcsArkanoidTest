@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Components
 {
-    //[DontSerialize]//как тест что оно может целиком на сервере определяться
     public struct MoveInfoComponent
     {
         public Vector3 startPoint;

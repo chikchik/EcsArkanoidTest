@@ -320,6 +320,8 @@ namespace Game.Fabros.Net.Client
             {
                 while (true)
                 {
+                    if (Socket == null)
+                        break;//closed connection
                     int delay = 0;
                     bool updated = false;
                     while (true)
@@ -458,6 +460,8 @@ namespace Game.Fabros.Net.Client
 
         public void OnDestroy()
         {
+            Socket?.Close();
+            Socket = null;
         }
 
         public void Tick(float deltaTime, Action action)

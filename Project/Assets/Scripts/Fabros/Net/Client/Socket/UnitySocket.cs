@@ -42,6 +42,11 @@ namespace Game.Fabros.Net.Client.Socket
             return packet;
         }
 
+        public void Close()
+        {
+            socket.Close();
+        }
+
         public class Message
         {
             public byte[] buffer;

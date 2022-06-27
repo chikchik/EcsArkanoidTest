@@ -20,6 +20,7 @@ public class DevSubPanel : MonoBehaviour
 
     private int destroyedCount;
     private static int prevT;
+    private Vector2 customCellSize = new Vector2(0,0);
 
     private void Awake()
     {
@@ -35,6 +36,10 @@ public class DevSubPanel : MonoBehaviour
         OnRectTransformDimensionsChange();
     }
 
+    public void ChangeCellSize(Vector2 cs)
+    {
+        customCellSize = cs;
+    }
 
     private void OnRectTransformDimensionsChange()
     {
@@ -55,10 +60,11 @@ public class DevSubPanel : MonoBehaviour
             var sc = h / rtHeight;
             size /= sc;
         }
-        
-        
 
-        gridLayout.cellSize = new Vector2(size, size);
+        if (customCellSize.magnitude > 0.001f)
+            gridLayout.cellSize = customCellSize;
+        else
+            gridLayout.cellSize = new Vector2(size, size);
     }
 
 
