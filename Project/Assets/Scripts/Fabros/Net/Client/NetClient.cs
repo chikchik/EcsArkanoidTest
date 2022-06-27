@@ -268,7 +268,8 @@ namespace Game.Fabros.Net.Client
                 throw new Exception("async next step for stopped application");
 
             //получили состояние мира с сервера
-            var dif0 = WorldDiff.FromJsonString(Leo.Pool, packet.WorldUpdate.difStr);
+            var data = Convert.FromBase64String(packet.WorldUpdate.difStr);
+            var dif0 = WorldDiff.FromByteArray(Leo.Pool, data);
 
             InitWorldAction(MainWorld);
 

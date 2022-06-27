@@ -402,7 +402,7 @@ namespace ConsoleApp
                 hasWelcomeFromServer = true,
                 WorldUpdate = new WorldUpdateProto
                 {
-                    difStr = dif.ToJsonString(),
+                    difStr = dif.ToBase64String(),
                     delay = 1
                 }
             };
