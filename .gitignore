@@ -44,3 +44,5 @@ Box2DProject/box2d-console/out
 *.apk
 *.pdb
 tmp/
+*DontShip*
+*DoNotShip*

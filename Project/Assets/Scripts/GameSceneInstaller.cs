@@ -1,3 +1,5 @@
+using Fabros.Ecs.ClientServer;
+using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.ClientServer.WorldDiff;
 using Game.Client;
 using Game.ClientServer;
@@ -39,7 +41,7 @@ namespace Game
             Container.BindInterfacesAndSelfTo<EcsSystemsFactory>().AsSingle();
             Container.Bind<ComponentsCollection>().FromInstance(SharedComponents.CreateComponentsPool()).AsSingle();
 
-
+            WorldLoggerExt.logger = new WorldLogger();
 
             if (settings.SinglePlayer)
             {

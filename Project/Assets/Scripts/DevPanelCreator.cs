@@ -24,12 +24,19 @@ public class DevPanelCreator
             input.contentType = TMP_InputField.ContentType.IntegerNumber;
            
 
-            sub.button("connect", (btn) =>
+            sub.button("connect MainScene", (btn) =>
+            {
+                Config.ROOM_B = input.text;
+                SceneManager.LoadScene("MainScene");
+            });
+            
+            sub.button("connect MiniScene", (btn) =>
             {
                 Config.ROOM_B = input.text;
                 
-                SceneManager.LoadScene("MainScene");
+                SceneManager.LoadScene("MiniScene");
             });
+            
         });
     }
 }

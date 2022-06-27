@@ -253,16 +253,30 @@ namespace Game.Fabros.Net.Client
             copyServerSystems.Destroy();
             Profiler.EndSample();
         }
+
         private async UniTask<string> AsyncMain(Packet packet)
         {
+            try
+            {
+                return await AsyncMain0(packet);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+
+            return "";
+        }
+        
+        private async UniTask<string> AsyncMain0(Packet packet)
+        {
             Leo.Pool.RemapOrder(packet.hello.Components);
+            
             while (!packet.hasWelcomeFromServer)
             {
                 var msg = await Socket.AsyncWaitMessage();
                 packet = P2P.ParseResponse<Packet>(msg.buffer);
             }
-            
-            
                 
             if (!Application.isPlaying)
                 throw new Exception("async next step for stopped application");
@@ -303,7 +317,7 @@ namespace Game.Fabros.Net.Client
             //SystemsAndComponents.AddSystems(Leo.Pool, serverSystems, false, false);
             serverSystems.Init();
 
-            Debug.Log($"world\n{LeoDebug.e2s(MainWorld)}");
+            //Debug.Log($"world\n{LeoDebug.e2s(MainWorld)}");
 
 
             Connected = true;
@@ -492,6 +506,11 @@ namespace Game.Fabros.Net.Client
                 return;
 
             GUILayout.BeginVertical();
+            
+            GUILayout.Label("");
+            GUILayout.Label("");
+            GUILayout.Label("");
+            
             GUILayout.Label($"main entities {MainWorld.GetAllEntitiesCount()}");
             GUILayout.Label($"input entities {InputWorld.GetAllEntitiesCount()}");
             GUILayout.Label($"playerID {playerID}");
@@ -517,7 +536,7 @@ namespace Game.Fabros.Net.Client
             GUILayout.Label($"history {history}");
 
             GUILayout.Label($"diffSize {stats.diffSize}");
-
+            
             var size = MainWorld.GetAllocMemorySizeInBytes() / 1024;
                 
             GUILayout.Label($"EcsWorld size {size} kb");

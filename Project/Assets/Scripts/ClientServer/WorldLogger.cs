@@ -1,18 +1,19 @@
 ﻿using System;
 using System.IO;
-using System.Text;
+using Fabros.Ecs.ClientServer;
+using Fabros.Ecs.ClientServer.Utils;
 using Fabros.EcsModules.Tick.Other;
-using Game.ClientServer;
+using Game.Fabros.Net.ClientServer;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace Game.Fabros.Net.ClientServer
+namespace Game.ClientServer
 {
-    public static class WorldDebugLogger
+    public class WorldLogger : IWorldLogger
     {
-        public static void Log(this EcsWorld world, string str)
+        public void Log(EcsWorld world, string str)
         {
-#if false
+#if true
             var worldName = world.GetDebugName();
 
             try
@@ -35,7 +36,6 @@ namespace Game.Fabros.Net.ClientServer
             var tx = $"{worldName}:{world.GetTick()}) {str}";
             Debug.Log(tx);
 #endif
-            
         }
     }
 }

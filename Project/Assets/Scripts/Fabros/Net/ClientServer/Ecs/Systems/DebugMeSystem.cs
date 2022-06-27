@@ -1,4 +1,6 @@
-﻿using Fabros.Ecs.ClientServer.Components;
+﻿using Fabros.Ecs.ClientServer;
+using Fabros.Ecs.ClientServer.Components;
+using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
