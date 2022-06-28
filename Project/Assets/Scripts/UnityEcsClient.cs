@@ -108,6 +108,8 @@ namespace Game.Client
             UnityEcsSinglePlayer.CheckInput(camera, joystick, controlService);
             
             viewSystems.Run();
+
+            ui.View.DebugText.text = client.GetDebugString();
         }
 
         private void OnDestroy()
@@ -119,7 +121,7 @@ namespace Game.Client
 
         private void OnGUI()
         {
-            client.OnGUI();
+            //client.OnGUI();
         }
 
         private void OnDrawGizmos()

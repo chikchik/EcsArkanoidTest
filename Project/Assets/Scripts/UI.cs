@@ -8,14 +8,14 @@ namespace Game.Client
 {
     public class UI: EventsSystem<FoodCollectedComponent>.IAnyComponentChangedListener
     {
-        private MainUI view;
+        public MainUI View { get; private set; }
         private EcsWorld world;
         private PlayerControlService controlService;
         
         public UI(
             EcsWorld world, MainUI view, PlayerControlService controlService)
         {
-            this.view = view;
+            this.View = view;
             this.world = world;
             this.controlService = controlService;
 
@@ -45,7 +45,7 @@ namespace Game.Client
             if (unitEntity != entity)
                 return;
 
-            view.FoodText.text = $"Food Collected {data.Value}";       
+            View.FoodText.text = $"Food Collected {data.Value}";       
         }
     }
 }

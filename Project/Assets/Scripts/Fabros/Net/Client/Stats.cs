@@ -14,7 +14,7 @@ namespace Game.Fabros.Net.Client
         public int simTicksTotal;
 
         public List<int> delaysHistory = new List<int>();
-        public const int HISTORY_LEN = 30;
+        public const int HISTORY_LEN = 10;
 
         public Stats()
         {

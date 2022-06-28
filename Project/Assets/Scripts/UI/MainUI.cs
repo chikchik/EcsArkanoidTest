@@ -15,5 +15,6 @@ namespace Game.UI
         public GridLayoutGroup InventoryGrid;
         public ConnectView Connect;
         public TMP_Text FoodText;
+        public TMP_Text DebugText;
     }
 }

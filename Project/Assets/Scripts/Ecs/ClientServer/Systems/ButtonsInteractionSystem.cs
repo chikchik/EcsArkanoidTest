@@ -13,7 +13,7 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class ButtonsInteractionSystem : IEcsRunSystem
     {
-        private List<int> entities = new List<int>();
+        private List<int> entities = new List<int>(32);
         
         public void Run(EcsSystems systems)
         {

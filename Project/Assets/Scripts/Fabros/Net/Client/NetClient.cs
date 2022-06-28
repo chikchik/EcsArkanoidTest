@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Cysharp.Threading.Tasks;
 using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
@@ -9,6 +10,7 @@ using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D;
 using Fabros.EcsModules.Box2D.Client.Systems;
 using Fabros.EcsModules.Box2D.ClientServer;
+using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
@@ -39,6 +41,8 @@ namespace Game.Fabros.Net.Client
         public EcsWorld MainWorld { get; }
         public EcsWorld InputWorld { get; }
         public EcsWorld ServerWorld { get; private set; }
+        
+        public EcsWorld copyServerWorld { get; private set; }
 
         public LeoContexts Leo { get; }
 
@@ -48,6 +52,7 @@ namespace Game.Fabros.Net.Client
         private float lastUpdateTime { get; set; }
         private EcsSystems clientSystems;
         private EcsSystems serverSystems;
+        private EcsSystems copyServerSystems;
         
         private readonly int playerID;
 
@@ -201,20 +206,13 @@ namespace Game.Fabros.Net.Client
             
            
             Profiler.BeginSample("PrepareSimWorld");
-            var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
-            copyServerWorld.SetDebugName($"cp{ServerWorld.GetTick()}");
-       
+            //var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
+            //copyServerWorld.SetDebugName($"cp{ServerWorld.GetTick()}");
+            
+            copyServerWorld.CopyFrom(ServerWorld);
+            copyServerWorld.DelUnique<Box2DWorldComponent>();
             Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
-            
-            var copyServerSystems = new EcsSystems(copyServerWorld);
-            copyServerSystems.AddWorld(InputWorld, "input");
-            
-            systemsFactory.AddNewSystems(copyServerSystems,
-                new IEcsSystemsFactory.Settings{client = false, server = false});
-            
-            copyServerSystems.Init();
-            
-            
+
             Profiler.EndSample();
 
             var serverTick = Leo.GetCurrentTick(copyServerWorld);
@@ -260,7 +258,6 @@ namespace Game.Fabros.Net.Client
             
             Profiler.BeginSample("SimEnd");
             Box2DDebugViewSystem.ReplaceBox2D(MainWorld);
-            copyServerSystems.Destroy();
             Profiler.EndSample();
             
             Profiler.EndSample();
@@ -331,6 +328,18 @@ namespace Game.Fabros.Net.Client
 
             //Debug.Log($"world\n{LeoDebug.e2s(MainWorld)}");
 
+
+            copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
+            copyServerWorld.SetDebugName("csrv");
+            
+            copyServerSystems = new EcsSystems(copyServerWorld);
+            copyServerSystems.AddWorld(InputWorld, "input");
+            
+            systemsFactory.AddNewSystems(copyServerSystems,
+                new IEcsSystemsFactory.Settings{client = false, server = false});
+            
+            copyServerSystems.Init();
+            
 
             Connected = true;
             Debug.Log("client started");
@@ -524,44 +533,45 @@ namespace Game.Fabros.Net.Client
             if (!Connected)
                 return;
 
-            GUILayout.BeginVertical();
             
-            GUILayout.Label("");
-            GUILayout.Label("");
-            GUILayout.Label("");
+            //GUILayout.Label(GetDebugString());
+        }
+
+        public string GetDebugString()
+        {
+            var sb = new StringBuilder(512);
             
-            GUILayout.Label($"main entities {MainWorld.GetAllEntitiesCount()}");
-            GUILayout.Label($"input entities {InputWorld.GetAllEntitiesCount()}");
-            GUILayout.Label($"playerID {playerID}");
-            //GUILayout.Label($"future {futureTicks}");
-            GUILayout.Label($"lags {stats.lags} vs {stats.oppLags}");
-            GUILayout.Label($"stepOffset {stepOffset}");
-            GUILayout.Label($"stepMult {stepMult}");
-            GUILayout.Label($"currentWorldTick {Leo.GetCurrentTick(MainWorld)}");
-            GUILayout.Label($"serverWorldTick {Leo.GetCurrentTick(ServerWorld)}");
+            sb.AppendLine($"main entities {MainWorld.GetAllEntitiesCount()}");
+            sb.AppendLine($"input entities {InputWorld.GetAllEntitiesCount()}");
+            sb.AppendLine($"playerID {playerID}");
+            //sb.AppendLine($"future {futureTicks}");
+            sb.AppendLine($"lags {stats.lags} vs {stats.oppLags}");
+            sb.AppendLine($"stepOffset {stepOffset}");
+            sb.AppendLine($"stepMult {stepMult}");
+            sb.AppendLine($"currentWorldTick {Leo.GetCurrentTick(MainWorld)}");
+            sb.AppendLine($"serverWorldTick {Leo.GetCurrentTick(ServerWorld)}");
 
-            GUILayout.Label($"lastReceivedServerTick {stats.lastReceivedServerTick}");
-            GUILayout.Label($"lastClientTick {stats.lastClientTick}");
-            GUILayout.Label($"delta {stats.lastClientTick - stats.lastReceivedServerTick}");
-            GUILayout.Label($"simTicksTotal {stats.simTicksTotal}");
+            sb.AppendLine($"lastReceivedServerTick {stats.lastReceivedServerTick}");
+            sb.AppendLine($"lastClientTick {stats.lastClientTick}");
+            sb.AppendLine($"delta {stats.lastClientTick - stats.lastReceivedServerTick}");
+            sb.AppendLine($"simTicksTotal {stats.simTicksTotal}");
 
 
-            var history = "";
+            sb.Append("history: ");
             foreach (var i in stats.delaysHistory)
             {
-                history += $"{i.ToString()}".PadLeft(4);
+                sb.Append($"{i.ToString()}".PadLeft(4));
             }
-            
-            GUILayout.Label($"history {history}");
 
-            GUILayout.Label($"diffSize {stats.diffSize}");
+            sb.AppendLine();
+
+            sb.AppendLine($"diffSize {stats.diffSize}");
             
             var size = MainWorld.GetAllocMemorySizeInBytes() / 1024;
                 
-            GUILayout.Label($"EcsWorld size {size} kb");
-
-            //WorldMono.OnGui(currentWorld);
-            GUILayout.EndVertical();
+            sb.AppendLine($"EcsWorld size {size} kb");
+            
+            return sb.ToString();
         }
     }
 }
