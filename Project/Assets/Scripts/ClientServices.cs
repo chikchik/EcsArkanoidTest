@@ -39,6 +39,7 @@ namespace Game.Client
             ref var entityCollectionComponent = ref entityCollectionSystem.EntityAdd<EntityCollectionComponent>(world);
             var entities = entityCollectionComponent.entities = new Dictionary<GameObject, int>();
 
+            int NameId = 0;
             int GetOrCreateGameEntity(GameObject go)
             {
                 if (entities.TryGetValue(go, out var entity)) return entity;
@@ -46,7 +47,9 @@ namespace Game.Client
                 entity = world.NewEntity();
 
                 ref var gameObjectNameComponent = ref entity.EntityAdd<GameObjectNameComponent>(world);
-                gameObjectNameComponent.Name = go.name;
+                gameObjectNameComponent.Id = NameId;
+                go.name = NameId.ToString();
+                NameId++;
 
                 ref var transformComponent = ref entity.EntityAdd<TransformComponent>(world);
                 transformComponent.Transform = go.transform;

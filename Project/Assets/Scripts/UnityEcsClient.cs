@@ -109,7 +109,7 @@ namespace Game.Client
             
             viewSystems.Run();
 
-            //ui.View.DebugText.text = client.GetDebugString();
+            ui.View.DebugText.text = client.GetDebugString();
         }
 
         private void OnDestroy()

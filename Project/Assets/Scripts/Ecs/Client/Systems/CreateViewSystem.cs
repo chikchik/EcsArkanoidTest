@@ -26,7 +26,7 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filter)
             {
-                var name = entity.EntityGetComponent<GameObjectNameComponent>(world).Name;
+                var name = entity.EntityGetComponent<GameObjectNameComponent>(world).Id.ToString();
                 var go = GameObject.Find(name).gameObject;
                 go.gameObject.SetActive(true);
 

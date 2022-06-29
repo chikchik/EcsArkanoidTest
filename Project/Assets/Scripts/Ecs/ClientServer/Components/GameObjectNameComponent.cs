@@ -8,7 +8,8 @@ namespace Game.Ecs.ClientServer.Components
     [Serializable]
     public struct GameObjectNameComponent
     {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] 
-        public string Name;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] 
+        //public string Name;
+        public int Id;
     }
 }

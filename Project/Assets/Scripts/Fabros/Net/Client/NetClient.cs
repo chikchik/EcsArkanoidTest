@@ -53,6 +53,8 @@ namespace Game.Fabros.Net.Client
         private EcsSystems clientSystems;
         private EcsSystems serverSystems;
         private EcsSystems copyServerSystems;
+
+        private WorldDiff dif2;
         
         private readonly int playerID;
 
@@ -244,10 +246,10 @@ namespace Game.Fabros.Net.Client
 
             Profiler.BeginSample("Apply Main Dif");
             
-            var dif2 = WorldDiff.BuildDiff(Leo.Pool, MainWorld, copyServerWorld);
+            dif2 = WorldDiff.BuildDiff(Leo.Pool, MainWorld, copyServerWorld, dif2);
             
-            if (copyServerWorld.GetTick() != MainWorld.GetTick())
-                Debug.LogError($"ticks not equal {copyServerWorld.GetTick()} != {MainWorld.GetTick()}");
+            //if (copyServerWorld.GetTick() != MainWorld.GetTick())
+            //    Debug.LogError($"ticks not equal {copyServerWorld.GetTick()} != {MainWorld.GetTick()}");
             
             dif2.ApplyChanges(MainWorld);
             Profiler.EndSample();
@@ -256,10 +258,7 @@ namespace Game.Fabros.Net.Client
             Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld);
             Profiler.EndSample();
             
-            Profiler.BeginSample("SimEnd");
             Box2DDebugViewSystem.ReplaceBox2D(MainWorld);
-            Profiler.EndSample();
-            
             Profiler.EndSample();
         }
 
@@ -537,9 +536,11 @@ namespace Game.Fabros.Net.Client
             //GUILayout.Label(GetDebugString());
         }
 
+        private StringBuilder sb = new StringBuilder(512);
         public string GetDebugString()
         {
-            var sb = new StringBuilder(512);
+            sb.Clear();
+#if UNITY_EDITOR
             
             sb.AppendLine($"main entities {MainWorld.GetAllEntitiesCount()}");
             sb.AppendLine($"input entities {InputWorld.GetAllEntitiesCount()}");
@@ -570,6 +571,9 @@ namespace Game.Fabros.Net.Client
             var size = MainWorld.GetAllocMemorySizeInBytes() / 1024;
                 
             sb.AppendLine($"EcsWorld size {size} kb");
+#else
+            sb.AppendLine($"diffSize {stats.diffSize}");
+#endif
             
             return sb.ToString();
         }

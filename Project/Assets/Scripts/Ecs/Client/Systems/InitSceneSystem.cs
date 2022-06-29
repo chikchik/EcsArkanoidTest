@@ -32,12 +32,12 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in sceneWorld.Filter<GameObjectNameComponent>().End())
             {
-                var name = poolSceneWorldObjectNames.Get(entity).Name;
+                var name = poolSceneWorldObjectNames.Get(entity).Id.ToString();
                 sceneEntitiesByName[name] = poolSceneWorldObjects.Get(entity).Transform;
             }
 
             foreach (var entity in world.Filter<GameObjectNameComponent>().End())
-                sceneEntitiesByName.Remove(poolWorldObjectNames.Get(entity).Name);
+                sceneEntitiesByName.Remove(poolWorldObjectNames.Get(entity).Id.ToString());
 
             /*
              * все кто остался в sceneEntitiesByName можно удалить со сцены

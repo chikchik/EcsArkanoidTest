@@ -29,7 +29,7 @@ namespace Game.Ecs.ClientServer.Systems
             int GetTargetEntityByName(string name)
             {
                 foreach (var entity in names)
-                    if (entity.EntityGet<GameObjectNameComponent>(world).Name == name)
+                    if (entity.EntityGet<GameObjectNameComponent>(world).Id.ToString() == name)
                     {
                         //те что часть квеста - не горят
                         if (entity.EntityHas<FlammableComponent>(world))

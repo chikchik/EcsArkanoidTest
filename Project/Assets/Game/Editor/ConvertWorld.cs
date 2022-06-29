@@ -8,7 +8,7 @@ using UnityEngine;
 
 public static class ConvertWorld
 {
-    [MenuItem("World/Save ECS world")]
+    //[MenuItem("World/Save ECS world")]
     static void SaveWorld()
     {
         var world = new EcsWorld();
