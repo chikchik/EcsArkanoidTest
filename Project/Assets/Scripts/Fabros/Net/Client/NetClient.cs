@@ -12,6 +12,7 @@ using Fabros.EcsModules.Box2D.Client.Systems;
 using Fabros.EcsModules.Box2D.ClientServer;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
+using Fabros.EcsModules.Grid.Components;
 using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
@@ -208,12 +209,14 @@ namespace Game.Fabros.Net.Client
             
            
             Profiler.BeginSample("PrepareSimWorld");
-            //var copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
-            //copyServerWorld.SetDebugName($"cp{ServerWorld.GetTick()}");
-            
+
+            var gridComponent = copyServerWorld.GetUnique<GridComponent>(); 
             copyServerWorld.CopyFrom(ServerWorld);
             copyServerWorld.DelUnique<Box2DWorldComponent>();
             Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
+
+            //в ServerWorld нету Grid системы, потому при копировании она удалится, передобавим
+            copyServerWorld.AddUnique(gridComponent);
 
             Profiler.EndSample();
 
