@@ -128,6 +128,7 @@ namespace Game.Client
 
             var hor = Input.GetAxis("Horizontal");
             var ver = Input.GetAxis("Vertical");
+            //Debug.Log(joystick.Direction);
             
             if (Mathf.Abs(hor) > 0.01f || Mathf.Abs(ver) > 0.01f)
             {

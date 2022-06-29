@@ -3,15 +3,23 @@ using Leopotam.EcsLite;
 
 namespace Game.Fabros.EcsModules.Fire.ClientServer.Systems
 {
-    public class FireDestroyEntitySystem : IEcsRunSystem
+    public class FireDestroyEntitySystem : IEcsInitSystem, IEcsRunSystem
     {
-        public void Run(EcsSystems systems)
+        EcsWorld world;
+        EcsFilter filter;
+        
+        public void Init(EcsSystems systems)
         {
-            var world = systems.GetWorld();
-            var filter = world
+            world = systems.GetWorld();
+            filter = world
                 .Filter<FireComponent>().Inc<BurnedOutComponent>()
                 .End();
-            foreach (var entity in filter) world.DelEntity(entity);
+        }
+        
+        public void Run(EcsSystems systems)
+        {
+            foreach (var entity in filter) 
+                world.DelEntity(entity);
         }
     }
 }

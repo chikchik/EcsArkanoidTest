@@ -551,10 +551,10 @@ namespace Game.Fabros.Net.Client
             sb.AppendLine($"currentWorldTick {Leo.GetCurrentTick(MainWorld)}");
             sb.AppendLine($"serverWorldTick {Leo.GetCurrentTick(ServerWorld)}");
 
-            sb.AppendLine($"lastReceivedServerTick {stats.lastReceivedServerTick}");
+            //sb.AppendLine($"lastReceivedServerTick {stats.lastReceivedServerTick}");
             sb.AppendLine($"lastClientTick {stats.lastClientTick}");
             sb.AppendLine($"delta {stats.lastClientTick - stats.lastReceivedServerTick}");
-            sb.AppendLine($"simTicksTotal {stats.simTicksTotal}");
+            //sb.AppendLine($"simTicksTotal {stats.simTicksTotal}");
 
 
             sb.Append("history: ");
