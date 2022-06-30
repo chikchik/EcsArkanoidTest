@@ -41,17 +41,15 @@ namespace Game
             Container.BindInterfacesAndSelfTo<EcsSystemsFactory>().AsSingle();
             Container.Bind<ComponentsCollection>().FromInstance(SharedComponents.CreateComponentsPool()).AsSingle();
 
+
+            Container.Bind<GameSettings>().FromComponentOn(GameObject.Find("[SETUP]")).AsSingle();
+            Container.Bind<DevPanelController>().FromComponentInNewPrefabResource("DEV/DevPanel").AsSingle();
+            Container.Bind<DevPanel>().AsSingle().NonLazy();
+
             WorldLoggerExt.logger = new WorldLogger();
 
-            if (settings.SinglePlayer)
-            {
-                //Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
-                 //   .AsSingle().WhenInjectedInto<PlayerControlService>();
 
-                var comp = settings.gameObject.AddComponent<UnityEcsSinglePlayer>();
-                Container.QueueForInject(comp);
-            }
-            else
+            if (settings.MultiPlayer)
             {
                 Container.Bind<IInputService>().To<ClientInputService>()
                     .AsSingle().WhenInjectedInto<PlayerControlService>();
@@ -60,6 +58,14 @@ namespace Game
                 //    .AsSingle().WhenInjectedInto<NetClient>();
                 
                 var comp = settings.gameObject.AddComponent<UnityEcsClient>();
+                Container.QueueForInject(comp);
+            }
+            else
+            {
+                //Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
+                //   .AsSingle().WhenInjectedInto<PlayerControlService>();
+
+                var comp = settings.gameObject.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);
             }
         }

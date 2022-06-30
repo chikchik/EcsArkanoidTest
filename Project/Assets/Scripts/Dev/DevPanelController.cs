@@ -37,7 +37,6 @@ public class DevPanelController : MonoBehaviour
     private static string status;
     private DevButton buttonSwitchGame;
     private float deltaTime;
-    private DevPanelCreator creator = new DevPanelCreator();
     private readonly List<GameObject> logItems = new List<GameObject>();
     
     public GameObject logPanel;
@@ -86,8 +85,6 @@ public class DevPanelController : MonoBehaviour
         });
         
         root.nextLine(true);
-        
-        creator.create(this);
     }
 
     private void Awake()

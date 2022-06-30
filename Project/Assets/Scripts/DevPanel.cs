@@ -1,13 +1,14 @@
 
+using Game;
 using Game.ClientServer;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class DevPanelCreator
+public class DevPanel
 {
-    public void create(DevPanelController dev)
+    public DevPanel(DevPanelController dev, GameSettings settings)
     {
         var root = dev.root;
         root.button("lunar console", () =>
@@ -46,7 +47,11 @@ public class DevPanelCreator
                 
                 SceneManager.LoadScene("HugeScene");
             });
-            
+        });
+        
+        root.toggleBool("multiplayer", () => settings.MultiPlayer, b =>
+        {
+            settings.MultiPlayer = b;
         });
     }
 }

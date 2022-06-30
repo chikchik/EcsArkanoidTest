@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using Dev;
 using UnityEngine;
+using Zenject;
 
-public class DevToolsInitializer : MonoBehaviour{
+public class DevToolsInitializer : MonoBehaviour {
     private int step = 0;
     private float lastSecretClickTime;
     private int secretClicksCount;
-        
+
+    [Inject] private DevPanelController DevPanelController;
     
     // Start is called before the first frame update
     void Awake()

@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class GameSettings : MonoBehaviour
 {
-    public bool SinglePlayer = true;
+    public bool MultiPlayer = true;
 }
