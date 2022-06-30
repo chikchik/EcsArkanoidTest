@@ -167,7 +167,6 @@ namespace Game.ClientServer
             systems.DeleteEntityHere<Box2DPreSolveComponent>();
             systems.DeleteEntityHere<Box2DPostSolveComponent>();
             
-            systems.Add(new EventsSystem<Box2DBodyComponent>());
             systems.Add(new EventsSystem<FireComponent>());
             systems.Add(new EventsSystem<ButtonPressedComponent>());
             systems.Add(new EventsSystem<PlayerComponent>());

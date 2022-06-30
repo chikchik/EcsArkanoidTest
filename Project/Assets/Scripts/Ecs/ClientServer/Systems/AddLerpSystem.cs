@@ -16,9 +16,6 @@ namespace Game.Ecs.ClientServer.Systems
         {
             foreach (var entity in filter)
             {
-                if (entity.EntityHas<LerpComponent>(world))
-                    continue;
-                
                 poolLerp.Add(entity).value = 0.5f;
             }
         }
@@ -26,7 +23,7 @@ namespace Game.Ecs.ClientServer.Systems
         public void Init(EcsSystems systems)
         {
             world = systems.GetWorld();
-            filter = world.Filter<PositionComponent>().IncAdded<Box2DBodyComponent>().End();
+            filter = world.Filter<Box2DBodyComponent>().Exc<LerpComponent>().End();
             poolLerp = world.GetPool<LerpComponent>();
         }
     }
