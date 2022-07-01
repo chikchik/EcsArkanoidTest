@@ -370,7 +370,7 @@ namespace ConsoleApp
                 return;
 
             var dif = WorldDiff.BuildDiff(leo.Pool, sentWorld, world);
-            dif.WriteBinary(writer);
+            dif.WriteBinary(false, writer);
 
             var difBinary = Convert.ToBase64String(P2P.Compress(writer.CopyToByteArray()));
 
