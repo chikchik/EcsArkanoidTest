@@ -9,6 +9,7 @@ namespace Game.UI
     {
         public Button ShotButton;
         public Button InteractionButton;
+        public Button KickButton;
         //public FixedJoystick Joystick;
         public FloatingJoystick Joystick;
 

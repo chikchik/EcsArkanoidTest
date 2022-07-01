@@ -59,6 +59,19 @@ namespace Game
             Apply(component);
         }
         
+        public void Kick()
+        {
+            if (unitEntity == -1)
+                return;
+            
+            Debug.Log($"kick input {TimeUtils.GetUnixTimeMS()}");
+            
+            var component = new InputKickComponent();
+            component.dir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
+            
+            Apply(component);
+        }
+        
         public void MoveToDirection(Vector3 dir)
         {
             if (unitEntity == -1)

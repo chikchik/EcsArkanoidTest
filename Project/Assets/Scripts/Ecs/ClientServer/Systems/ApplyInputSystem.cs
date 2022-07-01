@@ -22,27 +22,36 @@ using Random = System.Random;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-    public class ApplyInputSystem : IEcsRunSystem
+    public class ApplyInputSystem : IEcsInitSystem, IEcsRunSystem
     {
+        EcsFilter filter;
+        private EcsWorld world;
+        private EcsWorld inputWorld;
+        
+        public void Init(EcsSystems systems)
+        {
+            world = systems.GetWorld();
+            inputWorld = systems.GetWorld("input");
+            filter = inputWorld.Filter<InputComponent>().End();
+        }
+        
         public void Run(EcsSystems systems)
         {
-            var world = systems.GetWorld();
-            
             var mainPlayerId = -1;
             if (world.HasUnique<MainPlayerIdComponent>())//если это мир на клиенте
                 mainPlayerId = world.GetUnique<MainPlayerIdComponent>().value;
-            
-
-            var inputWorld = systems.GetWorld("input");
+           
             
             var poolInputShot   = inputWorld.GetPool<InputShotComponent>();
             var poolPlayer      = inputWorld.GetPool<InputPlayerComponent>();
             var poolInputMoveDir= inputWorld.GetPool<InputMoveDirectionComponent>();
             var poolInputMoveTo = inputWorld.GetPool<InputMoveToPointComponent>();
             var poolInputAction = inputWorld.GetPool<InputActionComponent>();
-            var poolInputTick = inputWorld.GetPool<InputTickComponent>();
+            var poolInputKick   = inputWorld.GetPool<InputKickComponent>();
+            var poolInputTick   = inputWorld.GetPool<InputTickComponent>();
             
-            var filter = inputWorld.Filter<InputComponent>().End();
+            
+            
 
             var tick = world.GetTick();
             
@@ -104,6 +113,12 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     Interract(world, unitEntity);
                 }
+                
+                if (poolInputKick.Has(inputEntity))
+                {
+                    var dir = poolInputKick.Get(inputEntity).dir;
+                    Kick(world, unitEntity, dir);
+                }
             }
         }
         
@@ -132,7 +147,10 @@ namespace Game.Ecs.ClientServer.Systems
                 
                 return;
             }
-         
+        }
+        
+        public void Kick(EcsWorld world, int unitEntity, Vector3 dir)
+        {
             if (unitEntity.EntityHas<PushingComponent>(world))
                 return;
                 
@@ -143,7 +161,6 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 ref var component = ref unitEntity.EntityAdd<ApplyForceComponent>(world);
                 component.Time = world.GetTime() + 1f;
-                var dir = unitEntity.EntityGet<LookDirectionComponent>(world).value;
                 var angle = Math.PI / 8f;
                 var rotated = new Vector3();
                 rotated.x = (float)(dir.x * Math.Cos(angle) - dir.z * Math.Sin(angle));
@@ -170,5 +187,6 @@ namespace Game.Ecs.ClientServer.Systems
                 Direction = dir, ShootAtTime = world.GetTime() + 0.2f, TotalTime = world.GetTime() + 0.5f
             });
         }
+
     }
 }

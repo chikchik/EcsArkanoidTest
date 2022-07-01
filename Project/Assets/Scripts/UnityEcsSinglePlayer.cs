@@ -117,6 +117,7 @@ namespace Game.Client
             if (Input.GetMouseButtonDown(0) && !(EventSystem.current.IsPointerOverGameObject() &&
                                                  EventSystem.current.currentSelectedGameObject != null))
             {
+                //EventSystem.current.
                 var ray = camera.ScreenPointToRay(Input.mousePosition);
                 var plane = new Plane(new Vector3(0, 1, 0), 0);
                 plane.Raycast(ray, out var dist);
@@ -124,6 +125,7 @@ namespace Game.Client
                 var point = ray.GetPoint(dist);
                 
                 controlService.MoveToPoint(point);
+                return;
             }
 
             var hor = Input.GetAxis("Horizontal");

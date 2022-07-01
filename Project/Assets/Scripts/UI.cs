@@ -24,6 +24,11 @@ namespace Game.Client
                 controlService.Interract();
             });
             
+            view.KickButton.onClick.AddListener(() =>
+            {
+                controlService.Kick();
+            });
+            
             view.ShotButton.onClick.AddListener(() =>
             {
                 controlService.Shot();
