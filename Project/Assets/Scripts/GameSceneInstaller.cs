@@ -42,14 +42,17 @@ namespace Game
             Container.Bind<ComponentsCollection>().FromInstance(SharedComponents.CreateComponentsPool()).AsSingle();
 
 
+            
             Container.Bind<GameSettings>().FromComponentOn(GameObject.Find("[SETUP]")).AsSingle();
             Container.Bind<DevPanelController>().FromComponentInNewPrefabResource("DEV/DevPanel").AsSingle();
             Container.Bind<DevPanel>().AsSingle().NonLazy();
+            
 
             WorldLoggerExt.logger = new WorldLogger();
 
 
-            if (settings.MultiPlayer)
+            //if (settings.MultiPlayer)
+            if (true)
             {
                 Container.Bind<IInputService>().To<ClientInputService>()
                     .AsSingle().WhenInjectedInto<PlayerControlService>();

@@ -25,7 +25,7 @@ public class DevSubPanel : MonoBehaviour
     private void Awake()
     {
         destroyedCount = gridLayout.transform.childCount;
-        gridLayout.transform.DestroyChildren();
+        //gridLayout.transform.DestroyChildren();
         BackClick.onClick.AddListener(close);
         actionClose = () => { Destroy(gameObject); };
         gridLayout.constraintCount = 5;
