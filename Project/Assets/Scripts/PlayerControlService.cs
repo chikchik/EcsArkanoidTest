@@ -47,12 +47,12 @@ namespace Game
             Apply(component);
         }
         
-        public void Interract()
+        public void Interact()
         {
             if (unitEntity == -1)
                 return;
             
-            Debug.Log($"interract input {TimeUtils.GetUnixTimeMS()}");
+            Debug.Log($"interact input {TimeUtils.GetUnixTimeMS()}");
             
             var component = new InputActionComponent();
             

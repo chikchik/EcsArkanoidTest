@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Fabros.Ecs;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
@@ -97,6 +98,24 @@ namespace Game.Client
             unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
         }
 
+        public static bool IsPointerOverUIObject()
+        {
+            PointerEventData pointer = new PointerEventData(EventSystem.current);
+            pointer.position = Input.mousePosition;
+ 
+            List<RaycastResult> raycastResults = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, raycastResults);
+ 
+            if (raycastResults.Count > 0)
+            {
+                if (raycastResults[0].gameObject.GetComponentInParent<Canvas>() != null)
+                    return true;
+
+            }
+
+            return false;
+        }
+        
         public static void CheckInput(Camera camera, Joystick joystick, PlayerControlService controlService)
         {
             void MoveDir(float hor, float ver)
@@ -113,9 +132,9 @@ namespace Game.Client
                 
                 controlService.MoveToDirection(dir);
             }
+           
             
-            if (Input.GetMouseButtonDown(0) && !(EventSystem.current.IsPointerOverGameObject() &&
-                                                 EventSystem.current.currentSelectedGameObject != null))
+            if (Input.GetMouseButtonDown(0) && !IsPointerOverUIObject())
             {
                 //EventSystem.current.
                 var ray = camera.ScreenPointToRay(Input.mousePosition);

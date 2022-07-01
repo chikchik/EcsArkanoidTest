@@ -3226,6 +3226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShotButton: {fileID: 3448083649616257221}
   InteractionButton: {fileID: 3448083650709265370}
+  KickButton: {fileID: 1623466190730117684}
   Joystick: {fileID: 6825269393133612752}
   ObjectivesRectTransform: {fileID: 3448083650624029015}
   InventoryGrid: {fileID: 3448083651637334249}
