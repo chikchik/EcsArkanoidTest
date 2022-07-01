@@ -104,9 +104,11 @@ namespace ConsoleApp
         
         private void StartSystems(byte[] initialWorld)
         {
+            Console.WriteLine("StartSystems");
             WorldDiff dif = null;
             if (initialWorld?.Length > 0)
             {
+                Console.WriteLine($"FromByteArray {initialWorld.Length}");
                 dif = WorldDiff.FromByteArray(pool, initialWorld);
             }
             else
