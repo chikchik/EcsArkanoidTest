@@ -22,10 +22,19 @@ public class DevSubPanel : MonoBehaviour
     private static int prevT;
     private Vector2 customCellSize = new Vector2(0,0);
 
+    private bool initialized;
     private void Awake()
     {
+       
+    }
+
+    public void init()
+    { 
+        if (initialized)
+            return;
+        initialized = true;
         destroyedCount = gridLayout.transform.childCount;
-        //gridLayout.transform.DestroyChildren();
+        gridLayout.transform.DestroyChildren();
         BackClick.onClick.AddListener(close);
         actionClose = () => { Destroy(gameObject); };
         gridLayout.constraintCount = 5;
@@ -148,6 +157,7 @@ public class DevSubPanel : MonoBehaviour
 
         var go = Instantiate(subPanelPrefab, transform);
         var sub = go.GetComponent<DevSubPanel>();
+        sub.init();
         var rc = sub.gridLayout.GetComponent<RectTransform>();
         //rc.offsetMin = r1.offsetMin + new Vector2(50, 50);
         //rc.offsetMax = r1.offsetMax + new Vector2(-50, -50);

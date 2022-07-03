@@ -11,6 +11,8 @@ public class DevPanel
     public DevPanel(DevPanelController dev, GameSettings settings)
     {
         var root = dev.root;
+        root.init();
+        
         root.button("lunar console", () =>
         {
             LunarConsolePlugin.LunarConsole.Show();    

@@ -546,12 +546,12 @@ namespace Game.Fabros.Net.Client
 #if UNITY_EDITOR
             
             sb.AppendLine($"main entities {MainWorld.GetAllEntitiesCount()}");
-            sb.AppendLine($"input entities {InputWorld.GetAllEntitiesCount()}");
+            //sb.AppendLine($"input entities {InputWorld.GetAllEntitiesCount()}");
             sb.AppendLine($"playerID {playerID}");
             //sb.AppendLine($"future {futureTicks}");
             sb.AppendLine($"lags {stats.lags} vs {stats.oppLags}");
             sb.AppendLine($"stepOffset {stepOffset}");
-            sb.AppendLine($"stepMult {stepMult}");
+            //sb.AppendLine($"stepMult {stepMult}");
             sb.AppendLine($"currentWorldTick {Leo.GetCurrentTick(MainWorld)}");
             sb.AppendLine($"serverWorldTick {Leo.GetCurrentTick(ServerWorld)}");
 
@@ -561,7 +561,7 @@ namespace Game.Fabros.Net.Client
             //sb.AppendLine($"simTicksTotal {stats.simTicksTotal}");
 
 
-            sb.Append("history: ");
+            //sb.Append("history: ");
             foreach (var i in stats.delaysHistory)
             {
                 sb.Append($"{i.ToString()}".PadLeft(4));
@@ -573,7 +573,7 @@ namespace Game.Fabros.Net.Client
             
             var size = MainWorld.GetAllocMemorySizeInBytes() / 1024;
                 
-            sb.AppendLine($"EcsWorld size {size} kb");
+            sb.AppendLine($"world size {size} kb");
 #else
             sb.AppendLine($"diffSize {stats.diffSize}");
 #endif
