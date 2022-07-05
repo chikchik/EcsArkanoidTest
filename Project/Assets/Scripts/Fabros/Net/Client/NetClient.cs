@@ -10,6 +10,7 @@ using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D;
 using Fabros.EcsModules.Box2D.Client.Systems;
 using Fabros.EcsModules.Box2D.ClientServer;
+using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Grid.Components;
@@ -210,9 +211,17 @@ namespace Game.Fabros.Net.Client
            
             Profiler.BeginSample("PrepareSimWorld");
 
-            var gridComponent = copyServerWorld.GetUnique<GridComponent>(); 
+            var gridComponent = copyServerWorld.GetUnique<GridComponent>();
+            if (copyServerWorld.HasUnique<Box2DWorldComponent>())
+            {
+                //старый box2d надо удалить сейчас, иначе его перезатрет copyServerWorld.CopyFrom
+                //и произойдет утечка
+                var oldBox2dWorld = copyServerWorld.GetUnique<Box2DWorldComponent>().WorldReference;
+                Box2DApi.DestroyWorld(oldBox2dWorld);
+            }
+
             copyServerWorld.CopyFrom(ServerWorld);
-            copyServerWorld.DelUnique<Box2DWorldComponent>();
+            //copyServerWorld.DelUnique<Box2DWorldComponent>();
             Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
 
             //в ServerWorld нету Grid системы, потому при копировании она удалится, передобавим
