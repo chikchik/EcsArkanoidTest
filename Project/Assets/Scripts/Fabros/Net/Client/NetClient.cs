@@ -167,7 +167,10 @@ namespace Game.Fabros.Net.Client
                         stats.oppLags++;
                     }
 
-                    stepOffset = 0.001f * delay;
+                    if (delay > 50)
+                        stepOffset = 0.5f;
+                    else
+                        stepOffset = 0.001f * delay;
                     
                     
                     if (delay == 1)
@@ -517,6 +520,11 @@ namespace Game.Fabros.Net.Client
 
         public void Tick(float deltaTime, Action action)
         {
+            if (deltaTime < 0)
+            {
+                deltaTime = 0.001f;
+            }
+            
             Profiler.BeginSample("Main Tick");
             //хелпер чтоб не обновляться чаще раз в секунду чем заданный tickrate
             var iteration = 0;
