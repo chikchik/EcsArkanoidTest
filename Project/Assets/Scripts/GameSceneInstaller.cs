@@ -51,8 +51,8 @@ namespace Game
             WorldLoggerExt.logger = new WorldLogger();
 
 
-            //if (settings.MultiPlayer)
-            if (true)
+            if (settings.MultiPlayer)
+            //if (true)
             {
                 Container.Bind<IInputService>().To<ClientInputService>()
                     .AsSingle().WhenInjectedInto<PlayerControlService>();

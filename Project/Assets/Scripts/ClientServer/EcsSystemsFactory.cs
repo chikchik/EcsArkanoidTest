@@ -126,7 +126,7 @@ namespace Game.ClientServer
 
             systems.Add(new ApplyForceSystem());
             
-            systems.Add(new ShootSystem());
+            
 
 #if CLIENT
             AddClient(new CreateViewSystem());
@@ -157,15 +157,14 @@ namespace Game.ClientServer
             //иначе в мультиплеере предсказание не будет работать правильно
             systems.Add(new Box2DInitSystem());
             systems.Add(new Box2DCreateBodiesSystem());
+            systems.Add(new Box2DCreateContactsSystem());
             systems.Add(new Box2DUpdateInternalObjectsSystem());
-            systems.Add(new Box2DUpdateSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS, false));
-                  
+            systems.Add(new Box2DUpdateSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
+            systems.Add(new BulletContactSystem());      
             
-            
-            systems.DeleteEntityHere<Box2DBeginContactComponent>();
-            systems.DeleteEntityHere<Box2DEndContactComponent>();
-            systems.DeleteEntityHere<Box2DPreSolveComponent>();
-            systems.DeleteEntityHere<Box2DPostSolveComponent>();
+            systems.Add(new ShootSystem());
+
+            systems.Add(new Box2DDeleteContactsSystem());
             
             systems.Add(new EventsSystem<FireComponent>());
             systems.Add(new EventsSystem<ButtonPressedComponent>());

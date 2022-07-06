@@ -224,6 +224,7 @@ namespace Game.Fabros.Net.Client
             }
 
             copyServerWorld.CopyFrom(ServerWorld);
+            copyServerWorld.SetDebugName($"cp{ServerWorld.GetTick()}");
             //copyServerWorld.DelUnique<Box2DWorldComponent>();
             Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
 

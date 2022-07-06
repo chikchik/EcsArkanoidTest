@@ -31,34 +31,36 @@ namespace Game.Ecs.ClientServer.Systems
                 if (shootingComponent.ShootAtTime < tm && !shootingComponent.ShootMade)
                 {
                     shootingComponent.ShootMade = true;
-                    
+
                     var dir = entity.EntityGet<ShootingComponent>(world).Direction;
-                    
+
                     var bulletEntity = world.NewEntity();
                     bulletEntity.EntityAdd<BulletComponent>(world);
 
                     var pos = entity.EntityGet<PositionComponent>(world).value;
-                    bulletEntity.EntityAdd<PositionComponent>(world).value = (pos + dir/2).WithY(1.2f);
+                    bulletEntity.EntityAdd<PositionComponent>(world).value = (pos + dir / 2).WithY(1.2f);
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
 
                     ref var def = ref bulletEntity.EntityAdd<Box2DRigidbodyDefinitionComponent>(world);
                     def.BodyType = BodyType.Dynamic;
                     def.Bullet = true;
                     def.Density = 5;
+                    def.LinearDamping = 0;
 
-                    //bulletEntity.EntityAdd<DebugMeComponent>(world);
-                    
-                    
-                    world.Log($"create bullet {bulletEntity} {dir}");
+                    bulletEntity.EntityAdd<DebugMeComponent>(world);
+
+
+                    world.Log($"create bullet {bulletEntity} {dir} {pos}");
 
                     ref var collider = ref bulletEntity.EntityAdd<Box2DCircleColliderComponent>(world);
                     collider.Radius = 0.02f;
-                    
+
                     var body = Box2DServices.CreateBodyNow(world, bulletEntity);
                     Box2DApi.ApplyForce(body, dir.ToVector2XZ() * 3, pos.ToVector2XZ());
+                    world.Log($"ApplyForce {dir.ToVector2XZ() * 3} {pos.ToVector2XZ()}");
                     //var bodyInfo = Box2DApi.GetBodyInfo(body);
 
-                    bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 1f;
+                    //bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 1f;
                 }
 
                 if (shootingComponent.TotalTime < tm)
