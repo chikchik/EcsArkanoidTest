@@ -154,7 +154,7 @@ namespace ConsoleApp
             try
             {
                 //StartSystems(null);
-                WorldLoggerExt.logger = new WorldLogger();
+                WorldLoggerExt.logger = new SyncWorldLogger();
 
                 var url = $"{Config.url}/{P2P.ADDR_SERVER.AddressString}";
                 await socket.ConnectAsync(new Uri(url, UriKind.Absolute), new CancellationToken());

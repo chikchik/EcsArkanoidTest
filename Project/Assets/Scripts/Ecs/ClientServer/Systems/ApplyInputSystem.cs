@@ -178,7 +178,7 @@ namespace Game.Ecs.ClientServer.Systems
                 return;
             }
 
-            world.Log($"shot at {world.GetTick()}");
+            world.Log($"input shot");
 
             //unitEntity.EntityGetOrCreateRef<CantMoveComponent>(world);
             unitEntity.EntityAdd<ShootStartedComponent>(world);

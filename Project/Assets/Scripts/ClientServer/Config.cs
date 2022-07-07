@@ -8,11 +8,11 @@ namespace Game.ClientServer
 #if CLIENT
         public static string SYNC_LOG_PATH = "../client.log"; 
         public static string TMP_HASHES_PATH = "../tmp";
-        public static string OTHER_LOGS_PATH = "../tmp2";
+        //public static string OTHER_LOGS_PATH = "../tmp2";
 #else
         public static string SYNC_LOG_PATH = "../server.log";
         public static string TMP_HASHES_PATH = "../tmp";
-        public static string OTHER_LOGS_PATH = "../tmp2";
+        //public static string OTHER_LOGS_PATH = "../tmp2";
 #endif
 
 #if DEBUG

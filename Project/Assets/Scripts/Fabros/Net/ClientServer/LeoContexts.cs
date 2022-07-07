@@ -89,7 +89,8 @@ namespace Game.Fabros.Net.ClientServer
             //обновляем мир 1 раз
             
             var currentTick = GetCurrentTick(world);
-            world.Log($"tick {currentTick.Value} ->");
+            var sl = world.GetSyncLogger();
+            sl.BeginTick(world, currentTick.Value);
             
             var strStateDebug = "";
             if (writeHashes)
@@ -103,6 +104,7 @@ namespace Game.Fabros.Net.ClientServer
             systems.ChangeDefaultWorld(world);
             systems.Run();
 
+            sl.EndTick(world, GetCurrentTick(world).Value);
 
             if (!writeToLog)
                 return;

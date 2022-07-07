@@ -157,7 +157,7 @@ namespace Game.ClientServer
             //иначе в мультиплеере предсказание не будет работать правильно
             systems.Add(new Box2DInitSystem());
             systems.Add(new Box2DCreateBodiesSystem());
-            systems.Add(new Box2DCreateContactsSystem());
+            //systems.Add(new Box2DCreateContactsSystem());
             systems.Add(new Box2DUpdateInternalObjectsSystem());
             systems.Add(new Box2DUpdateSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
             systems.Add(new BulletContactSystem());      

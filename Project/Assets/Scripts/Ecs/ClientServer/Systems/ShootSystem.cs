@@ -37,14 +37,15 @@ namespace Game.Ecs.ClientServer.Systems
                     var bulletEntity = world.NewEntity();
                     bulletEntity.EntityAdd<BulletComponent>(world);
 
-                    var pos = entity.EntityGet<PositionComponent>(world).value;
-                    bulletEntity.EntityAdd<PositionComponent>(world).value = (pos + dir / 2).WithY(1.2f);
+                    var unitPos = entity.EntityGet<PositionComponent>(world).value;
+                    var pos = (unitPos + dir / 2).WithY(1.2f);
+                    bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
 
                     ref var def = ref bulletEntity.EntityAdd<Box2DRigidbodyDefinitionComponent>(world);
                     def.BodyType = BodyType.Dynamic;
                     def.Bullet = true;
-                    def.Density = 5;
+                    def.Density = 20;
                     def.LinearDamping = 0;
 
                     bulletEntity.EntityAdd<DebugMeComponent>(world);
@@ -56,8 +57,10 @@ namespace Game.Ecs.ClientServer.Systems
                     collider.Radius = 0.02f;
 
                     var body = Box2DServices.CreateBodyNow(world, bulletEntity);
-                    Box2DApi.ApplyForce(body, dir.ToVector2XZ() * 3, pos.ToVector2XZ());
-                    world.Log($"ApplyForce {dir.ToVector2XZ() * 3} {pos.ToVector2XZ()}");
+
+                    var force = dir.ToVector2XZ() * 3;
+                    Box2DApi.ApplyForce(body, force, pos.ToVector2XZ());
+                    world.Log($"ApplyForce {force} {pos.ToVector2XZ()}");
                     //var bodyInfo = Box2DApi.GetBodyInfo(body);
 
                     //bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 1f;
