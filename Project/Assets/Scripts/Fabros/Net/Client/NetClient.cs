@@ -226,7 +226,8 @@ namespace Game.Fabros.Net.Client
             copyServerWorld.CopyFrom(ServerWorld);
             copyServerWorld.SetDebugName($"cp{ServerWorld.GetTick()}");
             //copyServerWorld.DelUnique<Box2DWorldComponent>();
-            Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld);
+            Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld, copyServerSystems);
+            
 
             //в ServerWorld нету Grid системы, потому при копировании она удалится, передобавим
             copyServerWorld.AddUnique(gridComponent);
@@ -271,7 +272,7 @@ namespace Game.Fabros.Net.Client
             Profiler.EndSample();
             
             Profiler.BeginSample("replicate2");
-            Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld);
+            Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld, clientSystems);
             Profiler.EndSample();
             
             Box2DDebugViewSystem.ReplaceBox2D(MainWorld);
