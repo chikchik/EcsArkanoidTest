@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Fabros.Ecs.ClientServer;
 using Fabros.Ecs.ClientServer.Utils;
+using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.Fabros.Net.ClientServer;
 using Leopotam.EcsLite;
@@ -63,13 +64,14 @@ namespace Game.ClientServer
         {
             GetState(world).tick = tick;
             GetState(world).inTick = true;
-            LogRaw(world, $"tick {tick} [");
+            var b2 = world.GetUnique<Box2DWorldComponent>().WorldReference.ToInt64();
+            LogRaw(world, $"tick {tick} [");//b2:0x{b2:X8}"); 
         }
         
         public void EndTick(EcsWorld world, int tick)
         {
             GetState(world).inTick = false;
-            LogRaw(world, $"]\n");
+            LogRaw(world, $"] {tick}\n");
         }
     }
 

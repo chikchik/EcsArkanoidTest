@@ -215,18 +215,26 @@ namespace Game.Fabros.Net.Client
             Profiler.BeginSample("PrepareSimWorld");
 
             var gridComponent = copyServerWorld.GetUnique<GridComponent>();
+            
+            //старый box2d надо удалить сейчас, иначе его перезатрет copyServerWorld.CopyFrom
+            //и произойдет утечка
+            Box2DServices.DestroyWorld(copyServerWorld);
+            
+            
             if (copyServerWorld.HasUnique<Box2DWorldComponent>())
             {
-                //старый box2d надо удалить сейчас, иначе его перезатрет copyServerWorld.CopyFrom
-                //и произойдет утечка
-                var oldBox2dWorld = copyServerWorld.GetUnique<Box2DWorldComponent>().WorldReference;
-                Box2DApi.DestroyWorld(oldBox2dWorld);
+                
+                //var oldBox2dWorld = copyServerWorld.GetUnique<Box2DWorldComponent>().WorldReference;
+                //Box2DApi.DestroyWorld(oldBox2dWorld);
+                
             }
-
+            
             copyServerWorld.CopyFrom(ServerWorld);
             copyServerWorld.SetDebugName($"cp{ServerWorld.GetTick()}");
-            //copyServerWorld.DelUnique<Box2DWorldComponent>();
+            Box2DServices.__ClearWorld(copyServerWorld);
+            
             Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld, copyServerSystems);
+            Debug.Log($"repl {copyServerWorld.GetUnique<Box2DWorldComponent>().WorldReference}");
             
 
             //в ServerWorld нету Grid системы, потому при копировании она удалится, передобавим
@@ -272,6 +280,7 @@ namespace Game.Fabros.Net.Client
             Profiler.EndSample();
             
             Profiler.BeginSample("replicate2");
+            Box2DServices.DestroyWorld(MainWorld);
             Box2DServices.ReplicateBox2D(copyServerWorld, MainWorld, clientSystems);
             Profiler.EndSample();
             
@@ -345,17 +354,22 @@ namespace Game.Fabros.Net.Client
             //Debug.Log($"world\n{LeoDebug.e2s(MainWorld)}");
 
 
-            copyServerWorld = WorldUtils.CopyWorld(Leo.Pool, ServerWorld);
-            copyServerWorld.SetDebugName("csrv");
-            
+            copyServerWorld = new EcsWorld("csrv");
             copyServerSystems = new EcsSystems(copyServerWorld);
             copyServerSystems.AddWorld(InputWorld, "input");
             
             systemsFactory.AddNewSystems(copyServerSystems,
                 new IEcsSystemsFactory.Settings{client = false, server = false});
             
-            copyServerSystems.Init();
+            copyServerWorld.CopyFrom(ServerWorld);
             
+            Box2DServices.__ClearWorld(copyServerWorld);
+            Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld, copyServerSystems);
+
+
+            copyServerSystems.Init();
+
+
 
             Connected = true;
             Debug.Log("client started");
@@ -433,7 +447,9 @@ namespace Game.Fabros.Net.Client
 
                         //применяем diff к прошлому миру полученному от сервера
                         dif.ApplyChanges(ServerWorld);
+                        ServerWorld.GetSyncLogger().BeginTick(ServerWorld, ServerWorld.GetTick()-1);
                         serverSystems.Run();
+                        ServerWorld.GetSyncLogger().EndTick(ServerWorld, ServerWorld.GetTick());
                         Profiler.EndSample();
                     }
 

@@ -60,7 +60,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                     var force = dir.ToVector2XZ() * 3;
                     Box2DApi.ApplyForce(body, force, pos.ToVector2XZ());
-                    world.Log($"ApplyForce {force} {pos.ToVector2XZ()}");
+                    world.Log($"ApplyForce {pos.ToVector2XZ()} {force}");
                     //var bodyInfo = Box2DApi.GetBodyInfo(body);
 
                     //bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 1f;
