@@ -8,6 +8,7 @@ namespace Game.View
     public class CharacterView : MonoBehaviour
     {
         public Animator Animator;
+        public GameObject Gun;
 
         private Vector3 last;
         [SerializeField]

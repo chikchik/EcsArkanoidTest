@@ -17,11 +17,8 @@ namespace Game.ClientServer
         {
             public int tick;
             public bool inTick;
-            public int len;
         }
 
-        private StringBuilder sb = new StringBuilder(256);
-        
         public void Log(EcsWorld world, string str)
         {
             var state = GetState(world);
@@ -64,7 +61,7 @@ namespace Game.ClientServer
         {
             GetState(world).tick = tick;
             GetState(world).inTick = true;
-            var b2 = world.GetUnique<Box2DWorldComponent>().WorldReference.ToInt64();
+            //var b2 = world.GetUnique<Box2DWorldComponent>().WorldReference.ToInt64();
             LogRaw(world, $"tick {tick} [");//b2:0x{b2:X8}"); 
         }
         

@@ -48,9 +48,6 @@ namespace Game
             Container.Bind<DevPanel>().AsSingle().NonLazy();
             
 
-            WorldLoggerExt.logger = new SyncWorldLogger();
-
-
             if (settings.MultiPlayer)
             //if (true)
             {

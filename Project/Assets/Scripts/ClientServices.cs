@@ -187,6 +187,20 @@ namespace Game.Client
                 entityA.EntityAdd<JointTestComponent>(world).Entity = entityB;
             });
             
+            ForEachObject<SpawnGunView>(view =>
+            {
+                var entity = GetOrCreateGameEntity(view.gameObject);
+                entity.EntityAdd<SpawnGunComponent>(world);
+                entity.EntityAdd<InteractableComponent>(world);
+                entity.EntityAdd<PositionComponent>(world).value = view.transform.position;
+                
+                ref var collectableComponent = ref entity.EntityAdd<CollectableComponent>(world);
+                collectableComponent.isCollected = false;
+                
+                
+                entity.EntityAdd<CollectableTargetComponent>(world).targetObject = view.gameObject;
+            });
+            
             var unit = Object.FindObjectOfType<Global>().characterPrefab;
             
             var clips = unit.Animator.runtimeAnimatorController.animationClips;
