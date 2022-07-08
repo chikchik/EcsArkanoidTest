@@ -447,9 +447,9 @@ namespace Game.Fabros.Net.Client
 
                         //применяем diff к прошлому миру полученному от сервера
                         dif.ApplyChanges(ServerWorld);
-                        ServerWorld.GetSyncLogger().BeginTick(ServerWorld, ServerWorld.GetTick()-1);
+                        ServerWorld.GetSyncLogger()?.BeginTick(ServerWorld, ServerWorld.GetTick()-1);
                         serverSystems.Run();
-                        ServerWorld.GetSyncLogger().EndTick(ServerWorld, ServerWorld.GetTick());
+                        ServerWorld.GetSyncLogger()?.EndTick(ServerWorld, ServerWorld.GetTick());
                         Profiler.EndSample();
                     }
 

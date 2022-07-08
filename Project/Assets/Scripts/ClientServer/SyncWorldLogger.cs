@@ -32,7 +32,7 @@ namespace Game.ClientServer
         
         private void LogRaw(EcsWorld world, string str)
         {
-#if true
+#if false
             var worldName = world.GetDebugName();
 
             try
