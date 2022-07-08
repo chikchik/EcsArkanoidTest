@@ -1,4 +1,5 @@
-﻿using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
+﻿using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Game.Ecs.ClientServer.Components;
 using Leopotam.EcsLite;
 
@@ -23,15 +24,19 @@ namespace Game.Ecs.ClientServer.Systems
                 var contact = poolContacts.Get(entity);
                 var entityA = contact.CollisionCallbackData.EntityA;
                 var entityB = contact.CollisionCallbackData.EntityB;
-                if (poolBullets.Has(entityA))
-                    OnBulletContact(entityA);
-                if (poolBullets.Has(entityB))
-                    OnBulletContact(entityB);
+                
+                OnBulletContact(entityA);
+                OnBulletContact(entityB);
             }
         }
 
         private void OnBulletContact(int entity)
         {
+            //todo remove: world.IsEntityAliveInternal usage
+            if (!world.IsEntityAliveInternal(entity))
+                return;
+            if (!world.EntityHas<BulletComponent>(entity))
+                return;
             world.DelEntity(entity);
         }
     }
