@@ -80,25 +80,12 @@ namespace Game.Ecs.ClientServer.Systems
                 if (poolInputShot.Has(inputEntity))
                 {
                     var dir = poolInputShot.Get(inputEntity).dir;
-                    Shoot(world, unitEntity, dir);
+                    Shoot(unitEntity, dir);
                 }
 
                 if (poolInputMoveDir.Has(inputEntity))
                 {
-                    var dir = poolInputMoveDir.Get(inputEntity).Dir;
-                    if (dir.sqrMagnitude > 0.001f)
-                    {
-                        unitEntity.EntityDel<TargetPositionComponent>(world);
-                        unitEntity.EntityGetOrCreateRef<MoveDirectionComponent>(world).value = dir;
-                    }
-                    else
-                    {
-                        if (unitEntity.EntityHas<MoveDirectionComponent>(world))
-                        {
-                            unitEntity.EntityDel<MoveDirectionComponent>(world);
-                            unitEntity.EntityDel<MovingComponent>(world);
-                        }
-                    }
+                    Move(unitEntity, poolInputMoveDir.Get(inputEntity).Dir);
                 }
 
                 if (poolInputMoveTo.Has(inputEntity))
@@ -117,7 +104,7 @@ namespace Game.Ecs.ClientServer.Systems
                 if (poolInputKick.Has(inputEntity))
                 {
                     var dir = poolInputKick.Get(inputEntity).dir;
-                    Kick(world, unitEntity, dir);
+                    Kick(unitEntity, dir);
                 }
             }
         }
@@ -149,13 +136,14 @@ namespace Game.Ecs.ClientServer.Systems
             }
         }
         
-        public void Kick(EcsWorld world, int unitEntity, Vector3 dir)
+        public void Kick(int unitEntity, Vector3 dir)
         {
             if (unitEntity.EntityHas<PushingComponent>(world))
                 return;
                 
             unitEntity.EntityAdd<PushingComponent>(world).EndTime = world.GetTime() + 1.3f;
-
+            unitEntity.EntityGetOrCreateRef<CantMoveComponent>(world);
+            
             if (unitEntity.EntityHas<LookDirectionComponent>(world) && 
                 !unitEntity.EntityHas<ApplyForceComponent>(world))
             {
@@ -169,7 +157,7 @@ namespace Game.Ecs.ClientServer.Systems
             }
         }
         
-        private void Shoot(EcsWorld world, int unitEntity, Vector3 dir)
+        private void Shoot(int unitEntity, Vector3 dir)
         {
             if (unitEntity.EntityHas<ShootingComponent>(world) &&
                 !unitEntity.EntityGet<ShootingComponent>(world).ShootMade)
@@ -186,6 +174,26 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 Direction = dir, ShootAtTime = world.GetTime() + 0.2f, TotalTime = world.GetTime() + 0.5f
             });
+        }
+
+        private void Move(int unitEntity, Vector3 dir)
+        {
+            if (unitEntity.EntityHas<CantMoveComponent>(world))
+                return;
+                    
+            if (dir.sqrMagnitude > 0.001f)
+            {
+                unitEntity.EntityDel<TargetPositionComponent>(world);
+                unitEntity.EntityGetOrCreateRef<MoveDirectionComponent>(world).value = dir;
+            }
+            else
+            {
+                if (unitEntity.EntityHas<MoveDirectionComponent>(world))
+                {
+                    unitEntity.EntityDel<MoveDirectionComponent>(world);
+                    unitEntity.EntityDel<MovingComponent>(world);
+                }
+            }
         }
 
     }

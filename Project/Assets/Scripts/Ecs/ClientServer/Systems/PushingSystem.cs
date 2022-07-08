@@ -14,7 +14,10 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var entity in filter)
             {
                 if (entity.EntityGet<PushingComponent>(world).EndTime < world.GetTime())
+                {
                     entity.EntityDel<PushingComponent>(world);
+                    entity.EntityDel<CantMoveComponent>(world);
+                }
             }
         }
     }
