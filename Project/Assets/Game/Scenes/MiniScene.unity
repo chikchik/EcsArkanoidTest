@@ -188,7 +188,7 @@ PrefabInstance:
     - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
       propertyPath: MultiPlayer
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3448083649790090397, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
@@ -304,7 +304,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &296381546
 Rigidbody2D:
   serializedVersion: 4
@@ -730,7 +730,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &1223258181
 Rigidbody2D:
   serializedVersion: 4
@@ -866,6 +866,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ButtonBot
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512442603519569149, guid: b65cc3d5fc5036f448c79d6af0671a3c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2594179271948558102, guid: b65cc3d5fc5036f448c79d6af0671a3c,
         type: 3}
@@ -1061,7 +1066,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &1534732692
 Rigidbody2D:
   serializedVersion: 4
