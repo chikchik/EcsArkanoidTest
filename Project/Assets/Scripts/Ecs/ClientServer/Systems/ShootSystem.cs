@@ -58,12 +58,13 @@ namespace Game.Ecs.ClientServer.Systems
 
                     var body = Box2DServices.CreateBodyNow(world, bulletEntity);
 
-                    var force = dir.ToVector2XZ() * 3;
+                    var force = dir.ToVector2XZ() * 20;
                     Box2DApi.ApplyForce(body, force, pos.ToVector2XZ());
                     world.Log($"ApplyForce {pos.ToVector2XZ()} {force}");
                     //var bodyInfo = Box2DApi.GetBodyInfo(body);
 
-                    //bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 1f;
+                    //защита от бесконечного полета в пустоте
+                    bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 5f;
                 }
 
                 if (shootingComponent.TotalTime < tm)

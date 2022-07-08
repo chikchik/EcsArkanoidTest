@@ -63,16 +63,17 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filterBullets)
             {
-                world.Log($"create view {entity}");
                 var view = Object.Instantiate(viewComponent.Global.BulletPrefab);
-                view.transform.position = entity.EntityGet<PositionComponent>(world).value;
+                var pos = entity.EntityGet<PositionComponent>(world).value;
+                view.transform.position = pos;
                 view.name = $"Bullet{entity}";
 
                 ref var component = ref entity.EntityAddComponent<TransformComponent>(world);
                 component.Transform = view.transform;
 
-
                 entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
+                
+                world.Log($"create view {entity} at {pos}");
             }
         }
     }

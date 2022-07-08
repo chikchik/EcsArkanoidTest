@@ -151,18 +151,18 @@ namespace Game.ClientServer
 #endif
 
             systems.Add(new AddLerpSystem());
-
+            systems.Add(new ShootSystem());
             
             //Основная Box2dSystem должна быть в конце после всех основных систем,
             //иначе в мультиплеере предсказание не будет работать правильно
             systems.Add(new Box2DInitSystem());
             systems.Add(new Box2DCreateBodiesSystem());
-            //systems.Add(new Box2DCreateContactsSystem());
+            systems.Add(new Box2DCreateContactsSystem());
             systems.Add(new Box2DUpdateInternalObjectsSystem());
             systems.Add(new Box2DUpdateSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
             systems.Add(new BulletContactSystem());      
             
-            systems.Add(new ShootSystem());
+            
 
             systems.Add(new Box2DDeleteContactsSystem());
             
@@ -179,6 +179,7 @@ namespace Game.ClientServer
             
 #if CLIENT
             systems.Add(new EventsSystem<MovingComponent>());
+            AddClient(new CreateViewSystem());
 #endif
             //write final Box2d transforms to components
             systems.Add(new Box2DWriteBodiesToComponentsSystem());

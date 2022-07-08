@@ -21,6 +21,7 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
         
         public void Run(EcsSystems systems)
         {
+            /*
             foreach (var entity in filter)
             {
                 var str = "";
@@ -34,7 +35,7 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
                 if (entity.EntityHas<Box2DRigidbodyComponent>(world))
                     str += entity.EntityGet<Box2DRigidbodyComponent>(world).LinearVelocity;
                 world.Log(str);
-            }
+            }*/
         }
 
         public void Init(EcsSystems systems)
