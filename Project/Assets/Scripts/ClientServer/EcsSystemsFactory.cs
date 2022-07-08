@@ -115,6 +115,7 @@ namespace Game.ClientServer
 
 #if CLIENT
             AddClient(new CollectableSystem());
+            AddClient(new WeaponEquipSystem());
 #endif
             // gates and buttons
             systems.Add(new ButtonsInteractionSystem());
@@ -166,6 +167,7 @@ namespace Game.ClientServer
 
             systems.Add(new Box2DDeleteContactsSystem());
             
+            systems.Add(new EventsSystem<WeaponComponent>());
             systems.Add(new EventsSystem<FireComponent>());
             systems.Add(new EventsSystem<ButtonPressedComponent>());
             systems.Add(new EventsSystem<PlayerComponent>());

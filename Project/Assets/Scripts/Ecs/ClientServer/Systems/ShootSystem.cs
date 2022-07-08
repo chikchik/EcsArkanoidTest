@@ -38,7 +38,7 @@ namespace Game.Ecs.ClientServer.Systems
                     bulletEntity.EntityAdd<BulletComponent>(world);
 
                     var unitPos = entity.EntityGet<PositionComponent>(world).value;
-                    var pos = (unitPos + dir / 2).WithY(1.2f);
+                    var pos = (unitPos + dir * 0.75f).WithY(1.25f);
                     bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
 

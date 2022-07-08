@@ -42,7 +42,9 @@ namespace Game
             Debug.Log($"shot input {TimeUtils.GetUnixTimeMS()}");
             
             var component = new InputShotComponent();
-            component.dir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
+            var lookDir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
+            var dir = Quaternion.Euler(0, -22, 0) * lookDir;
+            component.dir = dir;
             
             Apply(component);
         }

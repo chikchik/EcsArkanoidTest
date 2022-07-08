@@ -131,6 +131,11 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
                 }
+
+                if (entity.EntityHas<SpawnGunComponent>(world))
+                {
+                    unitEntity.EntityAdd<WeaponComponent>(world);
+                }
                 
                 return;
             }
