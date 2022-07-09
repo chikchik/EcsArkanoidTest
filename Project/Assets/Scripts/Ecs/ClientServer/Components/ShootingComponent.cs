@@ -7,6 +7,7 @@ namespace Game.Ecs.ClientServer.Components
     public struct ShootingComponent
     {
         public Vector3 Direction;
+        public Vector3 Position;
         public float ShootAtTime;
         public float TotalTime;
         public bool ShootMade;

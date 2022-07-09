@@ -1,4 +1,5 @@
 ﻿using System;
+using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
@@ -7,6 +8,7 @@ using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Input.Proto;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
+using Game.View;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
@@ -40,11 +42,16 @@ namespace Game
                 return;
             
             Debug.Log($"shot input {TimeUtils.GetUnixTimeMS()}");
+
+
+            var view = unitEntity.EntityGet<TransformComponent>(world).Transform.GetComponent<CharacterView>();
+            //view.
             
             var component = new InputShotComponent();
             var lookDir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
             var dir = Quaternion.Euler(0, -22, 0) * lookDir;
             component.dir = dir;
+            component.pos = view.BulletSpawnPos.transform.position; 
             
             Apply(component);
         }

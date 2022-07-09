@@ -9,6 +9,7 @@ namespace Game.View
     {
         public Animator Animator;
         public GameObject Gun;
+        public GameObject BulletSpawnPos;
 
         private Vector3 last;
         [SerializeField]

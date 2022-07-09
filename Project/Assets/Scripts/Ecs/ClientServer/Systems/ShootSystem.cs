@@ -32,13 +32,14 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     shootingComponent.ShootMade = true;
 
-                    var dir = entity.EntityGet<ShootingComponent>(world).Direction;
+                    var shoot = entity.EntityGet<ShootingComponent>(world);
 
                     var bulletEntity = world.NewEntity();
                     bulletEntity.EntityAdd<BulletComponent>(world);
 
-                    var unitPos = entity.EntityGet<PositionComponent>(world).value;
-                    var pos = (unitPos + dir * 0.75f).WithY(1.25f);
+                    //var unitPos = entity.EntityGet<PositionComponent>(world).value;
+                    var pos = shoot.Position;
+                    var dir = entity.EntityGet<ShootingComponent>(world).Direction;
                     bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
 

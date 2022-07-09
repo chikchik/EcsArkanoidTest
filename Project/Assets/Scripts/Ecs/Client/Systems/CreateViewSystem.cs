@@ -35,9 +35,20 @@ namespace Game.Ecs.Client.Systems
 
                 if (entity.EntityHasComponent<CollectableComponent>(world))
                 {
-                    var view = go.GetComponent<BushView>();
-                    ref var collectableTargetComponent = ref entity.EntityAddComponent<CollectableTargetComponent>(world);
-                    collectableTargetComponent.targetObject = view.Berries.gameObject;
+                    if (entity.EntityHas<BushComponent>(world))
+                    {
+                        var view = go.GetComponent<BushView>();
+                        ref var collectableTargetComponent =
+                            ref entity.EntityAddComponent<CollectableTargetComponent>(world);
+                        collectableTargetComponent.targetObject = view.Berries.gameObject;
+                    }
+                    else
+                    {
+                        var view = go.GetComponent<SpawnGunView>();
+                        ref var collectableTargetComponent =
+                            ref entity.EntityAddComponent<CollectableTargetComponent>(world);
+                        collectableTargetComponent.targetObject = view.gameObject;
+                    }
                 }
             }
 

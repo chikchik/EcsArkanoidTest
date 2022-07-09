@@ -79,8 +79,7 @@ namespace Game.Ecs.ClientServer.Systems
                 
                 if (poolInputShot.Has(inputEntity))
                 {
-                    var dir = poolInputShot.Get(inputEntity).dir;
-                    Shoot(unitEntity, dir);
+                    Shoot(unitEntity, poolInputShot.Get(inputEntity));
                 }
 
                 if (poolInputMoveDir.Has(inputEntity))
@@ -162,7 +161,7 @@ namespace Game.Ecs.ClientServer.Systems
             }
         }
         
-        private void Shoot(int unitEntity, Vector3 dir)
+        private void Shoot(int unitEntity, InputShotComponent shoot)
         {
             if (unitEntity.EntityHas<ShootingComponent>(world) &&
                 !unitEntity.EntityGet<ShootingComponent>(world).ShootMade)
@@ -177,7 +176,10 @@ namespace Game.Ecs.ClientServer.Systems
             unitEntity.EntityAdd<ShootStartedComponent>(world);
             unitEntity.EntityReplace(world, new ShootingComponent
             {
-                Direction = dir, ShootAtTime = world.GetTime() + 0.2f, TotalTime = world.GetTime() + 0.5f
+                Direction = shoot.dir,
+                Position = shoot.pos,
+                ShootAtTime = world.GetTime() + 0.2f, 
+                TotalTime = world.GetTime() + 0.5f
             });
         }
 

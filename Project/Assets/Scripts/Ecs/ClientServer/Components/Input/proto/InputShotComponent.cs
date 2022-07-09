@@ -6,5 +6,6 @@ namespace Game.Ecs.ClientServer.Components.Input.Proto
     public struct InputShotComponent:IInputComponent
     {
         public Vector3 dir;
+        public Vector3 pos;
     }
 }
