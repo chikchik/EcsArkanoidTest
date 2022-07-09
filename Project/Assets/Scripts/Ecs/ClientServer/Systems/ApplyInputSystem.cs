@@ -122,18 +122,23 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 var entity = result[0];
                 
-                entity.EntityDel<InteractableComponent>(world);
-                unitEntity.EntityGetOrCreateRef<FoodCollectedComponent>(world).Value += 1;
-                ObjectiveService.Triggered(world, entity);
-
-                if (entity.EntityHas<CollectableComponent>(world))
-                {
-                    entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
-                }
+             
 
                 if (entity.EntityHas<SpawnGunComponent>(world))
                 {
-                    unitEntity.EntityAdd<WeaponComponent>(world);
+                    unitEntity.EntityGetOrCreateRef<WeaponComponent>(world);
+                }
+                else
+                {
+                    //bush
+                    entity.EntityDel<InteractableComponent>(world);
+                    unitEntity.EntityGetOrCreateRef<FoodCollectedComponent>(world).Value += 1;
+                    ObjectiveService.Triggered(world, entity);
+
+                    if (entity.EntityHas<CollectableComponent>(world))
+                    {
+                        entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
+                    }
                 }
                 
                 return;

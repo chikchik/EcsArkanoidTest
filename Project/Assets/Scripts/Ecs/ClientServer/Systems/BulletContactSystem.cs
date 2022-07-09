@@ -15,26 +15,22 @@ namespace Game.Ecs.ClientServer.Systems
         
         public void Run(EcsSystems systems)
         {
-            
             var filter = world.Filter<Box2DBeginContactComponent>().End();
             var poolContacts = world.GetPool<Box2DBeginContactComponent>();
-            var poolBullets = world.GetPool<BulletComponent>();
             foreach (var entity in filter)
             {
                 var contact = poolContacts.Get(entity);
-                var entityA = contact.CollisionCallbackData.EntityA;
-                var entityB = contact.CollisionCallbackData.EntityB;
-                
-                OnBulletContact(entityA);
-                OnBulletContact(entityB);
+                OnBulletContact(contact.Data.EntityA);
+                OnBulletContact(contact.Data.EntityB);
             }
         }
 
-        private void OnBulletContact(int entity)
+        private void OnBulletContact(EcsPackedEntity packedEntity)
         {
-            //todo remove: world.IsEntityAliveInternal usage
-            if (!world.IsEntityAliveInternal(entity))
+            int entity;
+            if (!packedEntity.Unpack(world, out entity))
                 return;
+            
             if (!world.EntityHas<BulletComponent>(entity))
                 return;
             world.DelEntity(entity);
