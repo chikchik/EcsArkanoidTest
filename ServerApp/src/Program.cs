@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Fabros.Ecs.ClientServer;
 using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.ClientServer.WorldDiff;
 using Fabros.Ecs.Utils;
@@ -16,6 +17,7 @@ using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Leopotam.EcsLite;
+using UnityEngine;
 
 namespace ConsoleApp
 {
@@ -70,8 +72,7 @@ namespace ConsoleApp
 
         private static void log(string str)
         {
-            var tm = TimeUtils.GetUnixTimeMS();
-            Console.WriteLine($"{tm} {str}");
+            Debug.Log(str);
         }
 
         async Task ReceiveData()
@@ -98,17 +99,17 @@ namespace ConsoleApp
             }
             catch (Exception e)
             {
-                Console.Write(e);
+                Debug.LogError(e);
             }
         }
         
         private void StartSystems(byte[] initialWorld)
         {
-            Console.WriteLine("StartSystems");
+            Debug.Log("StartSystems");
             WorldDiff dif = null;
             if (initialWorld?.Length > 0)
             {
-                Console.WriteLine($"FromByteArray {initialWorld.Length}");
+                Debug.Log($"FromByteArray {initialWorld.Length}");
                 dif = WorldDiff.FromByteArray(pool, initialWorld);
             }
             else
@@ -119,7 +120,8 @@ namespace ConsoleApp
 
             world = new EcsWorld("serv");
             world.EntityDestroyedListeners.Add(destroyedListener);
-             
+
+ 
             inputWorld = new EcsWorld("input");
 
             world.AddUnique(config);
@@ -138,10 +140,10 @@ namespace ConsoleApp
             /*
             leo.WriteToConsole = (string str) =>
             {
-                Console.WriteLine(str);
+                Debug.Log(str);
             };*/
 
-            
+
             dif.ApplyChanges(world);
 
             systems.Init();
@@ -196,7 +198,7 @@ namespace ConsoleApp
             }
             catch(Exception e)
             {
-                Console.Write(e);
+                Debug.LogError(e);
             }
         }
 
@@ -310,7 +312,7 @@ namespace ConsoleApp
                     var cname = component.GetComponentType().Name;
                     cname = cname.Replace("Component", "C.");
                     var end = inputTime < currentTick.Value ? "!!!" : "";
-                    log($"got input {cname}:{inputTime} at {currentTick.Value} {end}");
+                    //log($"got input {cname}:{inputTime} at {currentTick.Value} {end}");
                     
                     var componentData = component.ReadSingleComponent(reader) as IInputComponent;
 
@@ -416,7 +418,7 @@ namespace ConsoleApp
             
             SendAsync(packet, client.Address);
             
-            Console.WriteLine($"initial world send to client {client.ID}");
+            Debug.Log($"initial world send to client {client.ID}");
         }
 
         private void SendAsync(Packet packet, ClientAddr addr)

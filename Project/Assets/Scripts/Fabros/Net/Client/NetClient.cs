@@ -238,7 +238,7 @@ namespace Game.Fabros.Net.Client
             Box2DServices.__ClearWorld(copyServerWorld);
             
             Box2DServices.ReplicateBox2D(ServerWorld, copyServerWorld, copyServerSystems);
-            Debug.Log($"repl {copyServerWorld.GetUnique<Box2DWorldComponent>().WorldReference}");
+            //Debug.Log($"repl {copyServerWorld.GetUnique<Box2DWorldComponent>().WorldReference}");
             
 
             //в ServerWorld нету Grid системы, потому при копировании она удалится, передобавим
@@ -427,9 +427,6 @@ namespace Game.Fabros.Net.Client
                         ForEach(dif.CreatedEntities, entity =>
                         {
                             if (!MainWorld.IsEntityAliveInternal(entity))
-                                return;
-
-                            if (entity.EntityHas<LocalEntityComponent>(MainWorld))
                                 return;
 
                             if (entity.EntityHasComponent<TransformComponent>(MainWorld))

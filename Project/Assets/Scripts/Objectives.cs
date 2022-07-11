@@ -6,6 +6,7 @@ using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.UI;
+using Leopotam.ecslite;
 using Leopotam.EcsLite;
 using TMPro;
 using UnityEngine;
@@ -18,18 +19,20 @@ public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyComponen
     private readonly TextMeshProUGUI textPrefab;
     private readonly RectTransform verticalLayoutGroup;
     private EcsWorld world;
-    private LocalEntity objectivesListener;
-
     public Objectives(MainUI ui, EcsWorld world)
     {
         this.world = world;
 
         verticalLayoutGroup = ui.ObjectivesRectTransform;
 
-        objectivesListener = world.NewLocalEntity();
+        
+        var listener = world.CreateAnyListener();
+        listener.SetAnyChangedListener<ObjectiveOpenedComponent>(this);
+        listener.SetAnyChangedListener<ObjectiveCompletedComponent>(this);
+        listener.SetAnyRemovedListener<>();
 
-        objectivesListener.AddAnyChangedListener<ObjectiveCompletedComponent>(world, this);
-        objectivesListener.AddAnyChangedListener<ObjectiveOpenedComponent>(world, this);
+        //world.DelAnyListener(listener);
+        
         
         textPrefab = verticalLayoutGroup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         textPrefab.gameObject.SetActive(false);

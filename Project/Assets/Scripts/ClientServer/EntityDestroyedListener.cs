@@ -2,6 +2,7 @@
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Leopotam.EcsLite;
+using UnityEngine;
 
 #if CLIENT
 using UnityEngine;
@@ -27,8 +28,8 @@ namespace Game.ClientServer
             
             if (entity.EntityHas<Box2DBodyComponent>(world))
             {
-                 Box2DApi.DestroyBody2(entity.EntityGet<Box2DBodyComponent>(world).BodyReference);
-                 entity.EntityDel<Box2DBodyComponent>(world);
+                Box2DApi.DestroyBody2(entity.EntityGet<Box2DBodyComponent>(world).BodyReference);
+                entity.EntityDel<Box2DBodyComponent>(world);
             }
         }
     }

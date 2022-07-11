@@ -48,8 +48,8 @@ namespace Game.ClientServer
             collider.Radius = 0.4f;
 
             entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();
-            
-            Console.WriteLine($"GenerateUnitEntity {entity}");
+
+            Debug.Log($"GenerateUnitEntity {entity}");
 
             return entity;
         }

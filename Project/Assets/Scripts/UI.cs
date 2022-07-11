@@ -40,10 +40,9 @@ namespace Game.Client
             view.FoodText.text = "";
             view.ShotButton.gameObject.SetActive(false);
 
-            var globalListenerEntity = world.NewLocalEntity();
-            globalListenerEntity.AddAnyChangedListener<FoodCollectedComponent>(world, this);
-            
-            globalListenerEntity.AddAnyChangedListener<WeaponComponent>(world, this);
+            var listener = world.CreateAnyListener();
+            listener.SetAnyChangedListener<WeaponComponent>(this);
+            listener.SetAnyChangedListener<FoodCollectedComponent>(this);
         }
 
         
