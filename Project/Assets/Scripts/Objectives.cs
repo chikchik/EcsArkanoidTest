@@ -11,11 +11,10 @@ using Leopotam.EcsLite;
 using TMPro;
 using UnityEngine;
 
-public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyComponentChangedListener,
-        EventsSystem<ObjectiveOpenedComponent>.IAnyComponentChangedListener
-    //IAnyCompletedListener, IAnyOpenedListener
+public class Objectives : 
+    EventsSystem<ObjectiveCompletedComponent>.IAnyComponentChangedListener,
+    EventsSystem<ObjectiveOpenedComponent>.IAnyComponentChangedListener
 {
-    //private readonly int objectivesListener;
     private readonly TextMeshProUGUI textPrefab;
     private readonly RectTransform verticalLayoutGroup;
     private EcsWorld world;
@@ -24,13 +23,10 @@ public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyComponen
         this.world = world;
 
         verticalLayoutGroup = ui.ObjectivesRectTransform;
-
         
         var listener = world.CreateAnyListener();
         listener.SetAnyChangedListener<ObjectiveOpenedComponent>(this);
         listener.SetAnyChangedListener<ObjectiveCompletedComponent>(this);
-
-        //world.DelAnyListener(listener);
         
         
         textPrefab = verticalLayoutGroup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
