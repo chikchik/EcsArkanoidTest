@@ -29,7 +29,6 @@ public class Objectives : EventsSystem<ObjectiveCompletedComponent>.IAnyComponen
         var listener = world.CreateAnyListener();
         listener.SetAnyChangedListener<ObjectiveOpenedComponent>(this);
         listener.SetAnyChangedListener<ObjectiveCompletedComponent>(this);
-        listener.SetAnyRemovedListener<>();
 
         //world.DelAnyListener(listener);
         
