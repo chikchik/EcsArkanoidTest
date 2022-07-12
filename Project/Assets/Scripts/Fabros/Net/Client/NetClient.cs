@@ -146,10 +146,10 @@ namespace Game.Fabros.Net.Client
 
             Profiler.BeginSample("SimServerWorld");
             //удаляем гарантированно устаревший ввод от игрока
-            Leo.FilterInputs(Leo.GetCurrentTick(ServerWorld) - 10);
+            Leo.FilterInputs(ServerWorld.GetTick() - 10);
 
-            stats.lastClientTick = Leo.GetCurrentTick(MainWorld).Value;
-            stats.lastReceivedServerTick = Leo.GetCurrentTick(ServerWorld).Value;
+            stats.lastClientTick = MainWorld.GetTick();
+            stats.lastReceivedServerTick = ServerWorld.GetTick();
             //проматываем в будущее серверный мир
 
 
@@ -246,15 +246,15 @@ namespace Game.Fabros.Net.Client
 
             Profiler.EndSample();
 
-            var serverTick = Leo.GetCurrentTick(copyServerWorld);
-            var clientTick = Leo.GetCurrentTick(MainWorld);
+            var serverTick = copyServerWorld.GetTick();
+            var clientTick = MainWorld.GetTick();
             
             string debug = $"{ServerWorld.GetUnique<TickComponent>().Value.Value}";
             
             //Debug.Log($"pr srv:{Leo.GetCurrentTick(ServerWorld).Value} client: {Leo.GetCurrentTick(MainWorld).Value}");
             
             stats.simTicksTotal = 0;
-            while (Leo.GetCurrentTick(copyServerWorld) < Leo.GetCurrentTick(MainWorld))
+            while (copyServerWorld.GetTick() < MainWorld.GetTick())
             {
                 Profiler.BeginSample("SimTick");
                 Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Config.SyncDataLogging, debug);
@@ -482,12 +482,6 @@ namespace Game.Fabros.Net.Client
             return playerID;
         }
 
-        public Tick GetNextInputTick()
-        {
-            return Leo.GetCurrentTick(MainWorld);
-        }
-
-
         public void Update()
         {
             if (!Connected)
@@ -506,7 +500,7 @@ namespace Game.Fabros.Net.Client
                 //    return;
                     
                 //leo.ApplyUserInput(world);
-                SendPing(Leo.GetCurrentTick(MainWorld).Value);
+                SendPing(MainWorld.GetTick());
                 Leo.Tick(clientSystems, InputWorld, MainWorld, Config.SyncDataLogging, "");
                 
             });
@@ -588,8 +582,8 @@ namespace Game.Fabros.Net.Client
             sb.AppendLine($"lags {stats.lags} vs {stats.oppLags}");
             sb.AppendLine($"stepOffset {stepOffset}");
             //sb.AppendLine($"stepMult {stepMult}");
-            sb.AppendLine($"currentWorldTick {Leo.GetCurrentTick(MainWorld)}");
-            sb.AppendLine($"serverWorldTick {Leo.GetCurrentTick(ServerWorld)}");
+            sb.AppendLine($"currentWorldTick {MainWorld.GetTick()}");
+            sb.AppendLine($"serverWorldTick {ServerWorld.GetTick()}");
 
             //sb.AppendLine($"lastReceivedServerTick {stats.lastReceivedServerTick}");
             sb.AppendLine($"lastClientTick {stats.lastClientTick}");

@@ -1,5 +1,6 @@
 ﻿using Fabros.Ecs.ClientServer.WorldDiff;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
@@ -26,7 +27,8 @@ namespace Game.Fabros.Net.Client
         
         public void Input(EcsWorld inputWorld, int playerID, int tick, IInputComponent inputComponent)
         {
-            var nextTick = client.GetNextInputTick().Value;
+            //GetTick как раз указывает на тик который произойдет сейчас, но еще не начался, +1 тут не нужен
+            var nextTick = client.GetWorld().GetTick();
             if (tick != nextTick)
             {
                 Debug.LogError($"{tick} != {nextTick}");

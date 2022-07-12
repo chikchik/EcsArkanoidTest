@@ -72,14 +72,13 @@ namespace Game.Fabros.Net.ClientServer
             }
         }
 
-        public void FilterInputs(Tick time)
+        public void FilterInputs(int tick)
         {
             var filter = inputWorld.Filter<InputTickComponent>().End();
             var pool = inputWorld.GetPool<InputTickComponent>();
             foreach (var entity in filter)
             {
-                var tick = pool.Get(entity).Tick;
-                if (tick < time.Value)
+                if (pool.Get(entity).Tick < tick)
                     inputWorld.DelEntity(entity);
             }
         }
@@ -88,9 +87,9 @@ namespace Game.Fabros.Net.ClientServer
         {
             //обновляем мир 1 раз
             
-            var currentTick = GetCurrentTick(world);
+            var currentTick = world.GetTick();
             var sl = world.GetSyncLogger();
-            sl?.BeginTick(world, currentTick.Value);
+            sl?.BeginTick(world, currentTick);
             
             var strStateDebug = "";
             if (writeHashes)
@@ -104,12 +103,12 @@ namespace Game.Fabros.Net.ClientServer
             systems.ChangeDefaultWorld(world);
             systems.Run();
 
-            sl?.EndTick(world, GetCurrentTick(world).Value);
+            sl?.EndTick(world, world.GetTick());
 
             if (!writeToLog)
                 return;
 
-            currentTick = GetCurrentTick(world);
+            currentTick = world.GetTick();
 
             //отладочный код, который умеет писать в файлы hash мира и его diff
             //var empty = WorldUtils.CreateWorld("empty", Pool);
@@ -117,7 +116,7 @@ namespace Game.Fabros.Net.ClientServer
             
             
             
-            world.Log($"<- tick {currentTick.Value}\n");
+            world.Log($"<- tick {currentTick}\n");
 
             if (writeHashes)
             {
@@ -128,7 +127,7 @@ namespace Game.Fabros.Net.ClientServer
                 //SyncLog.WriteLine($"hash: {hash}\n");
 
                 var str = strStateDebug + "\n>>>>>>\n" +  strWorldDebug;
-                var tick = currentTick.Value.ToString("D4");
+                var tick = currentTick.ToString("D4");
 
                 //var tt = DateTime.UtcNow.Ticks % 10000000;
                 
@@ -142,18 +141,6 @@ namespace Game.Fabros.Net.ClientServer
                     file.Write(str);
                 }
             }
-        }
-
-        public Tick GetCurrentTick(EcsWorld w)
-        {
-            return w.GetUnique<TickComponent>().Value;
-        }
-        
-
-        public TickrateConfigComponent GetConfig(EcsWorld world)
-        {
-            //конфиг сервера
-            return world.GetUnique<TickrateConfigComponent>();
         }
     }
 }

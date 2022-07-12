@@ -278,10 +278,10 @@ namespace ConsoleApp
                 }
 
 
-                var currentTick = leo.GetCurrentTick(world);
+                var currentTick = world.GetTick();
                 var step = world.GetUnique<TickDeltaComponent>().Value;
                 //на сколько тиков мы опередили сервер или отстали
-                var delay = time - currentTick.Value;
+                var delay = time - currentTick;
                 /**
                  * delay > 0 - клиент опережает сервер
                  * delay == 0 - клиент идет оптимально с сервером
@@ -290,16 +290,16 @@ namespace ConsoleApp
 
                 //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
                 if (delay < 0)
-                    time = currentTick.Value;
+                    time = currentTick;
 
 
-                var sentWorldTick = leo.GetCurrentTick(sentWorld) - step;
+                var sentWorldTick = sentWorld.GetTick() - step.Value;
 
                 if (delay == 0 && sentWorldTick == time)
-                    time = currentTick.Value + step.Value;
+                    time = currentTick + step.Value;
 
                 client.LastClientTick = inputTime;
-                client.LastServerTick = currentTick.Value;
+                client.LastServerTick = currentTick;
 
                 var component = leo.Pool.GetComponent(type);                
 
@@ -311,7 +311,7 @@ namespace ConsoleApp
                 {
                     var cname = component.GetComponentType().Name;
                     cname = cname.Replace("Component", "C.");
-                    var end = inputTime < currentTick.Value ? "!!!" : "";
+                    var end = inputTime < currentTick ? "!!!" : "";
                     //log($"got input {cname}:{inputTime} at {currentTick.Value} {end}");
                     
                     var componentData = component.ReadSingleComponent(reader) as IInputComponent;
@@ -338,7 +338,7 @@ namespace ConsoleApp
             //var time0 = leo.GetCurrentTick(world);
 
             //Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} Tick Begin {time0.Value}");
-            var time = leo.GetCurrentTick(world);
+            var time = world.GetTick();
             leo.FilterInputs(time);
 
             //ref var component = ref world.GetUniqueRef<PendingInputComponent>();
@@ -347,11 +347,11 @@ namespace ConsoleApp
             //обновляем мир 1 раз
             leo.Tick(systems, inputWorld, world, Config.SyncDataLogging);
         
-            time = leo.GetCurrentTick(world);
+            //time = world.GetTick();
 
-            var cfg = leo.GetConfig(world);
+            //var cfg = leo.GetConfig(world);
 
-            if (leo.GetCurrentTick(world).Value % cfg.ServerSyncStep == 0)
+            //if (world.GetTick() % cfg.ServerSyncStep == 0)
             {
                 //если у сервера высокий tickrate, например 60
                 //то отправлять миру 60 раз в секунду - накладно

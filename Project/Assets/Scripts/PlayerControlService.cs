@@ -34,7 +34,7 @@ namespace Game
         
         private int playerId => world.GetUnique<MainPlayerIdComponent>().value;
         private int unitEntity => BaseServices.GetUnitEntityByPlayerId(world, playerId);
-        private int tick => world.GetTick();// + 1;//next tick
+        private int tick => world.GetTick();
         
         public void Shot()
         {
