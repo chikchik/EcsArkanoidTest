@@ -14,22 +14,13 @@ using UnityEngine;
 
 namespace Game.Fabros.Net.ClientServer
 {
-    public class LeoContexts
+    public class SyncDebugService
     {
-        //public ComponentsCollection Components { get; }
-
-        //compatibility with old code
-        //public ComponentsCollection Pool => Components;
-        /*
-         * позволяет сохранять в отдельный файл игровые данные и сравнивать состояния миров между собой
-        */
-
-         
         
         private readonly string hashDir;
         private readonly bool writeHashes;
 
-        public LeoContexts(string hashDir)
+        public SyncDebugService(string hashDir)
         {
             this.hashDir = hashDir;
 

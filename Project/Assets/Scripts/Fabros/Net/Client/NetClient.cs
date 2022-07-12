@@ -45,11 +45,11 @@ namespace Game.Fabros.Net.Client
         
         public EcsWorld copyServerWorld { get; private set; }
 
-        public LeoContexts Leo { get; }
+        
 
         public bool Connected { get; private set; }
 
-
+        private SyncDebugService syncDebug;
         private float lastUpdateTime { get; set; }
         private EcsSystems clientSystems;
         private EcsSystems serverSystems;
@@ -87,10 +87,7 @@ namespace Game.Fabros.Net.Client
             this.systemsFactory = systemsFactory;
 
             components = pool;
-            Leo = new LeoContexts(Config.TMP_HASHES_PATH);
-            
-            
-            
+            syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
 
 
             //генерируем случайный id игрока с которым нас будет ассоциировать сервер

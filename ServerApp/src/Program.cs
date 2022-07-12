@@ -38,7 +38,7 @@ namespace ConsoleApp
 
     class Program
     {
-        private LeoContexts leo;
+        private SyncDebugService syncDebug;
         private ClientWebSocket socket;
 
         private EcsWorld world;
@@ -136,7 +136,7 @@ namespace ConsoleApp
             factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { client = false, server = true });
 
 
-            leo = new LeoContexts(Config.TMP_HASHES_PATH);
+            syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
             /*
             leo.WriteToConsole = (string str) =>
             {
