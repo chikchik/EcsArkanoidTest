@@ -1,15 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using Fabros.Ecs.ClientServer;
-using Fabros.Ecs.ClientServer.Utils;
-using Fabros.EcsModules.Box2D.ClientServer.Components;
-using Fabros.EcsModules.Tick.Other;
-using Game.Fabros.Net.ClientServer;
+﻿using Fabros.Ecs.ClientServer.Utils;
 using Leopotam.EcsLite;
-using UnityEngine;
 
-namespace Game.ClientServer
+namespace Game.Fabros.Net.ClientServer
 {
     public class SyncWorldLogger : IWorldLogger
     {

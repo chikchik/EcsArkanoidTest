@@ -3,7 +3,7 @@ using System.Globalization;
 using Fabros.Ecs.ClientServer.WorldDiff;
 using Leopotam.EcsLite;
 
-namespace Game.Fabros.Net.ClientServer
+namespace Game.Fabros.Net.ClientServer.Utils
 {
     public class WorldDumpUtils
     {

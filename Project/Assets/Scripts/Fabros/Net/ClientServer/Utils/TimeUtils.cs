@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.Fabros.Net.ClientServer
+namespace Game.Fabros.Net.ClientServer.Utils
 {
     public static class TimeUtils
     {

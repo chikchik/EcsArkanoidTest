@@ -4,7 +4,7 @@ using Game.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.UI
+namespace Game.UI.Mono
 {
     public class HpView : MonoBehaviour
     {

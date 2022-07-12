@@ -1,26 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.Client;
-using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components.Joints;
 using Game.Ecs.Client.Components;
-using Game.Ecs.Client.Systems;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
-using Game.Physics;
-using Game.Utils;
 using Game.View;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-namespace Game.Client
+namespace Game
 {
     public class ClientServices
     {

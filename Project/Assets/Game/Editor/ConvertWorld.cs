@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Fabros.Ecs.ClientServer.WorldDiff;
-using Game.Client;
+using Game;
 using Game.ClientServer;
 using Leopotam.EcsLite;
 using UnityEditor;

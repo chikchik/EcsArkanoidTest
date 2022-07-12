@@ -5,9 +5,10 @@ using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Input;
-using Game.Ecs.ClientServer.Components.Input.Proto;
+using Game.Ecs.ClientServer.Components.Input.proto;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
+using Game.Fabros.Net.ClientServer.Utils;
 using Game.View;
 using Leopotam.EcsLite;
 using UnityEngine;
@@ -40,9 +41,6 @@ namespace Game
         {
             if (unitEntity == -1)
                 return;
-            
-            Debug.Log($"shot input {TimeUtils.GetUnixTimeMS()}");
-
 
             var view = unitEntity.EntityGet<TransformComponent>(world).Transform.GetComponent<CharacterView>();
             //view.
@@ -61,10 +59,7 @@ namespace Game
             if (unitEntity == -1)
                 return;
             
-            Debug.Log($"interact input {TimeUtils.GetUnixTimeMS()}");
-            
             var component = new InputActionComponent();
-            
             Apply(component);
         }
         
@@ -72,8 +67,6 @@ namespace Game
         {
             if (unitEntity == -1)
                 return;
-            
-            Debug.Log($"kick input {TimeUtils.GetUnixTimeMS()}");
             
             var component = new InputKickComponent();
             component.dir = world.EntityGet<LookDirectionComponent>(unitEntity).value;

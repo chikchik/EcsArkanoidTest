@@ -136,7 +136,7 @@ namespace ConsoleApp
             factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { client = false, server = true });
 
 
-            leo = new LeoContexts(Config.TMP_HASHES_PATH, pool, inputWorld);
+            leo = new LeoContexts(Config.TMP_HASHES_PATH);
             /*
             leo.WriteToConsole = (string str) =>
             {
@@ -301,7 +301,7 @@ namespace ConsoleApp
                 client.LastClientTick = inputTime;
                 client.LastServerTick = currentTick;
 
-                var component = leo.Pool.GetComponent(type);                
+                var component = pool.GetComponent(type);                
 
                 if (component.GetComponentType() == typeof(PingComponent))//ping
                 {                    
@@ -339,13 +339,14 @@ namespace ConsoleApp
 
             //Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} Tick Begin {time0.Value}");
             var time = world.GetTick();
-            leo.FilterInputs(time);
+
+            Services.FilterInputs(inputWorld, time);
 
             //ref var component = ref world.GetUniqueRef<PendingInputComponent>();
 
             //Console.WriteLine($"tick {time} at {TimeUtils.GetUnixTimeMS()}");
             //обновляем мир 1 раз
-            leo.Tick(systems, inputWorld, world, Config.SyncDataLogging);
+            Services.Tick(systems, inputWorld, world, Config.SyncDataLogging);
         
             //time = world.GetTick();
 
@@ -371,7 +372,7 @@ namespace ConsoleApp
             if (clients.Count == 0)
                 return;
 
-            var dif = WorldDiff.BuildDiff(leo.Pool, sentWorld, world);
+            var dif = WorldDiff.BuildDiff(pool, sentWorld, world);
             dif.WriteBinary(false, writer);
 
             var difBinary = Convert.ToBase64String(P2P.Compress(writer.CopyToByteArray()));
@@ -399,12 +400,12 @@ namespace ConsoleApp
             });
                                         
             //сохраняем отправленный мир чтоб с ним потом считать diff
-            sentWorld = WorldUtils.CopyWorld(leo.Pool, world);
+            sentWorld = WorldUtils.CopyWorld(pool, world);
         }
 
         void SendInitialWorld(EcsWorld prevWorld, Client client)
         {
-            var dif = WorldDiff.BuildDiff(leo.Pool, prevWorld, sentWorld);
+            var dif = WorldDiff.BuildDiff(pool, prevWorld, sentWorld);
 
             var packet = new Packet
             {

@@ -1,34 +1,19 @@
-﻿using System;
-using Fabros.Ecs;
-using Fabros.Ecs.Client.Components;
-using Fabros.Ecs.ClientServer.Components;
-using Fabros.Ecs.ClientServer.WorldDiff;
-using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Box2D.ClientServer.Api;
-using Fabros.EcsModules.Box2D.ClientServer.Components;
+﻿using Fabros.Ecs.ClientServer.WorldDiff;
 using Game.ClientServer;
 using Game.Ecs.Client.Components;
-using Game.Ecs.Client.Systems;
-using Game.Ecs.ClientServer.Components;
 using Game.Ecs.View.Systems;
-using Game.Fabros.EcsModules.Fire.Client.Components;
 using Game.Fabros.Net.Client;
-using Game.Fabros.Net.ClientServer;
-using Game.Fabros.Net.ClientServer.Protocol;
-using Game.UI;
-using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Zenject;
 
-namespace Game.Client
+namespace Game
 {
     public class UnityEcsClient : MonoBehaviour
     {
         [Inject] private Camera camera;
         [Inject] private Global global;
-        [Inject] private UI ui;
+        [Inject] private UI.UI ui;
         [Inject] private Joystick joystick;
         [Inject] private NetClient client;
         

@@ -1,12 +1,9 @@
-﻿using Fabros.Ecs.Client.Components;
-using Fabros.Ecs.ClientServer;
-using Fabros.Ecs.Utils;
-using Game.Ecs.Client.Components;
+﻿using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-using Game.UI;
+using Game.UI.Mono;
 using Leopotam.EcsLite;
 
-namespace Game.Client
+namespace Game.UI
 {
     public class UI: EventsSystem<FoodCollectedComponent>.IAnyComponentChangedListener,
         EventsSystem<WeaponComponent>.IAnyComponentChangedListener

@@ -1,12 +1,13 @@
 using Fabros.Ecs.ClientServer;
 using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.ClientServer.WorldDiff;
-using Game.Client;
 using Game.ClientServer;
 using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
 using Game.UI;
+using Game.UI.Mono;
 using Leopotam.EcsLite;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using Zenject;
 
@@ -32,7 +33,7 @@ namespace Game
             var mainUI = FindObjectOfType<MainUI>();
             Container.Bind<MainUI>().FromInstance(mainUI).AsSingle();
             Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();
-            Container.Bind<Client.UI>().AsSingle().NonLazy();
+            Container.Bind<UI.UI>().AsSingle().NonLazy();
 
             Container.Bind<PlayerControlService>().AsSingle();
 

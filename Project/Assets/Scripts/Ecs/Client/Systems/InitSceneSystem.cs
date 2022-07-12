@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Fabros.Ecs.Client.Components;
-using Game.Client;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Utils;

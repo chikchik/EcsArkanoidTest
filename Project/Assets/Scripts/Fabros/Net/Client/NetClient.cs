@@ -17,7 +17,6 @@ using Fabros.EcsModules.Grid.Components;
 using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
-using Game.Client;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.Client.Socket;
@@ -57,6 +56,7 @@ namespace Game.Fabros.Net.Client
         private EcsSystems copyServerSystems;
 
         private WorldDiff dif2;
+        private ComponentsCollection components;
         
         private readonly int playerID;
 
@@ -86,8 +86,8 @@ namespace Game.Fabros.Net.Client
             
             this.systemsFactory = systemsFactory;
 
-            Leo = new LeoContexts(Config.TMP_HASHES_PATH,
-                pool, inputWorld);
+            components = pool;
+            Leo = new LeoContexts(Config.TMP_HASHES_PATH);
             
             
             
@@ -146,7 +146,7 @@ namespace Game.Fabros.Net.Client
 
             Profiler.BeginSample("SimServerWorld");
             //удаляем гарантированно устаревший ввод от игрока
-            Leo.FilterInputs(ServerWorld.GetTick() - 10);
+            Services.FilterInputs(InputWorld, ServerWorld.GetTick() - 10);
 
             stats.lastClientTick = MainWorld.GetTick();
             stats.lastReceivedServerTick = ServerWorld.GetTick();
@@ -257,7 +257,7 @@ namespace Game.Fabros.Net.Client
             while (copyServerWorld.GetTick() < MainWorld.GetTick())
             {
                 Profiler.BeginSample("SimTick");
-                Leo.Tick(copyServerSystems, InputWorld, copyServerWorld, Config.SyncDataLogging, debug);
+                Services.Tick(copyServerSystems, InputWorld, copyServerWorld, Config.SyncDataLogging, debug);
                 Profiler.EndSample();
                 
                 stats.simTicksTotal++;
@@ -275,7 +275,7 @@ namespace Game.Fabros.Net.Client
 
             Profiler.BeginSample("Apply Main Dif");
             
-            dif2 = WorldDiff.BuildDiff(Leo.Pool, MainWorld, copyServerWorld, dif2);
+            dif2 = WorldDiff.BuildDiff(components, MainWorld, copyServerWorld, dif2);
             
             //if (copyServerWorld.GetTick() != MainWorld.GetTick())
             //    Debug.LogError($"ticks not equal {copyServerWorld.GetTick()} != {MainWorld.GetTick()}");
@@ -308,7 +308,7 @@ namespace Game.Fabros.Net.Client
         
         private async UniTask<string> AsyncMain0(Packet packet)
         {
-            Leo.Pool.RemapOrder(packet.hello.Components);
+            components.RemapOrder(packet.hello.Components);
             
             while (!packet.hasWelcomeFromServer)
             {
@@ -321,7 +321,7 @@ namespace Game.Fabros.Net.Client
 
             //получили состояние мира с сервера
             var data = Convert.FromBase64String(packet.WorldUpdate.difStr);
-            var dif0 = WorldDiff.FromByteArray(Leo.Pool, data);
+            var dif0 = WorldDiff.FromByteArray(components, data);
 
             InitWorldAction(MainWorld);
 
@@ -335,7 +335,7 @@ namespace Game.Fabros.Net.Client
             clientSystems.Init();
 
 
-            ServerWorld = WorldUtils.CopyWorld(Leo.Pool, MainWorld);
+            ServerWorld = WorldUtils.CopyWorld(components, MainWorld);
             ServerWorld.SetDebugName("rsrv");
 
             serverSystems = new EcsSystems(ServerWorld);
@@ -417,7 +417,7 @@ namespace Game.Fabros.Net.Client
                         var byteArrayDifCompressed = Convert.FromBase64String(packet.WorldUpdate.difBinary);
                         stats.diffSize = byteArrayDifCompressed.Length;
                         var byteArrayDif = P2P.Decompress(byteArrayDifCompressed);
-                        var dif = WorldDiff.FromByteArray(Leo.Pool, byteArrayDif);
+                        var dif = WorldDiff.FromByteArray(components, byteArrayDif);
                         Profiler.EndSample();
 
                         /*
@@ -501,7 +501,7 @@ namespace Game.Fabros.Net.Client
                     
                 //leo.ApplyUserInput(world);
                 SendPing(MainWorld.GetTick());
-                Leo.Tick(clientSystems, InputWorld, MainWorld, Config.SyncDataLogging, "");
+                Services.Tick(clientSystems, InputWorld, MainWorld, Config.SyncDataLogging, "");
                 
             });
 
@@ -519,7 +519,7 @@ namespace Game.Fabros.Net.Client
             writer.WriteInt32(0xff);
             writer.WriteInt32(playerID);
             writer.WriteInt32(currentTick);
-            writer.WriteInt32(Leo.Pool.GetComponent(typeof(PingComponent)).GetId());
+            writer.WriteInt32(components.GetComponent(typeof(PingComponent)).GetId());
                 
             Socket.Send(writer.CopyToByteArray());
         }

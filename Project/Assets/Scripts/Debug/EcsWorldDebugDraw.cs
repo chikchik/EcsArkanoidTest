@@ -2,11 +2,10 @@
 using Fabros.Ecs.Utils;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
-using Game.Utils;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace Game.Client
+namespace Game
 {
     public class EcsWorldDebugDraw
     {
