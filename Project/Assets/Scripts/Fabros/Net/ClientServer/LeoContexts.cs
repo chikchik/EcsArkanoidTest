@@ -9,7 +9,7 @@ using Game.ClientServer;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 
 namespace Game.Fabros.Net.ClientServer

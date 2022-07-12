@@ -1,6 +1,6 @@
 ﻿using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 
 namespace Game.Fabros.Net.ClientServer
 {

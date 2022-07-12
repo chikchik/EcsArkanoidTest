@@ -10,7 +10,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.View;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;

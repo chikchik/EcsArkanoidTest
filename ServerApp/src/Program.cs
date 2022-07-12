@@ -16,7 +16,7 @@ using Game.ClientServer;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 
 namespace ConsoleApp

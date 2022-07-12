@@ -4,7 +4,7 @@ using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
 using Game.Fabros.EcsModules.Fire.Client.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 
 namespace Game.Fabros.EcsModules.Fire.Client.Systems

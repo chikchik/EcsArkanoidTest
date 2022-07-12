@@ -4,7 +4,7 @@ using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 
 namespace Game.Fabros.Net.ClientServer.Ecs.Systems
 {

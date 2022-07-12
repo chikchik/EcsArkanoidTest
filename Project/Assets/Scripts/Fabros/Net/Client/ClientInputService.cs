@@ -4,7 +4,7 @@ using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 
 namespace Game.Fabros.Net.Client

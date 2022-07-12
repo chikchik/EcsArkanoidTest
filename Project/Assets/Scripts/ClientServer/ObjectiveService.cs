@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Fabros.Ecs.Utils;
 using Game.Ecs.ClientServer.Components.Objective;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 
 namespace Game.ClientServer
 {

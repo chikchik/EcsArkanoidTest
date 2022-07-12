@@ -1,6 +1,6 @@
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components.Inventory;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 
 namespace Game.Ecs.Client.Systems.Inventory

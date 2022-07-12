@@ -3,7 +3,7 @@ using Fabros.Ecs.ClientServer.Utils;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components.Input;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 
 namespace Game.Fabros.Net.ClientServer
 {

@@ -1,6 +1,6 @@
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 
 namespace Game.Ecs.Client.Systems
 {

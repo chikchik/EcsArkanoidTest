@@ -2,7 +2,7 @@
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.UI.Mono;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using TMPro;
 using UnityEngine;
 

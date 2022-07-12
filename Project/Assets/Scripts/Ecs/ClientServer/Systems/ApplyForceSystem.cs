@@ -5,7 +5,7 @@ using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Systems

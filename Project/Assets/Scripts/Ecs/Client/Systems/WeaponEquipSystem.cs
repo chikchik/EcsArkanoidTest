@@ -3,7 +3,7 @@ using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.View;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 
 namespace Game.Ecs.Client.Systems
 {

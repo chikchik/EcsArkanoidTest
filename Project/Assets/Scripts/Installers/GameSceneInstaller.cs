@@ -6,7 +6,7 @@ using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
 using Game.UI;
 using Game.UI.Mono;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using Zenject;

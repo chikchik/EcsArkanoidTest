@@ -5,7 +5,7 @@ using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 using Random = System.Random;
 

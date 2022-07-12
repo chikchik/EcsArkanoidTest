@@ -2,7 +2,7 @@
 using Fabros.Ecs.Utils;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 
 namespace Game

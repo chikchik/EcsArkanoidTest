@@ -7,7 +7,7 @@ using Fabros.EcsModules.Grid.Other;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 
 namespace Game.Ecs.ClientServer.Systems
 {

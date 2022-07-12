@@ -2,7 +2,7 @@
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 
 namespace Game.Ecs.Client.Systems
 {

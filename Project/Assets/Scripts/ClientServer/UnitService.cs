@@ -5,7 +5,7 @@ using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components.Colliders;
 using Game.Ecs.ClientServer.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 
 namespace Game.ClientServer
@@ -15,8 +15,7 @@ namespace Game.ClientServer
         public static int CreateUnitEntity(EcsWorld world)
         {
             var entity = world.NewEntity();
-
-            //Console.WriteLine($"Generate LeoPlayerEntity: {entity} with PlayerID: {playerId}");
+            
             entity.EntityAddComponent<UnitComponent>(world);
             //entity.EntityAddComponent<MoveDirectionComponent>(world).value = new Vector3(0,0,1);
             entity.EntityAddComponent<LookDirectionComponent>(world).value = new Vector3(0,0,1);

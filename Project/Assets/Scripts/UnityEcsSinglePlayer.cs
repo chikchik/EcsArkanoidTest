@@ -8,7 +8,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.Ecs.View.Systems;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
@@ -67,7 +67,7 @@ namespace Game
             
             
 #if UNITY_EDITOR
-            systems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
+            systems.Add(new Flow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
 
             var systemsFactory = new EcsSystemsFactory(null);

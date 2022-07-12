@@ -1,5 +1,5 @@
 ﻿using System;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 
 namespace Game.Ecs.ClientServer.Components
 {

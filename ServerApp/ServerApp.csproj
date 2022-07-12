@@ -27,8 +27,8 @@
 		<Compile Include="$(FabrosEcsPackage)\**\*.cs">
 			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
-		<Compile Remove="$(FabrosEcsPackage)\Leopotam\ecslite-unityeditor\**"></Compile>
-		<Compile Remove="$(FabrosEcsPackage)\Leopotam\ecslite-unileo\**"></Compile>		
+		<Compile Remove="$(FabrosEcsPackage)\Flow\UnityEditor\**"></Compile>
+		<Compile Remove="$(FabrosEcsPackage)\Flow\unileo\**"></Compile>		
 		<Compile Remove="$(FabrosEcsPackage)\Fabros\Ecs\Client\**"></Compile>
 	</ItemGroup>
 

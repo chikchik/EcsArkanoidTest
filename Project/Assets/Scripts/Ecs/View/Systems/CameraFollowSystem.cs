@@ -1,6 +1,6 @@
 using Fabros.Ecs.Client.Components;
 using Game.Ecs.Client.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 
 namespace Game.Ecs.View.Systems

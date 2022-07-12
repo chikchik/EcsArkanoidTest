@@ -1,5 +1,5 @@
 using Game.Ecs.ClientServer.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 using Random = System.Random;
 

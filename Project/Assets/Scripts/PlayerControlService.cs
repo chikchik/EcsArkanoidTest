@@ -10,7 +10,7 @@ using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Utils;
 using Game.View;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 using Zenject;
 

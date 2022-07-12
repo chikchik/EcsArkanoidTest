@@ -1,5 +1,5 @@
 ﻿using Game.Fabros.EcsModules.Fire.ClientServer.Components;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 
 namespace Game.Fabros.EcsModules.Fire.Client.Systems
 {

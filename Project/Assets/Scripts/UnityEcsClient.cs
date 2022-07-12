@@ -3,7 +3,7 @@ using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.View.Systems;
 using Game.Fabros.Net.Client;
-using Leopotam.EcsLite;
+using Flow.EcsLite;
 using UnityEngine;
 using Zenject;
 
@@ -43,7 +43,7 @@ namespace Game
             viewSystems.Add(new CameraFollowSystem(Camera.main));
             
 #if UNITY_EDITOR
-            viewSystems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
+            viewSystems.Add(new Flow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
             
             //глобальный обработчик удаления entity, чтоб никакой GameObject не утек
