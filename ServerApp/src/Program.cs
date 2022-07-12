@@ -54,7 +54,7 @@ namespace ConsoleApp
         private List<byte[]> receivedMessages = new List<byte[]>();
         private HGlobalWriter writer = new HGlobalWriter();
 
-        readonly ComponentsCollection pool = SharedComponents.CreateComponentsPool();
+        readonly ComponentsCollection components = SharedComponents.CreateComponentsPool();
 
         private TickrateConfigComponent config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1 };
 
@@ -110,11 +110,11 @@ namespace ConsoleApp
             if (initialWorld?.Length > 0)
             {
                 Debug.Log($"FromByteArray {initialWorld.Length}");
-                dif = WorldDiff.FromByteArray(pool, initialWorld);
+                dif = WorldDiff.FromByteArray(components, initialWorld);
             }
             else
             {
-                dif = WorldDiff.FromJsonString(pool, File.ReadAllText("world.ecs.json"));
+                dif = WorldDiff.FromJsonString(components, File.ReadAllText("world.ecs.json"));
             }
 
 
@@ -132,7 +132,7 @@ namespace ConsoleApp
             systems = new EcsSystems(world);
             systems.AddWorld(inputWorld, "input");
 
-            var factory = new EcsSystemsFactory(pool);
+            var factory = new EcsSystemsFactory(components);
             factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { client = false, server = true });
 
 
@@ -148,7 +148,7 @@ namespace ConsoleApp
 
             systems.Init();
 
-            sentWorld = WorldUtils.CopyWorld(pool, world);
+            sentWorld = WorldUtils.CopyWorld(components, world);
         }
 
         async Task AsyncRun()
@@ -232,9 +232,9 @@ namespace ConsoleApp
 
                 log($"got hello from client {packet.playerID}");
 
-                var components = pool.Components.Select(component => component.GetComponentType().FullName).ToArray();
-                var hello = new Hello {Components = components};
-                                
+                var hello = new Hello();
+                hello.Components = components.Components.Select(component => component.GetComponentType().FullName).ToArray();
+
                 if (clients.Count == 0 &&  systems == null) {
                     //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
                     StartSystems(Convert.FromBase64String(packet.hello.InitialWorld));
@@ -301,7 +301,7 @@ namespace ConsoleApp
                 client.LastClientTick = inputTime;
                 client.LastServerTick = currentTick;
 
-                var component = pool.GetComponent(type);                
+                var component = components.GetComponent(type);                
 
                 if (component.GetComponentType() == typeof(PingComponent))//ping
                 {                    
@@ -372,7 +372,7 @@ namespace ConsoleApp
             if (clients.Count == 0)
                 return;
 
-            var dif = WorldDiff.BuildDiff(pool, sentWorld, world);
+            var dif = WorldDiff.BuildDiff(components, sentWorld, world);
             dif.WriteBinary(false, writer);
 
             var difBinary = Convert.ToBase64String(P2P.Compress(writer.CopyToByteArray()));
@@ -400,12 +400,12 @@ namespace ConsoleApp
             });
                                         
             //сохраняем отправленный мир чтоб с ним потом считать diff
-            sentWorld = WorldUtils.CopyWorld(pool, world);
+            sentWorld = WorldUtils.CopyWorld(components, world);
         }
 
         void SendInitialWorld(EcsWorld prevWorld, Client client)
         {
-            var dif = WorldDiff.BuildDiff(pool, prevWorld, sentWorld);
+            var dif = WorldDiff.BuildDiff(components, prevWorld, sentWorld);
 
             var packet = new Packet
             {
