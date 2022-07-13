@@ -175,7 +175,7 @@ namespace Game
                 ClientBox2DServices.CreateBody(world, entity, collider);
             });
             
-            ForEachObject<JointConnect>(joint =>
+            ForEachObject<JointConnectView>(joint =>
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
                 var entityB = GetOrCreateGameEntity(joint.Connect);

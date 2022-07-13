@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.View
 {
-    public class JointConnect : MonoBehaviour
+    public class JointConnectView : MonoBehaviour
     {
         public GameObject Connect;
     }
