@@ -71,7 +71,7 @@ namespace Game.ClientServer
             AddClient(new DetectPlayerIdChangesSystem());
 #endif
             
-            //AddServer(new SpawnBotSystem());
+            AddServer(new CustomInitSystem());
             AddServer(new JoinPlayerSystem());
 
 
@@ -135,6 +135,7 @@ namespace Game.ClientServer
             AddClient(new FireViewSystem());
             AddClient(new InventorySystem());
             AddClient(new CreateMechViewSystem());
+            AddClient(new MechAnimationSystem());
 #endif
 
             systems.Add(new DeleteEntitiesSystemWith<DestroyComponent>());

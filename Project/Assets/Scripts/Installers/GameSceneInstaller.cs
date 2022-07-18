@@ -1,6 +1,7 @@
 using Fabros.Ecs.ClientServer;
 using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.ClientServer.WorldDiff;
+using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
@@ -47,6 +48,8 @@ namespace Game
             Container.Bind<GameSettings>().FromComponentOn(GameObject.Find("[SETUP]")).AsSingle();
             Container.Bind<DevPanelController>().FromComponentInNewPrefabResource("DEV/DevPanel").AsSingle();
             Container.Bind<DevPanel>().AsSingle().NonLazy();
+            
+            Container.Bind<MechService>().AsSingle().NonLazy();
             
 
             if (settings.MultiPlayer)
