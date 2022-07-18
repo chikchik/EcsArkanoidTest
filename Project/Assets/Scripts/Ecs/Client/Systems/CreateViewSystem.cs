@@ -13,16 +13,20 @@ using UnityEngine;
 
 namespace Game.Ecs.Client.Systems
 {
-    public class CreateViewSystem : IEcsRunSystem
+    public class CreateViewSystem : IEcsInitSystem, IEcsRunSystem
     {
+        private EcsWorld world;
+        private EcsFilter filter;
+        public void Init(EcsSystems systems)
+        {
+            world = systems.GetWorld();
+            filter = world.Filter<GameObjectNameComponent>()
+                .Exc<TransformComponent>().End();
+        }
+        
         public void Run(EcsSystems systems)
         {
-            var world = systems.GetWorld();
-            
             var viewComponent = world.GetUnique<ClientViewComponent>();
-
-            var filter = world.Filter<GameObjectNameComponent>()
-                .Exc<TransformComponent>().End();
 
             foreach (var entity in filter)
             {

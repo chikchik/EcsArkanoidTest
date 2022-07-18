@@ -19,6 +19,12 @@
       "source": "local",
       "dependencies": {}
     },
+    "com.fabros.ecs.mech": {
+      "version": "file:../../module-ecs-mech/MechEcsPackage",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.burst": {
       "version": "1.6.6",
       "depth": 1,

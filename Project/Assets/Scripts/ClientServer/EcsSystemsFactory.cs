@@ -4,6 +4,7 @@ using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Grid;
+using Fabros.EcsModules.Mech.Client.Systems;
 using Fabros.EcsModules.Tick;
 
 using Game.Ecs.ClientServer.Components;
@@ -133,6 +134,7 @@ namespace Game.ClientServer
             AddClient(new CreateViewSystem());
             AddClient(new FireViewSystem());
             AddClient(new InventorySystem());
+            AddClient(new CreateMechViewSystem());
 #endif
 
             systems.Add(new DeleteEntitiesSystemWith<DestroyComponent>());
