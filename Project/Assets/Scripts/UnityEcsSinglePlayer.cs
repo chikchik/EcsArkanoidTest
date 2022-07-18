@@ -32,6 +32,9 @@ namespace Game
         [Inject] 
         private EntityDestroyedListener entityDestroyedListener;
 
+        [Inject]
+        private EcsSystemsFactory systemsFactory;
+
         private EcsSystems systems;
         private EcsSystems viewSystems;
         
@@ -69,9 +72,7 @@ namespace Game
 #if UNITY_EDITOR
             systems.Add(new Flow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
-
-            var systemsFactory = new EcsSystemsFactory(null);
-            
+           
             systemsFactory.AddNewSystems(systems, 
                 new IEcsSystemsFactory.Settings{client = true, server = true});
 
