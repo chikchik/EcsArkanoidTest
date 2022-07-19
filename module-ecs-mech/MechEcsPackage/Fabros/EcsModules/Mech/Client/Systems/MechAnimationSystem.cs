@@ -9,11 +9,12 @@ namespace Fabros.EcsModules.Mech.Client.Systems
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
-            var filter = world.Filter<MechComponent>().Inc<MechMovingComponent>().End();
+            var filter = world.Filter<MechComponent>().End();//.Inc<MechMovingComponent>().End();
             foreach (var entity in filter)
             {
                 var animator = entity.EntityGet<MechAnimatorComponent>(world).Animator;
-                //animator.Play("");
+                
+                animator.SetBool("walking", entity.EntityHas<MechMovingComponent>(world));
             }
         }
     }

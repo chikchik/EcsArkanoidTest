@@ -132,7 +132,7 @@ namespace ConsoleApp
             systems = new EcsSystems(world);
             systems.AddWorld(inputWorld, "input");
 
-            var factory = new EcsSystemsFactory(components);
+            var factory = new EcsSystemsFactory(components, new Fabros.EcsModules.Mech.ClientServer.MechService());
             factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { client = false, server = true });
 
 

@@ -4,7 +4,6 @@ using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Grid;
-using Fabros.EcsModules.Mech.Client.Systems;
 using Fabros.EcsModules.Mech.ClientServer;
 using Fabros.EcsModules.Tick;
 
@@ -27,6 +26,8 @@ using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
 using Game.Fabros.EcsModules.Fire.Client.Systems;
 using Fabros.EcsModules.Box2D.Client.Systems;
+using Fabros.EcsModules.Mech.Client.Systems;
+using Fabros.EcsModules.Tick.ClientServer.Components;
 #endif
 
 namespace Game.ClientServer
@@ -98,7 +99,8 @@ namespace Game.ClientServer
             systems.Add(new SimpleMoveSystem());
             systems.Add(new UnitMoveSystem());
             systems.Add(new PushingSystem());
-            
+
+            systems.Add(new MechAdapterSystem());
             
             systems.Add(new EntitiesLifeTimeSystem());
             
@@ -187,6 +189,7 @@ namespace Game.ClientServer
             
 #if CLIENT
             systems.Add(new EventsSystem<MovingComponent>());
+            systems.Add(new EventsSystem<TickComponent>());
             AddClient(new CreateViewSystem());
 #endif
             //write final Box2d transforms to components

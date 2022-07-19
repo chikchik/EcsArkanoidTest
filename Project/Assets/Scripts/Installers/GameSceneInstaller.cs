@@ -37,6 +37,7 @@ namespace Game
             Container.Bind<UI.UI>().AsSingle().NonLazy();
 
             Container.Bind<PlayerControlService>().AsSingle();
+            Container.Bind<ClientServerServices>().AsSingle();
 
 
             Container.Bind<NetClient>().AsSingle();

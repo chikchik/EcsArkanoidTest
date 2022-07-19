@@ -8,22 +8,40 @@ using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-    public class MoveToTargetPositionSystem : IEcsRunSystem
+    public class MoveToTargetPositionSystem : IEcsRunSystem, IEcsInitSystem
     {
+        EcsPool<TargetPositionComponent> poolTargetPosition;
+        EcsPool<PositionComponent> poolPosition;
+        EcsPool<MovingComponent> poolMoving;
+        EcsPool<CantMoveComponent> poolCantMove;
+        EcsPool<LookDirectionComponent> poolLookDirection;
+        EcsPool<AverageSpeedComponent> poolAverageSpeed;
+        EcsWorld world;
+        
+        public void Init(EcsSystems systems)
+        {
+            world = systems.GetWorld();
+            poolTargetPosition = world.GetPool<TargetPositionComponent>();
+            poolPosition = world.GetPool<PositionComponent>();
+            poolLookDirection = world.GetPool<LookDirectionComponent>();
+            poolMoving = world.GetPool<MovingComponent>();
+            poolCantMove = world.GetPool<CantMoveComponent>();
+            poolAverageSpeed = world.GetPool<AverageSpeedComponent>();
+        }
+
+        private void ReachedTarget(int entity, Vector3 targetPosition)
+        {
+            poolPosition.GetRef(entity).value = targetPosition;
+            poolTargetPosition.Del(entity);
+            poolMoving.Del(entity);
+        }
+        
         public void Run(EcsSystems systems)
         {
-            var world = systems.GetWorld();
             var filter = world
                 .Filter<TargetPositionComponent>()
                 .Inc<PositionComponent>()
                 .End();
-            
-            var poolTargetPosition = world.GetPool<TargetPositionComponent>();
-            var poolPosition = world.GetPool<PositionComponent>();
-            //var poolMoveDirection = world.GetPool<MoveDirectionComponent>();
-            var poolLookDirection = world.GetPool<LookDirectionComponent>();
-            var poolMoving = world.GetPool<MovingComponent>();
-            var poolCantMove = world.GetPool<CantMoveComponent>();
 
             var deltaTime = world.GetDeltaSeconds();
 
@@ -35,34 +53,30 @@ namespace Game.Ecs.ClientServer.Systems
                 var targetPositionComponent = poolTargetPosition.Get(entity);
                 var positionComponent = poolPosition.Get(entity);
 
-                var direction = (targetPositionComponent.Value - positionComponent.value).WithY(0);
-                var distance = direction.magnitude;
+                var directionToTarget = (targetPositionComponent.Value - positionComponent.value).WithY(0);
 
-                if (distance < 0.1f)
+                //too close to target
+                if (directionToTarget.magnitude < 0.00001f)
                 {
-                    poolTargetPosition.Del(entity);
-                    poolMoving.Del(entity);
-                    //poolMoveDirection.Del(entity);
+                    ReachedTarget(entity, targetPositionComponent.Value);
+                    continue;
                 }
-                else
+                
+                poolMoving.Replace(entity, new MovingComponent());
+                
+                var speed = poolAverageSpeed.GetNullable(entity)?.Value ?? 1.0f;
+                var step = directionToTarget.normalized * deltaTime * speed;
+                
+                if (step.magnitude < directionToTarget.magnitude)
                 {
-                    poolMoving.Replace(entity, new MovingComponent());
-                    direction.Normalize();
-                    
-                    var speed = entity.EntityGetNullable<AverageSpeedComponent>(world)?.Value ?? 1.0f;
-
-                    //poolMoveDirection.Replace(entity).value = direction;
-
-                    var dir = direction * deltaTime * speed; //speedComponent.speed;
-                    poolPosition.GetRef(entity).value += dir;
-                    
-                    if (dir.magnitude > 0.001f)
-                    {
-                        //if delta and speed not 0
-                        poolLookDirection.GetOrCreateRef(entity).value = dir.normalized;
-                    }
+                    poolPosition.GetRef(entity).value += step;
+                    poolLookDirection.GetOrCreateRef(entity).value = step.normalized;
+                    continue;
                 }
+                
+                ReachedTarget(entity, targetPositionComponent.Value);
             }
         }
+
     }
 }

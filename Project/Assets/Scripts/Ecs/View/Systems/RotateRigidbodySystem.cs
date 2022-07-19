@@ -17,6 +17,7 @@ namespace Game.Ecs.View.Systems
                 .Inc<TransformComponent>()
                 .Inc<Rotation2DComponent>()
                 .Exc<UnitComponent>()
+                .Exc<LookDirectionComponent>()
                 .End();
 
             var poolTransform = world.GetPool<TransformComponent>();

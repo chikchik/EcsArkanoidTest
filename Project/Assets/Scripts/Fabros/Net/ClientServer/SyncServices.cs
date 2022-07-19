@@ -7,7 +7,7 @@ using Flow.EcsLite;
 
 namespace Game.Fabros.Net.ClientServer
 {
-    public static class Services
+    public static class SyncServices
     {
         public static void FilterInputs(EcsWorld inputWorld, int tick)
         {

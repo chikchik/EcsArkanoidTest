@@ -1,6 +1,7 @@
 using Fabros.Ecs.Client.Components;
 using Game.Ecs.Client.Components;
 using Flow.EcsLite;
+using Game.ClientServer;
 using UnityEngine;
 
 namespace Game.Ecs.View.Systems
@@ -25,8 +26,15 @@ namespace Game.Ecs.View.Systems
             var deltaTime = Time.deltaTime;
 
             var clientPlayerComponent = world.GetUnique<ClientPlayerComponent>();
-            var targetEntityTransform = poolTransform.Get(clientPlayerComponent.entity).Transform;
-            var targetPosition = targetEntityTransform.position + CameraOffset;
+            
+
+            var controlledEntity = ApplyInputWorldService.GetControlledEntity(world, clientPlayerComponent.entity);
+            var dist = 1f;
+            if (controlledEntity != clientPlayerComponent.entity)
+                dist = 2.5f;
+
+            var targetEntityTransform = poolTransform.Get(controlledEntity).Transform;
+            var targetPosition = targetEntityTransform.position + CameraOffset*dist;
 
             camera.transform.position = Vector3.Lerp(
                 camera.transform.position,

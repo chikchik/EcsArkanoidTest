@@ -26,7 +26,7 @@ namespace Game
                     pos = pos.WithAddedToY(1.0f);
                     Gizmos.color = Color.white;
                 }
-                
+
                 if (entity.EntityHas<UnitComponent>(world))
                 {
                     Gizmos.color = Color.green;
@@ -41,12 +41,27 @@ namespace Game
                     Gizmos.color = Color.green;
                     Gizmos.DrawRay(pos, data.value);
                 });
+                
+                entity.EntityWith<LookDirectionComponent>(world, data =>
+                {
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawRay(pos.WithAddedToY(-0.02f), data.value);
+                });
 
                 entity.EntityWith<ApplyForceComponent>(world, data =>
                 {
                     Gizmos.color = Color.red;
                     Gizmos.DrawRay(pos, data.Direction);
                 });
+
+                /*
+                entity.EntityWith<Rotation2DComponent>(world, data =>
+                {
+                    var dir = Quaternion.Euler(0,  data.Angle * Mathf.Rad2Deg, 0) * new Vector3(0, 0, 1f);
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawRay(pos, dir);
+                });
+                */
             }
         }
     }

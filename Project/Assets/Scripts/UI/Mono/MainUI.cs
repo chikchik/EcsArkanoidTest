@@ -10,6 +10,7 @@ namespace Game.UI.Mono
         public Button ShotButton;
         public Button InteractionButton;
         public Button KickButton;
+        public Button MechButton;
         //public FixedJoystick Joystick;
         public FloatingJoystick Joystick;
 

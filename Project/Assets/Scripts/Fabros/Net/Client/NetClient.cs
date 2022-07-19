@@ -143,7 +143,7 @@ namespace Game.Fabros.Net.Client
 
             Profiler.BeginSample("SimServerWorld");
             //удаляем гарантированно устаревший ввод от игрока
-            Services.FilterInputs(InputWorld, ServerWorld.GetTick() - 10);
+            SyncServices.FilterInputs(InputWorld, ServerWorld.GetTick() - 10);
 
             stats.lastClientTick = MainWorld.GetTick();
             stats.lastReceivedServerTick = ServerWorld.GetTick();
@@ -254,7 +254,7 @@ namespace Game.Fabros.Net.Client
             while (copyServerWorld.GetTick() < MainWorld.GetTick())
             {
                 Profiler.BeginSample("SimTick");
-                Services.Tick(copyServerSystems, InputWorld, copyServerWorld, Config.SyncDataLogging, debug);
+                SyncServices.Tick(copyServerSystems, InputWorld, copyServerWorld, Config.SyncDataLogging, debug);
                 Profiler.EndSample();
                 
                 stats.simTicksTotal++;
@@ -498,7 +498,7 @@ namespace Game.Fabros.Net.Client
                     
                 //leo.ApplyUserInput(world);
                 SendPing(MainWorld.GetTick());
-                Services.Tick(clientSystems, InputWorld, MainWorld, Config.SyncDataLogging, "");
+                SyncServices.Tick(clientSystems, InputWorld, MainWorld, Config.SyncDataLogging, "");
                 
             });
 

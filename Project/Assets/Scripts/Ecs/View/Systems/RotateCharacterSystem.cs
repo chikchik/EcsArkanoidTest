@@ -11,8 +11,8 @@ namespace Game.Ecs.View.Systems
         {
             var world = systems.GetWorld();
             var filter = world
-                .Filter<UnitComponent>()
-                .Inc<LookDirectionComponent>()
+                .Filter<LookDirectionComponent>()
+                //.Inc<LookDirectionComponent>()
                 .Inc<TransformComponent>()
                 .End();
 

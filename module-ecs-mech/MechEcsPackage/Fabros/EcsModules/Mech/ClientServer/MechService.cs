@@ -14,8 +14,8 @@ namespace Fabros.EcsModules.Mech.ClientServer
             var entity = world.NewEntity();
             entity.EntityAdd<MechComponent>(world);
             entity.EntityAdd<PositionComponent>(world);
-            entity.EntityAdd<Rotation2DComponent>(world);
-            entity.EntityAdd<MechMovingComponent>(world);
+            entity.EntityAdd<Rotation2DComponent>(world).Angle = 1;
+            //entity.EntityAdd<MechMovingComponent>(world);
 
             return entity;
         }

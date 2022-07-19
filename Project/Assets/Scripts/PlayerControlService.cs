@@ -74,6 +74,14 @@ namespace Game
             Apply(component);
         }
         
+        public void Mech()
+        {
+            if (unitEntity == -1)
+                return;
+
+            Apply(new InputMechEnterLeaveComponent());
+        }
+        
         public void MoveToDirection(Vector3 dir)
         {
             if (unitEntity == -1)
@@ -89,8 +97,10 @@ namespace Game
         {
             if (unitEntity == -1)
                 return;
+
+            var entity = ApplyInputWorldService.GetControlledEntity(world, unitEntity);
             
-            if (!unitEntity.EntityHas<MoveDirectionComponent>(world))
+            if (!entity.EntityHas<MoveDirectionComponent>(world))
                 return;
             
             var component = new InputMoveDirectionComponent();

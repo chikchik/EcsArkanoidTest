@@ -3,6 +3,7 @@ using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Flow.EcsLite;
+using Game.Ecs.ClientServer.Components;
 
 namespace Game.ClientServer
 {
@@ -16,6 +17,18 @@ namespace Game.ClientServer
         public void Input(EcsWorld inputWorld, int playerId, int tick, IInputComponent inp)
         {
             CreateInputEntity(inputWorld, playerId, tick, inp);
+        }
+        
+        public static int GetControlledEntity(EcsWorld world, int unitEntity)
+        {
+            if (unitEntity.EntityHas<ControlsMechComponent>(world))
+            {
+                int mechEntity;
+                if (unitEntity.EntityGet<ControlsMechComponent>(world).PackedEntity.Unpack(world, out mechEntity))
+                    return mechEntity;
+            }
+
+            return unitEntity;
         }
 
         public static void CreateInputEntity(EcsWorld inputWorld, int playerId, int tick, IInputComponent inp)

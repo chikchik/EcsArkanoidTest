@@ -29,6 +29,8 @@ namespace Game.Ecs.ClientServer.Systems
         private EcsWorld world;
         private EcsWorld inputWorld;
         
+        List<int> entities = new List<int>();
+        
         public void Init(EcsSystems systems)
         {
             world = systems.GetWorld();
@@ -103,10 +105,15 @@ namespace Game.Ecs.ClientServer.Systems
                     var dir = poolInputKick.Get(inputEntity).dir;
                     Kick(unitEntity, dir);
                 }
+
+                if (inputEntity.EntityHas<InputMechEnterLeaveComponent>(inputWorld))
+                {
+                    EnterLeaveMech(unitEntity);
+                }
             }
         }
-        
-        public void Interract(EcsWorld world, int unitEntity)
+
+        public void EnterLeaveMech(int unitEntity)
         {
             if (unitEntity.EntityHas<ControlsMechComponent>(world))
             {
@@ -114,44 +121,44 @@ namespace Game.Ecs.ClientServer.Systems
                 return;
             }
             
-            var result = new List<int>();
-
-            var position = unitEntity.EntityGet<PositionComponent>(world).value;
-            
             world.GetNearestEntities(unitEntity,
                 unitEntity.EntityGet<PositionComponent>(world).value,
-                1, ref result, entity=> entity.EntityHas<InteractableComponent>(world));
+                1, ref entities, entity=> entity.EntityHas<MechComponent>(world));
 
-            if (result.Count > 0)
-            {
-                var entity = result[0];
-                
-             
-
-                if (entity.EntityHas<MechComponent>(world))
-                {
-                    ref var packedEntity = ref unitEntity.EntityAdd<ControlsMechComponent>(world).PackedEntity;
-                    packedEntity = world.PackEntity(entity);
-                }
-                
-                if (entity.EntityHas<SpawnGunComponent>(world))
-                {
-                    unitEntity.EntityGetOrCreateRef<WeaponComponent>(world);
-                }
-                
-                if (entity.EntityHas<BushComponent>(world))
-                {
-                    entity.EntityDel<InteractableComponent>(world);
-                    unitEntity.EntityGetOrCreateRef<FoodCollectedComponent>(world).Value += 1;
-                    ObjectiveService.Triggered(world, entity);
-
-                    if (entity.EntityHas<CollectableComponent>(world))
-                    {
-                        entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
-                    }
-                }
-                
+            if (entities.Count == 0)
                 return;
+            
+            var entity = entities[0];
+            ref var packedEntity = ref unitEntity.EntityAdd<ControlsMechComponent>(world).PackedEntity;
+            packedEntity = world.PackEntity(entity);
+        }
+        
+        public void Interract(EcsWorld world, int unitEntity)
+        {
+            world.GetNearestEntities(unitEntity,
+                unitEntity.EntityGet<PositionComponent>(world).value,
+                1, ref entities, entity=> entity.EntityHas<InteractableComponent>(world));
+
+            if (entities.Count == 0)
+                return;
+            
+            var entity = entities[0];
+
+            if (entity.EntityHas<SpawnGunComponent>(world))
+            {
+                unitEntity.EntityGetOrCreateRef<WeaponComponent>(world);
+            }
+            
+            if (entity.EntityHas<BushComponent>(world))
+            {
+                entity.EntityDel<InteractableComponent>(world);
+                unitEntity.EntityGetOrCreateRef<FoodCollectedComponent>(world).Value += 1;
+                ObjectiveService.Triggered(world, entity);
+
+                if (entity.EntityHas<CollectableComponent>(world))
+                {
+                    entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
+                }
             }
         }
         
