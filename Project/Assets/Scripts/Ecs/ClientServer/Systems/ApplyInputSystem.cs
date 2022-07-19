@@ -8,6 +8,7 @@ using Fabros.EcsModules.Box2D.ClientServer;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Grid.Other;
+using Fabros.EcsModules.Mech.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
@@ -89,10 +90,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if (poolInputMoveTo.Has(inputEntity))
                 {
-                    var inputMoveToPointComponent = poolInputMoveTo.Get(inputEntity);
-
-                    ref var targetPositionComponent = ref unitEntity.EntityGetOrCreateRef<TargetPositionComponent>(world);
-                    targetPositionComponent.Value = inputMoveToPointComponent.Value;
+                    MoveToPoint(unitEntity, poolInputMoveTo.Get(inputEntity).Value);
                 }
                 
                 if (poolInputAction.Has(inputEntity))
@@ -110,6 +108,12 @@ namespace Game.Ecs.ClientServer.Systems
         
         public void Interract(EcsWorld world, int unitEntity)
         {
+            if (unitEntity.EntityHas<ControlsMechComponent>(world))
+            {
+                unitEntity.EntityDel<ControlsMechComponent>(world);
+                return;
+            }
+            
             var result = new List<int>();
 
             var position = unitEntity.EntityGet<PositionComponent>(world).value;
@@ -124,13 +128,19 @@ namespace Game.Ecs.ClientServer.Systems
                 
              
 
+                if (entity.EntityHas<MechComponent>(world))
+                {
+                    ref var packedEntity = ref unitEntity.EntityAdd<ControlsMechComponent>(world).PackedEntity;
+                    packedEntity = world.PackEntity(entity);
+                }
+                
                 if (entity.EntityHas<SpawnGunComponent>(world))
                 {
                     unitEntity.EntityGetOrCreateRef<WeaponComponent>(world);
                 }
-                else
+                
+                if (entity.EntityHas<BushComponent>(world))
                 {
-                    //bush
                     entity.EntityDel<InteractableComponent>(world);
                     unitEntity.EntityGetOrCreateRef<FoodCollectedComponent>(world).Value += 1;
                     ObjectiveService.Triggered(world, entity);
@@ -188,25 +198,48 @@ namespace Game.Ecs.ClientServer.Systems
             });
         }
 
+
+        private int GetControlledEntity(int unitEntity)
+        {
+            if (unitEntity.EntityHas<ControlsMechComponent>(world))
+            {
+                int mechEntity;
+                if (unitEntity.EntityGet<ControlsMechComponent>(world).PackedEntity.Unpack(world, out mechEntity))
+                    return mechEntity;
+            }
+
+            return unitEntity;
+        }
+        
         private void Move(int unitEntity, Vector3 dir)
         {
-            if (unitEntity.EntityHas<CantMoveComponent>(world))
+            var entity = GetControlledEntity(unitEntity);
+
+            if (entity.EntityHas<CantMoveComponent>(world))
                 return;
                     
             if (dir.sqrMagnitude > 0.001f)
             {
-                unitEntity.EntityDel<TargetPositionComponent>(world);
-                unitEntity.EntityGetOrCreateRef<MoveDirectionComponent>(world).value = dir;
+                entity.EntityDel<TargetPositionComponent>(world);
+                entity.EntityGetOrCreateRef<MoveDirectionComponent>(world).value = dir;
             }
             else
             {
-                if (unitEntity.EntityHas<MoveDirectionComponent>(world))
+                if (entity.EntityHas<MoveDirectionComponent>(world))
                 {
-                    unitEntity.EntityDel<MoveDirectionComponent>(world);
-                    unitEntity.EntityDel<MovingComponent>(world);
+                    entity.EntityDel<MoveDirectionComponent>(world);
+                    entity.EntityDel<MovingComponent>(world);
                 }
             }
         }
 
+        private void MoveToPoint(int unitEntity, Vector3 pos)
+        {
+            var entity = GetControlledEntity(unitEntity);
+            
+            ref var targetPositionComponent = ref entity.EntityGetOrCreateRef<TargetPositionComponent>(world);
+            targetPositionComponent.Value = pos;
+            
+        }
     }
 }

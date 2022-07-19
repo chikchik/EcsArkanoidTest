@@ -5,6 +5,7 @@ using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Mech.Client.Systems;
+using Fabros.EcsModules.Mech.ClientServer;
 using Fabros.EcsModules.Tick;
 
 using Game.Ecs.ClientServer.Components;
@@ -33,9 +34,11 @@ namespace Game.ClientServer
     public class EcsSystemsFactory : IEcsSystemsFactory
     {
         private ComponentsCollection pool;
-        public EcsSystemsFactory(ComponentsCollection pool) 
+        private MechService mechService;
+        public EcsSystemsFactory(ComponentsCollection pool, MechService mechService) 
         {
             this.pool = pool;
+            this.mechService = mechService;
         }
 
         public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)
@@ -71,7 +74,7 @@ namespace Game.ClientServer
             AddClient(new DetectPlayerIdChangesSystem());
 #endif
             
-            AddServer(new CustomInitSystem());
+            AddServer(new CustomInitSystem(mechService));
             AddServer(new JoinPlayerSystem());
 
 

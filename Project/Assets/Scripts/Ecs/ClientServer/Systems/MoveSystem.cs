@@ -14,7 +14,6 @@ namespace Game.Ecs.ClientServer.Systems
             var filter = world
                 .Filter<MoveDirectionComponent>()
                 .Inc<PositionComponent>()
-                .Inc<AverageSpeedComponent>()
                 .End();
             
             var deltaTime = world.GetDeltaSeconds();
@@ -32,7 +31,7 @@ namespace Game.Ecs.ClientServer.Systems
                 
                 var moveDirectionComponent = poolMoveDirection.Get(entity);
 
-                var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).Value;
+                var speed = entity.EntityGetNullable<AverageSpeedComponent>(world)?.Value??1f;
                 var dir = moveDirectionComponent.value * deltaTime * speed; //speedComponent.speed;
                 poolPosition.GetRef(entity).value += dir;
                 poolMoving.Replace(entity, new MovingComponent());

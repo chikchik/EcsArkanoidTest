@@ -49,7 +49,7 @@ namespace Game
             Container.Bind<DevPanelController>().FromComponentInNewPrefabResource("DEV/DevPanel").AsSingle();
             Container.Bind<DevPanel>().AsSingle().NonLazy();
             
-            Container.Bind<MechService>().AsSingle().NonLazy();
+            Container.Bind<MechService>().AsSingle();
             
 
             if (settings.MultiPlayer)

@@ -49,7 +49,7 @@ namespace Game.Ecs.ClientServer.Systems
                     poolMoving.Replace(entity, new MovingComponent());
                     direction.Normalize();
                     
-                    var speed = entity.EntityGetComponent<AverageSpeedComponent>(world).Value;
+                    var speed = entity.EntityGetNullable<AverageSpeedComponent>(world)?.Value ?? 1.0f;
 
                     //poolMoveDirection.Replace(entity).value = direction;
 

@@ -11,12 +11,19 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class CustomInitSystem : IEcsInitSystem
     {
+        private MechService mechService;
+        public CustomInitSystem(MechService mechService)
+        {
+            this.mechService = mechService;
+        }
+        
         public void Init(EcsSystems systems)
         {
-            var service = new MechService();
             var world = systems.GetWorld();
-            var mechEntity = service.CreateMechEntity(world);
+            var mechEntity = mechService.CreateMechEntity(world);
             mechEntity.EntityGetRef<PositionComponent>(world).value = new Vector3(-5, 0, -5f);
+
+            mechEntity.EntityAdd<InteractableComponent>(world);
 
             /*
             var world = systems.GetWorld();
