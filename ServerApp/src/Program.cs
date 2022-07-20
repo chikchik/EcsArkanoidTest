@@ -340,13 +340,13 @@ namespace ConsoleApp
             //Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} Tick Begin {time0.Value}");
             var time = world.GetTick();
 
-            Services.FilterInputs(inputWorld, time);
+            SyncServices.FilterInputs(inputWorld, time);
 
             //ref var component = ref world.GetUniqueRef<PendingInputComponent>();
 
             //Console.WriteLine($"tick {time} at {TimeUtils.GetUnixTimeMS()}");
             //обновляем мир 1 раз
-            Services.Tick(systems, inputWorld, world, Config.SyncDataLogging);
+            SyncServices.Tick(systems, inputWorld, world, Config.SyncDataLogging);
         
             //time = world.GetTick();
 
