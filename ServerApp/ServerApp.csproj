@@ -6,6 +6,7 @@
 		<RootNamespace>ServerApp</RootNamespace>
 		
 		<FabrosEcsPackage>..\..\module-ecs\FabrosEcsPackage</FabrosEcsPackage>
+		<FabrosCentral>..\..\module-ecs-central\Package</FabrosCentral>
 		<UnityScripts>..\project\Assets\Scripts</UnityScripts>
 		<Box2D>..\..\module-ecs-box2d\FabrosEcsBox2DPackage\Fabros\EcsModules\Box2D</Box2D>
 		<Mech>..\module-ecs-mech\MechEcsPackage\Fabros\EcsModules\Mech</Mech>
@@ -29,8 +30,15 @@
 			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
 		<Compile Remove="$(FabrosEcsPackage)\Flow\UnityEditor\**"></Compile>
-		<Compile Remove="$(FabrosEcsPackage)\Flow\unileo\**"></Compile>		
+		<Compile Remove="$(FabrosEcsPackage)\Flow\unileo\**"></Compile>
 		<Compile Remove="$(FabrosEcsPackage)\Fabros\Ecs\Client\**"></Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(FabrosCentral)\**\*.cs">
+			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+		<Compile Remove="$(FabrosCentral)\Fabros\Ecs\Client\**"></Compile>
 	</ItemGroup>
 
 	<ItemGroup>

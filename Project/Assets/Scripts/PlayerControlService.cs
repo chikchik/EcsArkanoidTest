@@ -1,5 +1,6 @@
 ﻿using System;
 using Fabros.Ecs.Client.Components;
+using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;

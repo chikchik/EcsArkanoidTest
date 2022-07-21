@@ -1,4 +1,5 @@
-﻿using Game.Ecs.ClientServer.Components;
+﻿using Fabros.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Components;
 using Flow.EcsLite;
 
 namespace Game.Ecs.ClientServer.Systems

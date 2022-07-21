@@ -1,4 +1,5 @@
-﻿using Fabros.EcsModules.Box2D.ClientServer.Api;
+﻿using Fabros.Ecs.ClientServer.Components;
+using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Game.Ecs.ClientServer.Components;
 using Flow.EcsLite;

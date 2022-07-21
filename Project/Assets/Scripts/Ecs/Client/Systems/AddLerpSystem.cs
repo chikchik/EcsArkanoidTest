@@ -1,7 +1,5 @@
-﻿using Fabros.Ecs.ClientServer.Components;
-using Fabros.Ecs.Utils;
+﻿using Fabros.Ecs.Client.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
-using Game.Ecs.ClientServer.Components;
 using Flow.EcsLite;
 
 namespace Game.Ecs.ClientServer.Systems

@@ -1,3 +1,4 @@
+using Fabros.Ecs.Client.Components;
 using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;

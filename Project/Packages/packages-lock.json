@@ -19,6 +19,12 @@
       "source": "local",
       "dependencies": {}
     },
+    "com.fabros.ecs.central": {
+      "version": "file:../../../module-ecs-central/Package",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.fabros.ecs.mech": {
       "version": "file:../../module-ecs-mech/MechEcsPackage",
       "depth": 0,

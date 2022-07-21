@@ -157,9 +157,10 @@ namespace Game.ClientServer
             
 #if CLIENT
             AddClient(new CharacterAnimationSystem());
+            AddClient(new AddLerpSystem());
 #endif
 
-            systems.Add(new AddLerpSystem());
+            
             systems.Add(new ShootSystem());
             
             //Основная Box2dSystem должна быть в конце после всех основных систем,

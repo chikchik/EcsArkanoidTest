@@ -30,9 +30,7 @@ namespace Game
 
         public static void InitializeNewWorldFromScene(EcsWorld world)
         {
-            var entityCollectionSystem = world.NewEntity();
-            ref var entityCollectionComponent = ref entityCollectionSystem.EntityAdd<EntityCollectionComponent>(world);
-            var entities = entityCollectionComponent.entities = new Dictionary<GameObject, int>();
+            var entities = new Dictionary<GameObject, int>();
 
             int NameId = 0;
             int GetOrCreateGameEntity(GameObject go)
