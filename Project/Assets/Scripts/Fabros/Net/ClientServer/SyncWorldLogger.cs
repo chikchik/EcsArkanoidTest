@@ -1,5 +1,8 @@
 ﻿using Fabros.Ecs.ClientServer.Utils;
 using Flow.EcsLite;
+using Game.ClientServer;
+using System;
+using System.IO;
 
 namespace Game.Fabros.Net.ClientServer
 {
@@ -21,7 +24,7 @@ namespace Game.Fabros.Net.ClientServer
         
         private void LogRaw(EcsWorld world, string str)
         {
-#if false
+#if true
             var worldName = world.GetDebugName();
 
             try

@@ -336,14 +336,14 @@ namespace Game.Fabros.Net.Client
             ServerWorld.SetDebugName("rsrv");
 
             serverSystems = new EcsSystems(ServerWorld);
-            serverSystems.Add(new DebugMeSystem(true));
+            serverSystems.Add(systemsFactory.CreateSyncDebugSystem(true));
             serverSystems.AddWorld(InputWorld, "input");
             //serverSystems.Add(Box2DModule.CreateMainSystems(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
             serverSystems.Add(new Box2DInitSystem());
             serverSystems.Add(new Box2DCreateBodiesSystem());
             serverSystems.Add(new Box2DUpdateInternalObjectsSystem());
             //serverSystems.Add(new Box2DWriteBodiesToComponentsSystem());
-            serverSystems.Add(new DebugMeSystem(false));
+            serverSystems.Add(systemsFactory.CreateSyncDebugSystem(false));
             //serverSystems.Add(new TickSystem());
 
             //после того как нам пришло что-то от сервера старый инпут можно спокойно удалять

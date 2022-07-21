@@ -1,4 +1,5 @@
-﻿using Fabros.Ecs.ClientServer;
+﻿using System;
+using Fabros.Ecs.ClientServer;
 using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.Utils;
@@ -21,7 +22,6 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
         
         public void Run(EcsSystems systems)
         {
-            /*
             foreach (var entity in filter)
             {
                 var str = "";
@@ -29,13 +29,14 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
                     str += "beg-";
                 else
                     str += "end-";
-                
+
                 if (entity.EntityHas<PositionComponent>(world))
                     str += entity.EntityGet<PositionComponent>(world).value;
                 if (entity.EntityHas<Box2DRigidbodyComponent>(world))
                     str += entity.EntityGet<Box2DRigidbodyComponent>(world).LinearVelocity;
+                    
                 world.Log(str);
-            }*/
+            }
         }
 
         public void Init(EcsSystems systems)

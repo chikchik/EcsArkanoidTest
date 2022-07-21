@@ -11,5 +11,7 @@ namespace Game.Fabros.Net.ClientServer
         }
 
         void AddNewSystems(EcsSystems systems, Settings settings);
+
+        IEcsSystem CreateSyncDebugSystem(bool pre);
     }
 }

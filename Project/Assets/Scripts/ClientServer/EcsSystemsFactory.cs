@@ -42,9 +42,14 @@ namespace Game.ClientServer
             this.mechService = mechService;
         }
 
+        public IEcsSystem CreateSyncDebugSystem(bool pre)
+        {
+            return new DebugMeSystem(pre);
+        }
+
         public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)
         {
-            systems.Add(new DebugMeSystem(true));
+            systems.Add(CreateSyncDebugSystem(true));
             
             var client = settings.client;
             var server = settings.server;
@@ -195,7 +200,7 @@ namespace Game.ClientServer
             //write final Box2d transforms to components
             systems.Add(new Box2DWriteBodiesToComponentsSystem());
             
-            systems.Add(new DebugMeSystem(false));
+            systems.Add(CreateSyncDebugSystem(false));
             
             //тик меняется на следующий в самом конце после всех систем 
             systems.Add(TickModule.GetSystems());
