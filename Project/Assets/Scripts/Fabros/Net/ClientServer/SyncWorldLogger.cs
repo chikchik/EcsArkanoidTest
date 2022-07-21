@@ -8,12 +8,17 @@ namespace Game.Fabros.Net.ClientServer
 {
     public class SyncWorldLogger : IWorldLogger
     {
+        private string folder;
         struct LoggerState
         {
             public int tick;
             public bool inTick;
         }
 
+        public SyncWorldLogger(string tmpFolder)
+        {
+            folder = tmpFolder;
+        }
         public void Log(EcsWorld world, string str)
         {
             var state = GetState(world);
@@ -31,7 +36,7 @@ namespace Game.Fabros.Net.ClientServer
             {
                 lock (world)
                 {
-                    using (var file = File.AppendText($"{Config.TMP_HASHES_PATH}/{worldName}.log"))
+                    using (var file = File.AppendText($"{folder}/{worldName}.log"))
                     {
                         file.WriteLine(str);
                         file.Close();

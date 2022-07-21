@@ -136,7 +136,6 @@ namespace ConsoleApp
             factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { client = false, server = true });
 
 
-            syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
             /*
             leo.WriteToConsole = (string str) =>
             {
@@ -155,8 +154,8 @@ namespace ConsoleApp
         {
             try
             {
-                //StartSystems(null);
-                WorldLoggerExt.logger = new SyncWorldLogger();
+                syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
+                WorldLoggerExt.logger = syncDebug.CreateLogger();
 
                 var url = $"{Config.url}/{P2P.ADDR_SERVER.AddressString}";
                 await socket.ConnectAsync(new Uri(url, UriKind.Absolute), new CancellationToken());

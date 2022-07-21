@@ -80,7 +80,6 @@ namespace Game.Fabros.Net.Client
         {
             Application.targetFrameRate = 60;
             
-            WorldLoggerExt.logger = new SyncWorldLogger();
 
             this.InputWorld = inputWorld;
             
@@ -88,6 +87,7 @@ namespace Game.Fabros.Net.Client
 
             components = pool;
             syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
+            WorldLoggerExt.logger = syncDebug.CreateLogger();
 
 
             //генерируем случайный id игрока с которым нас будет ассоциировать сервер

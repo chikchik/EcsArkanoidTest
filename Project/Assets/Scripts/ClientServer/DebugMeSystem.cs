@@ -22,6 +22,10 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
         
         public void Run(EcsSystems systems)
         {
+            //if logging disabled skip
+            if (world.GetSyncLogger() == null)
+                return;
+            
             foreach (var entity in filter)
             {
                 var str = "";
