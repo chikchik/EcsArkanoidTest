@@ -15,6 +15,7 @@ using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Grid.Components;
 using Fabros.EcsModules.Tick.ClientServer.Components;
+using Fabros.EcsModules.Tick.ClientServer.Systems;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
@@ -324,8 +325,11 @@ namespace Game.Fabros.Net.Client
 
             clientSystems = new EcsSystems(MainWorld);
             clientSystems.AddWorld(InputWorld, "input");
-            
-            systemsFactory.AddNewSystems(clientSystems, new IEcsSystemsFactory.Settings{client = true, server = false});
+
+            clientSystems.Add(systemsFactory.CreateSyncDebugSystem(true));
+            systemsFactory.AddNewSystems(clientSystems, new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = false});
+            clientSystems.Add(systemsFactory.CreateSyncDebugSystem(false));
+            clientSystems.Add(new TickSystem());
 
             dif0.ApplyChanges(MainWorld);
 
@@ -359,9 +363,13 @@ namespace Game.Fabros.Net.Client
             copyServerSystems = new EcsSystems(copyServerWorld);
             copyServerSystems.AddWorld(InputWorld, "input");
             
+            copyServerSystems.Add(systemsFactory.CreateSyncDebugSystem(true));
             systemsFactory.AddNewSystems(copyServerSystems,
-                new IEcsSystemsFactory.Settings{client = false, server = false});
-            
+                new IEcsSystemsFactory.Settings{AddClientSystems = false, AddServerSystems = false});
+            copyServerSystems.Add(systemsFactory.CreateSyncDebugSystem(false));
+            copyServerSystems.Add(new TickSystem());
+
+
             copyServerWorld.CopyFrom(ServerWorld);
             
             Box2DServices.__ClearWorld(copyServerWorld);

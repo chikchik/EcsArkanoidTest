@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
@@ -9,6 +10,8 @@ using Fabros.Ecs.ClientServer;
 using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.ClientServer.WorldDiff;
 using Fabros.Ecs.Utils;
+using Fabros.EcsModules.Box2D.ClientServer.Systems;
+using Fabros.EcsModules.Mech.ClientServer;
 using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
@@ -18,6 +21,8 @@ using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Protocol;
 using Flow.EcsLite;
 using UnityEngine;
+using Zenject;
+using Fabros.EcsModules.Tick.ClientServer.Systems;
 
 namespace ConsoleApp
 {
@@ -45,6 +50,7 @@ namespace ConsoleApp
         private EcsWorld sentWorld;
         private EcsWorld inputWorld;
 
+
         private EcsSystems systems;
         private List<Client> clients = new List<Client>();
         private List<int> missingClients = new List<int>();
@@ -53,6 +59,9 @@ namespace ConsoleApp
 
         private List<byte[]> receivedMessages = new List<byte[]>();
         private HGlobalWriter writer = new HGlobalWriter();
+        private IEcsSystemsFactory systemsFactory;
+
+        private bool worldInitialized;
 
         readonly ComponentsCollection components = SharedComponents.CreateComponentsPool();
 
@@ -117,8 +126,7 @@ namespace ConsoleApp
                 dif = WorldDiff.FromJsonString(components, File.ReadAllText("world.ecs.json"));
             }
 
-
-            world = new EcsWorld("serv");
+            
             world.EntityDestroyedListeners.Add(destroyedListener);
 
  
@@ -129,31 +137,37 @@ namespace ConsoleApp
             world.AddUnique(new TickDeltaComponent { Value = new TickDelta(config.Tickrate) });
 
 
-            systems = new EcsSystems(world);
+            
             systems.AddWorld(inputWorld, "input");
 
-            var factory = new EcsSystemsFactory(components, new Fabros.EcsModules.Mech.ClientServer.MechService());
-            factory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { client = false, server = true });
-
-
-            /*
-            leo.WriteToConsole = (string str) =>
-            {
-                Debug.Log(str);
-            };*/
-
-
+            
             dif.ApplyChanges(world);
 
             systems.Init();
 
             sentWorld = WorldUtils.CopyWorld(components, world);
+
+            worldInitialized = true;
         }
 
         async Task AsyncRun()
         {
             try
             {
+                var container = new DiContainer();
+                container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
+                container.Bind<MechService>().AsSingle();
+                container.Bind<ComponentsCollection>().FromInstance(components).AsSingle();
+                
+                systemsFactory = new EcsSystemsFactory(container);
+                container.ResolveRoots();
+
+                world = new EcsWorld("serv");
+                systems = new EcsSystems(world);
+                systemsFactory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { AddClientSystems = false, AddServerSystems = true });
+                systems.Add(new TickSystem());
+                
+                
                 syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
                 WorldLoggerExt.logger = syncDebug.CreateLogger();
 
@@ -166,7 +180,7 @@ namespace ConsoleApp
                 _ = Task.Factory.StartNew(ReceiveData);
                 
                 SendWorldToClients();
-
+       
 
                 log("loop");
                 var next = DateTime.UtcNow;
@@ -183,7 +197,7 @@ namespace ConsoleApp
                     for (int i = 0; i < receivedCopy.Length; ++i)
                         ProcessMessage(receivedCopy[i]);
 
-                    if (next <= DateTime.UtcNow && systems != null)
+                    if (next <= DateTime.UtcNow && worldInitialized)
                     {
                         //Console.WriteLine($"tick {leo.GetCurrentTick(world)}");
                         next = next.AddSeconds(step);
@@ -234,7 +248,7 @@ namespace ConsoleApp
                 var hello = new Hello();
                 hello.Components = components.Components.Select(component => component.GetComponentType().FullName).ToArray();
 
-                if (clients.Count == 0 &&  systems == null) {
+                if (clients.Count == 0) {
                     //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
                     StartSystems(Convert.FromBase64String(packet.hello.InitialWorld));
                 }

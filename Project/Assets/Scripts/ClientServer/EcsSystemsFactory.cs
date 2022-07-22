@@ -20,6 +20,9 @@ using Game.Fabros.Net.ClientServer.Ecs.Systems;
 using Flow.EcsLite;
 using Flow.EcsLite.ExtendedSystems;
 using UnityEngine;
+using System.Collections.Generic;
+using System;
+using Fabros.EcsModules.Grid.Systems;
 
 #if CLIENT
 using Game.Ecs.Client.Systems;
@@ -30,180 +33,221 @@ using Fabros.EcsModules.Mech.Client.Systems;
 using Fabros.EcsModules.Tick.ClientServer.Components;
 #endif
 
+using Zenject;
+
 namespace Game.ClientServer
 {
-    public class EcsSystemsFactory : IEcsSystemsFactory
+    public class EcsSystemsFactory: IEcsSystemsFactory
     {
-        private ComponentsCollection pool;
-        private MechService mechService;
-        public EcsSystemsFactory(ComponentsCollection pool, MechService mechService) 
+        public enum Target
         {
-            this.pool = pool;
-            this.mechService = mechService;
+            Any,
+            Client,
+            Server
+        }
+        
+        private DiContainer container;
+        
+        public struct system
+        {
+            public Type type;
+            public Target target;
+        }
+        
+        public List<system> systems = new List<system>();
+
+        public EcsSystemsFactory(DiContainer container)
+        {
+            this.container = container.CreateSubContainer();
+            
+            /*
+             * системы регистрируются в порядке следования
+             * RegisterClient - система, которая будет отрабатывать в мире где есть Unity Client
+             * RegisterServer - система, которая будет создана и на стороне сервера (или синглплеера)
+             * Register - система, регистрируется для всех случаев
+             */
+            
+#if SERVER
+            Register<CreateGameSystem>();
+#endif
+            
+#if CLIENT
+            RegisterClient<DetectPlayerIdChangesSystem>();
+#endif
+            
+            RegisterServer<CustomInitSystem>();
+            RegisterServer<JoinPlayerSystem>();
+            
+#if CLIENT
+            RegisterClient<InitSceneSystem>();
+            RegisterClient<Box2DDebugViewSystem>();
+#endif
+            
+            RegisterServer<AIPlayerSystem>();
+
+            Register<MoveToTargetPositionSystem>();
+            Register<MoveSystem>();
+            Register<LookDirectionSystem>();
+            Register<SimpleMoveSystem>();
+            Register<UnitMoveSystem>();
+            Register<PushingSystem>();
+
+            Register<MechAdapterSystem>();
+            
+            Register<EntitiesLifeTimeSystem>();
+            
+            Register<GridSystem>();
+            
+            Register<DeleteComponentHereSystem<ShootStartedComponent>>();//если ставить в конец, то на клиент этот компонент даже придет
+            
+            Register<ApplyInputSystem>();
+
+
+            RegisterServer<FootprintSystem>();
+
+#if CLIENT
+            RegisterClient<FootprintViewSystem>();
+            RegisterClient<HighlightInteractableSystem>();
+#endif
+            
+
+#if CLIENT
+            RegisterClient<CollectableSystem>();
+            RegisterClient<WeaponEquipSystem>();
+#endif
+            // gates and buttons
+            Register<ButtonsInteractionSystem>();
+            RegisterServer<ButtonCustomSystem>();
+            Register<GateSystem>();
+            Register<MoveByProgressSystem>();
+            
+            Register<FireSystem>();
+
+            Register<ApplyForceSystem>();
+            
+            
+
+#if CLIENT
+            RegisterClient<CreateViewSystem>();
+            RegisterClient<FireViewSystem>();
+            RegisterClient<InventorySystem>();
+            RegisterClient<CreateMechViewSystem>();
+            RegisterClient<MechAnimationSystem>();
+#endif
+
+            Register<DeleteEntityHereSystem<DestroyComponent>>();
+
+            RegisterServer<DeleteInputEntitiesSystem>();
+            RegisterServer<DeleteOutdatedInputEntitiesSystem>();
+
+            Register<FireDestroyEntitySystem>();
+
+            RegisterServer<ObjectivesSystem>();
+
+            Register<DestroyAtTimeSystem>();
+
+            
+#if CLIENT
+            RegisterClient<CharacterAnimationSystem>();
+#endif
+
+            Register<AddLerpSystem>();
+            Register<ShootSystem>();
+            
+            //Основная Box2dSystem должна быть в конце после всех основных систем,
+            //иначе в мультиплеере предсказание не будет работать правильно
+            Register<Box2DInitSystem>();
+            Register<Box2DCreateBodiesSystem>();
+            Register<Box2DCreateContactsSystem>();
+            Register<Box2DUpdateInternalObjectsSystem>();
+            Register<Box2DUpdateSystem>();
+            Register<BulletContactSystem>();      
+            
+            
+
+            Register<Box2DDeleteContactsSystem>();
+            
+            Register<EventsSystem<WeaponComponent>>();
+            Register<EventsSystem<FireComponent>>();
+            Register<EventsSystem<ButtonPressedComponent>>();
+            Register<EventsSystem<PlayerComponent>>();
+            Register<EventsSystem<ButtonPushCompleted>>();
+            Register<EventsSystem<ObjectiveOpenedComponent>>();
+            Register<EventsSystem<ObjectiveCompletedComponent>>();
+            Register<EventsSystem<GateOpenedComponent>>();
+            Register<EventsSystem<FoodCollectedComponent>>();
+            Register<EventsSystem<PushingComponent>>();
+            Register<EventsSystem<CantMoveComponent>>();
+            
+#if CLIENT
+            Register<EventsSystem<MovingComponent>>();
+            Register<EventsSystem<TickComponent>>();
+            RegisterClient<CreateViewSystem>();
+#endif
+            //write final Box2d transforms to components
+            Register<Box2DWriteBodiesToComponentsSystem>();
+        }
+        
+        private void RegisterClient<T>()
+        {
+            //иногда на клиенте нужно получить список систем
+            //куда не входят по настоящему клиентские системы (привязанные к Unity)
+            
+            container.Bind<T>().AsTransient();
+            systems.Add(new system
+            {
+                type = typeof(T),
+                target = Target.Client,
+            });
+        }
+        
+        private void RegisterServer<T>()
+        {
+            container.Bind<T>().AsTransient();
+            systems.Add(new system
+            {
+                type = typeof(T),
+                target = Target.Server,
+            });
+        }
+        
+        private void Register<T>()
+        {
+            container.Bind<T>().AsTransient();
+            
+            systems.Add(new system
+            {
+                type = typeof(T),
+                target = Target.Any
+            });
+        }
+        
+        public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)
+        {
+            //override global EcsWorld to world from EcsSystems
+            container.Rebind<EcsWorld>().ToSelf().FromInstance(systems.GetWorld()).AsTransient();
+            
+            foreach (var system in this.systems)
+            {
+                if (system.target != Target.Any)
+                {
+                    var add =
+                        settings.AddClientSystems && system.target == Target.Client ||
+                        settings.AddServerSystems && system.target == Target.Server;
+
+                    if (!add)
+                        continue;
+                }
+
+                var sys = container.Instantiate(system.type) as IEcsSystem;
+                systems.Add(sys);   
+            }
+            
         }
 
         public IEcsSystem CreateSyncDebugSystem(bool pre)
         {
             return new DebugMeSystem(pre);
-        }
-
-        public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)
-        {
-            systems.Add(CreateSyncDebugSystem(true));
-            
-            var client = settings.client;
-            var server = settings.server;
-
-#if CLIENT
-            void AddClient(IEcsSystem system)
-            {
-                //иногда на клиенте нужно получить список систем
-                //куда не входят по настоящему клиентские системы (привязанные к Unity) 
-                if (client)
-                    systems.Add(system);
-            }
-#endif
-
-            void AddServer(IEcsSystem system)
-            { 
-                //для сингл плеера нужны все игровые системы
-                if (server)
-                    systems.Add(system);
-            }
-       
-            
-#if SERVER
-            systems.Add(new CreateGameSystem(pool));
-#endif
-            
-#if CLIENT
-            AddClient(new DetectPlayerIdChangesSystem());
-#endif
-            
-            AddServer(new CustomInitSystem(mechService));
-            AddServer(new JoinPlayerSystem());
-
-
-            //systems.Add(new ApplyInput0System());
-            
-#if CLIENT
-            AddClient(new InitSceneSystem());
-#endif
-            
-
-            
-#if CLIENT
-            AddClient(new Box2DDebugViewSystem());
-#endif
-            
-            AddServer(new AIPlayerSystem());
-
-            systems.Add(new MoveToTargetPositionSystem());
-            systems.Add(new MoveSystem());
-            systems.Add(new LookDirectionSystem());
-            systems.Add(new SimpleMoveSystem());
-            systems.Add(new UnitMoveSystem());
-            systems.Add(new PushingSystem());
-
-            systems.Add(new MechAdapterSystem());
-            
-            systems.Add(new EntitiesLifeTimeSystem());
-            
-            systems.Add(GridModule.GetSystems());
-            
-            systems.DeleteComponentHere<ShootStartedComponent>();//если ставить в конец, то на клиент этот компонент даже придет
-            systems.Add(new ApplyInputSystem());
-
-
-            AddServer(new FootprintSystem());
-
-#if CLIENT
-            AddClient(new FootprintViewSystem());
-            AddClient(new HighlightInteractableSystem());
-#endif
-            //systems.Add(new BushInteractionSystem());
-            //systems.Add(new BoxInteractionSystem());
-
-#if CLIENT
-            AddClient(new CollectableSystem());
-            AddClient(new WeaponEquipSystem());
-#endif
-            // gates and buttons
-            systems.Add(new ButtonsInteractionSystem());
-            AddServer(new ButtonCustomSystem());
-            systems.Add(new GateSystem());
-            systems.Add(new MoveByProgressSystem());
-            
-            systems.Add(new FireSystem());
-
-            systems.Add(new ApplyForceSystem());
-            
-            
-
-#if CLIENT
-            AddClient(new CreateViewSystem());
-            AddClient(new FireViewSystem());
-            AddClient(new InventorySystem());
-            AddClient(new CreateMechViewSystem());
-            AddClient(new MechAnimationSystem());
-#endif
-
-            systems.Add(new DeleteEntitiesSystemWith<DestroyComponent>());
-
-            AddServer(new DeleteInputEntitiesSystem());
-            AddServer(new DeleteOutdatedInputEntitiesSystem());
-
-            systems.Add(new FireDestroyEntitySystem());
-
-            AddServer(new ObjectivesSystem());
-
-            systems.Add(new DestroyAtTimeSystem());
-
-            
-#if CLIENT
-            AddClient(new CharacterAnimationSystem());
-#endif
-
-            systems.Add(new AddLerpSystem());
-            systems.Add(new ShootSystem());
-            
-            //Основная Box2dSystem должна быть в конце после всех основных систем,
-            //иначе в мультиплеере предсказание не будет работать правильно
-            systems.Add(new Box2DInitSystem());
-            systems.Add(new Box2DCreateBodiesSystem());
-            systems.Add(new Box2DCreateContactsSystem());
-            systems.Add(new Box2DUpdateInternalObjectsSystem());
-            systems.Add(new Box2DUpdateSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
-            systems.Add(new BulletContactSystem());      
-            
-            
-
-            systems.Add(new Box2DDeleteContactsSystem());
-            
-            systems.Add(new EventsSystem<WeaponComponent>());
-            systems.Add(new EventsSystem<FireComponent>());
-            systems.Add(new EventsSystem<ButtonPressedComponent>());
-            systems.Add(new EventsSystem<PlayerComponent>());
-            systems.Add(new EventsSystem<ButtonPushCompleted>());
-            systems.Add(new EventsSystem<ObjectiveOpenedComponent>());
-            systems.Add(new EventsSystem<ObjectiveCompletedComponent>());
-            systems.Add(new EventsSystem<GateOpenedComponent>());
-            systems.Add(new EventsSystem<FoodCollectedComponent>());
-            systems.Add(new EventsSystem<PushingComponent>());
-            systems.Add(new EventsSystem<CantMoveComponent>());
-            
-#if CLIENT
-            systems.Add(new EventsSystem<MovingComponent>());
-            systems.Add(new EventsSystem<TickComponent>());
-            AddClient(new CreateViewSystem());
-#endif
-            //write final Box2d transforms to components
-            systems.Add(new Box2DWriteBodiesToComponentsSystem());
-            
-            systems.Add(CreateSyncDebugSystem(false));
-            
-            //тик меняется на следующий в самом конце после всех систем 
-            systems.Add(TickModule.GetSystems());
         }
     }
 }

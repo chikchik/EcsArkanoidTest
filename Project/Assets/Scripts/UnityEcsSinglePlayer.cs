@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Tick.ClientServer.Components;
+using Fabros.EcsModules.Tick.ClientServer.Systems;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.Client.Components;
@@ -33,7 +34,7 @@ namespace Game
         private EntityDestroyedListener entityDestroyedListener;
 
         [Inject]
-        private EcsSystemsFactory systemsFactory;
+        private IEcsSystemsFactory systemsFactory;
 
         private EcsSystems systems;
         private EcsSystems viewSystems;
@@ -73,8 +74,12 @@ namespace Game
             systems.Add(new Flow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
            
+            
+            
             systemsFactory.AddNewSystems(systems, 
-                new IEcsSystemsFactory.Settings{client = true, server = true});
+                new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = true});
+            systems.Add(new TickSystem());
+            
 
             systems.Init();
             

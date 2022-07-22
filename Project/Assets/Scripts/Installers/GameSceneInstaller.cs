@@ -1,6 +1,7 @@
 using Fabros.Ecs.ClientServer;
 using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.ClientServer.WorldDiff;
+using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.Fabros.Net.Client;
@@ -45,30 +46,26 @@ namespace Game
 
 
             
+            
             Container.Bind<GameSettings>().FromComponentOn(GameObject.Find("[SETUP]")).AsSingle();
             Container.Bind<DevPanelController>().FromComponentInNewPrefabResource("DEV/DevPanel").AsSingle();
             Container.Bind<DevPanel>().AsSingle().NonLazy();
             
+            Container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
             Container.Bind<MechService>().AsSingle();
+           
             
 
             if (settings.MultiPlayer)
-            //if (true)
             {
                 Container.Bind<IInputService>().To<ClientInputService>()
                     .AsSingle().WhenInjectedInto<PlayerControlService>();
-                
-                //Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
-                //    .AsSingle().WhenInjectedInto<NetClient>();
                 
                 var comp = settings.gameObject.AddComponent<UnityEcsClient>();
                 Container.QueueForInject(comp);
             }
             else
             {
-                //Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
-                //   .AsSingle().WhenInjectedInto<PlayerControlService>();
-
                 var comp = settings.gameObject.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);
             }

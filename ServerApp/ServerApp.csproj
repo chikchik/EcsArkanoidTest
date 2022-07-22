@@ -9,6 +9,7 @@
 		<UnityScripts>..\project\Assets\Scripts</UnityScripts>
 		<Box2D>..\..\module-ecs-box2d\FabrosEcsBox2DPackage\Fabros\EcsModules\Box2D</Box2D>
 		<Mech>..\module-ecs-mech\MechEcsPackage\Fabros\EcsModules\Mech</Mech>
+		<StartupObject>ConsoleApp.Program</StartupObject>
 		
 	</PropertyGroup>
 
@@ -65,6 +66,20 @@
 		<Compile Include="$(UnityScripts)\Ecs\ClientServer\**\*.cs">
 			<Link>UnityScripts\Ecs\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+	  <Reference Include="Zenject">
+	    <HintPath>Zenject.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Zenject-Signals">
+	    <HintPath>Zenject-Signals.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Zenject-usage">
+	    <HintPath>Zenject-usage.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 </Project>
