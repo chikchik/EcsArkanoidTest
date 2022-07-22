@@ -4,7 +4,10 @@ using UnityEngine;
 namespace Game.ClientServer
 {
     public static class Config
-    {
+    { 
+        public static readonly string DEFAULT_ROOM_A = "sandbox_";
+        public static readonly string DEFAULT_ROOM_B = P2P.GetDevRoom();
+        
 #if CLIENT
         public static string SYNC_LOG_PATH = "../client.log"; 
         public static string TMP_HASHES_PATH = "../tmp";
@@ -21,13 +24,9 @@ namespace Game.ClientServer
         public static readonly bool SyncDataLogging = false;
 #endif
 
-        public static string ROOM_A = "sandbox_";
-        public static string ROOM_B = P2P.GetDevRoom();
+        public static string ROOM_A = DEFAULT_ROOM_A;
+        public static string ROOM_B = DEFAULT_ROOM_B;
 
-        //Physics
-        public static Vector2 GRAVITY = new Vector2(0, 0);
-        public static int VELOCITY_ITERATIONS = 6;
-        public static int POSITION_ITERATIONS = 2;
 
         //public static string url = $"wss://dev1.ecs.fbpub.net/XsZubnMOTHC0JRDTS95S/{ROOM}";
         //public static string url = $"ws://localhost:9096/XsZubnMOTHC0JRDTS95S/{ROOM}";

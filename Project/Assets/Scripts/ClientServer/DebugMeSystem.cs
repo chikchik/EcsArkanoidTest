@@ -1,14 +1,14 @@
-﻿using System;
-using Fabros.Ecs.ClientServer;
-using Fabros.Ecs.ClientServer.Components;
+﻿using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
-using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Flow.EcsLite;
 
 namespace Game.Fabros.Net.ClientServer.Ecs.Systems
 {
+    /*
+     * отладочная система для поиска расинхрона, добавляется в список систем автоматически
+     */
     public class DebugMeSystem : IEcsInitSystem, IEcsRunSystem
     {
         private bool pre;

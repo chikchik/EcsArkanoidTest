@@ -45,17 +45,16 @@ namespace Game.ClientServer
             Client,
             Server
         }
-        
-        private DiContainer container;
-        
-        public struct system
+
+        public struct RegisteredSystem
         {
-            public Type type;
-            public Target target;
+            public Type SystemClassType;
+            public Target Target;
         }
         
-        public List<system> systems = new List<system>();
-
+        private List<RegisteredSystem> systems = new List<RegisteredSystem>();
+        private DiContainer container;
+        
         public EcsSystemsFactory(DiContainer container)
         {
             this.container = container.CreateSubContainer();
@@ -194,20 +193,20 @@ namespace Game.ClientServer
             //куда не входят по настоящему клиентские системы (привязанные к Unity)
             
             container.Bind<T>().AsTransient();
-            systems.Add(new system
+            systems.Add(new RegisteredSystem
             {
-                type = typeof(T),
-                target = Target.Client,
+                SystemClassType = typeof(T),
+                Target = Target.Client,
             });
         }
         
         private void RegisterServer<T>()
         {
             container.Bind<T>().AsTransient();
-            systems.Add(new system
+            systems.Add(new RegisteredSystem
             {
-                type = typeof(T),
-                target = Target.Server,
+                SystemClassType = typeof(T),
+                Target = Target.Server,
             });
         }
         
@@ -215,10 +214,10 @@ namespace Game.ClientServer
         {
             container.Bind<T>().AsTransient();
             
-            systems.Add(new system
+            systems.Add(new RegisteredSystem
             {
-                type = typeof(T),
-                target = Target.Any
+                SystemClassType = typeof(T),
+                Target = Target.Any
             });
         }
         
@@ -229,17 +228,17 @@ namespace Game.ClientServer
             
             foreach (var system in this.systems)
             {
-                if (system.target != Target.Any)
+                if (system.Target != Target.Any)
                 {
                     var add =
-                        settings.AddClientSystems && system.target == Target.Client ||
-                        settings.AddServerSystems && system.target == Target.Server;
+                        settings.AddClientSystems && system.Target == Target.Client ||
+                        settings.AddServerSystems && system.Target == Target.Server;
 
                     if (!add)
                         continue;
                 }
 
-                var sys = container.Instantiate(system.type) as IEcsSystem;
+                var sys = container.Instantiate(system.SystemClassType) as IEcsSystem;
                 systems.Add(sys);   
             }
             
