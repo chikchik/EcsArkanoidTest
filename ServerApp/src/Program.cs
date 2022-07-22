@@ -63,9 +63,16 @@ namespace ConsoleApp
 
         private bool worldInitialized;
 
-        readonly ComponentsCollection components = SharedComponents.CreateComponentsPool();
+        private ComponentsCollection components;
 
         private TickrateConfigComponent config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1 };
+
+
+        public Program()
+        {
+            components = new ComponentsCollection();
+            ComponentsCollectionUtils.AddComponents(components);
+        }
 
         async Task Run()
         {

@@ -8,7 +8,8 @@ using Game.Ecs.ClientServer.Components;
 
 namespace Game.ClientServer
 {
-    public class ClientServerServices
+    
+    public class ClientServerServices//todo find better name
     {
         List<int> entities = new List<int>();
         

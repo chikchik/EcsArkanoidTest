@@ -42,10 +42,11 @@ namespace Game
 
             Container.Bind<NetClient>().AsSingle();
             Container.BindInterfacesAndSelfTo<EcsSystemsFactory>().AsSingle();
-            Container.Bind<ComponentsCollection>().FromInstance(SharedComponents.CreateComponentsPool()).AsSingle();
-
-
             
+            var collection = new ComponentsCollection();
+            ComponentsCollectionUtils.AddComponents(collection);
+            
+            Container.Bind<ComponentsCollection>().FromInstance(collection).AsSingle();
             
             Container.Bind<GameSettings>().FromComponentOn(GameObject.Find("[SETUP]")).AsSingle();
             Container.Bind<DevPanelController>().FromComponentInNewPrefabResource("DEV/DevPanel").AsSingle();

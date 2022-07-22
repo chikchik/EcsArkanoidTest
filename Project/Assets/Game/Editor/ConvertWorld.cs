@@ -21,8 +21,11 @@ public static class ConvertWorld
         ClientServices.InitializeNewWorldFromScene(world);
         
         Debug.Log("saving world");
-        var pool = SharedComponents.CreateComponentsPool();
-        var dif = WorldDiff.BuildDiff(pool, new EcsWorld("save"), world);
+        
+        var collection = new ComponentsCollection();
+        ComponentsCollectionUtils.AddComponents(collection);
+        
+        var dif = WorldDiff.BuildDiff(collection, new EcsWorld("save"), world);
 
         File.WriteAllText("../ServerApp/world.ecs.json", dif.ToJsonString(true));
     }
