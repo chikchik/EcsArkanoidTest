@@ -12,8 +12,6 @@ namespace Game
         public FootprintView LeftFootprintPrefab;
         public FootprintView RightFootprintPrefab;
 
-        public Transform footprintParent;
-
         [Space] public HighlightView highlightView;
 
         public ParticleSystem FireParticles;

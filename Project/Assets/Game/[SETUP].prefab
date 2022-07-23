@@ -1942,9 +1942,9 @@ MonoBehaviour:
     type: 3}
   BulletPrefab: {fileID: 5730769562240561534, guid: 5924f3e6b0e8fd644bc48dce858d36ae,
     type: 3}
-  leftFootprintPrefab: {fileID: 7600920622916232644, guid: 0c99fede1827f452f949f949f8f49180,
+  LeftFootprintPrefab: {fileID: 2377384638785079866, guid: 0c99fede1827f452f949f949f8f49180,
     type: 3}
-  rightFootprintPrefab: {fileID: 7961604661812335307, guid: 584a45b9d2fc245eea37eec51297816c,
+  RightFootprintPrefab: {fileID: 3323942594753085900, guid: 584a45b9d2fc245eea37eec51297816c,
     type: 3}
   footprintParent: {fileID: 0}
   highlightView: {fileID: 3448083650799402823}
