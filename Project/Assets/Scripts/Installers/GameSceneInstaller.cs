@@ -9,6 +9,7 @@ using Game.Fabros.Net.ClientServer;
 using Game.UI;
 using Game.UI.Mono;
 using Flow.EcsLite;
+using Game.View;
 using UnityEngine;
 using Zenject;
 
@@ -22,7 +23,16 @@ namespace Game
         public override void InstallBindings()
         {
             Container.Bind<Camera>().FromComponentsOn(GameObject.Find("Main Camera")).AsSingle();
-            Container.Bind<Global>().FromComponentsOn(GameObject.Find("Global")).AsSingle();
+            var global = GameObject.Find("Global").GetComponent<Global>();
+            Container.Bind<Global>().FromInstance(global).AsSingle();
+            
+            
+            Container.Bind<CharacterView>().FromInstance(global.characterPrefab).AsSingle();
+            Container.Bind<BulletView>().FromInstance(global.BulletPrefab).AsSingle();
+            
+            Container.Bind<FootprintView>().WithId("left").FromInstance(global.LeftFootprintPrefab).AsCached();
+            Container.Bind<FootprintView>().WithId("right").FromInstance(global.RightFootprintPrefab).AsCached();
+            
             Container.Bind<Objectives>().AsSingle().NonLazy();
 
             //var world = new EcsWorld("main");

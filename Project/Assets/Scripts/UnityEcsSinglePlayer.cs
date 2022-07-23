@@ -60,12 +60,7 @@ namespace Game
             });
 
             world.AddUnique(new TickComponent{Value = new Tick(0)});
-            world.AddUnique(new ClientViewComponent
-            {
-                Global = global
-            });
 
-            
             unitEntity = UnitService.CreateUnitEntity(world);
             world.AddUnique(new ClientPlayerComponent{ entity = unitEntity});
             

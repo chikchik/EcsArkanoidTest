@@ -6,11 +6,12 @@ namespace Game
     public class Global : MonoBehaviour
     {
         public CharacterView characterPrefab;
-        public Transform BulletPrefab;
+        public BulletView BulletPrefab;
 
-        [Header("Footprint")] public GameObject leftFootprintPrefab;
+        [Header("Footprint")] 
+        public FootprintView LeftFootprintPrefab;
+        public FootprintView RightFootprintPrefab;
 
-        public GameObject rightFootprintPrefab;
         public Transform footprintParent;
 
         [Space] public HighlightView highlightView;

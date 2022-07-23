@@ -1940,7 +1940,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPrefab: {fileID: 2333436472338061716, guid: 80777c791d67b1a4ba63379591253e96,
     type: 3}
-  BulletPrefab: {fileID: 5754011746657453084, guid: 5924f3e6b0e8fd644bc48dce858d36ae,
+  BulletPrefab: {fileID: 5730769562240561534, guid: 5924f3e6b0e8fd644bc48dce858d36ae,
     type: 3}
   leftFootprintPrefab: {fileID: 7600920622916232644, guid: 0c99fede1827f452f949f949f8f49180,
     type: 3}

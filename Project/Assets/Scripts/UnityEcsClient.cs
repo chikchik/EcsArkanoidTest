@@ -57,13 +57,6 @@ namespace Game
                 viewSystems.Init();
             };
             
-            client.InitWorldAction = world =>
-            {
-                var viewComponent = new ClientViewComponent();
-                viewComponent.Global = global;
-
-                world.AddUnique<ClientViewComponent>() = viewComponent;
-            };
             
 
             string initialWorldJson = null;
