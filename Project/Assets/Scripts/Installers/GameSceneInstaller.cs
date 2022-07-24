@@ -52,9 +52,14 @@ namespace Game
 
             Container.Bind<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
-
-            Container.BindInterfacesAndSelfTo<States>().AsSingle().NonLazy();
+           
             
+            //register states and view
+            Container.Bind<SimpleDialogView>().FromInstance(global.SimpleDialogView).AsSingle();
+             
+            Container.Bind<States>().AsSingle();
+            Container.Bind<RootState>().AsSingle();
+            Container.Bind<SimpleDialogState>().AsSingle();
             
 
 

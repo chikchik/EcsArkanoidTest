@@ -15,5 +15,7 @@ namespace Game
         [Space] public HighlightView highlightView;
 
         public ParticleSystem FireParticles;
+
+        public SimpleDialogView SimpleDialogView;
     }
 }

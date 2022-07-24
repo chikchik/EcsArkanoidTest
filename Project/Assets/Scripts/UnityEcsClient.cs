@@ -97,11 +97,6 @@ namespace Game
             client.OnDestroy();
         }
 
-        private void OnGUI()
-        {
-            //client.OnGUI();
-        }
-
         private void OnDrawGizmos()
         {
             if (!Application.isPlaying)

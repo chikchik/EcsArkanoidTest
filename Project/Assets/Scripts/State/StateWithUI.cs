@@ -25,6 +25,11 @@ public class StateWithUI<T> : StateWithUI where T : BaseUIView
         
         DoEnter();
     }
+
+    public T GetView()
+    {
+        return view;
+    }
     
     
 

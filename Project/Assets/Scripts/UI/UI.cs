@@ -30,11 +30,7 @@ namespace Game.UI
             this.controlService = controlService;
             this.clientServerServices = clientServerServices;
 
-            states.RegisterState(new SimpleDialogState(states, view.SimpleDialog));
-            states.RegisterState(new RootState(states));
-            
-            states.StartFrom<RootState>();
-            
+
             view.InteractionButton.onClick.AddListener(() =>
             {
                 controlService.Interact();

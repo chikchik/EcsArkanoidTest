@@ -2,7 +2,7 @@
 {
     public class SimpleDialogState : StateWithUI<SimpleDialogView>
     {
-        public SimpleDialogState(FSM.FSM fsm, SimpleDialogView view):base(fsm)
+        public SimpleDialogState(States states, SimpleDialogView view):base(states)
         {
             this.view = view;
         }
