@@ -1,6 +1,8 @@
-﻿using Fabros.Ecs.Utils;
+﻿using System;
+using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Mech.Client;
 using Fabros.EcsModules.Mech.ClientServer;
+using Fabros.EcsModules.Tick.ClientServer.Components;
 using Flow.EcsLite;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
@@ -77,11 +79,13 @@ namespace Game.UI
         public void OnComponentChanged(EcsWorld world, int entity, ControlsMechComponent data, bool newComponent)
         {
             UpdateButtonState();
+            Close();
         }
 
-        public void OnComponentRemoved(EcsWorld world, int entity)
+        public void OnComponentRemoved(EcsWorld world, int entity, AlwaysNull<ControlsMechComponent> _)
         {
             UpdateButtonState();
+            Close();
         }
     }
 }
