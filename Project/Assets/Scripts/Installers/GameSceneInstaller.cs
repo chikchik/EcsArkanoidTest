@@ -1,19 +1,21 @@
-using Fabros.Ecs.ClientServer;
-using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.ClientServer.WorldDiff;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Mech.ClientServer;
+using Flow.EcsLite;
 using Game.ClientServer;
+using Game.ClientServer.Services;
+using Game.Dev;
 using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
+using Game.State;
 using Game.UI;
 using Game.UI.Mono;
-using Flow.EcsLite;
+using Game.UIView;
 using Game.View;
 using UnityEngine;
 using Zenject;
 
-namespace Game
+namespace Game.Installers
 {
     public class GameSceneInstaller : MonoInstaller
     {
@@ -55,11 +57,11 @@ namespace Game
            
             
             //register states and view
-            Container.Bind<MechDialogView>().FromInstance(global.mechDialogView).AsSingle();
+            Container.Bind<MechInfoView>().FromInstance(global.mechInfoView).AsSingle();
              
             Container.Bind<States>().AsSingle();
             Container.Bind<RootState>().AsSingle();
-            Container.Bind<MechState>().AsSingle();
+            Container.Bind<MechInfoState>().AsSingle();
             
 
 

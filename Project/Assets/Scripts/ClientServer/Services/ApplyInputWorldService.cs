@@ -1,11 +1,11 @@
 ﻿using Fabros.Ecs.Utils;
+using Flow.EcsLite;
+using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
-using Flow.EcsLite;
-using Game.Ecs.ClientServer.Components;
 
-namespace Game.ClientServer
+namespace Game.ClientServer.Services
 {
     /**
      * в конечном счете все изменения в InputWorld будут применяться тут

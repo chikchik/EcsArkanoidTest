@@ -23,6 +23,7 @@ using Flow.EcsLite;
 using UnityEngine;
 using Zenject;
 using Fabros.EcsModules.Tick.ClientServer.Systems;
+using Game.ClientServer.Services;
 
 namespace ConsoleApp
 {

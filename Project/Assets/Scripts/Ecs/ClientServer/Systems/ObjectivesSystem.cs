@@ -5,6 +5,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Flow.EcsLite;
+using Game.ClientServer.Services;
 
 namespace Game.Ecs.ClientServer.Systems
 {

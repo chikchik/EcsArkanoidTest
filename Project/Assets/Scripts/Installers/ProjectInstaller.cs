@@ -1,15 +1,6 @@
-using Fabros.Ecs.ClientServer;
-using Fabros.Ecs.ClientServer.Utils;
-using Fabros.Ecs.ClientServer.WorldDiff;
-using Game.ClientServer;
-using Game.Fabros.Net.Client;
-using Game.Fabros.Net.ClientServer;
-using Game.UI;
-using Flow.EcsLite;
-using UnityEngine;
 using Zenject;
 
-namespace Game
+namespace Game.Installers
 {
     public class ProjectInstaller : MonoInstaller
     {

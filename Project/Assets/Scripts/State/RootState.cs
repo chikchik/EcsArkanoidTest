@@ -1,6 +1,7 @@
-﻿using Game.UI.FSM;
+﻿using Game.UI;
+using Game.UI.FSM;
 
-namespace Game.UI
+namespace Game.State
 {
     public class RootState : FSMState
     {

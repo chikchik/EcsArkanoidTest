@@ -2,6 +2,7 @@ using Fabros.Ecs.Client.Components;
 using Game.Ecs.Client.Components;
 using Flow.EcsLite;
 using Game.ClientServer;
+using Game.ClientServer.Services;
 using UnityEngine;
 
 namespace Game.Ecs.View.Systems

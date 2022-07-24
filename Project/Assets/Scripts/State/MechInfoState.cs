@@ -1,36 +1,30 @@
-﻿using System;
-using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Mech.Client;
-using Fabros.EcsModules.Mech.ClientServer;
-using Fabros.EcsModules.Tick.ClientServer.Components;
+﻿using Fabros.Ecs.Utils;
 using Flow.EcsLite;
-using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.ClientServer;
+using Game.UI;
+using Game.UIView;
 
-namespace Game.UI
+namespace Game.State
 {
-    public class MechState : StateWithUI<MechDialogView>, 
+    public class MechInfoState : StateWithUI<MechInfoView>, 
         EventsSystem<ControlsMechComponent>.IComponentChangedListener,
         EventsSystem<ControlsMechComponent>.IComponentRemovedListener
     {
         private EcsWorld world;
-        private ClientServerServices services;
         private PlayerControlService playerControlService;
 
         private int unitEntity;
         
-        public MechState(
-            States states, 
-            MechDialogView view, 
+        public MechInfoState(
+            States states,
             EcsWorld world, 
-            ClientServerServices services,
+            MechInfoView view,
             PlayerControlService playerControlService):base(states)
         {
             this.view = view;
             this.world = world;
             this.playerControlService = playerControlService;
-            this.services = services;
         }
 
         protected override void DoInitialize()

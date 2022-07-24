@@ -4,6 +4,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Flow.EcsLite;
+using Game.ClientServer.Services;
 
 namespace Game.Fabros.Net.ClientServer.Ecs.Systems
 {

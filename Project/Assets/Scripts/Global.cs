@@ -1,4 +1,5 @@
-﻿using Game.View;
+﻿using Game.UIView;
+using Game.View;
 using UnityEngine;
 
 namespace Game
@@ -16,6 +17,6 @@ namespace Game
 
         public ParticleSystem FireParticles;
 
-        public MechDialogView mechDialogView;
+        public MechInfoView mechInfoView;
     }
 }

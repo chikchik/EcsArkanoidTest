@@ -5,6 +5,8 @@ using Game.Ecs.ClientServer.Components;
 using Game.UI.Mono;
 using Flow.EcsLite;
 using Game.ClientServer;
+using Game.ClientServer.Services;
+using Game.State;
 
 namespace Game.UI
 {
@@ -45,7 +47,7 @@ namespace Game.UI
             {
                 //var state = states.State<MechState>();
                 //states.Push(state);
-                states.Push<MechState>();
+                states.Push<MechInfoState>();
                 
                 //controlService.Mech();
 

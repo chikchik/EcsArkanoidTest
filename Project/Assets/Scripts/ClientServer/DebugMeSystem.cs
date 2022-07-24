@@ -3,8 +3,9 @@ using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Flow.EcsLite;
+using Game.Fabros.Net.ClientServer;
 
-namespace Game.Fabros.Net.ClientServer.Ecs.Systems
+namespace Game.ClientServer
 {
     /*
      * отладочная система для поиска расинхрона, добавляется в список систем автоматически

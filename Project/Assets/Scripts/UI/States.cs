@@ -1,12 +1,13 @@
 ﻿using System;
 using Game.UI.FSM;
-using UnityEngine;
 using Zenject;
 
-public partial class States : FSM, ITickable 
+namespace Game.UI
 {
-	private bool _isStarted;
-	/*
+	public partial class States : FSM.FSM, ITickable 
+	{
+		private bool _isStarted;
+		/*
 	private DiContainer container;
 
 	public States(DiContainer container)
@@ -14,17 +15,18 @@ public partial class States : FSM, ITickable
 		this.container = container;
 	}*/
 	 
-	public void StartFrom<T>() where T : FSMState
-	{
-		if (_isStarted)
-			throw new Exception("already started");
+		public void StartFrom<T>() where T : FSMState
+		{
+			if (_isStarted)
+				throw new Exception("already started");
 
-		_isStarted = true;
-		Switch(this.State<T>());
-	}
+			_isStarted = true;
+			Switch(this.State<T>());
+		}
 
-	protected override FSMState ResolveState(Type type)
-	{
-		return null;
+		protected override FSMState ResolveState(Type type)
+		{
+			return null;
+		}
 	}
 }

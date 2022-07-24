@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Fabros.Ecs.Utils;
-using Game.Ecs.ClientServer.Components.Objective;
 using Flow.EcsLite;
+using Game.Ecs.ClientServer.Components.Objective;
 
-namespace Game.ClientServer
+namespace Game.ClientServer.Services
 {
     public static class ObjectiveService
     {

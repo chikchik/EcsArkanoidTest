@@ -1,14 +1,13 @@
-﻿using System;
-using Fabros.Ecs.ClientServer.Components;
+﻿using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components.Colliders;
-using Game.Ecs.ClientServer.Components;
 using Flow.EcsLite;
+using Game.Ecs.ClientServer.Components;
 using UnityEngine;
 
-namespace Game.ClientServer
+namespace Game.ClientServer.Services
 {
     public static class UnitService
     {
@@ -42,7 +41,7 @@ namespace Game.ClientServer
 
             entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();
 
-            Debug.Log($"GenerateUnitEntity {entity}");
+            UnityEngine.Debug.Log($"GenerateUnitEntity {entity}");
 
             return entity;
         }
