@@ -21,6 +21,7 @@ namespace Game.UI
         
         public UI(
             EcsWorld world, MainUI view, 
+            States states,
             PlayerControlService controlService,
             ClientServerServices clientServerServices)
         {
@@ -29,6 +30,11 @@ namespace Game.UI
             this.controlService = controlService;
             this.clientServerServices = clientServerServices;
 
+            states.RegisterState(new SimpleDialogState(states, view.SimpleDialog));
+            states.RegisterState(new RootState(states));
+            
+            states.StartFrom<RootState>();
+            
             view.InteractionButton.onClick.AddListener(() =>
             {
                 controlService.Interact();
@@ -37,11 +43,14 @@ namespace Game.UI
             view.KickButton.onClick.AddListener(() =>
             {
                 controlService.Kick();
+
+                states.Push<SimpleDialogState>();
             });
             
             view.MechButton.onClick.AddListener(() =>
             {
                 controlService.Mech();
+                
             });
             
             view.ShotButton.onClick.AddListener(() =>

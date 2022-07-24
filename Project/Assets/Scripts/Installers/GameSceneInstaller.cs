@@ -23,6 +23,7 @@ namespace Game
         public override void InstallBindings()
         {
             Container.Bind<Camera>().FromComponentsOn(GameObject.Find("Main Camera")).AsSingle();
+            
             var global = GameObject.Find("Global").GetComponent<Global>();
             Container.Bind<Global>().FromInstance(global).AsSingle();
             
@@ -32,6 +33,9 @@ namespace Game
             
             Container.Bind<FootprintView>().WithId("left").FromInstance(global.LeftFootprintPrefab).AsCached();
             Container.Bind<FootprintView>().WithId("right").FromInstance(global.RightFootprintPrefab).AsCached();
+            
+            
+            
             
             Container.Bind<Objectives>().AsSingle().NonLazy();
 
@@ -48,6 +52,10 @@ namespace Game
 
             Container.Bind<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<States>().AsSingle().NonLazy();
+            
+            
 
 
             Container.Bind<NetClient>().AsSingle();
