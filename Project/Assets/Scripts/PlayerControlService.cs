@@ -74,7 +74,7 @@ namespace Game
             Apply(component);
         }
         
-        public void Mech()
+        public void MechEnterLeave()
         {
             if (unitEntity == -1)
                 return;

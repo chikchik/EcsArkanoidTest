@@ -16,6 +16,6 @@ namespace Game
 
         public ParticleSystem FireParticles;
 
-        public SimpleDialogView SimpleDialogView;
+        public MechDialogView mechDialogView;
     }
 }

@@ -64,12 +64,6 @@ namespace Game.UI.FSM
             States.Add(state);
         }
 
-        protected FSMState AddState(FSMState state)
-        {
-            States.Add(state);
-            return state;
-        }
-
         protected void AddGlobalTransition(int transition, FSMState to, FSMState[] exclude = null)
         {
             foreach (var s in States)
@@ -132,10 +126,11 @@ namespace Game.UI.FSM
             SwitchingFinish();
         }
 
-        public void Push<T>() where T : FSMState
+        public T Push<T>() where T : FSMState
         {
             var state = State<T>();
             Push(state);
+            return state;
         }
 
         public T State<T>() where T : FSMState
@@ -146,7 +141,16 @@ namespace Game.UI.FSM
                     return (T)state;
             }
 
+            var resolverState = ResolveState(typeof(T));
+            if (resolverState != null)
+                return (T)resolverState;
+
             Debug.LogError($"Can't find state {typeof(T)}");
+            return null;
+        }
+
+        protected virtual FSMState ResolveState(Type type)
+        {
             return null;
         }
 

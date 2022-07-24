@@ -20,7 +20,7 @@ namespace Game.UI.Mono
         public TMP_Text FoodText;
         public TMP_Text DebugText;
 
-        public SimpleDialogView SimpleDialog;
+        public MechDialogView mechDialog;
         public BaseUIView[] UIViews;
     }
 }

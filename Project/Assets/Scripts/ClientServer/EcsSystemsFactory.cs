@@ -169,6 +169,7 @@ namespace Game.ClientServer
 #if CLIENT
             container.Register<EventsSystem<MovingComponent>>();
             container.Register<EventsSystem<TickComponent>>();
+            container.Register<EventsSystem<ControlsMechComponent>>();
             container.RegisterClient<CreateViewSystem>();
 #endif
             //write final Box2d transforms to components

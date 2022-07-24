@@ -321,7 +321,7 @@ namespace Game.Fabros.Net.Client
             var data = Convert.FromBase64String(packet.WorldUpdate.difStr);
             var dif0 = WorldDiff.FromByteArray(components, data);
 
-            InitWorldAction(MainWorld);
+            InitWorldAction?.Invoke(MainWorld);
 
             clientSystems = new EcsSystems(MainWorld);
             clientSystems.AddWorld(InputWorld, "input");

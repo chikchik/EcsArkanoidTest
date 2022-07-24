@@ -15,7 +15,7 @@ namespace Game.Ecs.Client.Systems
         private FootprintView leftPrefab;
         private FootprintView rightPrefab;
         
-        public FootprintViewSystem([Inject(Id="left")]FootprintView leftPrefab, [Inject(Id="left")]FootprintView rightPrefab)
+        public FootprintViewSystem([Inject(Id="left")]FootprintView leftPrefab, [Inject(Id="right")]FootprintView rightPrefab)
         {
             this.leftPrefab = leftPrefab;
             this.rightPrefab = rightPrefab;

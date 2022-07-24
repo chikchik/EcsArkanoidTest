@@ -6,19 +6,17 @@ using Zenject;
 
 public class GameStarter : MonoBehaviour
 {
-    public SimpleDialogView SimpleDialogView;
-    
     [Inject]
     private States states;
 
     [Inject] private RootState rootState;
-    [Inject] private SimpleDialogState simpleDialogState;
+    [Inject] private MechState _mechState;
     
     
     // Start is called before the first frame update
     void Start()
     {
-        RegisterStateWithUI(simpleDialogState);
+        RegisterStateWithUI(_mechState);
         states.RegisterState(rootState);
         
         states.StartFrom<RootState>();

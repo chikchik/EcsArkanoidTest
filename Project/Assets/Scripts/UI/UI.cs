@@ -39,14 +39,16 @@ namespace Game.UI
             view.KickButton.onClick.AddListener(() =>
             {
                 controlService.Kick();
-
-                states.Push<SimpleDialogState>();
             });
             
             view.MechButton.onClick.AddListener(() =>
             {
-                controlService.Mech();
+                //var state = states.State<MechState>();
+                //states.Push(state);
+                states.Push<MechState>();
                 
+                //controlService.Mech();
+
             });
             
             view.ShotButton.onClick.AddListener(() =>

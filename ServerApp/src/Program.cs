@@ -255,7 +255,7 @@ namespace ConsoleApp
                 var hello = new Hello();
                 hello.Components = components.Components.Select(component => component.GetComponentType().FullName).ToArray();
 
-                if (clients.Count == 0) {
+                if (!worldInitialized) {
                     //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
                     StartSystems(Convert.FromBase64String(packet.hello.InitialWorld));
                 }

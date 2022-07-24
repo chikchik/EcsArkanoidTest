@@ -55,11 +55,11 @@ namespace Game
            
             
             //register states and view
-            Container.Bind<SimpleDialogView>().FromInstance(global.SimpleDialogView).AsSingle();
+            Container.Bind<MechDialogView>().FromInstance(global.mechDialogView).AsSingle();
              
             Container.Bind<States>().AsSingle();
             Container.Bind<RootState>().AsSingle();
-            Container.Bind<SimpleDialogState>().AsSingle();
+            Container.Bind<MechState>().AsSingle();
             
 
 
