@@ -12,13 +12,13 @@ namespace Game
         private States states;
 
         [Inject] private RootState rootState;
-        [Inject] private MechInfoState _mechInfoState;
+        [Inject] private MechInfoState mechInfoState;
     
     
         // Start is called before the first frame update
         void Start()
         {
-            RegisterStateWithUI(_mechInfoState);
+            RegisterStateWithUI(mechInfoState);
             states.RegisterState(rootState);
         
             states.StartFrom<RootState>();
@@ -28,12 +28,6 @@ namespace Game
         {
             state.GetView().gameObject.SetActive(false);
             states.RegisterState(state);
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
         }
     }
 }

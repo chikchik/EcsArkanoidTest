@@ -45,12 +45,7 @@ namespace Game.UI
             
             view.MechButton.onClick.AddListener(() =>
             {
-                //var state = states.State<MechState>();
-                //states.Push(state);
                 states.Push<MechInfoState>();
-                
-                //controlService.Mech();
-
             });
             
             view.ShotButton.onClick.AddListener(() =>

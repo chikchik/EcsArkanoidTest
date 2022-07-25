@@ -18,80 +18,6 @@ namespace Game.UI.FSM
         private Stack<FSMState> _queue = new Stack<FSMState>(); // pushed state
         protected FSMState _currentState;
       
-        public void SpawnEvent(int eventName)
-        {
-            foreach (var t in _transitions)
-            {
-                if (t.transition == eventName)
-                {
-                    if (t.from == null || t.from == _currentState)
-                    {
-                        Switch(t.to);
-                        return;
-                    }
-                }
-            }
-
-            foreach (var t in _popupTransitions)
-            {
-                if (t.transition == eventName)
-                {
-                    if (t.from == null || t.from == _currentState)
-                    {
-                        Push(t.to);
-                        return;
-                    }
-
-                    if (t.to == _currentState)
-                    {
-                        Pop();
-                        return;
-                    }
-                }
-            }
-
-            Debug.LogError("Unit FSM: Event " + eventName + " not handled");
-        }
-
-
-        public void Tick()
-        {
-            _currentState?.Tick();
-        }
-
-        public void RegisterState(FSMState state)
-        {
-            States.Add(state);
-        }
-
-        protected void AddGlobalTransition(int transition, FSMState to, FSMState[] exclude = null)
-        {
-            foreach (var s in States)
-            {
-                if (exclude == null || Array.IndexOf(exclude, s) == -1)
-                    _transitions.Add(new FSMTransition(transition, s, to));
-            }
-        }
-
-        protected void AddTransition(int transition, FSMState stateFrom, FSMState to)
-        {
-            _transitions.Add(new FSMTransition(transition, stateFrom, to));
-        }
-
-        protected void AddGlobalPopupTransition(int transition, FSMState to, FSMState[] exclude = null)
-        {
-            foreach (var s in States)
-            {
-                if (exclude == null || Array.IndexOf(exclude, s) == -1)
-                    _popupTransitions.Add(new FSMTransition(transition, s, to));
-            }
-        }
-
-        protected void AddPopupTransition(int transition, FSMState stateFrom, FSMState stateTo)
-        {
-            _popupTransitions.Add(new FSMTransition(transition, stateFrom, stateTo));
-        }
-
         protected void FlushToTop()
         {
             _nextStateToPush = null;
@@ -125,6 +51,18 @@ namespace Game.UI.FSM
 
             SwitchingFinish();
         }
+        
+        
+        public void Tick()
+        {
+            _currentState?.Tick();
+        }
+
+        public void RegisterState(FSMState state)
+        {
+            States.Add(state);
+        }
+
 
         public T Push<T>() where T : FSMState
         {
@@ -254,6 +192,70 @@ namespace Game.UI.FSM
             }
 
             Pop();
+        }
+        
+        
+        public void SpawnEvent(int eventName)
+        {
+            foreach (var t in _transitions)
+            {
+                if (t.transition == eventName)
+                {
+                    if (t.from == null || t.from == _currentState)
+                    {
+                        Switch(t.to);
+                        return;
+                    }
+                }
+            }
+
+            foreach (var t in _popupTransitions)
+            {
+                if (t.transition == eventName)
+                {
+                    if (t.from == null || t.from == _currentState)
+                    {
+                        Push(t.to);
+                        return;
+                    }
+
+                    if (t.to == _currentState)
+                    {
+                        Pop();
+                        return;
+                    }
+                }
+            }
+
+            Debug.LogError("Unit FSM: Event " + eventName + " not handled");
+        }
+        
+        protected void AddGlobalTransition(int transition, FSMState to, FSMState[] exclude = null)
+        {
+            foreach (var s in States)
+            {
+                if (exclude == null || Array.IndexOf(exclude, s) == -1)
+                    _transitions.Add(new FSMTransition(transition, s, to));
+            }
+        }
+
+        protected void AddTransition(int transition, FSMState stateFrom, FSMState to)
+        {
+            _transitions.Add(new FSMTransition(transition, stateFrom, to));
+        }
+
+        protected void AddGlobalPopupTransition(int transition, FSMState to, FSMState[] exclude = null)
+        {
+            foreach (var s in States)
+            {
+                if (exclude == null || Array.IndexOf(exclude, s) == -1)
+                    _popupTransitions.Add(new FSMTransition(transition, s, to));
+            }
+        }
+
+        protected void AddPopupTransition(int transition, FSMState stateFrom, FSMState stateTo)
+        {
+            _popupTransitions.Add(new FSMTransition(transition, stateFrom, stateTo));
         }
 
         private class FSMTransition
