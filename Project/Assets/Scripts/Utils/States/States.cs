@@ -1,8 +1,8 @@
 ﻿using System;
-using Game.UI.FSM;
+using Game.Utils.States.FSM;
 using Zenject;
 
-namespace Game.UI
+namespace Game.Utils.States
 {
 	public partial class States : FSM.FSM, ITickable 
 	{

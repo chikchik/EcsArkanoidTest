@@ -1,11 +1,11 @@
-﻿using Game.UI.FSM;
+﻿using Game.Utils.States.FSM;
 using Game.View;
 
-namespace Game.State
+namespace Game.Utils.States
 {
     public class StateWithUI : FSMState
     {
-        public StateWithUI(FSM fsm) : base(fsm) 
+        public StateWithUI(FSM.FSM fsm) : base(fsm) 
         {
         }
     }
@@ -16,7 +16,7 @@ namespace Game.State
 
         private bool isInitialized;
     
-        public StateWithUI(FSM fsm) : base(fsm) 
+        public StateWithUI(FSM.FSM fsm) : base(fsm) 
         {
         }
 

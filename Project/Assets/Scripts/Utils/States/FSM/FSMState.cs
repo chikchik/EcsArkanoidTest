@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Game.UI.FSM
+namespace Game.Utils.States.FSM
 {
     [Serializable]
     public class FSMState
