@@ -4610,6 +4610,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1355707923}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1360483957 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1902622042, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3448083650097816946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4207eb0449e4df498824c352347d284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1394120422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7389,11 +7401,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: MultiPlayer
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3448083649790090397, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
       propertyPath: m_Name
       value: '[SETUP]'
       objectReference: {fileID: 0}
+    - target: {fileID: 3448083650777489238, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: mechInfoView
+      value: 
+      objectReference: {fileID: 1360483957}
     - target: {fileID: 3448083651184328196, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
       propertyPath: m_AnchorMax.y
