@@ -33,6 +33,7 @@ namespace Game.Installers
             
             Container.Bind<CharacterView>().FromInstance(global.characterPrefab).AsSingle();
             Container.Bind<BulletView>().FromInstance(global.BulletPrefab).AsSingle();
+            Container.Bind<ParticleSystem>().FromInstance(global.FireParticles).AsSingle();
             
             Container.Bind<FootprintView>().WithId("left").FromInstance(global.LeftFootprintPrefab).AsCached();
             Container.Bind<FootprintView>().WithId("right").FromInstance(global.RightFootprintPrefab).AsCached();

@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.cysharp.unitask": {
-      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "27604496ca1b27b93d78dd2257a50158fab2bc33"
-    },
     "com.fabros.ecs": {
       "version": "file:../../../module-ecs/FabrosEcsPackage",
       "depth": 0,
@@ -21,14 +14,6 @@
     },
     "com.fabros.ecs.central": {
       "version": "file:../../../module-ecs-central/Package",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask"
-      }
-    },
-    "com.fabros.ecs.mech": {
-      "version": "file:../../module-ecs-mech/MechEcsPackage",
       "depth": 0,
       "source": "local",
       "dependencies": {}
