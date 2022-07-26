@@ -6,45 +6,57 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class BulletContactSystem : IEcsRunSystem, IEcsInitSystem
     {
-        EcsWorld world;
+        private EcsWorld _world;
         public void Init(EcsSystems systems)
         {
-            world = systems.GetWorld();
+            _world = systems.GetWorld();
         }
 
         public void Run(EcsSystems systems)
         {
-            var filter = world.Filter<Box2DBeginContactComponent>().End();
-            var poolContacts = world.GetPool<Box2DBeginContactComponent>();
-            var poolBulletHits = world.GetPool<BulletHit>();
-            var poolBullet = world.GetPool<BulletComponent>();
+            var filter = _world.Filter<Box2DBeginContactComponent>().End();
+            var poolContacts = _world.GetPool<Box2DBeginContactComponent>();
+            var poolBulletHits = _world.GetPool<BulletHitComponent>();
+            var poolDestructibleHealth = _world.GetPool<DestructibleHealthComponent>();
+            var poolBullet = _world.GetPool<BulletComponent>();
             foreach (var entity in filter)
             {
                 var contact = poolContacts.Get(entity);
-                int entityA, entityB;
 
-                if (!contact.Data.EntityA.Unpack(world, out entityA))
+                if (!contact.Data.EntityA.Unpack(_world, out var entityA))
                     continue;
 
-                if (!contact.Data.EntityB.Unpack(world, out entityB))
+                if (!contact.Data.EntityB.Unpack(_world, out var entityB))
                     continue;
 
                 if (poolBullet.Has(entityA))
                 {
-                    if (poolBulletHits.Has(entityB))
+                    if (poolDestructibleHealth.Has(entityB))
                     {
-                        poolBulletHits.Get(entityB).BulletHits.Enqueue(poolBullet.Get(entityA));
+                        CreateHitEntity(poolBullet.Get(entityA), _world.PackEntity(entityB), poolBulletHits);
                     }
                 }
 
                 if (poolBullet.Has(entityB))
                 {
-                    if (poolBulletHits.Has(entityA))
+                    if (poolDestructibleHealth.Has(entityA))
                     {
-                        poolBulletHits.Get(entityA).BulletHits.Enqueue(poolBullet.Get(entityB));
+                        CreateHitEntity(poolBullet.Get(entityB), _world.PackEntity(entityA), poolBulletHits);
                     }
                 }
             }
+        }
+
+        private void CreateHitEntity(
+            BulletComponent bullet,
+            EcsPackedEntity entity,
+            EcsPool<BulletHitComponent> poolBulletHits)
+
+        {
+            var hitEntity = _world.NewEntity();
+            ref var bulletHit = ref poolBulletHits.Add(hitEntity);
+            bulletHit.Bullet = bullet;
+            bulletHit.EntityHit = entity;
         }
     }
 }

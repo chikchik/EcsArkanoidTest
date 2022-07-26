@@ -148,9 +148,9 @@ namespace Game.ClientServer
             container.Register<Box2DCreateContactsSystem>();
             container.Register<Box2DUpdateInternalObjectsSystem>();
             container.Register<Box2DUpdateSystem>();
+
             container.Register<BulletContactSystem>();      
-            
-            
+            container.Register<DestructibleDamageApplySystem>();      
 
             container.Register<Box2DDeleteContactsSystem>();
             

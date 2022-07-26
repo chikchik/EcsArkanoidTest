@@ -93,9 +93,6 @@ namespace Game
 
                 boxEntity.EntityAdd<InteractableComponent>(world);
 
-                boxEntity.EntityAdd<DestructibleHealthComponent>(world).Health = 3;
-                boxEntity.EntityAdd<BulletHit>(world).BulletHits = new Queue<BulletComponent>();
-
                 ref var radiusComponent = ref boxEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = view.transform.lossyScale.x / 2f;
             });
@@ -170,6 +167,12 @@ namespace Game
                 radiusComponent.radius = 0.4f;
             });
             
+            ForEachObject<CubeView>(view =>
+            {
+                var entity = GetOrCreateGameEntity(view.gameObject);
+                entity.EntityAdd<DestructibleHealthComponent>(world).Health = 3f;
+            });
+
             ForEachObject<Collider2D>(collider =>
             {
                 if (!collider.enabled)
@@ -177,7 +180,7 @@ namespace Game
                 var entity = GetOrCreateGameEntity(collider.gameObject);
                 ClientBox2DServices.CreateBody(world, entity, collider);
             });
-            
+
             ForEachObject<JointConnectView>(joint =>
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
