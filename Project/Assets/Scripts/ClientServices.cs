@@ -93,6 +93,9 @@ namespace Game
 
                 boxEntity.EntityAdd<InteractableComponent>(world);
 
+                boxEntity.EntityAdd<DestructibleHealthComponent>(world).Health = 3;
+                boxEntity.EntityAdd<BulletHit>(world).BulletHits = new Queue<BulletComponent>();
+
                 ref var radiusComponent = ref boxEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = view.transform.lossyScale.x / 2f;
             });
