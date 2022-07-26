@@ -12,6 +12,7 @@ using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Utils;
 using Game.View;
 using Flow.EcsLite;
+using Game.ClientServer.Services;
 using UnityEngine;
 using Zenject;
 
@@ -75,7 +76,7 @@ namespace Game
             Apply(component);
         }
         
-        public void Mech()
+        public void MechEnterLeave()
         {
             if (unitEntity == -1)
                 return;

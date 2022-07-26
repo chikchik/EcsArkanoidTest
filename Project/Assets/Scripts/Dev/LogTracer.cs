@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Utils;
 using UnityEngine;
 
-namespace Dev
+namespace Game.Dev
 {
     public class LogTracer
     {

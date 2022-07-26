@@ -39,6 +39,7 @@ namespace Game.View
             return;
             //return;
             //Debug.Log(Animator.velocity);
+            /*
             var currentAnimatorClipInfo = Animator.GetCurrentAnimatorClipInfo(0);
             if (currentAnimatorClipInfo.Length == 0)
                 return;
@@ -55,7 +56,7 @@ namespace Game.View
             transform.position = Animator.rootPosition;
             //Animator.transform.localPosition = Vector3.zero;//.WithX(0).WithZ(0);
             
-            Animator.rootPosition = Vector3.zero;
+            Animator.rootPosition = Vector3.zero;*/
             
         }
 

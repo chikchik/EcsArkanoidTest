@@ -6,10 +6,12 @@ namespace Game.Fabros.Net.ClientServer
     {
         public struct Settings
         {
-            public bool client;
-            public bool server;
+            public bool AddClientSystems;
+            public bool AddServerSystems;
         }
 
         void AddNewSystems(EcsSystems systems, Settings settings);
+
+        IEcsSystem CreateSyncDebugSystem(bool pre);
     }
 }

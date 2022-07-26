@@ -17,6 +17,7 @@ using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Input.proto;
 using Game.Fabros.Net.ClientServer;
 using Flow.EcsLite;
+using Game.ClientServer.Services;
 using UnityEngine;
 
 using Random = System.Random;

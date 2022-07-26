@@ -20,6 +20,7 @@ using Game.Fabros.Net.ClientServer.Ecs.Systems;
 using Flow.EcsLite;
 using Flow.EcsLite.ExtendedSystems;
 using UnityEngine;
+using Fabros.EcsModules.Grid.Systems;
 
 #if CLIENT
 using Game.Ecs.Client.Systems;
@@ -30,176 +31,159 @@ using Fabros.EcsModules.Mech.Client.Systems;
 using Fabros.EcsModules.Tick.ClientServer.Components;
 #endif
 
+using Zenject;
+
 namespace Game.ClientServer
 {
     public class EcsSystemsFactory : IEcsSystemsFactory
     {
-        private ComponentsCollection pool;
-        private MechService mechService;
-        public EcsSystemsFactory(ComponentsCollection pool, MechService mechService) 
+        private EcsSystemsContainer container;
+        
+        public EcsSystemsFactory(DiContainer di)
         {
-            this.pool = pool;
-            this.mechService = mechService;
-        }
-
-        public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)
-        {
-            systems.Add(new DebugMeSystem(true));
+            container = new EcsSystemsContainer(di);
             
-            var client = settings.client;
-            var server = settings.server;
-
-#if CLIENT
-            void AddClient(IEcsSystem system)
-            {
-                //иногда на клиенте нужно получить список систем
-                //куда не входят по настоящему клиентские системы (привязанные к Unity) 
-                if (client)
-                    systems.Add(system);
-            }
-#endif
-
-            void AddServer(IEcsSystem system)
-            { 
-                //для сингл плеера нужны все игровые системы
-                if (server)
-                    systems.Add(system);
-            }
-       
+            /*
+             * регистрация аналогична прямым вызовам через systems.AddSystem, за тем исключением,
+             * что система будет создана через Zenject 
+             */
             
+            /*
+             * системы регистрируются в порядке следования
+             * RegisterClient - система, которая будет отрабатывать в мире где есть Unity Client
+             * RegisterServer - система, которая будет создана и на стороне сервера (или синглплеера)
+             * Register - система, регистрируется для всех случаев
+             */
 #if SERVER
-            systems.Add(new CreateGameSystem(pool));
+            container.Register<CreateGameSystem>();
 #endif
             
 #if CLIENT
-            AddClient(new DetectPlayerIdChangesSystem());
+            container.RegisterClient<DetectPlayerIdChangesSystem>();
 #endif
             
-            AddServer(new CustomInitSystem(mechService));
-            AddServer(new JoinPlayerSystem());
-
-
-            //systems.Add(new ApplyInput0System());
+            container.RegisterServer<CustomInitSystem>();
+            container.RegisterServer<JoinPlayerSystem>();
             
 #if CLIENT
-            AddClient(new InitSceneSystem());
+            container.RegisterClient<InitSceneSystem>();
+            container.RegisterClient<Box2DDebugViewSystem>();
+#endif
+            
+            container.RegisterServer<AIPlayerSystem>();
+
+            container.Register<MoveToTargetPositionSystem>();
+            container.Register<MoveSystem>();
+            container.Register<LookDirectionSystem>();
+            container.Register<SimpleMoveSystem>();
+            container.Register<UnitMoveSystem>();
+            container.Register<PushingSystem>();
+
+            container.Register<MechAdapterSystem>();
+            
+            container.Register<EntitiesLifeTimeSystem>();
+            
+            container.Register<GridSystem>();
+            
+            container.Register<DeleteComponentHereSystem<ShootStartedComponent>>();//если ставить в конец, то на клиент этот компонент даже придет
+            
+            container.Register<ApplyInputSystem>();
+
+
+            container.RegisterServer<FootprintSystem>();
+
+#if CLIENT
+            container.RegisterClient<FootprintViewSystem>();
+            container.RegisterClient<HighlightInteractableSystem>();
 #endif
             
 
-            
 #if CLIENT
-            AddClient(new Box2DDebugViewSystem());
-#endif
-            
-            AddServer(new AIPlayerSystem());
-
-            systems.Add(new MoveToTargetPositionSystem());
-            systems.Add(new MoveSystem());
-            systems.Add(new LookDirectionSystem());
-            systems.Add(new SimpleMoveSystem());
-            systems.Add(new UnitMoveSystem());
-            systems.Add(new PushingSystem());
-
-            systems.Add(new MechAdapterSystem());
-            
-            systems.Add(new EntitiesLifeTimeSystem());
-            
-            systems.Add(GridModule.GetSystems());
-            
-            systems.DeleteComponentHere<ShootStartedComponent>();//если ставить в конец, то на клиент этот компонент даже придет
-            systems.Add(new ApplyInputSystem());
-
-
-            AddServer(new FootprintSystem());
-
-#if CLIENT
-            AddClient(new FootprintViewSystem());
-            AddClient(new HighlightInteractableSystem());
-#endif
-            //systems.Add(new BushInteractionSystem());
-            //systems.Add(new BoxInteractionSystem());
-
-#if CLIENT
-            AddClient(new CollectableSystem());
-            AddClient(new WeaponEquipSystem());
+            container.RegisterClient<CollectableSystem>();
+            container.RegisterClient<WeaponEquipSystem>();
 #endif
             // gates and buttons
-            systems.Add(new ButtonsInteractionSystem());
-            AddServer(new ButtonCustomSystem());
-            systems.Add(new GateSystem());
-            systems.Add(new MoveByProgressSystem());
+            container.Register<ButtonsInteractionSystem>();
+            container.RegisterServer<ButtonCustomSystem>();
+            container.Register<GateSystem>();
+            container.Register<MoveByProgressSystem>();
             
-            systems.Add(new FireSystem());
+            container.Register<FireSystem>();
 
-            systems.Add(new ApplyForceSystem());
+            container.Register<ApplyForceSystem>();
             
             
 
 #if CLIENT
-            AddClient(new CreateViewSystem());
-            AddClient(new FireViewSystem());
-            AddClient(new InventorySystem());
-            AddClient(new CreateMechViewSystem());
-            AddClient(new MechAnimationSystem());
+            container.RegisterClient<CreateViewSystem>();
+            container.RegisterClient<FireViewSystem>();
+            container.RegisterClient<InventorySystem>();
+            container.RegisterClient<CreateMechViewSystem>();
+            container.RegisterClient<MechAnimationSystem>();
 #endif
 
-            systems.Add(new DeleteEntitiesSystemWith<DestroyComponent>());
+            container.Register<DeleteEntityHereSystem<DestroyComponent>>();
 
-            AddServer(new DeleteInputEntitiesSystem());
-            AddServer(new DeleteOutdatedInputEntitiesSystem());
+            container.RegisterServer<DeleteInputEntitiesSystem>();
+            container.RegisterServer<DeleteOutdatedInputEntitiesSystem>();
 
-            systems.Add(new FireDestroyEntitySystem());
+            container.Register<FireDestroyEntitySystem>();
 
-            AddServer(new ObjectivesSystem());
+            container.RegisterServer<ObjectivesSystem>();
 
-            systems.Add(new DestroyAtTimeSystem());
+            container.Register<DestroyAtTimeSystem>();
 
             
 #if CLIENT
-            AddClient(new CharacterAnimationSystem());
-            AddClient(new AddLerpSystem());
+            container.RegisterClient<CharacterAnimationSystem>();
 #endif
 
-            
-            systems.Add(new ShootSystem());
+            container.Register<AddLerpSystem>();
+            container.Register<ShootSystem>();
             
             //Основная Box2dSystem должна быть в конце после всех основных систем,
             //иначе в мультиплеере предсказание не будет работать правильно
-            systems.Add(new Box2DInitSystem());
-            systems.Add(new Box2DCreateBodiesSystem());
-            systems.Add(new Box2DCreateContactsSystem());
-            systems.Add(new Box2DUpdateInternalObjectsSystem());
-            systems.Add(new Box2DUpdateSystem(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
-            systems.Add(new BulletContactSystem());      
+            container.Register<Box2DInitSystem>();
+            container.Register<Box2DCreateBodiesSystem>();
+            container.Register<Box2DCreateContactsSystem>();
+            container.Register<Box2DUpdateInternalObjectsSystem>();
+            container.Register<Box2DUpdateSystem>();
+            container.Register<BulletContactSystem>();      
             
             
 
-            systems.Add(new Box2DDeleteContactsSystem());
+            container.Register<Box2DDeleteContactsSystem>();
             
-            systems.Add(new EventsSystem<WeaponComponent>());
-            systems.Add(new EventsSystem<FireComponent>());
-            systems.Add(new EventsSystem<ButtonPressedComponent>());
-            systems.Add(new EventsSystem<PlayerComponent>());
-            systems.Add(new EventsSystem<ButtonPushCompleted>());
-            systems.Add(new EventsSystem<ObjectiveOpenedComponent>());
-            systems.Add(new EventsSystem<ObjectiveCompletedComponent>());
-            systems.Add(new EventsSystem<GateOpenedComponent>());
-            systems.Add(new EventsSystem<FoodCollectedComponent>());
-            systems.Add(new EventsSystem<PushingComponent>());
-            systems.Add(new EventsSystem<CantMoveComponent>());
+            container.Register<EventsSystem<WeaponComponent>>();
+            container.Register<EventsSystem<FireComponent>>();
+            container.Register<EventsSystem<ButtonPressedComponent>>();
+            container.Register<EventsSystem<PlayerComponent>>();
+            container.Register<EventsSystem<ButtonPushCompleted>>();
+            container.Register<EventsSystem<ObjectiveOpenedComponent>>();
+            container.Register<EventsSystem<ObjectiveCompletedComponent>>();
+            container.Register<EventsSystem<GateOpenedComponent>>();
+            container.Register<EventsSystem<FoodCollectedComponent>>();
+            container.Register<EventsSystem<PushingComponent>>();
+            container.Register<EventsSystem<CantMoveComponent>>();
             
 #if CLIENT
-            systems.Add(new EventsSystem<MovingComponent>());
-            systems.Add(new EventsSystem<TickComponent>());
-            AddClient(new CreateViewSystem());
+            container.Register<EventsSystem<MovingComponent>>();
+            container.Register<EventsSystem<TickComponent>>();
+            container.Register<EventsSystem<ControlsMechComponent>>();
+            container.RegisterClient<CreateViewSystem>();
 #endif
             //write final Box2d transforms to components
-            systems.Add(new Box2DWriteBodiesToComponentsSystem());
-            
-            systems.Add(new DebugMeSystem(false));
-            
-            //тик меняется на следующий в самом конце после всех систем 
-            systems.Add(TickModule.GetSystems());
+            container.Register<Box2DWriteBodiesToComponentsSystem>();
+        }
+        
+        public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)
+        {
+            systems.Add(container.CreateNewSystems(systems.GetWorld(), settings.AddClientSystems, settings.AddServerSystems));
+        }
+
+        public IEcsSystem CreateSyncDebugSystem(bool pre)
+        {
+            return new DebugMeSystem(pre);
         }
     }
 }

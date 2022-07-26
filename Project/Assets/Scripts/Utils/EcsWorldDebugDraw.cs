@@ -1,11 +1,11 @@
 ﻿using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
+using Flow.EcsLite;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
-using Flow.EcsLite;
 using UnityEngine;
 
-namespace Game
+namespace Game.Utils
 {
     public class EcsWorldDebugDraw
     {

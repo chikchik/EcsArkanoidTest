@@ -11,11 +11,15 @@ namespace Game.Fabros.EcsModules.Fire.Client.Systems
 {
     public class FireViewSystem : IEcsRunSystem
     {
+        private Global global;
+        public FireViewSystem(Global global)
+        {
+            this.global = global;
+        }
+        
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
-
-            var global = world.GetUnique<ClientViewComponent>().Global;
             
             var poolFire = world.GetPool<FireComponent>();
             var poolFireView = world.GetPool<FireViewComponent>();

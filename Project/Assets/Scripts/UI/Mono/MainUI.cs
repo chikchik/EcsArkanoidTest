@@ -1,4 +1,5 @@
-﻿using Game.View;
+﻿using Game.UIView;
+using Game.View;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,5 +20,8 @@ namespace Game.UI.Mono
         public ConnectView Connect;
         public TMP_Text FoodText;
         public TMP_Text DebugText;
+
+        public MechInfoView mechInfo;
+        public BaseUIView[] UIViews;
     }
 }

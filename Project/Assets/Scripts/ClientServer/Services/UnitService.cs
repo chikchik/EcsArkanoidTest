@@ -1,14 +1,13 @@
-﻿using System;
-using Fabros.Ecs.ClientServer.Components;
+﻿using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Components.Colliders;
-using Game.Ecs.ClientServer.Components;
 using Flow.EcsLite;
+using Game.Ecs.ClientServer.Components;
 using UnityEngine;
 
-namespace Game.ClientServer
+namespace Game.ClientServer.Services
 {
     public static class UnitService
     {
@@ -17,15 +16,9 @@ namespace Game.ClientServer
             var entity = world.NewEntity();
             
             entity.EntityAddComponent<UnitComponent>(world);
-            //entity.EntityAddComponent<MoveDirectionComponent>(world).value = new Vector3(0,0,1);
             entity.EntityAddComponent<LookDirectionComponent>(world).value = new Vector3(0,0,1);
-
-            //entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(-1.5f, 0, 9f);
-            //entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(2, 0, 8.5f);
             entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(0, 0, 0);
-
             entity.EntityAddComponent<FoodCollectedComponent>(world).Value = 0;
-            
             entity.EntityAddComponent<Rotation2DComponent>(world);
 
 
@@ -48,7 +41,7 @@ namespace Game.ClientServer
 
             entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();
 
-            Debug.Log($"GenerateUnitEntity {entity}");
+            UnityEngine.Debug.Log($"GenerateUnitEntity {entity}");
 
             return entity;
         }

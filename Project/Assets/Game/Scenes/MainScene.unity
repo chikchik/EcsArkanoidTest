@@ -4610,6 +4610,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1355707923}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1360483957 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1902622042, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3448083650097816946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4207eb0449e4df498824c352347d284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1394120422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7192,9 +7204,147 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 835375428, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+    - target: {fileID: 819412716, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_text
+      value: X
+      objectReference: {fileID: 0}
+    - target: {fileID: 819412716, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_fontSize
+      value: 77.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 819412716, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 819412716, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 77.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672948965, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 111.686
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672948965, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 84.375
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672948965, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672948965, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -55.842
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672948965, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -42.188
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672948967, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_RaycastPadding.w
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672948967, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_RaycastPadding.x
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672948967, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_RaycastPadding.y
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672948967, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_RaycastPadding.z
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016260, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016260, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016260, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016260, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016260, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016260, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016260, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_text
+      value: "The T-1000 Advanced Prototype[1], also known as 1000 Series[2], is
+        a Terminator series produced by Skynet in 2029. The 1000 Series Terminator
+        is fully autonomous,[3] and unlike previous Infiltrator models that used
+        rubber skin \u2014 and then finally living tissue over a metallic endoskeleton,
+        the T-1000 is made entirely out of a liquid metal called \"mimetic polyalloy\",
+        meaning it can reform into any shape it touches of the approximate size,
+        thus calling it a \"shape-changer\". "
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_fontSize
+      value: 51.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_margin.w
+      value: 153.44485
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_margin.x
+      value: 33.757812
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_margin.y
+      value: 64.44684
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_margin.z
+      value: 30.689087
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_fontColor.b
+      value: 0.38679248
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0.19947785
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_fontColor.r
+      value: 0.23357818
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 48.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1894016261, guid: 67af7d865b18e9b4b9e30d31de404c5c, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4284691260
       objectReference: {fileID: 0}
     - target: {fileID: 3448083649790090370, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
@@ -7261,44 +7411,39 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[SETUP]'
       objectReference: {fileID: 0}
-    - target: {fileID: 3448083650624029012, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+    - target: {fileID: 3448083650777489238, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
-      propertyPath: m_RaycastTarget
+      propertyPath: mechInfoView
+      value: 
+      objectReference: {fileID: 1360483957}
+    - target: {fileID: 3448083651184328196, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3448083651184328196, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083651184328196, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3448083651184328196, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 895.696
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3448083651184328196, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 42.45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3448083651184328196, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 452.848
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3448083651184328196, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -26.225
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083651184328197, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

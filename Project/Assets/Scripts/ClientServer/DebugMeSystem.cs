@@ -1,13 +1,15 @@
-﻿using Fabros.Ecs.ClientServer;
-using Fabros.Ecs.ClientServer.Components;
+﻿using Fabros.Ecs.ClientServer.Components;
 using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
-using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Flow.EcsLite;
+using Game.Fabros.Net.ClientServer;
 
-namespace Game.Fabros.Net.ClientServer.Ecs.Systems
+namespace Game.ClientServer
 {
+    /*
+     * отладочная система для поиска расинхрона, добавляется в список систем автоматически
+     */
     public class DebugMeSystem : IEcsInitSystem, IEcsRunSystem
     {
         private bool pre;
@@ -21,7 +23,10 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
         
         public void Run(EcsSystems systems)
         {
-            /*
+            //if logging disabled skip
+            if (world.GetSyncLogger() == null)
+                return;
+            
             foreach (var entity in filter)
             {
                 var str = "";
@@ -29,13 +34,14 @@ namespace Game.Fabros.Net.ClientServer.Ecs.Systems
                     str += "beg-";
                 else
                     str += "end-";
-                
+
                 if (entity.EntityHas<PositionComponent>(world))
                     str += entity.EntityGet<PositionComponent>(world).value;
                 if (entity.EntityHas<Box2DRigidbodyComponent>(world))
                     str += entity.EntityGet<Box2DRigidbodyComponent>(world).LinearVelocity;
+                    
                 world.Log(str);
-            }*/
+            }
         }
 
         public void Init(EcsSystems systems)

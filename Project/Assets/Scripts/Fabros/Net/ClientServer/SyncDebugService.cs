@@ -16,28 +16,39 @@ namespace Game.Fabros.Net.ClientServer
 {
     public class SyncDebugService
     {
-        
         private readonly string hashDir;
-        private readonly bool writeHashes;
+        private readonly bool loggingEnabled;
 
         public SyncDebugService(string hashDir)
         {
             this.hashDir = hashDir;
 
-            //Components = components;
-
 #if UNITY_EDITOR || UNITY_STANDALONE || SERVER
             //используется для отладки
-            writeHashes = Directory.Exists(hashDir);
-            if (writeHashes && (hashDir.Contains("temp") || hashDir.Contains("tmp")))
+            if (Directory.Exists(hashDir) && (hashDir.Contains("temp") || hashDir.Contains("tmp")))
             {
-                Debug.Log("writeHashes");
-                var files = Directory.GetFiles(hashDir);
-                Array.ForEach(files, file => {
-                    File.Delete(file);
-                });
+                try
+                {
+                    var files = Directory.GetFiles(hashDir);
+                    Array.ForEach(files, file =>
+                    {
+                        File.Delete(file);
+                    });
+                    loggingEnabled = true;
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"tmp folder '{hashDir}' exists but something goes wrong {ex}");
+                }
             }
 #endif
+        }
+
+        public SyncWorldLogger CreateLogger()
+        {
+            if (loggingEnabled)
+                return new SyncWorldLogger(hashDir);
+            return null;
         }
     }
 }

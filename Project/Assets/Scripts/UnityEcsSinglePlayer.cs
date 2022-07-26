@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Tick.ClientServer.Components;
+using Fabros.EcsModules.Tick.ClientServer.Systems;
 using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.Client.Components;
@@ -9,6 +10,8 @@ using Game.Ecs.View.Systems;
 using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Flow.EcsLite;
+using Game.ClientServer.Services;
+using Game.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
@@ -33,7 +36,7 @@ namespace Game
         private EntityDestroyedListener entityDestroyedListener;
 
         [Inject]
-        private EcsSystemsFactory systemsFactory;
+        private IEcsSystemsFactory systemsFactory;
 
         private EcsSystems systems;
         private EcsSystems viewSystems;
@@ -59,12 +62,7 @@ namespace Game
             });
 
             world.AddUnique(new TickComponent{Value = new Tick(0)});
-            world.AddUnique(new ClientViewComponent
-            {
-                Global = global
-            });
 
-            
             unitEntity = UnitService.CreateUnitEntity(world);
             world.AddUnique(new ClientPlayerComponent{ entity = unitEntity});
             
@@ -73,8 +71,12 @@ namespace Game
             systems.Add(new Flow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
            
+            
+            
             systemsFactory.AddNewSystems(systems, 
-                new IEcsSystemsFactory.Settings{client = true, server = true});
+                new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = true});
+            systems.Add(new TickSystem());
+            
 
             systems.Init();
             

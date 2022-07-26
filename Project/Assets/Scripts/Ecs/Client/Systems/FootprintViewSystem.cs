@@ -4,12 +4,23 @@ using Fabros.Ecs.Utils;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Flow.EcsLite;
+using Game.View;
 using UnityEngine;
+using Zenject;
 
 namespace Game.Ecs.Client.Systems
 {
     public class FootprintViewSystem : IEcsRunSystem
     {
+        private FootprintView leftPrefab;
+        private FootprintView rightPrefab;
+        
+        public FootprintViewSystem([Inject(Id="left")]FootprintView leftPrefab, [Inject(Id="right")]FootprintView rightPrefab)
+        {
+            this.leftPrefab = leftPrefab;
+            this.rightPrefab = rightPrefab;
+        }
+        
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
@@ -20,12 +31,11 @@ namespace Game.Ecs.Client.Systems
                 .Exc<DestroyComponent>()
                 .End();
             var poolFootprint = world.GetPool<FootprintComponent>();
-            var global = world.GetUnique<ClientViewComponent>().Global;
 
             foreach (var entity in filter)
             {
                 var footprintComponent = poolFootprint.Get(entity);
-                CreateView(world, entity, global, footprintComponent);
+                CreateView(world, entity, footprintComponent);
             }
 
             var destroyEntities = world
@@ -41,12 +51,12 @@ namespace Game.Ecs.Client.Systems
             }
         }
 
-        private void CreateView(EcsWorld world, int entity, Global global, FootprintComponent footprintComponent)
+        private void CreateView(EcsWorld world, int entity, FootprintComponent footprintComponent)
         {
-            var footprintPrefab =
-                footprintComponent.isLeftHand ? global.leftFootprintPrefab : global.rightFootprintPrefab;
+            var footprintPrefab = footprintComponent.isLeftHand ? leftPrefab : rightPrefab;
 
-            var transform = Object.Instantiate(footprintPrefab, global.footprintParent).transform;
+            var view = GameObject.Instantiate(footprintPrefab);
+            var transform = view.transform;
             
             ref var transformComponent = ref entity.EntityAddComponent<TransformComponent>(world);
             transformComponent.Transform = transform;

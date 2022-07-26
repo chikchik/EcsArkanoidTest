@@ -6,9 +6,10 @@ using Fabros.EcsModules.Mech.ClientServer.Components;
 using Flow.EcsLite;
 using Game.Ecs.ClientServer.Components;
 
-namespace Game.ClientServer
+namespace Game.ClientServer.Services
 {
-    public class ClientServerServices
+    
+    public class ClientServerServices//todo find better name
     {
         List<int> entities = new List<int>();
         

@@ -15,6 +15,7 @@ using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Grid.Components;
 using Fabros.EcsModules.Tick.ClientServer.Components;
+using Fabros.EcsModules.Tick.ClientServer.Systems;
 using Fabros.EcsModules.Tick.Other;
 using Fabros.P2P;
 using Game.ClientServer;
@@ -80,7 +81,6 @@ namespace Game.Fabros.Net.Client
         {
             Application.targetFrameRate = 60;
             
-            WorldLoggerExt.logger = new SyncWorldLogger();
 
             this.InputWorld = inputWorld;
             
@@ -88,6 +88,7 @@ namespace Game.Fabros.Net.Client
 
             components = pool;
             syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
+            WorldLoggerExt.logger = syncDebug.CreateLogger();
 
 
             //генерируем случайный id игрока с которым нас будет ассоциировать сервер
@@ -320,12 +321,15 @@ namespace Game.Fabros.Net.Client
             var data = Convert.FromBase64String(packet.WorldUpdate.difStr);
             var dif0 = WorldDiff.FromByteArray(components, data);
 
-            InitWorldAction(MainWorld);
+            InitWorldAction?.Invoke(MainWorld);
 
             clientSystems = new EcsSystems(MainWorld);
             clientSystems.AddWorld(InputWorld, "input");
-            
-            systemsFactory.AddNewSystems(clientSystems, new IEcsSystemsFactory.Settings{client = true, server = false});
+
+            clientSystems.Add(systemsFactory.CreateSyncDebugSystem(true));
+            systemsFactory.AddNewSystems(clientSystems, new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = false});
+            clientSystems.Add(systemsFactory.CreateSyncDebugSystem(false));
+            clientSystems.Add(new TickSystem());
 
             dif0.ApplyChanges(MainWorld);
 
@@ -336,14 +340,14 @@ namespace Game.Fabros.Net.Client
             ServerWorld.SetDebugName("rsrv");
 
             serverSystems = new EcsSystems(ServerWorld);
-            serverSystems.Add(new DebugMeSystem(true));
+            serverSystems.Add(systemsFactory.CreateSyncDebugSystem(true));
             serverSystems.AddWorld(InputWorld, "input");
             //serverSystems.Add(Box2DModule.CreateMainSystems(Config.POSITION_ITERATIONS, Config.VELOCITY_ITERATIONS));
             serverSystems.Add(new Box2DInitSystem());
             serverSystems.Add(new Box2DCreateBodiesSystem());
             serverSystems.Add(new Box2DUpdateInternalObjectsSystem());
             //serverSystems.Add(new Box2DWriteBodiesToComponentsSystem());
-            serverSystems.Add(new DebugMeSystem(false));
+            serverSystems.Add(systemsFactory.CreateSyncDebugSystem(false));
             //serverSystems.Add(new TickSystem());
 
             //после того как нам пришло что-то от сервера старый инпут можно спокойно удалять
@@ -359,9 +363,13 @@ namespace Game.Fabros.Net.Client
             copyServerSystems = new EcsSystems(copyServerWorld);
             copyServerSystems.AddWorld(InputWorld, "input");
             
+            copyServerSystems.Add(systemsFactory.CreateSyncDebugSystem(true));
             systemsFactory.AddNewSystems(copyServerSystems,
-                new IEcsSystemsFactory.Settings{client = false, server = false});
-            
+                new IEcsSystemsFactory.Settings{AddClientSystems = false, AddServerSystems = false});
+            copyServerSystems.Add(systemsFactory.CreateSyncDebugSystem(false));
+            copyServerSystems.Add(new TickSystem());
+
+
             copyServerWorld.CopyFrom(ServerWorld);
             
             Box2DServices.__ClearWorld(copyServerWorld);

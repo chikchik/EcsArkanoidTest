@@ -5,6 +5,9 @@ using Game.Ecs.ClientServer.Components;
 using Game.UI.Mono;
 using Flow.EcsLite;
 using Game.ClientServer;
+using Game.ClientServer.Services;
+using Game.State;
+using Game.Utils.States;
 
 namespace Game.UI
 {
@@ -21,6 +24,7 @@ namespace Game.UI
         
         public UI(
             EcsWorld world, MainUI view, 
+            States states,
             PlayerControlService controlService,
             ClientServerServices clientServerServices)
         {
@@ -28,6 +32,7 @@ namespace Game.UI
             this.world = world;
             this.controlService = controlService;
             this.clientServerServices = clientServerServices;
+
 
             view.InteractionButton.onClick.AddListener(() =>
             {
@@ -41,7 +46,7 @@ namespace Game.UI
             
             view.MechButton.onClick.AddListener(() =>
             {
-                controlService.Mech();
+                states.Push<MechInfoState>();
             });
             
             view.ShotButton.onClick.AddListener(() =>

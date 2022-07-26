@@ -1,17 +1,22 @@
-using Fabros.Ecs.ClientServer;
-using Fabros.Ecs.ClientServer.Utils;
 using Fabros.Ecs.ClientServer.WorldDiff;
+using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Mech.ClientServer;
+using Flow.EcsLite;
 using Game.ClientServer;
+using Game.ClientServer.Services;
+using Game.Dev;
 using Game.Fabros.Net.Client;
 using Game.Fabros.Net.ClientServer;
+using Game.State;
 using Game.UI;
 using Game.UI.Mono;
-using Flow.EcsLite;
+using Game.UIView;
+using Game.Utils.States;
+using Game.View;
 using UnityEngine;
 using Zenject;
 
-namespace Game
+namespace Game.Installers
 {
     public class GameSceneInstaller : MonoInstaller
     {
@@ -21,7 +26,20 @@ namespace Game
         public override void InstallBindings()
         {
             Container.Bind<Camera>().FromComponentsOn(GameObject.Find("Main Camera")).AsSingle();
-            Container.Bind<Global>().FromComponentsOn(GameObject.Find("Global")).AsSingle();
+            
+            var global = GameObject.Find("Global").GetComponent<Global>();
+            Container.Bind<Global>().FromInstance(global).AsSingle();
+            
+            
+            Container.Bind<CharacterView>().FromInstance(global.characterPrefab).AsSingle();
+            Container.Bind<BulletView>().FromInstance(global.BulletPrefab).AsSingle();
+            
+            Container.Bind<FootprintView>().WithId("left").FromInstance(global.LeftFootprintPrefab).AsCached();
+            Container.Bind<FootprintView>().WithId("right").FromInstance(global.RightFootprintPrefab).AsCached();
+            
+            
+            
+            
             Container.Bind<Objectives>().AsSingle().NonLazy();
 
             //var world = new EcsWorld("main");
@@ -37,38 +55,44 @@ namespace Game
 
             Container.Bind<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
+           
+            
+            //register states and view
+            Container.Bind<MechInfoView>().FromInstance(global.mechInfoView).AsSingle();
+             
+            Container.Bind<States>().AsSingle();
+            Container.Bind<RootState>().AsSingle();
+            Container.Bind<MechInfoState>().AsSingle();
+            
 
 
             Container.Bind<NetClient>().AsSingle();
             Container.BindInterfacesAndSelfTo<EcsSystemsFactory>().AsSingle();
-            Container.Bind<ComponentsCollection>().FromInstance(SharedComponents.CreateComponentsPool()).AsSingle();
-
-
+            
+            var collection = new ComponentsCollection();
+            ComponentsCollectionUtils.AddComponents(collection);
+            
+            Container.Bind<ComponentsCollection>().FromInstance(collection).AsSingle();
             
             Container.Bind<GameSettings>().FromComponentOn(GameObject.Find("[SETUP]")).AsSingle();
             Container.Bind<DevPanelController>().FromComponentInNewPrefabResource("DEV/DevPanel").AsSingle();
             Container.Bind<DevPanel>().AsSingle().NonLazy();
             
+            Container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
             Container.Bind<MechService>().AsSingle();
+           
             
 
             if (settings.MultiPlayer)
-            //if (true)
             {
                 Container.Bind<IInputService>().To<ClientInputService>()
                     .AsSingle().WhenInjectedInto<PlayerControlService>();
-                
-                //Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
-                //    .AsSingle().WhenInjectedInto<NetClient>();
                 
                 var comp = settings.gameObject.AddComponent<UnityEcsClient>();
                 Container.QueueForInject(comp);
             }
             else
             {
-                //Container.Bind<IInputService>().To<ApplyWorldChangesInputService>()
-                //   .AsSingle().WhenInjectedInto<PlayerControlService>();
-
                 var comp = settings.gameObject.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);
             }
