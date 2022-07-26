@@ -23,7 +23,9 @@
       "version": "file:../../../module-ecs-central/Package",
       "depth": 0,
       "source": "local",
-      "dependencies": {}
+      "dependencies": {
+        "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask"
+      }
     },
     "com.fabros.ecs.mech": {
       "version": "file:../../module-ecs-mech/MechEcsPackage",
