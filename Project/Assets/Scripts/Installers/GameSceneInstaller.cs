@@ -20,7 +20,6 @@ namespace Game.Installers
 {
     public class GameSceneInstaller : MonoInstaller
     {
-        [SerializeField] private Joystick joystickPrefab;
         [SerializeField] private GameSettings settings;
 
         public override void InstallBindings()
@@ -29,17 +28,13 @@ namespace Game.Installers
             
             var global = GameObject.Find("Global").GetComponent<Global>();
             Container.Bind<Global>().FromInstance(global).AsSingle();
-            
-            
+
             Container.Bind<CharacterView>().FromInstance(global.characterPrefab).AsSingle();
             Container.Bind<BulletView>().FromInstance(global.BulletPrefab).AsSingle();
             
             Container.Bind<FootprintView>().WithId("left").FromInstance(global.LeftFootprintPrefab).AsCached();
             Container.Bind<FootprintView>().WithId("right").FromInstance(global.RightFootprintPrefab).AsCached();
-            
-            
-            
-            
+
             Container.Bind<Objectives>().AsSingle().NonLazy();
 
             //var world = new EcsWorld("main");

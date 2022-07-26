@@ -1,6 +1,5 @@
 ﻿using Flow.EcsLite;
 using Game.Ecs.ClientServer.Components;
-using UnityEngine;
 
 namespace Game.Ecs.ClientServer.Systems
 {
@@ -19,6 +18,7 @@ namespace Game.Ecs.ClientServer.Systems
 
             var poolBulletHit = _world.GetPool<BulletHitComponent>();
             var poolDestructibleHealth = _world.GetPool<DestructibleHealthComponent>();
+            var poolVFXRequest = _world.GetPool<VFXRequestComponent>();
 
             foreach (var hit in filterHits)
             {
@@ -40,15 +40,10 @@ namespace Game.Ecs.ClientServer.Systems
                     destructibleHealth.Health -= bulletHit.Bullet.Damage;
                     if (destructibleHealth.Health <= 0)
                     {
-                        Debug.Log("destroyed");
+                        poolVFXRequest.Add(entityHit).VFXName = "FireRed";
+                        poolDestructibleHealth.Del(entityHit);
                     }
                 }
-            }
-
-            // TODO: Move me away
-            foreach (var hit in filterHits)
-            {
-                _world.DelEntity(hit);
             }
         }
     }
