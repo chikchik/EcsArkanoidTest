@@ -3,6 +3,7 @@ using Game.ClientServer;
 using Game.Utils;
 using UnityEngine;
 using UnityEngine.UI;
+using XFlow.Utils;
 
 namespace Game.UI.Mono
 {
