@@ -1,8 +1,8 @@
-using Fabros.Ecs.Client.Components;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components.Inventory;
 using Flow.EcsLite;
 using UnityEngine;
+using XFlow.Ecs.Client.Components;
 using XFlow.EcsLite;
 
 namespace Game.Ecs.Client.Systems.Inventory

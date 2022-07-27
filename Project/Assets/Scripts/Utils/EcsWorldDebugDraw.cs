@@ -1,9 +1,8 @@
-﻿using Fabros.Ecs.ClientServer.Components;
-using Fabros.Ecs.Utils;
-using Flow.EcsLite;
+﻿using Flow.EcsLite;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using UnityEngine;
+using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Utils;
 

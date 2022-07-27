@@ -1,5 +1,5 @@
-﻿using Fabros.Ecs.ClientServer.WorldDiff;
-using System;
+﻿using System;
+using XFlow.Ecs.ClientServer.WorldDiff.Attributes;
 
 namespace Game.Ecs.ClientServer.Components.Objective
 {

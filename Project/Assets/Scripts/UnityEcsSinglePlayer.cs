@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Tick.ClientServer.Components;
 using Fabros.EcsModules.Tick.ClientServer.Systems;
 using Fabros.EcsModules.Tick.Other;

@@ -1,9 +1,4 @@
-﻿using Fabros.Ecs.ClientServer.Systems;
-using Fabros.Ecs.ClientServer.WorldDiff;
-using Fabros.EcsModules.Box2D.ClientServer.Components;
-using Fabros.EcsModules.Box2D.ClientServer.Components.Other;
-using Fabros.EcsModules.Box2D.ClientServer.Systems;
-using Fabros.EcsModules.Grid;
+﻿using Fabros.EcsModules.Grid;
 using Fabros.EcsModules.Mech.ClientServer;
 using Fabros.EcsModules.Tick;
 
@@ -21,12 +16,13 @@ using Flow.EcsLite;
 using UnityEngine;
 using Fabros.EcsModules.Grid.Systems;
 using XFlow.EcsLite;
+using XFlow.Modules.Box2D.Client.Systems;
+using XFlow.Modules.Box2D.ClientServer.Systems;
 
 #if CLIENT
 using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
 using Game.Fabros.EcsModules.Fire.Client.Systems;
-using Fabros.EcsModules.Box2D.Client.Systems;
 using Fabros.EcsModules.Mech.Client.Systems;
 using Fabros.EcsModules.Tick.ClientServer.Components;
 #endif
