@@ -1,17 +1,5 @@
 {
   "dependencies": {
-    "com.fabros.ecs.box2d": {
-      "version": "file:../../../module-ecs-box2d/FabrosEcsBox2DPackage",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
-    "com.fabros.ecs.central": {
-      "version": "file:../../../module-ecs-central/Package",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.unity.burst": {
       "version": "1.6.6",
       "depth": 1,
@@ -202,6 +190,18 @@
     },
     "com.xflow.ecs": {
       "version": "file:../../../module-ecs/Package",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "com.xflow.ecs.box2d": {
+      "version": "file:../../../module-ecs-box2d/Package",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "com.xflow.ecs.central": {
+      "version": "file:../../../module-ecs-central/Package",
       "depth": 0,
       "source": "local",
       "dependencies": {}
