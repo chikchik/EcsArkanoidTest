@@ -109,7 +109,7 @@ namespace Game.ClientServer
             container.RegisterServer<ButtonCustomSystem>();
             container.Register<GateSystem>();
             container.Register<MoveByProgressSystem>();
-            
+
             container.Register<FireSystem>();
 
             container.Register<ApplyForceSystem>();

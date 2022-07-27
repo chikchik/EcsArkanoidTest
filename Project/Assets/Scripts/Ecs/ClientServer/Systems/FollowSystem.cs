@@ -2,7 +2,7 @@
 using Flow.EcsLite;
 using Game.Ecs.ClientServer.Components;
 
-namespace Game.Ecs.Client.Systems
+namespace Game.Ecs.ClientServer.Systems
 {
     public class FollowSystem : IEcsInitSystem, IEcsRunSystem
     {
@@ -18,7 +18,7 @@ namespace Game.Ecs.Client.Systems
             var filterFollow = _world.Filter<FollowComponent>().End();
 
             var poolFollow = _world.GetPool<FollowComponent>();
-            var poolTransform = _world.GetPool<PositionComponent>();
+            var poolPosition = _world.GetPool<PositionComponent>();
 
             foreach (var entity in filterFollow)
             {
@@ -28,12 +28,12 @@ namespace Game.Ecs.Client.Systems
                     continue;
                 }
 
-                if (!poolTransform.Has(entityToFollow))
+                if (!poolPosition.Has(entityToFollow))
                 {
                     continue;
                 }
 
-                poolTransform.GetOrCreateRef(entity).value = poolTransform.Get(entityToFollow).value;
+                poolPosition.GetOrCreateRef(entity).value = poolPosition.Get(entityToFollow).value;
             }
         }
     }

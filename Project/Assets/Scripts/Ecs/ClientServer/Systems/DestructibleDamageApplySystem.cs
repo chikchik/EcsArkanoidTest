@@ -6,6 +6,9 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class DestructibleDamageApplySystem : IEcsRunSystem, IEcsInitSystem
     {
+        private readonly float _boxDestructionTime = 3f;
+        private readonly float _fireDuration = 5f;
+
         private EcsWorld _world;
 
         public void Init(EcsSystems systems)
@@ -19,8 +22,9 @@ namespace Game.Ecs.ClientServer.Systems
             var tm = _world.GetTime();
 
             var poolBulletHit = _world.GetPool<BulletHitComponent>();
+            var poolFollow = _world.GetPool<FollowComponent>();
             var poolDestructibleHealth = _world.GetPool<DestructibleHealthComponent>();
-            var poolVFXRequest = _world.GetPool<VFXRequestComponent>();
+            var poolDestructibleDamaged = _world.GetPool<DestructibleDamagedComponent>();
             var poolDestroyAtTime = _world.GetPool<DestroyAtTimeComponent>();
 
             foreach (var hit in filterHits)
@@ -43,9 +47,13 @@ namespace Game.Ecs.ClientServer.Systems
                     destructibleHealth.Health -= bulletHit.Bullet.Damage;
                     if (destructibleHealth.Health <= 0)
                     {
-                        poolVFXRequest.Add(entityHit).VFXName = "FireRed";
+                        var vfxEntity = _world.NewEntity();
+
+                        poolFollow.Add(vfxEntity).Entity = _world.PackEntity(entityHit);
+                        poolDestructibleDamaged.Add(entityHit).vfxEntity = _world.PackEntity(vfxEntity);
                         poolDestructibleHealth.Del(entityHit);
-                        poolDestroyAtTime.Add(entityHit).Time = tm + 3f;
+                        poolDestroyAtTime.Add(entityHit).Time = tm + _boxDestructionTime;
+                        poolDestroyAtTime.Add(vfxEntity).Time = tm + _fireDuration;
                     }
                 }
             }

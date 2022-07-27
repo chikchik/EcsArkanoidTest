@@ -9,6 +9,9 @@ namespace Game.Ecs.Client.Systems
 {
     public class VFXCreationSystem : IEcsInitSystem, IEcsRunSystem
     {
+
+        private readonly string _fireVFX = "FireRed";
+
         private EcsWorld _world;
 
         public void Init(EcsSystems systems)
@@ -20,29 +23,32 @@ namespace Game.Ecs.Client.Systems
         {
             var tm = _world.GetTime();
 
-            var filterVFXRequest = _world.Filter<VFXRequestComponent>().End();
-            var poolVFXRequest = _world.GetPool<VFXRequestComponent>();
+            var filterDestructibleDamaged = _world.Filter<DestructibleDamagedComponent>().End();
+
+            var poolDestructibleDamaged = _world.GetPool<DestructibleDamagedComponent>();
             var poolActiveVFX = _world.GetPool<ActiveVFX>();
-            var poolFollow = _world.GetPool<FollowComponent>();
             var poolTransform = _world.GetPool<TransformComponent>();
-            var poolDestroyAtTime = _world.GetPool<DestroyAtTimeComponent>();
 
-            foreach (var request in filterVFXRequest)
+            foreach (var request in filterDestructibleDamaged)
             {
-                var requestData = poolVFXRequest.Get(request);
+                if (!poolDestructibleDamaged.Get(request).vfxEntity.Unpack(_world, out var vfxEntity))
+                {
+                    poolDestructibleDamaged.Del(request);
+                    continue;
+                }
 
-                var vfxEntity = _world.NewEntity();
+                if (poolActiveVFX.Has(vfxEntity)) // This can happen if the world was resimulated between frames
+                {
+                    continue;
+                }
 
-                poolFollow.Add(vfxEntity).Entity = _world.PackEntity(request);
-
-                var vfxGameObject = Object.Instantiate(Resources.Load<GameObject>(requestData.VFXName));
+                var vfxGameObject = Object.Instantiate(Resources.Load<GameObject>(_fireVFX));
 
                 ref var activeVfx = ref poolActiveVFX.Add(vfxEntity);
                 activeVfx.VFX = vfxGameObject;
 
                 poolTransform.Add(vfxEntity).Transform = vfxGameObject.transform;
-                poolDestroyAtTime.Add(vfxEntity).Time = tm + 5f;
-                poolVFXRequest.Del(request);
+                poolDestructibleDamaged.Del(request);
             }
         }
     }
