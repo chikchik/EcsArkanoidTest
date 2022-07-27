@@ -1,4 +1,5 @@
 ﻿using Fabros.Ecs.Client.Components;
+using Fabros.EcsModules.Tick.Other;
 using Flow.EcsLite;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
@@ -17,11 +18,14 @@ namespace Game.Ecs.Client.Systems
 
         public void Run(EcsSystems systems)
         {
+            var tm = _world.GetTime();
+
             var filterVFXRequest = _world.Filter<VFXRequestComponent>().End();
             var poolVFXRequest = _world.GetPool<VFXRequestComponent>();
             var poolActiveVFX = _world.GetPool<ActiveVFX>();
             var poolFollow = _world.GetPool<FollowComponent>();
             var poolTransform = _world.GetPool<TransformComponent>();
+            var poolDestroyAtTime = _world.GetPool<DestroyAtTimeComponent>();
 
             foreach (var request in filterVFXRequest)
             {
@@ -32,13 +36,12 @@ namespace Game.Ecs.Client.Systems
                 poolFollow.Add(vfxEntity).Entity = _world.PackEntity(request);
 
                 var vfxGameObject = Object.Instantiate(Resources.Load<GameObject>(requestData.VFXName));
-                
+
                 ref var activeVfx = ref poolActiveVFX.Add(vfxEntity);
-                activeVfx.DeathTime = 3f;
                 activeVfx.VFX = vfxGameObject;
 
                 poolTransform.Add(vfxEntity).Transform = vfxGameObject.transform;
-
+                poolDestroyAtTime.Add(vfxEntity).Time = tm + 5f;
                 poolVFXRequest.Del(request);
             }
         }

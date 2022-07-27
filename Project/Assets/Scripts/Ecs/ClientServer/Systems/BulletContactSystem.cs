@@ -35,6 +35,7 @@ namespace Game.Ecs.ClientServer.Systems
                     {
                         CreateHitEntity(poolBullet.Get(entityA), _world.PackEntity(entityB), poolBulletHits);
                     }
+                    _world.DelEntity(entityA);
                 }
 
                 if (poolBullet.Has(entityB))
@@ -43,6 +44,7 @@ namespace Game.Ecs.ClientServer.Systems
                     {
                         CreateHitEntity(poolBullet.Get(entityB), _world.PackEntity(entityA), poolBulletHits);
                     }
+                    _world.DelEntity(entityB);
                 }
             }
         }
