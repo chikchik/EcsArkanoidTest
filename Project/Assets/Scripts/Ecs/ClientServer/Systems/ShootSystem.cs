@@ -13,6 +13,8 @@ using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Flow.EcsLite;
 using UnityEngine;
+using XFlow.EcsLite;
+using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
 {

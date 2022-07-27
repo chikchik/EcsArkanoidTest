@@ -3,6 +3,7 @@ using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components.Inventory;
 using Flow.EcsLite;
 using UnityEngine;
+using XFlow.EcsLite;
 
 namespace Game.Ecs.Client.Systems.Inventory
 {

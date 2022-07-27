@@ -18,9 +18,9 @@ using Game.Fabros.Net.ClientServer;
 using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.Fabros.Net.ClientServer.Ecs.Systems;
 using Flow.EcsLite;
-using Flow.EcsLite.ExtendedSystems;
 using UnityEngine;
 using Fabros.EcsModules.Grid.Systems;
+using XFlow.EcsLite;
 
 #if CLIENT
 using Game.Ecs.Client.Systems;

@@ -1,6 +1,7 @@
 ﻿using Fabros.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components;
 using Flow.EcsLite;
+using XFlow.EcsLite;
 
 namespace Game.Ecs.ClientServer.Systems
 {

@@ -4,6 +4,8 @@ using Fabros.Ecs.Utils;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Flow.EcsLite;
 using Game.Fabros.Net.ClientServer;
+using XFlow.EcsLite;
+using XFlow.Utils;
 
 namespace Game.ClientServer
 {

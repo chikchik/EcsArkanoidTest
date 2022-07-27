@@ -6,6 +6,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.Fabros.Net.ClientServer;
 using Flow.EcsLite;
 using UnityEngine;
+using XFlow.EcsLite;
 #if CLIENT
 using Fabros.Ecs.Client.Components;
 #endif

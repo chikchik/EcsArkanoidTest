@@ -5,6 +5,7 @@ using Game.ClientServer;
 using Flow.EcsLite;
 using UnityEditor;
 using UnityEngine;
+using XFlow.EcsLite;
 
 public static class ConvertWorld
 {

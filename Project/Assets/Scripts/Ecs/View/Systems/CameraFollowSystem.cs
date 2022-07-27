@@ -4,6 +4,7 @@ using Flow.EcsLite;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using UnityEngine;
+using XFlow.EcsLite;
 
 namespace Game.Ecs.View.Systems
 {

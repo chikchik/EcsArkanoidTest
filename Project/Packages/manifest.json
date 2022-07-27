@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.fabros.ecs": "file:../../../module-ecs/FabrosEcsPackage",
+    "com.xflow.ecs": "file:../../../module-ecs/Package",
     "com.fabros.ecs.box2d": "file:../../../module-ecs-box2d/FabrosEcsBox2DPackage",
     "com.fabros.ecs.central": "file:../../../module-ecs-central/Package",
     "com.unity.cinemachine": "2.8.6",

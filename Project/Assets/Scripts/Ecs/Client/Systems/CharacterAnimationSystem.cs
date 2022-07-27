@@ -5,6 +5,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Systems;
 using Flow.EcsLite;
 using UnityEngine;
+using XFlow.EcsLite;
 
 namespace Game.Ecs.Client.Systems
 {

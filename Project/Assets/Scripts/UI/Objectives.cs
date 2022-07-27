@@ -5,6 +5,8 @@ using Game.UI.Mono;
 using Flow.EcsLite;
 using TMPro;
 using UnityEngine;
+using XFlow.EcsLite;
+using XFlow.Utils;
 
 namespace Game.UI
 {

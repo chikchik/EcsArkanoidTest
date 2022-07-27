@@ -14,6 +14,7 @@ using Game.UI.Mono;
 using Game.UIView;
 using Game.View;
 using UnityEngine;
+using XFlow.EcsLite;
 using Zenject;
 
 namespace Game.Installers

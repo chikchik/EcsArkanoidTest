@@ -8,6 +8,7 @@ using Flow.EcsLite;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.State;
+using XFlow.EcsLite;
 
 namespace Game.UI
 {

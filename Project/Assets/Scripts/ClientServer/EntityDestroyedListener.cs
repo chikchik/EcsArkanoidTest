@@ -3,6 +3,8 @@ using Fabros.EcsModules.Box2D.ClientServer.Api;
 using Fabros.EcsModules.Box2D.ClientServer.Components;
 using Flow.EcsLite;
 using UnityEngine;
+using XFlow.EcsLite;
+using XFlow.Utils;
 
 #if CLIENT
 using UnityEngine;

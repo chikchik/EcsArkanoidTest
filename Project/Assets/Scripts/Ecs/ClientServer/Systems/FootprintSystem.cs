@@ -5,6 +5,8 @@ using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.ClientServer.Components;
 using Game.Fabros.EcsModules.Fire.ClientServer.Components;
 using Flow.EcsLite;
+using XFlow.EcsLite;
+using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
 {

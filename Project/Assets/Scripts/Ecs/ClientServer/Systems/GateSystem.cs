@@ -2,6 +2,7 @@ using System;
 using Fabros.EcsModules.Tick.Other;
 using Game.Ecs.ClientServer.Components;
 using Flow.EcsLite;
+using XFlow.EcsLite;
 
 namespace Game.Ecs.ClientServer.Systems
 {
