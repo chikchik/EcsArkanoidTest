@@ -77,6 +77,7 @@ namespace Game.ClientServer
             container.Register<LookDirectionSystem>();
             container.Register<SimpleMoveSystem>();
             container.Register<UnitMoveSystem>();
+            container.Register<FollowSystem>();
             container.Register<PushingSystem>();
 
             container.Register<MechAdapterSystem>();
