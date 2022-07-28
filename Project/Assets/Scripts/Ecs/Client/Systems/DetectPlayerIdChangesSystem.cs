@@ -1,9 +1,10 @@
 ﻿using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Flow.EcsLite;
 using XFlow.Ecs.Client.Components;
 using XFlow.EcsLite;
+using XFlow.Net.ClientServer;
+using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
 
 namespace Game.Ecs.Client.Systems

@@ -1,6 +1,5 @@
 ﻿using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-using Game.Fabros.Net.ClientServer;
 using Game.View;
 using Flow.EcsLite;
 using UnityEngine;

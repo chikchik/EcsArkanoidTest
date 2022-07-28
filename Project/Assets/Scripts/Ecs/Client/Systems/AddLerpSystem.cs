@@ -1,9 +1,8 @@
-﻿using Flow.EcsLite;
-using XFlow.Ecs.Client.Components;
+﻿using XFlow.Ecs.Client.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Components;
 
-namespace Game.Ecs.ClientServer.Systems
+namespace Game.Ecs.Client.Systems
 {
     public class AddLerpSystem : IEcsInitSystem, IEcsRunSystem
     {

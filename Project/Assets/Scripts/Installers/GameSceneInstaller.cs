@@ -1,10 +1,7 @@
 using Fabros.EcsModules.Mech.ClientServer;
-using Flow.EcsLite;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Dev;
-using Game.Fabros.Net.Client;
-using Game.Fabros.Net.ClientServer;
 using Game.State;
 using Game.UI;
 using Game.UI.Mono;
@@ -15,6 +12,8 @@ using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Library.States;
+using XFlow.Net.Client;
+using XFlow.Net.ClientServer;
 using Zenject;
 
 namespace Game.Installers

@@ -6,14 +6,14 @@ using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.View.Systems;
-using Game.Fabros.Net.ClientServer;
-using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Flow.EcsLite;
 using Game.ClientServer.Services;
 using Game.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using XFlow.EcsLite;
+using XFlow.Net.ClientServer;
+using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
 using Zenject;
 

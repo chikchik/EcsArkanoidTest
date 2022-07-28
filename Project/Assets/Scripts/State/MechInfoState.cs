@@ -1,10 +1,9 @@
 ﻿using Flow.EcsLite;
 using Game.Ecs.ClientServer.Components;
-using Game.Fabros.Net.ClientServer;
-using Game.UI;
 using Game.UIView;
 using XFlow.EcsLite;
 using XFlow.Library.States;
+using XFlow.Net.ClientServer;
 using XFlow.Utils;
 
 namespace Game.State
