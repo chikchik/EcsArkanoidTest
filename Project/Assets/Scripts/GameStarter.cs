@@ -2,7 +2,7 @@ using Game.State;
 using Game.UI;
 using Game.View;
 using UnityEngine;
-using XFlow.Library.States;
+using XFlow.Modules.States;
 using Zenject;
 
 namespace Game

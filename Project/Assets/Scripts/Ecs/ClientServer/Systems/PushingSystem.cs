@@ -1,7 +1,7 @@
-﻿using Fabros.EcsModules.Tick.Other;
-using Game.Ecs.ClientServer.Components;
-using Flow.EcsLite;
+﻿using Game.Ecs.ClientServer.Components;
+
 using XFlow.EcsLite;
+using XFlow.Modules.Tick.Other;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems

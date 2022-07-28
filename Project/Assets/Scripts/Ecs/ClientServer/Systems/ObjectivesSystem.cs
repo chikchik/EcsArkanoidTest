@@ -2,10 +2,10 @@
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Objective;
-using Game.Fabros.EcsModules.Fire.ClientServer.Components;
-using Flow.EcsLite;
+
 using Game.ClientServer.Services;
 using XFlow.EcsLite;
+using XFlow.Modules.Fire.ClientServer.Components;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems

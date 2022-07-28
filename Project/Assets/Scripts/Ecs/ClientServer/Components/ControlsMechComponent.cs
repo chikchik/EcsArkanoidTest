@@ -1,5 +1,4 @@
-﻿using Flow.EcsLite;
-using XFlow.EcsLite;
+﻿using XFlow.EcsLite;
 
 namespace Game.Ecs.ClientServer.Components
 {

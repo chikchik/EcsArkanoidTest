@@ -11,7 +11,7 @@ using UnityEngine;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Systems;
-using XFlow.Library.States;
+using XFlow.Modules.States;
 using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
 using Zenject;
@@ -56,6 +56,8 @@ namespace Game.Installers
 
             Container.Bind<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
+            
+            Container.Bind<Config>().FromInstance(new Config()).AsSingle();
            
             
             //register states and view

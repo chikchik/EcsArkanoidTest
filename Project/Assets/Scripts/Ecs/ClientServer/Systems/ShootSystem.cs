@@ -1,5 +1,4 @@
-﻿using Fabros.EcsModules.Tick.Other;
-using Game.Ecs.ClientServer.Components;
+﻿using Game.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
@@ -7,6 +6,7 @@ using XFlow.Modules.Box2D.ClientServer;
 using XFlow.Modules.Box2D.ClientServer.Api;
 using XFlow.Modules.Box2D.ClientServer.Components;
 using XFlow.Modules.Box2D.ClientServer.Components.Colliders;
+using XFlow.Modules.Tick.Other;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems

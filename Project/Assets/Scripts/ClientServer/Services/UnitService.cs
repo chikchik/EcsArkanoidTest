@@ -1,5 +1,4 @@
-﻿using Flow.EcsLite;
-using Game.Ecs.ClientServer.Components;
+﻿using Game.Ecs.ClientServer.Components;
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;

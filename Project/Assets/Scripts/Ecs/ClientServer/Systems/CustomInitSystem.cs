@@ -1,8 +1,7 @@
 ﻿using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
-using Game.Fabros.EcsModules.Fire.ClientServer.Components;
-using Flow.EcsLite;
+
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;

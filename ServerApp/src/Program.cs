@@ -6,24 +6,23 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Fabros.Ecs.ClientServer;
-using Fabros.Ecs.ClientServer.Utils;
-using Fabros.Ecs.ClientServer.WorldDiff;
-using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Box2D.ClientServer.Systems;
-using Fabros.EcsModules.Mech.ClientServer;
-using Fabros.EcsModules.Tick.ClientServer.Components;
-using Fabros.EcsModules.Tick.Other;
-using Fabros.P2P;
 using Game.ClientServer;
-using Game.Fabros.Net.ClientServer;
-using Game.Fabros.Net.ClientServer.Ecs.Components;
-using Game.Fabros.Net.ClientServer.Protocol;
-using Flow.EcsLite;
-using UnityEngine;
 using Zenject;
-using Fabros.EcsModules.Tick.ClientServer.Systems;
 using Game.ClientServer.Services;
+using XFlow.EcsLite;
+using XFlow.Modules.Box2D.ClientServer.Systems;
+using XFlow.P2P;
+using XFlow.Net.ClientServer;
+using XFlow.Utils;
+using XFlow.Ecs.ClientServer.WorldDiff;
+using XFlow.Net.ClientServer.Ecs.Components;
+using UnityEngine;
+using XFlow.Net.ClientServer.Protocol;
+using XFlow.Modules.Tick.ClientServer.Components;
+using XFlow.Modules.Tick.Other;
+using XFlow.Ecs.ClientServer.Utils;
+using Fabros.EcsModules.Mech.ClientServer;
+using XFlow.Modules.Tick.ClientServer.Systems;
 
 namespace ConsoleApp
 {
@@ -44,6 +43,7 @@ namespace ConsoleApp
 
     class Program
     {
+        private Config cfg;
         private SyncDebugService syncDebug;
         private ClientWebSocket socket;
 
@@ -162,6 +162,8 @@ namespace ConsoleApp
         {
             try
             {
+                cfg = new Config();
+
                 var container = new DiContainer();
                 container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
                 container.Bind<MechService>().AsSingle();
@@ -176,10 +178,10 @@ namespace ConsoleApp
                 systems.Add(new TickSystem());
                 
                 
-                syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
+                syncDebug = new SyncDebugService(cfg.TMP_HASHES_PATH);
                 WorldLoggerExt.logger = syncDebug.CreateLogger();
 
-                var url = $"{Config.url}/{P2P.ADDR_SERVER.AddressString}";
+                var url = $"{cfg.url}/{P2P.ADDR_SERVER.AddressString}";
                 await socket.ConnectAsync(new Uri(url, UriKind.Absolute), new CancellationToken());
 
                 log($"connected to host\n{url}");
@@ -337,13 +339,6 @@ namespace ConsoleApp
                     
                     var componentData = component.ReadSingleComponent(reader) as IInputComponent;
 
-                    var input = new UserInput
-                    {
-                        PlayerID = playerId,
-                        Component = componentData,
-                        Tick = new Tick(time)
-                    };
-
                     inputService.Input(inputWorld, playerId, time, componentData);
                     //leo.Inputs.Add(input);
                     //world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
@@ -367,7 +362,7 @@ namespace ConsoleApp
 
             //Console.WriteLine($"tick {time} at {TimeUtils.GetUnixTimeMS()}");
             //обновляем мир 1 раз
-            SyncServices.Tick(systems, inputWorld, world, Config.SyncDataLogging);
+            SyncServices.Tick(systems, inputWorld, world, cfg.SyncDataLogging);
         
             //time = world.GetTick();
 

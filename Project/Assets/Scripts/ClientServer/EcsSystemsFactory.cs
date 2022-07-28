@@ -1,16 +1,12 @@
-﻿using Fabros.EcsModules.Grid;
-using Fabros.EcsModules.Mech.ClientServer;
-using Fabros.EcsModules.Tick;
-
+﻿using Fabros.EcsModules.Mech.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
-using Game.Fabros.EcsModules.Fire.ClientServer.Components;
-using Game.Fabros.EcsModules.Fire.ClientServer.Systems;
-using Fabros.EcsModules.Grid.Systems;
 using XFlow.EcsLite;
-using XFlow.Modules.Box2D.Client.Systems;
 using XFlow.Modules.Box2D.ClientServer.Systems;
+using XFlow.Modules.Fire.ClientServer.Components;
+using XFlow.Modules.Fire.ClientServer.Systems;
+using XFlow.Modules.Grid.Systems;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
@@ -19,9 +15,10 @@ using XFlow.Utils;
 #if CLIENT
 using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
-using Game.Fabros.EcsModules.Fire.Client.Systems;
 using Fabros.EcsModules.Mech.Client.Systems;
-using Fabros.EcsModules.Tick.ClientServer.Components;
+using XFlow.Modules.Box2D.Client.Systems;
+using XFlow.Modules.Fire.Client.Systems;
+using XFlow.Modules.Tick.ClientServer.Components;
 #endif
 
 using Zenject;
@@ -126,12 +123,13 @@ namespace Game.ClientServer
 
             container.Register<DestroyAtTimeSystem>();
 
-            
+
 #if CLIENT
             container.RegisterClient<CharacterAnimationSystem>();
+            container.RegisterClient<AddLerpSystem>();
 #endif
 
-            container.Register<AddLerpSystem>();
+
             container.Register<ShootSystem>();
             
             //Основная Box2dSystem должна быть в конце после всех основных систем,

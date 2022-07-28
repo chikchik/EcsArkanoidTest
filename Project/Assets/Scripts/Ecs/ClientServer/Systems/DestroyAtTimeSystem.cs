@@ -1,7 +1,7 @@
-﻿using Fabros.EcsModules.Tick.Other;
-using Game.Ecs.ClientServer.Components;
+﻿using Game.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
+using XFlow.Modules.Tick.Other;
 #if CLIENT
 #endif
 

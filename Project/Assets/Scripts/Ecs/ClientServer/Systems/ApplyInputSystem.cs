@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Fabros.EcsModules.Grid.Other;
 using Fabros.EcsModules.Mech.ClientServer.Components;
-using Fabros.EcsModules.Tick.Other;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.ClientServer.Services;
@@ -10,6 +8,8 @@ using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
+using XFlow.Modules.Grid.Other;
+using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Input;
 using XFlow.Net.ClientServer.Input.proto;

@@ -3,7 +3,7 @@ using Game.View;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using XFlow.Library.States;
+using XFlow.Modules.States;
 
 namespace Game.UI.Mono
 {
