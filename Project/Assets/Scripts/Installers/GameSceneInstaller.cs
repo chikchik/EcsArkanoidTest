@@ -83,6 +83,8 @@ namespace Game.Installers
             
             Container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
             Container.Bind<MechService>().AsSingle();
+            
+            Container.Bind<MyInventoryService>().AsSingle();
            
             
 
