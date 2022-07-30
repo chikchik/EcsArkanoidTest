@@ -43,7 +43,6 @@ namespace ConsoleApp
 
     class Program
     {
-        private Config cfg;
         private SyncDebugService syncDebug;
         private ClientWebSocket socket;
 
@@ -158,19 +157,20 @@ namespace ConsoleApp
             worldInitialized = true;
         }
 
+        protected virtual void CreateSystemsFactory()
+        {
+            var container = new DiContainer();
+            container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
+            container.Bind<MechService>().AsSingle();
+            container.Bind<ComponentsCollection>().FromInstance(components).AsSingle();
+            systemsFactory = new EcsSystemsFactory(container);
+        }
+
         async Task AsyncRun()
         {
             try
             {
-                cfg = new Config();
-
-                var container = new DiContainer();
-                container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
-                container.Bind<MechService>().AsSingle();
-                container.Bind<ComponentsCollection>().FromInstance(components).AsSingle();
-                
-                systemsFactory = new EcsSystemsFactory(container);
-                container.ResolveRoots();
+                CreateSystemsFactory();
 
                 world = new EcsWorld("serv");
                 systems = new EcsSystems(world);
@@ -178,10 +178,10 @@ namespace ConsoleApp
                 systems.Add(new TickSystem());
                 
                 
-                syncDebug = new SyncDebugService(cfg.TMP_HASHES_PATH);
+                syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
                 WorldLoggerExt.logger = syncDebug.CreateLogger();
 
-                var url = $"{cfg.url}/{P2P.ADDR_SERVER.AddressString}";
+                var url = $"{Config.URL}/{P2P.ADDR_SERVER.AddressString}";
                 await socket.ConnectAsync(new Uri(url, UriKind.Absolute), new CancellationToken());
 
                 log($"connected to host\n{url}");
@@ -362,7 +362,7 @@ namespace ConsoleApp
 
             //Console.WriteLine($"tick {time} at {TimeUtils.GetUnixTimeMS()}");
             //обновляем мир 1 раз
-            SyncServices.Tick(systems, inputWorld, world, cfg.SyncDataLogging);
+            SyncServices.Tick(systems, inputWorld, world);
         
             //time = world.GetTick();
 

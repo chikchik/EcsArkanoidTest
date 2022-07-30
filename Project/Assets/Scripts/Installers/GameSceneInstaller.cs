@@ -56,8 +56,11 @@ namespace Game.Installers
 
             Container.Bind<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
+
+
+            Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();
+            Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
             
-            Container.Bind<Config>().FromInstance(new Config()).AsSingle();
            
             
             //register states and view
