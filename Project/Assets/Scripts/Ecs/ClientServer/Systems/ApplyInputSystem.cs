@@ -11,8 +11,8 @@ using XFlow.EcsLite;
 using XFlow.Modules.Grid.Other;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
-using XFlow.Net.ClientServer.Input;
-using XFlow.Net.ClientServer.Input.proto;
+using XFlow.Net.ClientServer.Ecs.Components.Input;
+using XFlow.Net.ClientServer.Ecs.Components.Input.proto;
 using XFlow.Utils;
 using Random = System.Random;
 
