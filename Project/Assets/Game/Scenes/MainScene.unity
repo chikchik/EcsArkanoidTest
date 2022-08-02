@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571336, b: 0.3069219, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6074,6 +6074,90 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b65cc3d5fc5036f448c79d6af0671a3c, type: 3}
+--- !u!1001 &1726766898
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 53
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.8016987
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.363
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.401206
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5328079069284652727, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
+        type: 3}
+      propertyPath: m_Name
+      value: Ammo
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: aadd2cf48fdf84ea2a2a8fd816d57637, type: 3}
 --- !u!1001 &1742427321
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7404,7 +7488,7 @@ PrefabInstance:
     - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
       propertyPath: MultiPlayer
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3448083649790090397, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
