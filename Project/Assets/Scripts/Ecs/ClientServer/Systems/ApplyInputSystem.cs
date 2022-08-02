@@ -4,11 +4,13 @@ using Fabros.EcsModules.Mech.ClientServer.Components;
 using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components.Inventory;
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Modules.Grid.Other;
+using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
@@ -23,8 +25,15 @@ namespace Game.Ecs.ClientServer.Systems
         EcsFilter filter;
         private EcsWorld world;
         private EcsWorld inputWorld;
+
+        private MyInventoryService inventoryService;
         
         List<int> entities = new List<int>();
+
+        public ApplyInputSystem(MyInventoryService myInventoryService)
+        {
+            inventoryService = myInventoryService;
+        }
         
         public void Init(EcsSystems systems)
         {
@@ -154,6 +163,23 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
                 }
+
+                if (!unitEntity.EntityHasComponent<InventoryLinkComponent>(world))
+                {
+                    return;
+                }
+
+                var inventoryLink = unitEntity.EntityGet<InventoryLinkComponent>(world);
+                if (!inventoryLink.Inventory.Unpack(world, out var inventory))
+                {
+                    return;
+                }
+                
+                var berryEntity = world.NewEntity();
+                berryEntity.EntityAdd<AmountComponent>(world).Value = 1;
+                berryEntity.EntityAdd<ItemIdComponent>(world).ItemId = "Berry";
+
+                inventoryService.Add(world, inventory, berryEntity);
             }
         }
         

@@ -1,5 +1,4 @@
-﻿using Fabros.EcsModules.Mech.ClientServer;
-using Game.Ecs.ClientServer.Components;
+﻿using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
 using XFlow.EcsLite;
@@ -10,7 +9,6 @@ using XFlow.Modules.Grid.Systems;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
-using XFlow.Utils;
 
 #if CLIENT
 using Game.Ecs.Client.Systems;
@@ -107,7 +105,7 @@ namespace Game.ClientServer
 #if CLIENT
             container.RegisterClient<CreateViewSystem>();
             container.RegisterClient<FireViewSystem>();
-            container.RegisterClient<InventorySystem>();
+            container.RegisterClient<InventoryImageSystem>();
             container.RegisterClient<CreateMechViewSystem>();
             container.RegisterClient<MechAnimationSystem>();
 #endif
@@ -139,7 +137,7 @@ namespace Game.ClientServer
             container.Register<Box2DCreateContactsSystem>();
             container.Register<Box2DUpdateInternalObjectsSystem>();
             container.Register<Box2DUpdateSystem>();
-            container.Register<BulletContactSystem>();      
+            container.Register<BulletContactSystem>();
             
             
 

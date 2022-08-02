@@ -6,6 +6,8 @@ using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.State;
 using XFlow.EcsLite;
+using XFlow.Modules.Inventory.Client.Services;
+using XFlow.Modules.Inventory.ClientServer.Enums;
 using XFlow.Modules.States;
 using XFlow.Modules.Tick.ClientServer.Components;
 
@@ -23,10 +25,12 @@ namespace Game.UI
         private ClientServerServices clientServerServices;
         
         public UI(
-            EcsWorld world, MainUI view, 
+            EcsWorld world, 
+            MainUI view, 
             States states,
             PlayerControlService controlService,
-            ClientServerServices clientServerServices)
+            ClientServerServices clientServerServices,
+            InventoryFactory inventoryFactory)
         {
             this.View = view;
             this.world = world;
@@ -47,6 +51,11 @@ namespace Game.UI
             view.MechButton.onClick.AddListener(() =>
             {
                 states.Push<MechInfoState>();
+            });
+
+            view.InventoryButton.onClick.AddListener(() =>
+            {
+                inventoryFactory.CreateInventory(view.transform);
             });
             
             view.ShotButton.onClick.AddListener(() =>

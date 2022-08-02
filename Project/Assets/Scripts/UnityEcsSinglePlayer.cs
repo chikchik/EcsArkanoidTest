@@ -5,10 +5,14 @@ using Game.Ecs.ClientServer.Components;
 using Game.Ecs.View.Systems;
 
 using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components.Inventory;
 using Game.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using XFlow.EcsLite;
+using XFlow.Modules.Inventory.Client.Services;
+using XFlow.Modules.Inventory.ClientServer.Components;
+using XFlow.Modules.Inventory.Demo.UI;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Systems;
 using XFlow.Modules.Tick.Other;
@@ -92,6 +96,18 @@ namespace Game
             
             world.AddUnique(new MainPlayerIdComponent{value = playerId});
             unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
+
+            var inventory = world.NewEntity();
+            inventory.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+
+            unitEntity.EntityAddComponent<InventoryLinkComponent>(world).Inventory = world.PackEntity(inventory);
+            
+            /*
+            var trashEntity = world.NewEntity();
+            trashEntity.EntityAddComponent<TrashComponent>(world);
+
+            uiInventory.Init(inventory, trashEntity, world); 
+            */
         }
 
         public static bool IsPointerOverUIObject()

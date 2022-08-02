@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.View;
-
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer.Components;
@@ -191,11 +190,10 @@ namespace Game
                 ref var collectableComponent = ref entity.EntityAdd<CollectableComponent>(world);
                 collectableComponent.isCollected = false;
                 
-                
                 entity.EntityAdd<CollectableTargetComponent>(world).targetObject = view.gameObject;
             });
             
-            var unit = Object.FindObjectOfType<Global>().characterPrefab;
+            var unit = Object.FindObjectOfType<Global>().CharacterPrefab;
             
             var clips = unit.Animator.runtimeAnimatorController.animationClips;
             //var clip = clips.First(clip => clip.name == "Walking");
