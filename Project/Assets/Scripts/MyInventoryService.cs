@@ -1,9 +1,9 @@
 ﻿using XFlow.EcsLite;
-using XFlow.Modules.Inventory.ClientServer;
+using XFlow.Modules.Inventory.ClientServer.Systems;
 
 namespace Game
 {
-    public class MyInventoryService:InventoryService
+    public class MyInventoryService : InventoryService
     {
         public override bool IsItemStackable(EcsWorld world, int itemEntity)
         {
