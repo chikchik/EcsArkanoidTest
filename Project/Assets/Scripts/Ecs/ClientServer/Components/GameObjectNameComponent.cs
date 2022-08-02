@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using Fabros.Ecs.ClientServer.WorldDiff;
 
 namespace Game.Ecs.ClientServer.Components
 {

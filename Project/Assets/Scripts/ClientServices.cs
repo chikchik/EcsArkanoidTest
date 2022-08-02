@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
-using Fabros.Ecs.Client.Components;
-using Fabros.Ecs.ClientServer.Components;
-using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Box2D.Client;
-using Fabros.EcsModules.Box2D.ClientServer.Components.Joints;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-using Game.Fabros.EcsModules.Fire.ClientServer.Components;
-using Game.Fabros.Net.ClientServer.Ecs.Components;
 using Game.View;
-using Flow.EcsLite;
+
 using UnityEngine;
+using XFlow.Ecs.Client.Components;
+using XFlow.Ecs.ClientServer.Components;
+using XFlow.EcsLite;
+using XFlow.Modules.Box2D.Client;
+using XFlow.Modules.Box2D.ClientServer.Components.Joints;
+using XFlow.Modules.Fire.ClientServer.Components;
+using XFlow.Net.ClientServer.Ecs.Components;
+using XFlow.Utils;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -30,9 +31,7 @@ namespace Game
 
         public static void InitializeNewWorldFromScene(EcsWorld world)
         {
-            var entityCollectionSystem = world.NewEntity();
-            ref var entityCollectionComponent = ref entityCollectionSystem.EntityAdd<EntityCollectionComponent>(world);
-            var entities = entityCollectionComponent.entities = new Dictionary<GameObject, int>();
+            var entities = new Dictionary<GameObject, int>();
 
             int NameId = 0;
             int GetOrCreateGameEntity(GameObject go)

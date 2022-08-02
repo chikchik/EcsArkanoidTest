@@ -1,19 +1,19 @@
-using Fabros.Ecs.ClientServer.WorldDiff;
-using Fabros.EcsModules.Box2D.ClientServer.Systems;
 using Fabros.EcsModules.Mech.ClientServer;
-using Flow.EcsLite;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Dev;
-using Game.Fabros.Net.Client;
-using Game.Fabros.Net.ClientServer;
 using Game.State;
 using Game.UI;
 using Game.UI.Mono;
 using Game.UIView;
-using Game.Utils.States;
 using Game.View;
 using UnityEngine;
+using XFlow.Ecs.ClientServer.WorldDiff;
+using XFlow.EcsLite;
+using XFlow.Modules.Box2D.ClientServer.Systems;
+using XFlow.Modules.States;
+using XFlow.Net.Client;
+using XFlow.Net.ClientServer;
 using Zenject;
 
 namespace Game.Installers
@@ -31,6 +31,7 @@ namespace Game.Installers
 
             Container.Bind<CharacterView>().FromInstance(global.characterPrefab).AsSingle();
             Container.Bind<BulletView>().FromInstance(global.BulletPrefab).AsSingle();
+            Container.Bind<ParticleSystem>().FromInstance(global.FireParticles).AsSingle();
             
             Container.Bind<FootprintView>().WithId("left").FromInstance(global.LeftFootprintPrefab).AsCached();
             Container.Bind<FootprintView>().WithId("right").FromInstance(global.RightFootprintPrefab).AsCached();
@@ -50,6 +51,11 @@ namespace Game.Installers
 
             Container.Bind<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
+
+
+            Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();
+            Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
+            
            
             
             //register states and view
@@ -75,6 +81,8 @@ namespace Game.Installers
             
             Container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
             Container.Bind<MechService>().AsSingle();
+            
+            Container.Bind<MyInventoryService>().AsSingle();
            
             
 

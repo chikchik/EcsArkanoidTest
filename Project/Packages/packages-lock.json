@@ -1,30 +1,5 @@
 {
   "dependencies": {
-    "com.cysharp.unitask": {
-      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "27604496ca1b27b93d78dd2257a50158fab2bc33"
-    },
-    "com.fabros.ecs": {
-      "version": "file:../../../module-ecs/FabrosEcsPackage",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
-    "com.fabros.ecs.box2d": {
-      "version": "file:../../../module-ecs-box2d/FabrosEcsBox2DPackage",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
-    "com.fabros.ecs.mech": {
-      "version": "file:../../module-ecs-mech/MechEcsPackage",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.unity.burst": {
       "version": "1.6.6",
       "depth": 1,
@@ -212,6 +187,24 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "com.xflow.ecs": {
+      "version": "file:../../../module-ecs/Package",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "com.xflow.ecs.box2d": {
+      "version": "file:../../../module-ecs-box2d/Package",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "com.xflow.ecs.central": {
+      "version": "file:../../../module-ecs-central/Package",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

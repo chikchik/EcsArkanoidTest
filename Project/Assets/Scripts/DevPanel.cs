@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using XFlow.Utils;
 
 namespace Game
 {
@@ -31,25 +32,26 @@ namespace Game
                 input.text = "1963";
            
 
+                /*
                 sub.button("connect MainScene", (btn) =>
                 {
-                    Config.ROOM_B = input.text;
+                    Config.RoomPartB = input.text;
                     SceneManager.LoadScene("MainScene");
                 });
             
                 sub.button("connect MiniScene", (btn) =>
                 {
-                    Config.ROOM_B = input.text;
+                    Config.RoomPartB = input.text;
                 
                     SceneManager.LoadScene("MiniScene");
                 });
             
                 sub.button("connect HugeScene", (btn) =>
                 {
-                    Config.ROOM_B = input.text;
+                    Config.RoomPartB = input.text;
                 
                     SceneManager.LoadScene("HugeScene");
-                });
+                });*/
             });
         
             root.toggleBool("multiplayer", () => settings.MultiPlayer, b =>

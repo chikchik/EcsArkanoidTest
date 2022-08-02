@@ -1,11 +1,12 @@
-﻿using Fabros.Ecs.ClientServer.WorldDiff;
-using Game.ClientServer;
+﻿using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Ecs.View.Systems;
-using Game.Fabros.Net.Client;
-using Flow.EcsLite;
+
 using Game.Utils;
 using UnityEngine;
+using XFlow.Ecs.ClientServer.WorldDiff;
+using XFlow.EcsLite;
+using XFlow.Net.Client;
 using Zenject;
 
 namespace Game

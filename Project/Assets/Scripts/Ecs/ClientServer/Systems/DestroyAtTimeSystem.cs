@@ -1,13 +1,8 @@
-﻿using Fabros.Ecs.ClientServer;
-using Fabros.Ecs.ClientServer.Utils;
-using Fabros.Ecs.Utils;
-using Fabros.EcsModules.Tick.Other;
-using Game.Ecs.ClientServer.Components;
-using Game.Fabros.Net.ClientServer;
-using Flow.EcsLite;
-using UnityEngine;
+﻿using Game.Ecs.ClientServer.Components;
+using XFlow.Ecs.ClientServer.Utils;
+using XFlow.EcsLite;
+using XFlow.Modules.Tick.Other;
 #if CLIENT
-using Fabros.Ecs.Client.Components;
 #endif
 
 namespace Game.Ecs.ClientServer.Systems

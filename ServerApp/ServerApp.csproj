@@ -5,12 +5,12 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<RootNamespace>ServerApp</RootNamespace>
 		
-		<FabrosEcsPackage>..\..\module-ecs\FabrosEcsPackage</FabrosEcsPackage>
+		<XFlowEcsPackage>..\..\module-ecs\Package</XFlowEcsPackage>
+		<XFlowCentral>..\..\module-ecs-central</XFlowCentral>		
+		<XFlowBox2D>..\..\module-ecs-box2d\Package\XFlow</XFlowBox2D>
+
 		<UnityScripts>..\project\Assets\Scripts</UnityScripts>
-		<Box2D>..\..\module-ecs-box2d\FabrosEcsBox2DPackage\Fabros\EcsModules\Box2D</Box2D>
-		<Mech>..\module-ecs-mech\MechEcsPackage\Fabros\EcsModules\Mech</Mech>
 		<StartupObject>ConsoleApp.Program</StartupObject>
-		
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,38 +26,30 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="$(FabrosEcsPackage)\**\*.cs">
+		<Compile Include="$(XFlowEcsPackage)\**\*.cs">
 			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
-		<Compile Remove="$(FabrosEcsPackage)\Flow\UnityEditor\**"></Compile>
-		<Compile Remove="$(FabrosEcsPackage)\Flow\unileo\**"></Compile>		
-		<Compile Remove="$(FabrosEcsPackage)\Fabros\Ecs\Client\**"></Compile>
+		<Compile Remove="$(XFlowEcsPackage)\XFlow\UnityEditor\**"></Compile>
+		<Compile Remove="$(XFlowEcsPackage)\XFlow\UniLeo\**"></Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="$(UnityScripts)\Fabros\**\*.cs">
-			<Link>External\FabrosScripts\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		<Compile Include="$(XFlowCentral)\Package\XFlow\**\*.cs">
+			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
-		<Compile Remove="$(UnityScripts)\Fabros\EcsModules\Fire\Client\**" />
-		<Compile Remove="$(UnityScripts)\Fabros\EcsModules\Box2D\Client\**" />
-		<Compile Remove="$(UnityScripts)\Fabros\Net\Client\**" />
+		<Compile Include="$(XFlowCentral)\UnityEngine\**\*.cs">
+			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		</Compile>
+		<Compile Remove="$(XFlowCentral)\**\Client\**"></Compile>
+		<Compile Remove="$(XFlowCentral)\Package\XFlow\Modules\States\**"></Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="$(Box2D)\**\*.cs">
-			<Link>External\Box2D\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+		<Compile Include="$(XFlowBox2D)\**\*.cs">
+			<Link>External\XFlowBox2D\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
-		<Compile Remove="$(Box2D)\Client\**" />
+		<Compile Remove="$(XFlowBox2D)\**\Client\**" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Include="$(Mech)\**\*.cs">
-			<Link>External\Mech\%(RecursiveDir)/%(FileName)%(Extension)</Link>
-		</Compile>
-		<Compile Remove="$(Mech)\Client\**" />
-	</ItemGroup>
-
-
 
 	<ItemGroup>
 		<Compile Include="$(UnityScripts)\ClientServer\**\*.cs">
