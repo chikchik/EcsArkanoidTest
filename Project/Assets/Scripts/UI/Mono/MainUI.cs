@@ -20,6 +20,7 @@ namespace Game.UI.Mono
         public GridLayoutGroup InventoryGrid;
         public ConnectView Connect;
         public TMP_Text FoodText;
+        public TMP_Text AmmoText;
         public TMP_Text DebugText;
 
         public MechInfoView mechInfo;

@@ -13,6 +13,7 @@ namespace Game.UI
 {
     public class UI: 
         EventsSystem<FoodCollectedComponent>.IAnyComponentChangedListener,
+        EventsSystem<AmmoCollectedComponent>.IAnyComponentChangedListener,
         EventsSystem<WeaponComponent>.IAnyComponentChangedListener,
         EventsSystem<TickComponent>.IAnyComponentChangedListener
     {
@@ -55,11 +56,13 @@ namespace Game.UI
             });
 
             view.FoodText.text = "";
+            view.AmmoText.text = "";
             view.ShotButton.gameObject.SetActive(false);
 
             var listener = world.CreateAnyListener();
             listener.SetAnyChangedListener<WeaponComponent>(this);
             listener.SetAnyChangedListener<FoodCollectedComponent>(this);
+            listener.SetAnyChangedListener<AmmoCollectedComponent>(this);
             listener.SetAnyChangedListener<TickComponent>(this);
         }
 
@@ -86,6 +89,14 @@ namespace Game.UI
                 return;
             
             View.FoodText.text = $"Food Collected {data.Value}";
+        }
+        
+        public void OnAnyComponentChanged(EcsWorld world, int entity, AmmoCollectedComponent data, bool added)
+        {
+            if (!IsPlayerUnitEntity(entity))
+                return;
+
+            View.AmmoText.text = data.Value.ToString();
         }
 
         public void OnAnyComponentChanged(EcsWorld _, int entity, WeaponComponent data, bool added)
