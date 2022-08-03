@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Fabros.EcsModules.Mech.ClientServer.Components;
-using Game.ClientServer;
-using Game.Ecs.ClientServer.Components;
 using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Inventory;
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
@@ -16,7 +15,6 @@ using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
 using XFlow.Net.ClientServer.Ecs.Components.Input.proto;
 using XFlow.Utils;
-using Random = System.Random;
 
 namespace Game.Ecs.ClientServer.Systems
 {
@@ -174,7 +172,7 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     return;
                 }
-                
+
                 var berryEntity = world.NewEntity();
                 berryEntity.EntityAdd<AmountComponent>(world).Value = 1;
                 berryEntity.EntityAdd<ItemIdComponent>(world).ItemId = "Berry";

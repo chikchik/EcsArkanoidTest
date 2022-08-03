@@ -3,7 +3,7 @@ using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Utils;
 
-namespace Game
+namespace Game.ClientServer.Services
 {
     public class MyInventoryService : InventoryService
     {

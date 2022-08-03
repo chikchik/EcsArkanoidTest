@@ -13,7 +13,6 @@ using XFlow.Modules.Inventory.ClientServer.Enums;
 using XFlow.Modules.States;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Net.ClientServer;
-using XFlow.Utils;
 
 namespace Game.UI
 {
@@ -74,8 +73,19 @@ namespace Game.UI
                 {
                     return;
                 }
+                
+                var poolTrashLink = world.GetPool<TrashLinkComponent>();
+                if (!poolTrashLink.Has(unitEntity))
+                {
+                    return;
+                }
 
-                inventory.Init(inventoryEntity, world.NewEntity(),world);
+                if (!poolTrashLink.Get(unitEntity).Trash.Unpack(world, out var trashEntity))
+                {
+                    return;
+                }
+
+                inventory.Init(inventoryEntity, trashEntity, world);
             });
             
             view.ShotButton.onClick.AddListener(() =>

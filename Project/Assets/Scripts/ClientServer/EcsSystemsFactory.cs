@@ -16,6 +16,7 @@ using Game.Ecs.Client.Systems.Inventory;
 using Fabros.EcsModules.Mech.Client.Systems;
 using XFlow.Modules.Box2D.Client.Systems;
 using XFlow.Modules.Fire.Client.Systems;
+using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Components;
 #endif
 
@@ -121,7 +122,6 @@ namespace Game.ClientServer
 
             container.Register<DestroyAtTimeSystem>();
 
-
 #if CLIENT
             container.RegisterClient<CharacterAnimationSystem>();
             container.RegisterClient<AddLerpSystem>();
@@ -157,6 +157,8 @@ namespace Game.ClientServer
             
 #if CLIENT
             container.Register<EventsSystem<MovingComponent>>();
+            container.Register<EventsSystem<InventorySlotComponent>>();
+            container.Register<EventsSystem<ActiveInventoryCategoryComponent>>();
             container.Register<EventsSystem<TickComponent>>();
             container.Register<EventsSystem<ControlsMechComponent>>();
             container.RegisterClient<CreateViewSystem>();

@@ -162,6 +162,7 @@ namespace ConsoleApp
             var container = new DiContainer();
             container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
             container.Bind<MechService>().AsSingle();
+            container.Bind<MyInventoryService>().AsSingle();
             container.Bind<ComponentsCollection>().FromInstance(components).AsSingle();
             systemsFactory = new EcsSystemsFactory(container);
         }

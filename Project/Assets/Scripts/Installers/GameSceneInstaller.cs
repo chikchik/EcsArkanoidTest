@@ -1,4 +1,3 @@
-using Demo.Client.Interfaces;
 using Demo.Client.Services;
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
@@ -13,6 +12,7 @@ using UnityEngine;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Systems;
+using XFlow.Modules.Inventory.Client.Interfaces;
 using XFlow.Modules.Inventory.Client.Services;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
