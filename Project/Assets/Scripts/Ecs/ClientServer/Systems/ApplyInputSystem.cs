@@ -138,10 +138,10 @@ namespace Game.Ecs.ClientServer.Systems
                 return;
             
             var entity = entities[0];
-
             if (entity.EntityHas<SpawnGunComponent>(world))
             {
                 unitEntity.EntityGetOrCreateRef<WeaponComponent>(world);
+                TryHideCollected(entity);
             }
             
             if (entity.EntityHas<BushComponent>(world))
@@ -149,11 +149,22 @@ namespace Game.Ecs.ClientServer.Systems
                 entity.EntityDel<InteractableComponent>(world);
                 unitEntity.EntityGetOrCreateRef<FoodCollectedComponent>(world).Value += 1;
                 ObjectiveService.Triggered(world, entity);
+                TryHideCollected(entity);
+            }
 
-                if (entity.EntityHas<CollectableComponent>(world))
-                {
-                    entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
-                }
+            if (entity.EntityHas<AmmoComponent>(world))
+            {
+                unitEntity.EntityGetOrCreateRef<AmmoCollectedComponent>(world).Value += 10;
+                entity.EntityDel<InteractableComponent>(world);
+                TryHideCollected(entity);
+            }
+        }
+        
+        void TryHideCollected(int entity)
+        {
+            if (entity.EntityHas<CollectableComponent>(world))
+            {
+                entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
             }
         }
         

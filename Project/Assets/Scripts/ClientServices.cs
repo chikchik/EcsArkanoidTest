@@ -195,6 +195,18 @@ namespace Game
                 entity.EntityAdd<CollectableTargetComponent>(world).targetObject = view.gameObject;
             });
             
+            
+            ForEachObject<AmmoView>(view =>
+            {
+                var entity = GetOrCreateGameEntity(view.gameObject);
+                entity.EntityAdd<AmmoComponent>(world);
+                entity.EntityAdd<InteractableComponent>(world);
+                entity.EntityAdd<PositionComponent>(world).value = view.transform.position;
+                entity.EntityAdd<CollectableComponent>(world).isCollected = false;;
+                entity.EntityAdd<CollectableTargetComponent>(world).targetObject = view.gameObject;
+                entity.EntityAdd<RadiusComponent>(world).radius = view.transform.lossyScale.x / 2f;
+            });
+            
             var unit = Object.FindObjectOfType<Global>().characterPrefab;
             
             var clips = unit.Animator.runtimeAnimatorController.animationClips;

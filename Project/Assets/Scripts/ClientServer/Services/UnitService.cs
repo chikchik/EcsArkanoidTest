@@ -19,6 +19,7 @@ namespace Game.ClientServer.Services
             entity.EntityAddComponent<LookDirectionComponent>(world).value = new Vector3(0,0,1);
             entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(0, 0, 0);
             entity.EntityAddComponent<FoodCollectedComponent>(world).Value = 0;
+            entity.EntityAddComponent<AmmoCollectedComponent>(world).Value = 0;
             entity.EntityAddComponent<Rotation2DComponent>(world);
 
 

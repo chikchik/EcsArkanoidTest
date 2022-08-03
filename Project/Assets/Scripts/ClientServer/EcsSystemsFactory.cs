@@ -154,6 +154,7 @@ namespace Game.ClientServer
             container.Register<EventsSystem<ObjectiveCompletedComponent>>();
             container.Register<EventsSystem<GateOpenedComponent>>();
             container.Register<EventsSystem<FoodCollectedComponent>>();
+            container.Register<EventsSystem<AmmoCollectedComponent>>();
             container.Register<EventsSystem<PushingComponent>>();
             container.Register<EventsSystem<CantMoveComponent>>();
             
