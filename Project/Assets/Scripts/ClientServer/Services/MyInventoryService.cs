@@ -25,5 +25,11 @@ namespace Game.ClientServer.Services
             var itemEntity = world.NewEntity();
             return itemEntity;
         }
+
+        protected override void OnAddCompleted(EcsWorld world, int inventoryEntity, int itemEntity, int amount)
+        {
+            base.OnAddCompleted(world, inventoryEntity, itemEntity, amount);
+            OnItemSlotRemove(world, inventoryEntity, itemEntity);
+        }
     }
 }
