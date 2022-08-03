@@ -41,6 +41,7 @@
 			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
 		<Compile Remove="$(XFlowCentral)\**\Client\**"></Compile>
+		<Compile Remove="$(XFlowCentral)\**\UnityEditor\**"></Compile>
 		<Compile Remove="$(XFlowCentral)\Package\XFlow\Modules\States\**"></Compile>
 	</ItemGroup>
 
@@ -49,6 +50,7 @@
 			<Link>External\XFlowBox2D\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
 		<Compile Remove="$(XFlowBox2D)\**\Client\**" />
+		<Compile Remove="Container\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -58,6 +60,11 @@
 		<Compile Include="$(UnityScripts)\Ecs\ClientServer\**\*.cs">
 			<Link>UnityScripts\Ecs\ClientServer\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Remove="Container\**" />
+	  <None Remove="Container\**" />
 	</ItemGroup>
 
 
