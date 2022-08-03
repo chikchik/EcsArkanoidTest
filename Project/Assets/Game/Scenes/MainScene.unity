@@ -7901,6 +7901,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2333436472338061716, guid: 80777c791d67b1a4ba63379591253e96,
         type: 3}
+    - target: {fileID: 3448083650777489238, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: InventoryStaticData
+      value: 
+      objectReference: {fileID: 11400000, guid: 1e6b90ea9e66c504da23a0213d2a45ba,
+        type: 2}
     - target: {fileID: 3448083650880925113, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
       propertyPath: m_AnchorMax.y

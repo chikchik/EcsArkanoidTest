@@ -4,12 +4,16 @@ using Game.UI.Mono;
 
 using Game.ClientServer;
 using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components.Inventory;
 using Game.State;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.Client.Services;
+using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Inventory.ClientServer.Enums;
 using XFlow.Modules.States;
 using XFlow.Modules.Tick.ClientServer.Components;
+using XFlow.Net.ClientServer;
+using XFlow.Utils;
 
 namespace Game.UI
 {
@@ -55,7 +59,23 @@ namespace Game.UI
 
             view.InventoryButton.onClick.AddListener(() =>
             {
-                inventoryFactory.CreateInventory(view.transform);
+                var inventory = inventoryFactory.CreateInventory(view.transform);
+
+                var playerId = world.GetUnique<MainPlayerIdComponent>().value;
+                var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerId);
+
+                var poolInventoryLink = world.GetPool<InventoryLinkComponent>();
+                if (!poolInventoryLink.Has(unitEntity))
+                {
+                    return;
+                }
+
+                if (!poolInventoryLink.Get(unitEntity).Inventory.Unpack(world, out var inventoryEntity))
+                {
+                    return;
+                }
+
+                inventory.Init(inventoryEntity, world.NewEntity(),world);
             });
             
             view.ShotButton.onClick.AddListener(() =>
