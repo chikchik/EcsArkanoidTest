@@ -56,7 +56,7 @@ namespace Game.UI
             });
 
             view.FoodText.text = "";
-            view.AmmoText.text = "";
+            view.AmmoText.text = "0";
             view.ShotButton.gameObject.SetActive(false);
 
             var listener = world.CreateAnyListener();

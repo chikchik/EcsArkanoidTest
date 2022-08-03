@@ -23,9 +23,11 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var entity in filter)
             {
                 ref var shootingComponent = ref poolShooting.GetRef(entity);
-                if (shootingComponent.ShootAtTime < tm && !shootingComponent.ShootMade)
+                ref var ammo = ref entity.EntityGetRef<AmmoCollectedComponent>(world);
+                if (shootingComponent.ShootAtTime < tm && !shootingComponent.ShootMade && ammo.Value > 0)
                 {
                     shootingComponent.ShootMade = true;
+                    ammo.Value--;
 
                     var shoot = entity.EntityGet<ShootingComponent>(world);
 
