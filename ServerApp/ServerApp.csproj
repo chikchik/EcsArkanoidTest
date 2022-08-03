@@ -5,9 +5,9 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<RootNamespace>ServerApp</RootNamespace>
 		
-		<XFlowEcsPackage>..\..\module-ecs\Package</XFlowEcsPackage>
-		<XFlowCentral>..\..\module-ecs-central</XFlowCentral>		
-		<XFlowBox2D>..\..\module-ecs-box2d\Package\XFlow</XFlowBox2D>
+		<XFlowEcsPackage>..\Submodules\module-ecs\Package</XFlowEcsPackage>
+		<XFlowCentral>..\Submodules\module-ecs-central</XFlowCentral>		
+		<XFlowBox2D>..\Submodules\module-ecs-box2d\Package\XFlow</XFlowBox2D>
 
 		<UnityScripts>..\project\Assets\Scripts</UnityScripts>
 		<StartupObject>ConsoleApp.Program</StartupObject>

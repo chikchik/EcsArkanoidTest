@@ -189,19 +189,19 @@
       "url": "https://packages.unity.com"
     },
     "com.xflow.ecs": {
-      "version": "file:../../../module-ecs/Package",
+      "version": "file:../../Submodules/module-ecs/Package",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "com.xflow.ecs.box2d": {
-      "version": "file:../../../module-ecs-box2d/Package",
+      "version": "file:../../Submodules/module-ecs-box2d/Package",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "com.xflow.ecs.central": {
-      "version": "file:../../../module-ecs-central/Package",
+      "version": "file:../../Submodules/module-ecs-central/Package",
       "depth": 0,
       "source": "local",
       "dependencies": {}
