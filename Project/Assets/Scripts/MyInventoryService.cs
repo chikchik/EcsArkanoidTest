@@ -1,5 +1,5 @@
 ﻿using XFlow.EcsLite;
-using XFlow.Modules.Inventory.ClientServer.Systems;
+using XFlow.Modules.Inventory.ClientServer;
 
 namespace Game
 {
