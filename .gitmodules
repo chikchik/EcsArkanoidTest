@@ -1,3 +1,10 @@
 [submodule "Submodules/module-ecs-central"]
 	path = Submodules/module-ecs-central
 	url = ../module-ecs-central
+[submodule "Submodules/module-ecs"]
+	path = Submodules/module-ecs
+	url = git@bitbucket.org:xflowltd/module-ecs
+	branch = dev
+[submodule "Submodules/module-ecs-box2d"]
+	path = Submodules/module-ecs-box2d
+	url = git@bitbucket.org:xflowltd/module-ecs-box2d
