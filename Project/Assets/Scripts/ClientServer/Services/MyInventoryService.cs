@@ -1,7 +1,6 @@
 ﻿using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.Inventory.ClientServer.Components;
-using XFlow.Modules.Inventory.Demo.Components;
 using XFlow.Utils;
 
 namespace Game.ClientServer.Services
@@ -32,7 +31,7 @@ namespace Game.ClientServer.Services
             base.OnAddCompleted(world, inventoryEntity, itemEntity, amount);
             if (GetEntityAmount(world, itemEntity) == 0)
             {
-                itemEntity.EntityAdd<DeathEventComponent>(world);
+                itemEntity.EntityAdd<EntityRemoveEventComponent>(world);
             }
         }
     }
