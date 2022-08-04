@@ -1,13 +1,11 @@
-﻿using System;
-using Game.ClientServer;
-using Game.Ecs.ClientServer.Components;
+﻿using Game.Ecs.ClientServer.Components;
 using Game.View;
-
 using Game.ClientServer.Services;
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
+using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
@@ -17,7 +15,7 @@ using Zenject;
 
 namespace Game
 {
-    public class PlayerControlService
+    public class PlayerControlService : IMoveItemService
     {
         private EcsWorld inputWorld;
         private EcsWorld world;
@@ -27,6 +25,7 @@ namespace Game
         public PlayerControlService(
             [Inject(Id = "input")] EcsWorld inputWorld,
             [InjectOptional] IInputService input,
+            IInventoryService inventoryService,
             EcsWorld world)
         {
             this.inputWorld = inputWorld;
@@ -81,6 +80,18 @@ namespace Game
                 return;
 
             Apply(new InputMechEnterLeaveComponent());
+        }
+
+        public void MoveItem(int inventory, int item, int amount)
+        {
+            var component = new MoveItemComponent
+            {
+                Inventory = world.PackEntity(inventory),
+                Item = world.PackEntity(item),
+                Amount = amount
+            };
+            
+            Apply(component);
         }
         
         public void MoveToDirection(Vector3 dir)

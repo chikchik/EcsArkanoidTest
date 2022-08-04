@@ -6,6 +6,7 @@ using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Modules.Fire.ClientServer.Components;
 using XFlow.Modules.Fire.ClientServer.Systems;
 using XFlow.Modules.Grid.Systems;
+using XFlow.Modules.Inventory.ClientServer.Systems;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
@@ -17,6 +18,7 @@ using Fabros.EcsModules.Mech.Client.Systems;
 using XFlow.Modules.Box2D.Client.Systems;
 using XFlow.Modules.Fire.Client.Systems;
 using XFlow.Modules.Inventory.ClientServer.Components;
+using XFlow.Modules.Inventory.Demo.Components;
 using XFlow.Modules.Tick.ClientServer.Components;
 #endif
 
@@ -50,7 +52,6 @@ namespace Game.ClientServer
 #if CLIENT
             container.RegisterClient<DetectPlayerIdChangesSystem>();
 #endif
-            
             container.RegisterServer<CustomInitSystem>();
             container.RegisterServer<JoinPlayerSystem>();
             
@@ -159,10 +160,12 @@ namespace Game.ClientServer
             container.Register<EventsSystem<MovingComponent>>();
             container.Register<EventsSystem<InventorySlotComponent>>();
             container.Register<EventsSystem<ActiveInventoryCategoryComponent>>();
+            container.Register<EventsSystem<DeathEventComponent>>();
             container.Register<EventsSystem<TickComponent>>();
             container.Register<EventsSystem<ControlsMechComponent>>();
             container.RegisterClient<CreateViewSystem>();
 #endif
+            container.Register<DeathSystem>();
             //write final Box2d transforms to components
             container.Register<Box2DWriteBodiesToComponentsSystem>();
         }

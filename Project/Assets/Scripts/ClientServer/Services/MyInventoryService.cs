@@ -1,6 +1,7 @@
 ﻿using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.Inventory.ClientServer.Components;
+using XFlow.Modules.Inventory.Demo.Components;
 using XFlow.Utils;
 
 namespace Game.ClientServer.Services
@@ -29,7 +30,10 @@ namespace Game.ClientServer.Services
         protected override void OnAddCompleted(EcsWorld world, int inventoryEntity, int itemEntity, int amount)
         {
             base.OnAddCompleted(world, inventoryEntity, itemEntity, amount);
-            OnItemSlotRemove(world, inventoryEntity, itemEntity);
+            if (GetEntityAmount(world, itemEntity) == 0)
+            {
+                itemEntity.EntityAdd<DeathEventComponent>(world);
+            }
         }
     }
 }

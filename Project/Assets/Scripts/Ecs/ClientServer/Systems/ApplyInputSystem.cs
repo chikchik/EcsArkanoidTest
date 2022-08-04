@@ -51,6 +51,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolPlayer      = inputWorld.GetPool<InputPlayerComponent>();
             var poolInputMoveDir= inputWorld.GetPool<InputMoveDirectionComponent>();
             var poolInputMoveTo = inputWorld.GetPool<InputMoveToPointComponent>();
+            var poolMoveItem = inputWorld.GetPool<MoveItemComponent>();
             var poolInputAction = inputWorld.GetPool<InputActionComponent>();
             var poolInputKick   = inputWorld.GetPool<InputKickComponent>();
             var poolInputTick   = inputWorld.GetPool<InputTickComponent>();
@@ -111,6 +112,11 @@ namespace Game.Ecs.ClientServer.Systems
                 if (inputEntity.EntityHas<InputMechEnterLeaveComponent>(inputWorld))
                 {
                     EnterLeaveMech(unitEntity);
+                }
+
+                if (inputEntity.EntityHas<MoveItemComponent>(inputWorld))
+                {
+                    MoveItem(poolMoveItem.Get(inputEntity));
                 }
             }
         }
@@ -266,6 +272,21 @@ namespace Game.Ecs.ClientServer.Systems
             ref var targetPositionComponent = ref entity.EntityGetOrCreateRef<TargetPositionComponent>(world);
             targetPositionComponent.Value = pos;
             
+        }
+        
+        private void MoveItem(MoveItemComponent data)
+        {
+            if (!data.Inventory.Unpack(world, out var inventory))
+            {
+                return;
+            }
+            
+            if (!data.Item.Unpack(world, out var item))
+            {
+                return;
+            }
+
+            inventoryService.Add(world, inventory, item, data.Amount);
         }
     }
 }

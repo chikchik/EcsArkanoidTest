@@ -14,6 +14,7 @@ using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Modules.Inventory.Client.Interfaces;
 using XFlow.Modules.Inventory.Client.Services;
+using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
@@ -58,9 +59,8 @@ namespace Game.Installers
             Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();
             Container.Bind<UI.UI>().AsSingle().NonLazy();
 
-            Container.Bind<PlayerControlService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
-
 
             Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();
             Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();

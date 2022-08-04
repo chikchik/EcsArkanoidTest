@@ -22,6 +22,7 @@ using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
 using XFlow.Ecs.ClientServer.Utils;
 using Fabros.EcsModules.Mech.ClientServer;
+using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.Tick.ClientServer.Systems;
 
 namespace ConsoleApp
