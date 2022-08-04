@@ -41,7 +41,7 @@ namespace ConsoleApp
         }
     }
 
-    class Program
+    public class Program
     {
         private SyncDebugService syncDebug;
         private ClientWebSocket socket;
@@ -67,6 +67,9 @@ namespace ConsoleApp
 
         private TickrateConfigComponent config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1 };
 
+        private Task runTask;
+        private CancellationToken runCancellationToken;
+        private CancellationTokenSource runCancellationTokenSource;
 
         public Program()
         {
@@ -74,15 +77,44 @@ namespace ConsoleApp
             ComponentsCollectionUtils.AddComponents(components);
         }
 
-        async Task Run()
+        public void Run()
         {
+            var dir = Directory.GetCurrentDirectory();
+            Debug.Log($"working dir: {dir}");
             socket = new ClientWebSocket();
+            
+            runCancellationTokenSource = new CancellationTokenSource();
+            runCancellationToken = runCancellationTokenSource.Token;
+            runTask = Task.Run(AsyncRun, runCancellationToken);
+            //runTask = AsyncRun();
+        }
 
-            AsyncRun();
-            while (true)
+        public void Wait()
+        {
+            
+        }
+
+        public async  void Stop()
+        {
+            runCancellationTokenSource.Cancel();
+            
+            try
             {
-                Thread.Sleep(1000);
+                await runTask;
             }
+            catch (OperationCanceledException e)
+            {
+                Console.WriteLine($"{nameof(OperationCanceledException)} thrown with message: {e.Message}");
+            }
+            finally
+            {
+                runCancellationTokenSource.Dispose();
+            }
+        }
+
+        public string GetInfo()
+        {
+            return "";
         }
 
 
@@ -174,10 +206,11 @@ namespace ConsoleApp
 
                 world = new EcsWorld("serv");
                 systems = new EcsSystems(world);
-                systemsFactory.AddNewSystems(systems, new IEcsSystemsFactory.Settings { AddClientSystems = false, AddServerSystems = true });
+                systemsFactory.AddNewSystems(systems,
+                    new IEcsSystemsFactory.Settings { AddClientSystems = false, AddServerSystems = true });
                 systems.Add(new TickSystem());
-                
-                
+
+
                 syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
                 WorldLoggerExt.logger = syncDebug.CreateLogger();
 
@@ -188,17 +221,18 @@ namespace ConsoleApp
 
 
                 _ = Task.Factory.StartNew(ReceiveData);
-                
+
                 SendWorldToClients();
-       
+
 
                 log("loop");
                 var next = DateTime.UtcNow;
                 var step = 1.0 / config.Tickrate;
-                while (true)
+                while (!runCancellationTokenSource.IsCancellationRequested)
                 {
                     byte[][] receivedCopy = null;
-                    lock (receivedMessages) {
+                    lock (receivedMessages)
+                    {
                         receivedCopy = receivedMessages.ToArray();
                         receivedMessages.Clear();
                     }
@@ -213,15 +247,21 @@ namespace ConsoleApp
                         next = next.AddSeconds(step);
                         if (next <= DateTime.UtcNow)
                             next = DateTime.UtcNow.AddSeconds(step);
-                        Tick();                        
+                        Tick();
                     }
 
-                    Thread.Sleep(0);
+                    Thread.Sleep(10);
                 }
+
+                Debug.Log("Ended0");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.LogError(e);
+            }
+            finally
+            {
+                Debug.Log("Ended1");   
             }
         }
 
@@ -448,6 +488,10 @@ namespace ConsoleApp
         {
             var app = new Program();
             app.Run();
+            while (true)
+            {
+                Thread.Sleep(0);
+            }
         }
     }
 }

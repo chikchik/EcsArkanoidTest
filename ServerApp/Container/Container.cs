@@ -1,16 +1,18 @@
 ﻿using System;
+using ConsoleApp;
 using Contracts;
 
 public class Container : IContainer
 {
+    private Program program;
     public void Init()
     {
-        throw new NotImplementedException();
+        program = new Program();
     }
 
     public void Start()
     {
-        throw new NotImplementedException();
+        program.Run();
     }
 
     public void Update()
@@ -20,11 +22,11 @@ public class Container : IContainer
 
     public void Stop()
     {
-        throw new NotImplementedException();
+        program.Stop();
     }
 
     public string GetInfo()
     {
-        throw new NotImplementedException();
+        return program.GetInfo();
     }
 }

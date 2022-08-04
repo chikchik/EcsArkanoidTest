@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "ConsoleApp": {
+    "ServerApp": {
       "commandName": "Project",
       "workingDirectory": "."
     }

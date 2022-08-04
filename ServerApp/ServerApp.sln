@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerApp", "ServerApp.csproj", "{FF5FE96C-237E-45C0-8DA4-2EE0D0ED8957}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "..\..\module-ecs-central\Contracts\Contracts.csproj", "{AAB67FE9-3346-4532-A57B-5B14DAB8EADD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "..\..\module-ecs-container\Contracts\Contracts.csproj", "{AAB67FE9-3346-4532-A57B-5B14DAB8EADD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Container", "Container\Container.csproj", "{14C08317-8661-460E-A1C3-E9C7572A65A4}"
 EndProject

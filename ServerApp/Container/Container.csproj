@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\module-ecs-central\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\..\..\module-ecs-container\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\ServerApp.csproj" />
   </ItemGroup>
 
 </Project>
