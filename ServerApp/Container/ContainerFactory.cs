@@ -1,9 +1,9 @@
-using Contracts;
+using XFlow.Container;
 
 public class ContainerFactory: IContainerFactory
 {
     public IContainer Create(IHost host)
     {
-        return new Container();
+        return new Container(host);
     }
 }

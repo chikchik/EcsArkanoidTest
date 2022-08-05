@@ -1,13 +1,21 @@
 ﻿using System;
 using ConsoleApp;
-using Contracts;
+using XFlow.Container;
 
-public class Container : IContainer
+public class Container: IContainer
 {
     private Program program;
+    
+    IHost host;
+
+    public Container(IHost host)
+    {
+        this.host = host;
+    }
+    
     public void Init()
     {
-        program = new Program();
+        program = new Program(host.GetConfig(), host.GetLogger());
     }
 
     public void Start()

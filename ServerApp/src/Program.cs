@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
@@ -22,6 +21,7 @@ using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
 using XFlow.Ecs.ClientServer.Utils;
 using Fabros.EcsModules.Mech.ClientServer;
+using XFlow.Container;
 using XFlow.Modules.Tick.ClientServer.Systems;
 
 namespace ConsoleApp
@@ -70,9 +70,19 @@ namespace ConsoleApp
         private Task runTask;
         private CancellationToken runCancellationToken;
         private CancellationTokenSource runCancellationTokenSource;
+        
+        private IContainerConfig containerConfig;
 
-        public Program()
+        public static void Log(string str)
         {
+            
+        }
+        public Program(IContainerConfig containerConfig, ILogger logger)
+        {
+            Debug.SetLogDelegate(str=> logger.Log(str));
+            this.containerConfig = containerConfig;
+            
+            
             components = new ComponentsCollection();
             ComponentsCollectionUtils.AddComponents(components);
         }
@@ -110,19 +120,14 @@ namespace ConsoleApp
             {
                 runCancellationTokenSource.Dispose();
             }
+
         }
 
         public string GetInfo()
         {
             return "";
         }
-
-
-        private static void log(string str)
-        {
-            Debug.Log(str);
-        }
-
+        
         async Task ReceiveData()
         {
 
@@ -214,10 +219,11 @@ namespace ConsoleApp
                 syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
                 WorldLoggerExt.logger = syncDebug.CreateLogger();
 
-                var url = $"{Config.URL}/{P2P.ADDR_SERVER.AddressString}";
+                //var url = $"{Config.URL}/{P2P.ADDR_SERVER.AddressString}";
+                var url =  $"{P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.ADDR_SERVER.AddressString}";
                 await socket.ConnectAsync(new Uri(url, UriKind.Absolute), new CancellationToken());
 
-                log($"connected to host\n{url}");
+                Debug.Log($"connected to host\n{url}");
 
 
                 _ = Task.Factory.StartNew(ReceiveData);
@@ -225,7 +231,7 @@ namespace ConsoleApp
                 SendWorldToClients();
 
 
-                log("loop");
+                Debug.Log("loop");
                 var next = DateTime.UtcNow;
                 var step = 1.0 / config.Tickrate;
                 while (!runCancellationTokenSource.IsCancellationRequested)
@@ -275,7 +281,7 @@ namespace ConsoleApp
                 if (client != null)
                 {
                     clients.Remove(client);
-                    log($"removed client {client.ID}");
+                    Debug.Log($"removed client {client.ID}");
                     BaseServices.LeavePlayer(inputWorld, client.ID);
                 }
                 return;
@@ -293,7 +299,7 @@ namespace ConsoleApp
             {
                 var client = new Client(packet.playerID);
 
-                log($"got hello from client {packet.playerID}");
+                Debug.Log($"got hello from client {packet.playerID}");
 
                 var hello = new Hello();
                 hello.Components = components.Components.Select(component => component.GetComponentType().FullName).ToArray();
@@ -335,7 +341,7 @@ namespace ConsoleApp
                     if (!missingClients.Contains(playerId))
                     {
                         missingClients.Add(playerId);
-                        log($"not found player {playerId}");
+                        Debug.Log($"not found player {playerId}");
                     }
                     return;
                 }
@@ -484,10 +490,45 @@ namespace ConsoleApp
             socket.SendAsync(bytes, WebSocketMessageType.Text, true, new CancellationToken());            
         }
 
+        public void Some<T>(T p) where T : IContainerConfig
+        {
+            
+        }
+
+        public class DefaultConfig : IContainerConfig
+        {
+            private Dictionary<string, string> config = new Dictionary<string, string>();
+            public DefaultConfig()
+            {
+                config[ContainerConfigParams.ROOM] = $"{Config.ROOM_A}{Config.ROOM_B}";
+            }
+            public bool TryGetValue(string key, out string value)
+            {
+                return config.TryGetValue(key, out value);
+            }
+
+            public string GetValue(string key)
+            {
+                return config[key];
+            }
+        }
+
+        public class DefaultLogger : ILogger
+        {
+            public void Log(string str)
+            {
+                
+            }
+        }
+        
         static void Main(string[] args)
         {
-            var app = new Program();
+
+            var app = new Program(new DefaultConfig(), new DefaultLogger());
+            var q = new int[11];
+            var ww = new DefaultConfig();
             app.Run();
+            //app.Some<DefaultConfig>
             while (true)
             {
                 Thread.Sleep(0);

@@ -87,4 +87,10 @@
 	  <Folder Include="Properties" />
 	</ItemGroup>
 
+
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\module-ecs-container\Contracts\Contracts.csproj" />
+	</ItemGroup>
+
 </Project>
