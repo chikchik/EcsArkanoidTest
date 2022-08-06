@@ -7,7 +7,8 @@
         "Unity.TextMeshPro.Editor",
         "Unity.TextMeshPro",
         "xflow.ecs",
-        "xflow.ecs.central"
+        "xflow.ecs.central",
+        "xflow.ecs.inventory"
     ],
     "includePlatforms": [
         "Editor"
@@ -17,7 +18,8 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll",
-        "Moq.dll"
+        "Moq.dll",
+        "FluentAssertions.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [
