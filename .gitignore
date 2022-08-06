@@ -46,3 +46,4 @@ Box2DProject/box2d-console/out
 tmp/
 *DontShip*
 *DoNotShip*
+ServerApp/Container/obj/
