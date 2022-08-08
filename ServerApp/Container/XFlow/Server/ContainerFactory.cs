@@ -7,7 +7,7 @@ namespace XFlow.Server
     {
         public IContainer Create(IHost host)
         {
-            return new Container(host);
+            return new Container(host.GetConfig(), host.GetLogger());
         }
     }
 }
