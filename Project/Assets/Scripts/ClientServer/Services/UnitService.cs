@@ -2,6 +2,7 @@
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
+using XFlow.Modules.Box2D.ClientServer;
 using XFlow.Modules.Box2D.ClientServer.Api;
 using XFlow.Modules.Box2D.ClientServer.Components;
 using XFlow.Modules.Box2D.ClientServer.Components.Colliders;
@@ -28,16 +29,10 @@ namespace Game.ClientServer.Services
             ref var healthComponent = ref entity.EntityAddComponent<HealthComponent>(world);
             healthComponent.maxHealth = 100;
             healthComponent.health = 50;
-            
-            ref var rigidBodyDefinitionComponent = ref entity.EntityAddComponent<Box2DRigidbodyDefinitionComponent>(world);
-            rigidBodyDefinitionComponent.BodyType = BodyType.Kinematic;
-            rigidBodyDefinitionComponent.Density = 985f;
-            rigidBodyDefinitionComponent.Friction = 0.3f;
-            rigidBodyDefinitionComponent.Restitution = 0;
-            rigidBodyDefinitionComponent.RestitutionThreshold = 0.5f;   
 
-            ref var collider = ref entity.EntityAddComponent<Box2DCircleColliderComponent>(world);
-            collider.Radius = 0.4f;
+            Box2DServices.AddRigidbodyDefinition(world, entity, BodyType.Kinematic).SetDensity(985f).SetFriction(0.3f)
+                .SetRestitution(0).SetRestitutionThreshold(0.5f);
+            Box2DServices.AddCircleCollider(world, entity, 0.4f);
 
             entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();
 

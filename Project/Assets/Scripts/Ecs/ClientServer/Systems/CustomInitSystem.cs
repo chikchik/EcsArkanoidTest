@@ -5,6 +5,7 @@ using Game.Ecs.ClientServer.Components;
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
+using XFlow.Modules.Box2D.ClientServer;
 using XFlow.Modules.Box2D.ClientServer.Api;
 using XFlow.Modules.Box2D.ClientServer.Components;
 using XFlow.Modules.Box2D.ClientServer.Components.Colliders;
@@ -30,16 +31,8 @@ namespace Game.Ecs.ClientServer.Systems
             
             mechEntity.EntityAdd<AverageSpeedComponent>(world).Value = 8;
 
-
-            ref var def = ref mechEntity.EntityAdd<Box2DRigidbodyDefinitionComponent>(world);
-            def.Friction = 0.3f;
-            def.Restitution = 0;
-            def.RestitutionThreshold = 0.5f;   
-            def.BodyType = BodyType.Kinematic;
-
-            ref var collider = ref mechEntity.EntityAdd<Box2DCircleColliderComponent>(world);
-            
-            collider.Radius = 3;
+            Box2DServices.AddRigidbodyDefinition(world, mechEntity, BodyType.Kinematic).SetFriction(0.3f).SetRestitutionThreshold(0.5f);
+            Box2DServices.AddCircleCollider(world, mechEntity, 3);
 
             /*
             var world = systems.GetWorld();

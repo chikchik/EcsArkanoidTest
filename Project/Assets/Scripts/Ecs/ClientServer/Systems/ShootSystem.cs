@@ -38,19 +38,11 @@ namespace Game.Ecs.ClientServer.Systems
                     bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
 
-                    ref var def = ref bulletEntity.EntityAdd<Box2DRigidbodyDefinitionComponent>(world);
-                    def.BodyType = BodyType.Dynamic;
-                    def.Bullet = true;
-                    def.Density = 20;
-                    def.LinearDamping = 0;
-
+                    Box2DServices.AddRigidbodyDefinition(world, bulletEntity).SetBullet(true).SetDensity(20).SetLinearDamping(0);
+                    Box2DServices.AddCircleCollider(world, bulletEntity, 0.02f);
+                    
                     bulletEntity.EntityAdd<DebugMeComponent>(world);
 
-
-                    world.Log($"create bullet {bulletEntity} {dir} {pos}");
-
-                    ref var collider = ref bulletEntity.EntityAdd<Box2DCircleColliderComponent>(world);
-                    collider.Radius = 0.02f;
 
                     var body = Box2DServices.CreateBodyNow(world, bulletEntity);
 
