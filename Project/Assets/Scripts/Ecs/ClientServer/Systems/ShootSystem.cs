@@ -37,7 +37,7 @@ namespace Game.Ecs.ClientServer.Systems
                     var dir = entity.EntityGet<ShootingComponent>(world).Direction;
                     bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
-
+                    
                     Box2DServices.AddRigidbodyDefinition(world, bulletEntity).SetBullet(true).SetDensity(20).SetLinearDamping(0);
                     Box2DServices.AddCircleCollider(world, bulletEntity, 0.02f);
                     

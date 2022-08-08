@@ -58,7 +58,6 @@ namespace Game.UI
 
             if (view.InventoryButton != null)
             {
-
                 view.InventoryButton.onClick.AddListener(() =>
                 {
                     var inventory = inventoryFactory.CreateInventory(view.transform);

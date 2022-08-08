@@ -15,6 +15,7 @@ namespace Game.ClientServer.Services
         public MyInventoryService(IInventoryStaticData staticData)
         {
             this.staticData = staticData;
+            staticData.Init();
         }
         
         public override bool IsItemStackable(EcsWorld world, int itemEntity)
