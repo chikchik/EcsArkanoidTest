@@ -50,3 +50,6 @@ ServerApp/Container/obj/
 ServerApp/Container/bin/
 ServerApp/tools/container.zip
 ServerApp/tools/libbox2d-unity.so
+Server/Container/obj/
+ServerApp/ServerApp/obj/
+ServerApp/ServerApp/bin/

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\module-ecs-container\SimpleContainerServer\SimpleContainerServer.csproj" />
+    <ProjectReference Include="..\Container\Container.csproj" />
+  </ItemGroup>
+
+</Project>

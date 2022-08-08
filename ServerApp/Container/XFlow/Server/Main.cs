@@ -8,25 +8,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using Contracts.XFlow.Container;
 using Contracts.XFlow.Container.Host;
+using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
-using Zenject;
 using Game.ClientServer.Services;
+using UnityEngine;
+using XFlow.Ecs.ClientServer.Utils;
+using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Systems;
-using XFlow.P2P;
-using XFlow.Net.ClientServer;
-using XFlow.Utils;
-using XFlow.Ecs.ClientServer.WorldDiff;
-using XFlow.Net.ClientServer.Ecs.Components;
-using UnityEngine;
-using XFlow.Net.ClientServer.Protocol;
 using XFlow.Modules.Tick.ClientServer.Components;
-using XFlow.Modules.Tick.Other;
-using XFlow.Ecs.ClientServer.Utils;
-using Fabros.EcsModules.Mech.ClientServer;
 using XFlow.Modules.Tick.ClientServer.Systems;
+using XFlow.Modules.Tick.Other;
+using XFlow.Net.ClientServer;
+using XFlow.Net.ClientServer.Ecs.Components;
+using XFlow.Net.ClientServer.Protocol;
+using XFlow.P2P;
+using XFlow.Utils;
+using Zenject;
 
-namespace ConsoleApp
+namespace XFlow.Server
 {
     class Client
     {
@@ -42,7 +42,7 @@ namespace ConsoleApp
         }
     }
 
-    public class Program
+    public class Main
     {
         private SyncDebugService syncDebug;
         private ClientWebSocket socket;
@@ -75,12 +75,12 @@ namespace ConsoleApp
         private IContainerConfig containerConfig;
         private string url;
 
-        public Program(IContainerConfig containerConfig, ILogger logger)
+        public Main(IContainerConfig containerConfig, ILogger logger)
         {
             Debug.SetLogDelegate(logger.Log);
             this.containerConfig = containerConfig;
             
-            url =  $"{P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.ADDR_SERVER.AddressString}";
+            url =  $"{P2P.P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.P2P.ADDR_SERVER.AddressString}";
             
             components = new ComponentsCollection();
             ComponentsCollectionUtils.AddComponents(components);
@@ -282,7 +282,7 @@ namespace ConsoleApp
         private void ProcessMessage(byte[] msgBytes)
         {
             string errAddr = "";
-            if (P2P.CheckError(msgBytes, out errAddr))
+            if (P2P.P2P.CheckError(msgBytes, out errAddr))
             {
                 var client = clients.FirstOrDefault(client => client.ID.ToString() == errAddr);
                 if (client != null)
@@ -300,7 +300,7 @@ namespace ConsoleApp
                 return;
             }
 
-            var packet = P2P.ParseResponse<Packet>(msgBytes);
+            var packet = P2P.P2P.ParseResponse<Packet>(msgBytes);
 
             if (packet.hasHello)
             {
@@ -444,7 +444,7 @@ namespace ConsoleApp
             var dif = WorldDiff.BuildDiff(components, sentWorld, world);
             dif.WriteBinary(false, writer);
 
-            var difBinary = Convert.ToBase64String(P2P.Compress(writer.CopyToByteArray()));
+            var difBinary = Convert.ToBase64String(P2P.P2P.Compress(writer.CopyToByteArray()));
 
             //leo.SyncLog.WriteLine($"send world {leo.GetPrevTick(world)}->{leo.GetCurrentTick(world)} to clients\n");
 
@@ -493,52 +493,8 @@ namespace ConsoleApp
 
         private void SendAsync(Packet packet, ClientAddr addr)
         {
-            var bytes = P2P.BuildRequest(addr, packet);            
+            var bytes = P2P.P2P.BuildRequest(addr, packet);            
             socket.SendAsync(bytes, WebSocketMessageType.Text, true, new CancellationToken());            
-        }
-
-        public void Some<T>(T p) where T : IContainerConfig
-        {
-            
-        }
-
-        public class DefaultConfig : IContainerConfig
-        {
-            private Dictionary<string, string> config = new Dictionary<string, string>();
-            public DefaultConfig()
-            {
-                config[ContainerConfigParams.ROOM] = $"{Config.ROOM_A}{Config.ROOM_B}";
-            }
-            public bool TryGetValue(string key, out string value)
-            {
-                return config.TryGetValue(key, out value);
-            }
-
-            public string GetValue(string key)
-            {
-                return config[key];
-            }
-        }
-
-        public class DefaultLogger : ILogger
-        {
-            public void Log(string str)
-            {
-                
-            }
-        }
-        
-        static void Main(string[] args)
-        {
-            var app = new Program(new DefaultConfig(), new DefaultLogger());
-            var q = new int[11];
-            var ww = new DefaultConfig();
-            app.Run();
-            //app.Some<DefaultConfig>
-            while (true)
-            {
-                Thread.Sleep(0);
-            }
         }
     }
 }
