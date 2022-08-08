@@ -48,3 +48,5 @@ tmp/
 *DoNotShip*
 ServerApp/Container/obj/
 ServerApp/Container/bin/
+ServerApp/tools/container.zip
+ServerApp/tools/libbox2d-unity.so

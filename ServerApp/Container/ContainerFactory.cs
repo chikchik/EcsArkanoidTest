@@ -1,4 +1,5 @@
-using XFlow.Container;
+using Contracts.XFlow.Container;
+using Contracts.XFlow.Container.Host;
 
 public class ContainerFactory: IContainerFactory
 {

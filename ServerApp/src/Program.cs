@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Contracts.XFlow.Container;
+using Contracts.XFlow.Container.Host;
 using Game.ClientServer;
 using Zenject;
 using Game.ClientServer.Services;
@@ -21,7 +24,6 @@ using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
 using XFlow.Ecs.ClientServer.Utils;
 using Fabros.EcsModules.Mech.ClientServer;
-using XFlow.Container;
 using XFlow.Modules.Tick.ClientServer.Systems;
 
 namespace ConsoleApp
@@ -72,6 +74,7 @@ namespace ConsoleApp
         private CancellationTokenSource runCancellationTokenSource;
         
         private IContainerConfig containerConfig;
+        private string url;
 
         public static void Log(string str)
         {
@@ -82,6 +85,7 @@ namespace ConsoleApp
             Debug.SetLogDelegate(str=> logger.Log(str));
             this.containerConfig = containerConfig;
             
+            url =  $"{P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.ADDR_SERVER.AddressString}";
             
             components = new ComponentsCollection();
             ComponentsCollectionUtils.AddComponents(components);
@@ -97,11 +101,6 @@ namespace ConsoleApp
             runCancellationToken = runCancellationTokenSource.Token;
             runTask = Task.Run(AsyncRun, runCancellationToken);
             //runTask = AsyncRun();
-        }
-
-        public void Wait()
-        {
-            
         }
 
         public async  void Stop()
@@ -125,7 +124,19 @@ namespace ConsoleApp
 
         public string GetInfo()
         {
-            return "";
+            var sb = new StringBuilder(512);
+            sb.AppendLine($"url: {url}");
+            sb.AppendLine($"tick: {world.GetTick()}");
+            sb.AppendLine($"world entities: {world.GetEntitiesCount()}");
+            sb.AppendLine($"world size: {world.GetAllocMemorySizeInBytes()/1024} kb");
+            
+            sb.AppendLine($"clients: {clients.Count}");
+            for (int i = 0; i < clients.Count; ++i)
+            {
+                var client = clients[i];
+                sb.AppendLine($"  id: {client.ID}, lastTick: {client.LastClientTick}");
+            }
+            return sb.ToString();
         }
         
         async Task ReceiveData()
@@ -220,7 +231,7 @@ namespace ConsoleApp
                 WorldLoggerExt.logger = syncDebug.CreateLogger();
 
                 //var url = $"{Config.URL}/{P2P.ADDR_SERVER.AddressString}";
-                var url =  $"{P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.ADDR_SERVER.AddressString}";
+                
                 await socket.ConnectAsync(new Uri(url, UriKind.Absolute), new CancellationToken());
 
                 Debug.Log($"connected to host\n{url}");

@@ -1,6 +1,8 @@
 ﻿using System;
 using ConsoleApp;
-using XFlow.Container;
+using Contracts.XFlow.Container;
+using Contracts.XFlow.Container.Host;
+
 
 public class Container: IContainer
 {
