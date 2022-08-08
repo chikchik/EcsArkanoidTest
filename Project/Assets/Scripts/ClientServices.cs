@@ -165,8 +165,8 @@ namespace Game
                 ref var radiusComponent = ref characterEntity.EntityAddComponent<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
             });
-            
-            ForEachObject<CubeView>(view =>
+
+            ForEachObject<DestructibleView>(view =>
             {
                 var entity = GetOrCreateGameEntity(view.gameObject);
                 entity.EntityAdd<DestructibleHealthComponent>(world).Health = 3f;
