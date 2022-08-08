@@ -56,38 +56,42 @@ namespace Game.UI
                 states.Push<MechInfoState>();
             });
 
-            view.InventoryButton.onClick.AddListener(() =>
+            if (view.InventoryButton != null)
             {
-                var inventory = inventoryFactory.CreateInventory(view.transform);
 
-                var playerId = world.GetUnique<MainPlayerIdComponent>().value;
-                var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerId);
-
-                var poolInventoryLink = world.GetPool<InventoryLinkComponent>();
-                if (!poolInventoryLink.Has(unitEntity))
+                view.InventoryButton.onClick.AddListener(() =>
                 {
-                    return;
-                }
+                    var inventory = inventoryFactory.CreateInventory(view.transform);
 
-                if (!poolInventoryLink.Get(unitEntity).Inventory.Unpack(world, out var inventoryEntity))
-                {
-                    return;
-                }
-                
-                var poolTrashLink = world.GetPool<TrashLinkComponent>();
-                if (!poolTrashLink.Has(unitEntity))
-                {
-                    return;
-                }
+                    var playerId = world.GetUnique<MainPlayerIdComponent>().value;
+                    var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerId);
 
-                if (!poolTrashLink.Get(unitEntity).Trash.Unpack(world, out var trashEntity))
-                {
-                    return;
-                }
+                    var poolInventoryLink = world.GetPool<InventoryLinkComponent>();
+                    if (!poolInventoryLink.Has(unitEntity))
+                    {
+                        return;
+                    }
 
-                inventory.Init(inventoryEntity, trashEntity, world);
-            });
-            
+                    if (!poolInventoryLink.Get(unitEntity).Inventory.Unpack(world, out var inventoryEntity))
+                    {
+                        return;
+                    }
+
+                    var poolTrashLink = world.GetPool<TrashLinkComponent>();
+                    if (!poolTrashLink.Has(unitEntity))
+                    {
+                        return;
+                    }
+
+                    if (!poolTrashLink.Get(unitEntity).Trash.Unpack(world, out var trashEntity))
+                    {
+                        return;
+                    }
+
+                    inventory.Init(inventoryEntity, trashEntity, world);
+                });
+            }
+
             view.ShotButton.onClick.AddListener(() =>
             {
                 controlService.Shot();
