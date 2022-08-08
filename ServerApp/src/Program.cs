@@ -28,7 +28,6 @@ using XFlow.Modules.Tick.ClientServer.Systems;
 
 namespace ConsoleApp
 {
-
     class Client
     {
         public int ID;
@@ -76,13 +75,9 @@ namespace ConsoleApp
         private IContainerConfig containerConfig;
         private string url;
 
-        public static void Log(string str)
-        {
-            
-        }
         public Program(IContainerConfig containerConfig, ILogger logger)
         {
-            Debug.SetLogDelegate(str=> logger.Log(str));
+            Debug.SetLogDelegate(logger.Log);
             this.containerConfig = containerConfig;
             
             url =  $"{P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.ADDR_SERVER.AddressString}";
@@ -127,7 +122,8 @@ namespace ConsoleApp
             var sb = new StringBuilder(512);
             sb.AppendLine($"url: {url}");
             sb.AppendLine($"tick: {world.GetTick()}");
-            sb.AppendLine($"world entities: {world.GetEntitiesCount()}");
+            sb.AppendLine($"tickrate: {config.Tickrate}");
+            sb.AppendLine($"world entities: {world.GetAliveEntitiesCount()}");
             sb.AppendLine($"world size: {world.GetAllocMemorySizeInBytes()/1024} kb");
             
             sb.AppendLine($"clients: {clients.Count}");
@@ -534,7 +530,6 @@ namespace ConsoleApp
         
         static void Main(string[] args)
         {
-
             var app = new Program(new DefaultConfig(), new DefaultLogger());
             var q = new int[11];
             var ww = new DefaultConfig();
