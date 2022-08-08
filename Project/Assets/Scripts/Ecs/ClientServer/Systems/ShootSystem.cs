@@ -30,7 +30,7 @@ namespace Game.Ecs.ClientServer.Systems
                     var shoot = entity.EntityGet<ShootingComponent>(world);
 
                     var bulletEntity = world.NewEntity();
-                    bulletEntity.EntityAdd<BulletComponent>(world);
+                    bulletEntity.EntityAdd<BulletComponent>(world).Damage = 1f;
 
                     //var unitPos = entity.EntityGet<PositionComponent>(world).value;
                     var pos = shoot.Position;

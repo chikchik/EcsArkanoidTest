@@ -164,7 +164,13 @@ namespace Game
                 ref var radiusComponent = ref characterEntity.EntityAddComponent<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
             });
-            
+
+            ForEachObject<DestructibleView>(view =>
+            {
+                var entity = GetOrCreateGameEntity(view.gameObject);
+                entity.EntityAdd<DestructibleHealthComponent>(world).Health = 3f;
+            });
+
             ForEachObject<Collider2D>(collider =>
             {
                 if (!collider.enabled)
@@ -172,7 +178,7 @@ namespace Game
                 var entity = GetOrCreateGameEntity(collider.gameObject);
                 ClientBox2DServices.CreateBody(world, entity, collider);
             });
-            
+
             ForEachObject<JointConnectView>(joint =>
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);

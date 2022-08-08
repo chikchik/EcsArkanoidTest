@@ -66,6 +66,7 @@ namespace Game.ClientServer
             container.Register<LookDirectionSystem>();
             container.Register<SimpleMoveSystem>();
             container.Register<UnitMoveSystem>();
+            container.Register<FollowSystem>();
             container.Register<PushingSystem>();
 
             container.Register<MechAdapterSystem>();
@@ -84,6 +85,7 @@ namespace Game.ClientServer
 #if CLIENT
             container.RegisterClient<FootprintViewSystem>();
             container.RegisterClient<HighlightInteractableSystem>();
+            container.RegisterClient<VFXCreationSystem>();
 #endif
             
 
@@ -96,7 +98,7 @@ namespace Game.ClientServer
             container.RegisterServer<ButtonCustomSystem>();
             container.Register<GateSystem>();
             container.Register<MoveByProgressSystem>();
-            
+
             container.Register<FireSystem>();
 
             container.Register<ApplyForceSystem>();
@@ -137,12 +139,12 @@ namespace Game.ClientServer
             container.Register<Box2DCreateContactsSystem>();
             container.Register<Box2DUpdateInternalObjectsSystem>();
             container.Register<Box2DUpdateSystem>();
-            container.Register<BulletContactSystem>();
-            
-            
+            container.Register<BulletContactSystem>();      
+            container.Register<DestructibleDamageApplySystem>();
+            container.Register<HitEntityDestructionSystem>();
 
             container.Register<Box2DDeleteContactsSystem>();
-            
+
             container.Register<EventsSystem<WeaponComponent>>();
             container.Register<EventsSystem<FireComponent>>();
             container.Register<EventsSystem<ButtonPressedComponent>>();
