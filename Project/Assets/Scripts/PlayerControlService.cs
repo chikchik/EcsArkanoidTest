@@ -15,7 +15,7 @@ using Zenject;
 
 namespace Game
 {
-    public class PlayerControlService : IMoveItemService
+    public class PlayerControlService : IInventoryInputService
     {
         private EcsWorld inputWorld;
         private EcsWorld world;
@@ -91,6 +91,16 @@ namespace Game
                 Amount = amount
             };
             
+            Apply(component);
+        }
+
+        public void ClearInventory(int inventory)
+        {
+            var component = new ClearInventoryComponent
+            {
+                Inventory = world.PackEntity(inventory)
+            };
+
             Apply(component);
         }
         
