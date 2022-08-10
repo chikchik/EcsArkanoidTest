@@ -10,7 +10,6 @@ using Game.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using XFlow.EcsLite;
-using XFlow.Modules.Inventory.Client.Services;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Systems;

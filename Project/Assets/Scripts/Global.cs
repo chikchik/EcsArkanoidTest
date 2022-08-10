@@ -1,7 +1,7 @@
 ﻿using Game.UIView;
 using Game.View;
 using UnityEngine;
-using XFlow.Modules.Inventory.Client.StaticData;
+using XFlow.Modules.Inventory.Client.Demo.StaticData;
 
 namespace Game
 {

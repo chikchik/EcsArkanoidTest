@@ -1,4 +1,3 @@
-using Demo.Client.Services;
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.ClientServer.Services;
@@ -12,8 +11,8 @@ using UnityEngine;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Systems;
-using XFlow.Modules.Inventory.Client.Interfaces;
-using XFlow.Modules.Inventory.Client.Services;
+using XFlow.Modules.Inventory.Client.Demo.Interfaces;
+using XFlow.Modules.Inventory.Client.Demo.Services;
 using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
@@ -68,6 +67,7 @@ namespace Game.Installers
             Container.Bind<States>().AsSingle();
             Container.Bind<RootState>().AsSingle();
             Container.Bind<MechInfoState>().AsSingle();
+            Container.Bind<InventoryOpenedState>().AsSingle();
             
 
 

@@ -14,12 +14,15 @@ namespace Game
 
         [Inject] private RootState rootState;
         [Inject] private MechInfoState mechInfoState;
+        [Inject] private InventoryOpenedState inventoryOpenedState;
     
     
         // Start is called before the first frame update
         void Start()
         {
             RegisterStateWithUI(mechInfoState);
+            states.RegisterState(inventoryOpenedState);
+            
             states.RegisterState(rootState);
         
             states.StartFrom<RootState>();

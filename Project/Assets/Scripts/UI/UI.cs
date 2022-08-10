@@ -2,14 +2,10 @@
 using Game.Ecs.ClientServer.Components;
 using Game.UI.Mono;
 
-using Game.ClientServer;
+
 using Game.ClientServer.Services;
-using Game.Ecs.ClientServer.Components.Inventory;
 using Game.State;
 using XFlow.EcsLite;
-using XFlow.Modules.Inventory.Client.Services;
-using XFlow.Modules.Inventory.ClientServer.Components;
-using XFlow.Modules.Inventory.ClientServer.Enums;
 using XFlow.Modules.States;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Net.ClientServer;
@@ -32,8 +28,7 @@ namespace Game.UI
             MainUI view, 
             States states,
             PlayerControlService controlService,
-            ClientServerServices clientServerServices,
-            InventoryFactory inventoryFactory)
+            ClientServerServices clientServerServices)
         {
             this.View = view;
             this.world = world;
@@ -60,34 +55,7 @@ namespace Game.UI
             {
                 view.InventoryButton.onClick.AddListener(() =>
                 {
-                    var inventory = inventoryFactory.CreateInventory(view.transform);
-
-                    var playerId = world.GetUnique<MainPlayerIdComponent>().value;
-                    var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerId);
-
-                    var poolInventoryLink = world.GetPool<InventoryLinkComponent>();
-                    if (!poolInventoryLink.Has(unitEntity))
-                    {
-                        return;
-                    }
-
-                    if (!poolInventoryLink.Get(unitEntity).Inventory.Unpack(world, out var inventoryEntity))
-                    {
-                        return;
-                    }
-
-                    var poolTrashLink = world.GetPool<TrashLinkComponent>();
-                    if (!poolTrashLink.Has(unitEntity))
-                    {
-                        return;
-                    }
-
-                    if (!poolTrashLink.Get(unitEntity).Trash.Unpack(world, out var trashEntity))
-                    {
-                        return;
-                    }
-
-                    inventory.Init(inventoryEntity, trashEntity, world);
+                    states.Push<InventoryOpenedState>();
                 });
             }
 
