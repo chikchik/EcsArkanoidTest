@@ -1,4 +1,3 @@
-using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components.Inventory;
 
 using UnityEngine;
@@ -7,7 +6,7 @@ using XFlow.EcsLite;
 
 namespace Game.Ecs.Client.Systems.Inventory
 {
-    public class InventorySystem : IEcsRunSystem
+    public class InventoryImageSystem : IEcsRunSystem
     {
         public void Run(EcsSystems systems)
         {

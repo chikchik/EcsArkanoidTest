@@ -1,3 +1,4 @@
+using Demo.Client.Services;
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.ClientServer.Services;
@@ -11,6 +12,9 @@ using UnityEngine;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Systems;
+using XFlow.Modules.Inventory.Client.Interfaces;
+using XFlow.Modules.Inventory.Client.Services;
+using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
@@ -20,7 +24,6 @@ namespace Game.Installers
 {
     public class GameSceneInstaller : MonoInstaller
     {
-        [SerializeField] private Joystick joystickPrefab;
         [SerializeField] private GameSettings settings;
 
         public override void InstallBindings()
@@ -29,18 +32,15 @@ namespace Game.Installers
             
             var global = GameObject.Find("Global").GetComponent<Global>();
             Container.Bind<Global>().FromInstance(global).AsSingle();
-            
-            
-            Container.Bind<CharacterView>().FromInstance(global.characterPrefab).AsSingle();
+
+            Container.Bind<CharacterView>().FromInstance(global.CharacterPrefab).AsSingle();
             Container.Bind<BulletView>().FromInstance(global.BulletPrefab).AsSingle();
             Container.Bind<ParticleSystem>().FromInstance(global.FireParticles).AsSingle();
+            Container.Bind<IInventoryStaticData>().FromInstance(global.InventoryStaticData).AsSingle();
             
             Container.Bind<FootprintView>().WithId("left").FromInstance(global.LeftFootprintPrefab).AsCached();
             Container.Bind<FootprintView>().WithId("right").FromInstance(global.RightFootprintPrefab).AsCached();
-            
-            
-            
-            
+
             Container.Bind<Objectives>().AsSingle().NonLazy();
 
             //var world = new EcsWorld("main");
@@ -54,9 +54,8 @@ namespace Game.Installers
             Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();
             Container.Bind<UI.UI>().AsSingle().NonLazy();
 
-            Container.Bind<PlayerControlService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
-
 
             Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();
             Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
@@ -64,7 +63,7 @@ namespace Game.Installers
            
             
             //register states and view
-            Container.Bind<MechInfoView>().FromInstance(global.mechInfoView).AsSingle();
+            Container.Bind<MechInfoView>().FromInstance(global.MechInfoView).AsSingle();
              
             Container.Bind<States>().AsSingle();
             Container.Bind<RootState>().AsSingle();
@@ -86,10 +85,10 @@ namespace Game.Installers
             
             Container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
             Container.Bind<MechService>().AsSingle();
-            
-            Container.Bind<MyInventoryService>().AsSingle();
-           
-            
+
+            Container.Bind<AssetInstantiator>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MyInventoryService>().AsSingle();
+            Container.Bind<InventoryFactory>().AsSingle();
 
             if (settings.MultiPlayer)
             {
