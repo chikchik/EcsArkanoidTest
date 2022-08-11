@@ -2,12 +2,13 @@
 using Game.Ecs.ClientServer.Components;
 using Game.UI.Mono;
 
-using Game.ClientServer;
+
 using Game.ClientServer.Services;
 using Game.State;
 using XFlow.EcsLite;
 using XFlow.Modules.States;
 using XFlow.Modules.Tick.ClientServer.Components;
+using XFlow.Net.ClientServer;
 
 namespace Game.UI
 {
@@ -24,7 +25,8 @@ namespace Game.UI
         private ClientServerServices clientServerServices;
         
         public UI(
-            EcsWorld world, MainUI view, 
+            EcsWorld world, 
+            MainUI view, 
             States states,
             PlayerControlService controlService,
             ClientServerServices clientServerServices)
@@ -49,7 +51,15 @@ namespace Game.UI
             {
                 states.Push<MechInfoState>();
             });
-            
+
+            if (view.InventoryButton != null)
+            {
+                view.InventoryButton.onClick.AddListener(() =>
+                {
+                    states.Push<InventoryOpenedState>();
+                });
+            }
+
             view.ShotButton.onClick.AddListener(() =>
             {
                 controlService.Shot();

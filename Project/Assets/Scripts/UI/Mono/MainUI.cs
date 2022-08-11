@@ -11,6 +11,7 @@ namespace Game.UI.Mono
     {
         public Button ShotButton;
         public Button InteractionButton;
+        public Button InventoryButton;
         public Button KickButton;
         public Button MechButton;
         //public FixedJoystick Joystick;
