@@ -25,7 +25,6 @@ namespace Game
         public PlayerControlService(
             [Inject(Id = "input")] EcsWorld inputWorld,
             [InjectOptional] IInputService input,
-            IInventoryService inventoryService,
             EcsWorld world)
         {
             this.inputWorld = inputWorld;
