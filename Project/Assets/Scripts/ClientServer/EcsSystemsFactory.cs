@@ -1,4 +1,5 @@
-﻿using Game.Ecs.ClientServer.Components;
+﻿using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
 using XFlow.EcsLite;
@@ -48,6 +49,7 @@ namespace Game.ClientServer
             container.Register<CreateGameSystem>();
 #endif
             
+	        container.RegisterServer<MyInventoryService>();
 #if CLIENT
             container.RegisterClient<DetectPlayerIdChangesSystem>();
 #endif
