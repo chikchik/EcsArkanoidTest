@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using Fabros.EcsModules.Mech.ClientServer.Components;
-using Game.ClientServer;
-using Game.Ecs.ClientServer.Components;
 using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Components.Inventory;
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Modules.Grid.Other;
+using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
 using XFlow.Net.ClientServer.Ecs.Components.Input.proto;
 using XFlow.Utils;
-using Random = System.Random;
 
 namespace Game.Ecs.ClientServer.Systems
 {
@@ -23,8 +23,15 @@ namespace Game.Ecs.ClientServer.Systems
         EcsFilter filter;
         private EcsWorld world;
         private EcsWorld inputWorld;
+
+        private MyInventoryService inventoryService;
         
         List<int> entities = new List<int>();
+
+        public ApplyInputSystem(MyInventoryService myInventoryService)
+        {
+            inventoryService = myInventoryService;
+        }
         
         public void Init(EcsSystems systems)
         {
@@ -44,6 +51,8 @@ namespace Game.Ecs.ClientServer.Systems
             var poolPlayer      = inputWorld.GetPool<InputPlayerComponent>();
             var poolInputMoveDir= inputWorld.GetPool<InputMoveDirectionComponent>();
             var poolInputMoveTo = inputWorld.GetPool<InputMoveToPointComponent>();
+            var poolMoveItem = inputWorld.GetPool<MoveItemComponent>();
+            var poolClearInventory = inputWorld.GetPool<ClearInventoryComponent>();
             var poolInputAction = inputWorld.GetPool<InputActionComponent>();
             var poolInputKick   = inputWorld.GetPool<InputKickComponent>();
             var poolInputTick   = inputWorld.GetPool<InputTickComponent>();
@@ -105,6 +114,16 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     EnterLeaveMech(unitEntity);
                 }
+
+                if (inputEntity.EntityHas<MoveItemComponent>(inputWorld))
+                {
+                    MoveItem(poolMoveItem.Get(inputEntity));
+                }
+
+                if (inputEntity.EntityHas<ClearInventoryComponent>(inputWorld))
+                {
+                    ClearInventory(poolClearInventory.Get(inputEntity));
+                }
             }
         }
 
@@ -138,10 +157,10 @@ namespace Game.Ecs.ClientServer.Systems
                 return;
             
             var entity = entities[0];
-
             if (entity.EntityHas<SpawnGunComponent>(world))
             {
                 unitEntity.EntityGetOrCreateRef<WeaponComponent>(world);
+                TryHideCollected(entity);
             }
             
             if (entity.EntityHas<BushComponent>(world))
@@ -150,10 +169,43 @@ namespace Game.Ecs.ClientServer.Systems
                 unitEntity.EntityGetOrCreateRef<FoodCollectedComponent>(world).Value += 1;
                 ObjectiveService.Triggered(world, entity);
 
+
                 if (entity.EntityHas<CollectableComponent>(world))
                 {
                     entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
                 }
+
+                if (!unitEntity.EntityHasComponent<InventoryLinkComponent>(world))
+                {
+                    return;
+                }
+
+                var inventoryLink = unitEntity.EntityGet<InventoryLinkComponent>(world);
+                if (!inventoryLink.Inventory.Unpack(world, out var inventory))
+                {
+                    return;
+                }
+
+                var berryEntity = world.NewEntity();
+                berryEntity.EntityAdd<AmountComponent>(world).Value = 1;
+                berryEntity.EntityAdd<ItemIdComponent>(world).ItemId = "Berry";
+
+                inventoryService.Add(world, inventory, berryEntity);
+            }
+
+            if (entity.EntityHas<AmmoComponent>(world))
+            {
+                unitEntity.EntityGetOrCreateRef<AmmoCollectedComponent>(world).Value += 10;
+                entity.EntityDel<InteractableComponent>(world);
+                TryHideCollected(entity);
+            }
+        }
+
+        void TryHideCollected(int entity)
+        {
+            if (entity.EntityHas<CollectableComponent>(world))
+            {
+                entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
             }
         }
         
@@ -184,6 +236,12 @@ namespace Game.Ecs.ClientServer.Systems
                 !unitEntity.EntityGet<ShootingComponent>(world).ShootMade)
             {
                 //Debug.Log("skip");
+                return;
+            }
+            
+            if (unitEntity.EntityHas<AmmoCollectedComponent>(world) &&
+                unitEntity.EntityGet<AmmoCollectedComponent>(world).Value <= 0)
+            {
                 return;
             }
 
@@ -242,6 +300,37 @@ namespace Game.Ecs.ClientServer.Systems
             ref var targetPositionComponent = ref entity.EntityGetOrCreateRef<TargetPositionComponent>(world);
             targetPositionComponent.Value = pos;
             
+        }
+        
+        private void MoveItem(MoveItemComponent data)
+        {
+            if (!data.Inventory.Unpack(world, out var inventory))
+            {
+                return;
+            }
+            
+            if (!data.Item.Unpack(world, out var item))
+            {
+                return;
+            }
+
+            if (data.Amount == -1)
+            {
+                inventoryService.Add(world, inventory, item);
+                return;
+            }
+
+            inventoryService.Add(world, inventory, item, data.Amount);
+        }
+
+        private void ClearInventory(ClearInventoryComponent data)
+        {
+            if (!data.Inventory.Unpack(world, out var inventory))
+            {
+                return;
+            }
+
+            inventoryService.Clear(world, inventory);
         }
     }
 }

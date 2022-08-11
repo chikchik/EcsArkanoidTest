@@ -53,10 +53,9 @@ namespace Game.Ecs.Client.Systems
                     }
                     else
                     {
-                        var view = go.GetComponent<SpawnGunView>();
                         ref var collectableTargetComponent =
                             ref entity.EntityAddComponent<CollectableTargetComponent>(world);
-                        collectableTargetComponent.targetObject = view.gameObject;
+                        collectableTargetComponent.targetObject = go;
                     }
                 }
             }

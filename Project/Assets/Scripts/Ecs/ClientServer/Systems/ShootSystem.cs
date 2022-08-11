@@ -23,34 +23,28 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var entity in filter)
             {
                 ref var shootingComponent = ref poolShooting.GetRef(entity);
-                if (shootingComponent.ShootAtTime < tm && !shootingComponent.ShootMade)
+                ref var ammo = ref entity.EntityGetRef<AmmoCollectedComponent>(world);
+                if (shootingComponent.ShootAtTime < tm && !shootingComponent.ShootMade && ammo.Value > 0)
                 {
                     shootingComponent.ShootMade = true;
+                    ammo.Value--;
 
                     var shoot = entity.EntityGet<ShootingComponent>(world);
 
                     var bulletEntity = world.NewEntity();
-                    bulletEntity.EntityAdd<BulletComponent>(world);
+                    bulletEntity.EntityAdd<BulletComponent>(world).Damage = 1f;
 
                     //var unitPos = entity.EntityGet<PositionComponent>(world).value;
                     var pos = shoot.Position;
                     var dir = entity.EntityGet<ShootingComponent>(world).Direction;
                     bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
-
-                    ref var def = ref bulletEntity.EntityAdd<Box2DRigidbodyDefinitionComponent>(world);
-                    def.BodyType = BodyType.Dynamic;
-                    def.Bullet = true;
-                    def.Density = 20;
-                    def.LinearDamping = 0;
-
+                    
+                    Box2DServices.AddRigidbodyDefinition(world, bulletEntity).SetBullet(true).SetDensity(20).SetLinearDamping(0);
+                    Box2DServices.AddCircleCollider(world, bulletEntity, 0.02f);
+                    
                     bulletEntity.EntityAdd<DebugMeComponent>(world);
 
-
-                    world.Log($"create bullet {bulletEntity} {dir} {pos}");
-
-                    ref var collider = ref bulletEntity.EntityAdd<Box2DCircleColliderComponent>(world);
-                    collider.Radius = 0.02f;
 
                     var body = Box2DServices.CreateBodyNow(world, bulletEntity);
 

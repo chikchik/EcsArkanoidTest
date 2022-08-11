@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05682672b12f4716a226f2b8774d2d22, type: 3}
+  m_Name: InventoryStaticData
+  m_EditorClassIdentifier: 
+  maxSlotsInCategory: 50
+  maxItemsInSlot: 100
+  uiInventorySlotPrefab: {fileID: 7485544832845983834, guid: 0d828c9a62ba0d84c8ee2f2917cb261c,
+    type: 3}
+  uiInventoryPrefab: {fileID: 2094288397100608438, guid: 0b36b4ab58c22a440a153e9e478e0def,
+    type: 3}
+  uiCategoryButtonPrefab: {fileID: 7938932217607453424, guid: 8f218258ebb6d9f4cb44848e9d81c6d1,
+    type: 3}
+  categoryStaticData: {fileID: 11400000, guid: 0acb640176fe75346810d5ead2b31902, type: 2}
+  inventoryItemStaticData: {fileID: 11400000, guid: aea08b14a1dea324ab8b3703be04ddab,
+    type: 2}

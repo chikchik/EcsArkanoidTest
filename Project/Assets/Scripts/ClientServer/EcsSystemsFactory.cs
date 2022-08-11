@@ -1,4 +1,4 @@
-﻿using Fabros.EcsModules.Mech.ClientServer;
+﻿using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
@@ -7,10 +7,10 @@ using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Modules.Fire.ClientServer.Components;
 using XFlow.Modules.Fire.ClientServer.Systems;
 using XFlow.Modules.Grid.Systems;
+using XFlow.Modules.Inventory.ClientServer.Systems;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
-using XFlow.Utils;
 
 #if CLIENT
 using Game.Ecs.Client.Systems;
@@ -18,6 +18,7 @@ using Game.Ecs.Client.Systems.Inventory;
 using Fabros.EcsModules.Mech.Client.Systems;
 using XFlow.Modules.Box2D.Client.Systems;
 using XFlow.Modules.Fire.Client.Systems;
+using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Components;
 #endif
 
@@ -48,10 +49,10 @@ namespace Game.ClientServer
             container.Register<CreateGameSystem>();
 #endif
             
+	        container.RegisterServer<MyInventoryService>();
 #if CLIENT
             container.RegisterClient<DetectPlayerIdChangesSystem>();
 #endif
-            
             container.RegisterServer<CustomInitSystem>();
             container.RegisterServer<JoinPlayerSystem>();
             
@@ -67,6 +68,7 @@ namespace Game.ClientServer
             container.Register<LookDirectionSystem>();
             container.Register<SimpleMoveSystem>();
             container.Register<UnitMoveSystem>();
+            container.Register<FollowSystem>();
             container.Register<PushingSystem>();
 
             container.Register<MechAdapterSystem>();
@@ -85,6 +87,7 @@ namespace Game.ClientServer
 #if CLIENT
             container.RegisterClient<FootprintViewSystem>();
             container.RegisterClient<HighlightInteractableSystem>();
+            container.RegisterClient<VFXCreationSystem>();
 #endif
             
 
@@ -97,7 +100,7 @@ namespace Game.ClientServer
             container.RegisterServer<ButtonCustomSystem>();
             container.Register<GateSystem>();
             container.Register<MoveByProgressSystem>();
-            
+
             container.Register<FireSystem>();
 
             container.Register<ApplyForceSystem>();
@@ -107,7 +110,7 @@ namespace Game.ClientServer
 #if CLIENT
             container.RegisterClient<CreateViewSystem>();
             container.RegisterClient<FireViewSystem>();
-            container.RegisterClient<InventorySystem>();
+            container.RegisterClient<InventoryImageSystem>();
             container.RegisterClient<CreateMechViewSystem>();
             container.RegisterClient<MechAnimationSystem>();
 #endif
@@ -122,7 +125,6 @@ namespace Game.ClientServer
             container.RegisterServer<ObjectivesSystem>();
 
             container.Register<DestroyAtTimeSystem>();
-
 
 #if CLIENT
             container.RegisterClient<CharacterAnimationSystem>();
@@ -140,11 +142,11 @@ namespace Game.ClientServer
             container.Register<Box2DUpdateInternalObjectsSystem>();
             container.Register<Box2DUpdateSystem>();
             container.Register<BulletContactSystem>();      
-            
-            
+            container.Register<DestructibleDamageApplySystem>();
+            container.Register<HitEntityDestructionSystem>();
 
             container.Register<Box2DDeleteContactsSystem>();
-            
+
             container.Register<EventsSystem<WeaponComponent>>();
             container.Register<EventsSystem<FireComponent>>();
             container.Register<EventsSystem<ButtonPressedComponent>>();
@@ -154,15 +156,20 @@ namespace Game.ClientServer
             container.Register<EventsSystem<ObjectiveCompletedComponent>>();
             container.Register<EventsSystem<GateOpenedComponent>>();
             container.Register<EventsSystem<FoodCollectedComponent>>();
+            container.Register<EventsSystem<AmmoCollectedComponent>>();
             container.Register<EventsSystem<PushingComponent>>();
             container.Register<EventsSystem<CantMoveComponent>>();
             
 #if CLIENT
             container.Register<EventsSystem<MovingComponent>>();
+            container.Register<EventsSystem<InventorySlotComponent>>();
+            container.Register<EventsSystem<ActiveInventoryCategoryComponent>>();
+            container.Register<EventsSystem<EntityRemoveEventComponent>>();
             container.Register<EventsSystem<TickComponent>>();
             container.Register<EventsSystem<ControlsMechComponent>>();
             container.RegisterClient<CreateViewSystem>();
 #endif
+            container.Register<RemoveEntitySystem>();
             //write final Box2d transforms to components
             container.Register<Box2DWriteBodiesToComponentsSystem>();
         }

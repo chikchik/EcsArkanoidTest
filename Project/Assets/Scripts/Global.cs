@@ -1,12 +1,13 @@
 ﻿using Game.UIView;
 using Game.View;
 using UnityEngine;
+using XFlow.Modules.Inventory.Client.Demo.StaticData;
 
 namespace Game
 {
     public class Global : MonoBehaviour
     {
-        public CharacterView characterPrefab;
+        public CharacterView CharacterPrefab;
         public BulletView BulletPrefab;
 
         [Header("Footprint")] 
@@ -17,6 +18,8 @@ namespace Game
 
         public ParticleSystem FireParticles;
 
-        public MechInfoView mechInfoView;
+        public MechInfoView MechInfoView;
+
+        public InventoryStaticData InventoryStaticData;
     }
 }

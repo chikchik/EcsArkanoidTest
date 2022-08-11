@@ -8,3 +8,7 @@
 [submodule "Submodules/module-ecs-box2d"]
 	path = Submodules/module-ecs-box2d
 	url = git@bitbucket.org:xflowltd/module-ecs-box2d
+[submodule "Submodules/module-ecs-container"]
+	path = Submodules/module-ecs-container
+	url = git@bitbucket.org:xflowltd/module-ecs-container
+	branch = dev

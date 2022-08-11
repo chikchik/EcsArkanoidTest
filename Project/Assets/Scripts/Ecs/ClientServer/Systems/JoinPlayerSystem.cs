@@ -1,5 +1,7 @@
 ﻿using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components.Inventory;
 using XFlow.EcsLite;
+using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
@@ -37,6 +39,16 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     var freeUnitEntity = UnitService.CreateUnitEntity(world);
                     freeUnitEntity.EntityGetOrCreateRef<PlayerComponent>(world).id = playerID;
+                    
+                    var inventory = world.NewEntity();
+                    inventory.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+
+                    var trash = world.NewEntity();
+                    trash.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+
+                    freeUnitEntity.EntityAddComponent<InventoryLinkComponent>(world).Inventory =
+                        world.PackEntity(inventory);
+                    freeUnitEntity.EntityAddComponent<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
                 }
             }
         }

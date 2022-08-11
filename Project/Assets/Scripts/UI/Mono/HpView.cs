@@ -37,6 +37,7 @@ namespace Game.UI.Mono
             this.target = target;
         }
 
+        /*
         public void OnUpdate(float p)
         {
             var size = Image.GetRT().sizeDelta.WithX(p * 70);
@@ -48,6 +49,6 @@ namespace Game.UI.Mono
 
             Image.DOColor(c, 0.2f);
             Image.GetRT().DOSizeDelta(size, 0.2f);
-        }
+        }*/
     }
 }
