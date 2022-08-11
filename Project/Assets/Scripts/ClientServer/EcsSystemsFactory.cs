@@ -49,7 +49,6 @@ namespace Game.ClientServer
             container.Register<CreateGameSystem>();
 #endif
             
-	        container.RegisterServer<MyInventoryService>();
 #if CLIENT
             container.RegisterClient<DetectPlayerIdChangesSystem>();
 #endif
