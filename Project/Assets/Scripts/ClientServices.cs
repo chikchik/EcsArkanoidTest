@@ -199,8 +199,6 @@ namespace Game
                 entity.EntityAdd<CollectableTargetComponent>(world).targetObject = view.gameObject;
             });
             
-            var unit = Object.FindObjectOfType<Global>().CharacterPrefab;
-            
             ForEachObject<AmmoView>(view =>
             {
                 var entity = GetOrCreateGameEntity(view.gameObject);
@@ -211,9 +209,8 @@ namespace Game
                 entity.EntityAdd<CollectableTargetComponent>(world).targetObject = view.gameObject;
                 entity.EntityAdd<RadiusComponent>(world).radius = view.transform.lossyScale.x / 2f;
             });
-            
-            var unit = Object.FindObjectOfType<Global>().characterPrefab;
-            
+                
+            var unit = Object.FindObjectOfType<Global>().CharacterPrefab;
             var clips = unit.Animator.runtimeAnimatorController.animationClips;
             //var clip = clips.First(clip => clip.name == "Walking");
             //todo calculate exact speed
