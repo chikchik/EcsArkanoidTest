@@ -238,6 +238,12 @@ namespace Game.Ecs.ClientServer.Systems
                 //Debug.Log("skip");
                 return;
             }
+            
+            if (unitEntity.EntityHas<AmmoCollectedComponent>(world) &&
+                unitEntity.EntityGet<AmmoCollectedComponent>(world).Value <= 0)
+            {
+                return;
+            }
 
             world.Log($"input shot");
 
