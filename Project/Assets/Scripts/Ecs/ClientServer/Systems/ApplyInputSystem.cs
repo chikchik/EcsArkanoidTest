@@ -6,6 +6,7 @@ using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Inventory;
 using UnityEngine;
+using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;

@@ -1,5 +1,5 @@
 ﻿using Game.Ecs.ClientServer.Components;
-
+using XFlow.Ecs.ClientServer;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Components.Other;
 using XFlow.Net.ClientServer;

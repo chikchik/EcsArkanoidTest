@@ -4,6 +4,7 @@ using Game.View;
 using Game.ClientServer.Services;
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
+using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer;

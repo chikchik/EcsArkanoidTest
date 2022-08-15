@@ -1,6 +1,7 @@
 ﻿using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components.Inventory;
+using XFlow.Ecs.ClientServer;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Net.ClientServer;
