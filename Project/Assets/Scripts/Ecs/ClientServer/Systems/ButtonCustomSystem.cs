@@ -43,7 +43,7 @@ namespace Game.Ecs.ClientServer.Systems
                 if (custom.Spawn)
                 {
                     var botEntity = UnitService.CreateUnitEntity(world);
-                    botEntity.EntityAddComponent<AIPlayerComponent>(world);
+                    botEntity.EntityAdd<AIPlayerComponent>(world);
 
                     botEntity.EntityAdd<FireComponent>(world) = new FireComponent
                     {

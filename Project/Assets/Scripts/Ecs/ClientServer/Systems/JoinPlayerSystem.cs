@@ -20,7 +20,7 @@ namespace Game.Ecs.ClientServer.Systems
 
             foreach (var inputEntity in filter)
             {
-                var joinPlayerComponent = inputEntity.EntityGetComponent<InputJoinPlayerComponent>(inputWorld);
+                var joinPlayerComponent = inputEntity.EntityGet<InputJoinPlayerComponent>(inputWorld);
                 var playerID = joinPlayerComponent.playerID;
                 var leave = joinPlayerComponent.leave;
 
@@ -41,14 +41,14 @@ namespace Game.Ecs.ClientServer.Systems
                     freeUnitEntity.EntityGetOrCreateRef<PlayerComponent>(world).id = playerID;
                     
                     var inventory = world.NewEntity();
-                    inventory.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+                    inventory.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 
                     var trash = world.NewEntity();
-                    trash.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+                    trash.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 
-                    freeUnitEntity.EntityAddComponent<InventoryLinkComponent>(world).Inventory =
+                    freeUnitEntity.EntityAdd<InventoryLinkComponent>(world).Inventory =
                         world.PackEntity(inventory);
-                    freeUnitEntity.EntityAddComponent<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
+                    freeUnitEntity.EntityAdd<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
                 }
             }
         }

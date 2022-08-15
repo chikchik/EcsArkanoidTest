@@ -116,24 +116,24 @@ namespace Tests.Runtime.Tests
             var w2 = new EcsWorld();
 
             var e1 = w1.NewEntity();
-            e1.EntityAddComponent<ComponentA>(w1).Value = 1;
+            e1.EntityAdd<ComponentA>(w1).Value = 1;
         
             var e11 = w1.NewEntity();
-            e11.EntityAddComponent<ComponentA>(w1).Value = 1;
+            e11.EntityAdd<ComponentA>(w1).Value = 1;
         
             var e2 = w2.NewEntity();
-            e2.EntityAddComponent<ComponentB>(w2).Value = 2;
+            e2.EntityAdd<ComponentB>(w2).Value = 2;
         
             var delta = BuildDiff(w2, w1);
             delta.ApplyChanges(w2);
 
             Assert.AreEqual(
-                e1.EntityGetComponent<ComponentA>(w2).Value,
-                e1.EntityGetComponent<ComponentA>(w1).Value);
+                e1.EntityGet<ComponentA>(w2).Value,
+                e1.EntityGet<ComponentA>(w1).Value);
         
             Assert.AreEqual(
-                e2.EntityGetComponent<ComponentA>(w2).Value,
-                e2.EntityGetComponent<ComponentA>(w1).Value);
+                e2.EntityGet<ComponentA>(w2).Value,
+                e2.EntityGet<ComponentA>(w1).Value);
         }
     
     
@@ -144,19 +144,19 @@ namespace Tests.Runtime.Tests
             var world1 = new EcsWorld();
         
             var entity0 = world1.NewEntity();
-            entity0.EntityAddComponent<ComponentA>(world1).Value = 1;
+            entity0.EntityAdd<ComponentA>(world1).Value = 1;
         
             var entity01 = world1.NewEntity();
-            entity01.EntityAddComponent<ComponentB>(world1).Value = 3;
+            entity01.EntityAdd<ComponentB>(world1).Value = 3;
 
             var world1Copy = WorldUtils.CopyWorld(_collection, world1);
 
 
-            entity0.EntityAddComponent<ComponentB>(world1).Value = 4;
-            entity0.EntityAddComponent<ComponentC>(world1);
+            entity0.EntityAdd<ComponentB>(world1).Value = 4;
+            entity0.EntityAdd<ComponentC>(world1);
         
             var entity1 = world1.NewEntity();
-            entity1.EntityAddComponent<ComponentB>(world1).Value = 5;
+            entity1.EntityAdd<ComponentB>(world1).Value = 5;
         
             var dif = BuildDiff(world1Copy, world1);
             dif.ApplyChanges(world1Copy);

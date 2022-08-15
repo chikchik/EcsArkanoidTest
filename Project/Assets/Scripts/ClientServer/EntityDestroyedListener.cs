@@ -18,9 +18,9 @@ namespace Game.ClientServer
         public void OnEntityWillBeDestroyed(EcsWorld world, int entity)
         {
 #if CLIENT
-            if (entity.EntityHasComponent<TransformComponent>(world))
+            if (entity.EntityHas<TransformComponent>(world))
             {
-                var go = entity.EntityGetComponent<TransformComponent>(world).Transform.gameObject;
+                var go = entity.EntityGet<TransformComponent>(world).Transform.gameObject;
                 GameObject.Destroy(go);
             }
 #endif

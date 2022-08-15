@@ -16,7 +16,7 @@ namespace Game.ClientServer.Services
         protected override int CreateStackableSlotEntity(EcsWorld world, int fromItemEntity, int storageEntity)
         {
             var itemEntity = world.NewEntity();
-            itemEntity.EntityAddComponent<StackableComponent>(world);
+            itemEntity.EntityAdd<StackableComponent>(world);
             return itemEntity;
         }
 

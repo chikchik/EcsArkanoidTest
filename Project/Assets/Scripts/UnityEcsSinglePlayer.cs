@@ -96,13 +96,13 @@ namespace Game
             unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
 
             var inventory = world.NewEntity();
-            inventory.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+            inventory.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
             
             var trash = world.NewEntity();
-            trash.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+            trash.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 
-            unitEntity.EntityAddComponent<InventoryLinkComponent>(world).Inventory = world.PackEntity(inventory);
-            unitEntity.EntityAddComponent<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
+            unitEntity.EntityAdd<InventoryLinkComponent>(world).Inventory = world.PackEntity(inventory);
+            unitEntity.EntityAdd<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
         }
 
         public static bool IsPointerOverUIObject()

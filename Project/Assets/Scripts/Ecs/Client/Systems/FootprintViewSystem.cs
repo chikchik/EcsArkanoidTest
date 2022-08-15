@@ -47,7 +47,7 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in destroyEntities)
             {
-                var transform = entity.EntityGetRefComponent<TransformComponent>(world).Transform;
+                var transform = entity.EntityGetRef<TransformComponent>(world).Transform;
                 Object.Destroy(transform.gameObject);
             }
         }
@@ -59,11 +59,11 @@ namespace Game.Ecs.Client.Systems
             var view = GameObject.Instantiate(footprintPrefab);
             var transform = view.transform;
             
-            ref var transformComponent = ref entity.EntityAddComponent<TransformComponent>(world);
+            ref var transformComponent = ref entity.EntityAdd<TransformComponent>(world);
             transformComponent.Transform = transform;
 
             transform.name = $"footprint {footprintComponent.isLeftHand} - {entity}";
-            transform.position = entity.EntityGetComponent<PositionComponent>(world).value;
+            transform.position = entity.EntityGet<PositionComponent>(world).value;
             if (footprintComponent.direction.magnitude > 0.9f)
                 transform.forward = footprintComponent.direction;
         }
