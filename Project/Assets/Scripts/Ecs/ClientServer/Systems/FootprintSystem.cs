@@ -54,20 +54,20 @@ namespace Game.Ecs.ClientServer.Systems
         private void CreateFootprintAtPosition(EcsWorld world, LastFootprintComponent lastFootprint)
         {
             var footPrintEntity = world.NewEntity();
-            ref var footprintComponent = ref footPrintEntity.EntityAddComponent<FootprintComponent>(world);
+            ref var footprintComponent = ref footPrintEntity.EntityAdd<FootprintComponent>(world);
             footprintComponent.isLeftHand = lastFootprint.isLeftHand;
             footprintComponent.direction = lastFootprint.direction;
 
-            ref var positionComponent = ref footPrintEntity.EntityAddComponent<PositionComponent>(world);
+            ref var positionComponent = ref footPrintEntity.EntityAdd<PositionComponent>(world);
             positionComponent.value = lastFootprint.position;
 
 
-            ref var lifeTimeComponent = ref footPrintEntity.EntityAddComponent<LifeTimeComponent>(world);
+            ref var lifeTimeComponent = ref footPrintEntity.EntityAdd<LifeTimeComponent>(world);
             //lifeTimeComponent.lifeTime = FootprintLifeTime;
             var ticks = (int) (150f / world.GetDeltaSeconds());
             lifeTimeComponent.destroyTick = world.GetUnique<TickComponent>().Value.Value + ticks;
 
-            footPrintEntity.EntityAddComponent<FlammableComponent>(world).Power = 1;
+            footPrintEntity.EntityAdd<FlammableComponent>(world).Power = 1;
         }
     }
 }

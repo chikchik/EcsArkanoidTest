@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Fabros.EcsModules.Mech.ClientServer.Components;
+using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Inventory;
 using UnityEngine;
+using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
@@ -36,7 +38,7 @@ namespace Game.Ecs.ClientServer.Systems
         public void Init(EcsSystems systems)
         {
             world = systems.GetWorld();
-            inputWorld = systems.GetWorld("input");
+            inputWorld = systems.GetWorld(EcsWorlds.Input);
             filter = inputWorld.Filter<InputComponent>().End();
         }
         
@@ -172,10 +174,10 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if (entity.EntityHas<CollectableComponent>(world))
                 {
-                    entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
+                    entity.EntityGetRef<CollectableComponent>(world).isCollected = true;
                 }
 
-                if (!unitEntity.EntityHasComponent<InventoryLinkComponent>(world))
+                if (!unitEntity.EntityHas<InventoryLinkComponent>(world))
                 {
                     return;
                 }
@@ -205,7 +207,7 @@ namespace Game.Ecs.ClientServer.Systems
         {
             if (entity.EntityHas<CollectableComponent>(world))
             {
-                entity.EntityGetRefComponent<CollectableComponent>(world).isCollected = true;
+                entity.EntityGetRef<CollectableComponent>(world).isCollected = true;
             }
         }
         

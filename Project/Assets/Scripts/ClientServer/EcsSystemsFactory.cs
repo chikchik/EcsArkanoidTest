@@ -2,6 +2,7 @@
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Objective;
 using Game.Ecs.ClientServer.Systems;
+using XFlow.Ecs.ClientServer.Systems;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Modules.Fire.ClientServer.Components;
@@ -137,14 +138,14 @@ namespace Game.ClientServer
             //иначе в мультиплеере предсказание не будет работать правильно
             container.Register<Box2DInitSystem>();
             container.Register<Box2DCreateBodiesSystem>();
-            container.Register<Box2DCreateContactsSystem>();
+            container.Register<Box2DCreateEventContactsSystem>();
+            //container.Register<Box2DCreateContactsSystem>();
             container.Register<Box2DUpdateInternalObjectsSystem>();
             container.Register<Box2DUpdateSystem>();
             container.Register<BulletContactSystem>();      
             container.Register<DestructibleDamageApplySystem>();
-            container.Register<HitEntityDestructionSystem>();
 
-            container.Register<Box2DDeleteContactsSystem>();
+            //container.Register<Box2DDeleteContactsSystem>();
 
             container.Register<EventsSystem<WeaponComponent>>();
             container.Register<EventsSystem<FireComponent>>();
@@ -168,7 +169,9 @@ namespace Game.ClientServer
             container.Register<EventsSystem<ControlsMechComponent>>();
             container.RegisterClient<CreateViewSystem>();
 #endif
-            container.Register<RemoveEntitySystem>();
+            container.Register<DeleteEventEntitiesSystem>();
+            container.Register<RemoveEntitySystem>();//from inventory
+
             //write final Box2d transforms to components
             container.Register<Box2DWriteBodiesToComponentsSystem>();
         }

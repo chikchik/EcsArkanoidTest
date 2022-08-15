@@ -111,10 +111,10 @@ namespace Game
                 buttonEntity.EntityAdd<InteractableComponent>(world);
                 
 
-                ref var progressComponent = ref buttonEntity.EntityAddComponent<ProgressComponent>(world);
+                ref var progressComponent = ref buttonEntity.EntityAdd<ProgressComponent>(world);
                 progressComponent.progress = 0;
 
-                ref var moveInfoComponent = ref buttonEntity.EntityAddComponent<MoveInfoComponent>(world);
+                ref var moveInfoComponent = ref buttonEntity.EntityAdd<MoveInfoComponent>(world);
                 moveInfoComponent.startPoint = view.StartPosition;
                 moveInfoComponent.endPoint = view.EndPosition;
                 
@@ -142,10 +142,10 @@ namespace Game
                 ref var radiusComponent = ref gateEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = 1f;
 
-                ref var progressComponent = ref gateEntity.EntityAddComponent<ProgressComponent>(world);
+                ref var progressComponent = ref gateEntity.EntityAdd<ProgressComponent>(world);
                 progressComponent.progress = 0;
 
-                ref var moveInfoComponent = ref gateEntity.EntityAddComponent<MoveInfoComponent>(world);
+                ref var moveInfoComponent = ref gateEntity.EntityAdd<MoveInfoComponent>(world);
                 moveInfoComponent.startPoint = view.StartPosition;
                 moveInfoComponent.endPoint = view.EndPosition;
             });
@@ -154,14 +154,14 @@ namespace Game
             {
                 var characterEntity = GetOrCreateGameEntity(view.gameObject);
 
-                ref var playerComponent = ref characterEntity.EntityAddComponent<PlayerComponent>(world);
+                ref var playerComponent = ref characterEntity.EntityAdd<PlayerComponent>(world);
                 playerComponent.id = Random.Range(-9999, -1111);
-                characterEntity.EntityAddComponent<UnitComponent>(world);
+                characterEntity.EntityAdd<UnitComponent>(world);
 
-                characterEntity.EntityAddComponent<MoveDirectionComponent>(world);
-                characterEntity.EntityAddComponent<PositionComponent>(world);
+                characterEntity.EntityAdd<MoveDirectionComponent>(world);
+                characterEntity.EntityAdd<PositionComponent>(world);
                 
-                ref var radiusComponent = ref characterEntity.EntityAddComponent<RadiusComponent>(world);
+                ref var radiusComponent = ref characterEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
             });
 

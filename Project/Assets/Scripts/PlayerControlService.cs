@@ -1,8 +1,10 @@
-﻿using Game.Ecs.ClientServer.Components;
+﻿using Game.ClientServer;
+using Game.Ecs.ClientServer.Components;
 using Game.View;
 using Game.ClientServer.Services;
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
+using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer;
@@ -23,9 +25,8 @@ namespace Game
         private IInputService input;
         
         public PlayerControlService(
-            [Inject(Id = "input")] EcsWorld inputWorld,
+            [Inject(Id = EcsWorlds.Input)] EcsWorld inputWorld,
             [InjectOptional] IInputService input,
-            IInventoryService inventoryService,
             EcsWorld world)
         {
             this.inputWorld = inputWorld;

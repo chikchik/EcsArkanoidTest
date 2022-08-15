@@ -1,6 +1,8 @@
 ﻿using Game.Ecs.ClientServer.Components;
+using XFlow.Ecs.ClientServer;
 using XFlow.EcsLite;
 using XFlow.Modules.Tick.Other;
+using XFlow.Net.ClientServer;
 
 namespace Game.Ecs.ClientServer.Systems
 {
@@ -10,18 +12,20 @@ namespace Game.Ecs.ClientServer.Systems
         private readonly float fireDuration = 5f;
 
         private EcsWorld _world;
+        private EcsWorld _eventWorld;
 
         public void Init(EcsSystems systems)
         {
             _world = systems.GetWorld();
+            _eventWorld = systems.GetWorld(EcsWorlds.Event);
         }
 
         public void Run(EcsSystems systems)
         {
-            var filterHits = _world.Filter<BulletHitComponent>().End();
+            var filterHits = _eventWorld.Filter<BulletHitComponent>().End();
             var tm = _world.GetTime();
 
-            var poolBulletHit = _world.GetPool<BulletHitComponent>();
+            var poolBulletHit = _eventWorld.GetPool<BulletHitComponent>();
             var poolFollow = _world.GetPool<FollowComponent>();
             var poolDestructibleHealth = _world.GetPool<DestructibleHealthComponent>();
             var poolDestructibleDamaged = _world.GetPool<DestructibleDamagedComponent>();

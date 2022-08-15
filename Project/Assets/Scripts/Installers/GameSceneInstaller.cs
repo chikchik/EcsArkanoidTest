@@ -8,6 +8,7 @@ using Game.UI.Mono;
 using Game.UIView;
 using Game.View;
 using UnityEngine;
+using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Systems;
@@ -44,7 +45,8 @@ namespace Game.Installers
 
             //var world = new EcsWorld("main");
             Container.Bind<EcsWorld>().FromInstance(new EcsWorld("main")).AsCached();
-            Container.Bind<EcsWorld>().WithId("input").FromInstance(new EcsWorld("input")).AsCached();
+            Container.Bind<EcsWorld>().WithId(EcsWorlds.Input).FromInstance(new EcsWorld(EcsWorlds.Input)).AsCached();
+            Container.Bind<EcsWorld>().WithId(EcsWorlds.Event).FromInstance(new EcsWorld(EcsWorlds.Event)).AsCached();
 
             Container.Bind<EntityDestroyedListener>().AsSingle();
             

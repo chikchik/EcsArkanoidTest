@@ -9,6 +9,7 @@ using Game.Ecs.ClientServer.Components.Inventory;
 using Game.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using XFlow.Ecs.ClientServer;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Components;
@@ -30,7 +31,8 @@ namespace Game
         [Inject] private Joystick joystick;
         
         [Inject] private EcsWorld world;
-        [Inject(Id = "input")] private EcsWorld inputWorld;
+        [Inject(Id = EcsWorlds.Input)] private EcsWorld inputWorld;
+        [Inject(Id = EcsWorlds.Event)] private EcsWorld eventWorld;
         
         [Inject] 
         private PlayerControlService controlService;
@@ -54,7 +56,8 @@ namespace Game
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
 
             systems = new EcsSystems(world);
-            systems.AddWorld(inputWorld, "input");
+            systems.AddWorld(inputWorld, EcsWorlds.Input);
+            systems.AddWorld(eventWorld, EcsWorlds.Event);
             ClientServices.InitializeNewWorldFromScene(world);
             
             world.EntityDestroyedListeners.Add(entityDestroyedListener);
@@ -96,13 +99,13 @@ namespace Game
             unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
 
             var inventory = world.NewEntity();
-            inventory.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+            inventory.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
             
             var trash = world.NewEntity();
-            trash.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+            trash.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 
-            unitEntity.EntityAddComponent<InventoryLinkComponent>(world).Inventory = world.PackEntity(inventory);
-            unitEntity.EntityAddComponent<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
+            unitEntity.EntityAdd<InventoryLinkComponent>(world).Inventory = world.PackEntity(inventory);
+            unitEntity.EntityAdd<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
         }
 
         public static bool IsPointerOverUIObject()

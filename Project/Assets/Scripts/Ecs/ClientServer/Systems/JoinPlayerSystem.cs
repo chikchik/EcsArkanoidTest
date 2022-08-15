@@ -1,5 +1,7 @@
-﻿using Game.ClientServer.Services;
+﻿using Game.ClientServer;
+using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components.Inventory;
+using XFlow.Ecs.ClientServer;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Net.ClientServer;
@@ -14,13 +16,13 @@ namespace Game.Ecs.ClientServer.Systems
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
-            var inputWorld = systems.GetWorld("input");
+            var inputWorld = systems.GetWorld(EcsWorlds.Input);
 
             var filter = inputWorld.Filter<InputJoinPlayerComponent>().End();
 
             foreach (var inputEntity in filter)
             {
-                var joinPlayerComponent = inputEntity.EntityGetComponent<InputJoinPlayerComponent>(inputWorld);
+                var joinPlayerComponent = inputEntity.EntityGet<InputJoinPlayerComponent>(inputWorld);
                 var playerID = joinPlayerComponent.playerID;
                 var leave = joinPlayerComponent.leave;
 
@@ -41,14 +43,14 @@ namespace Game.Ecs.ClientServer.Systems
                     freeUnitEntity.EntityGetOrCreateRef<PlayerComponent>(world).id = playerID;
                     
                     var inventory = world.NewEntity();
-                    inventory.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+                    inventory.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 
                     var trash = world.NewEntity();
-                    trash.EntityAddComponent<InventoryComponent>(world).SlotCapacity = 10;
+                    trash.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 
-                    freeUnitEntity.EntityAddComponent<InventoryLinkComponent>(world).Inventory =
+                    freeUnitEntity.EntityAdd<InventoryLinkComponent>(world).Inventory =
                         world.PackEntity(inventory);
-                    freeUnitEntity.EntityAddComponent<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
+                    freeUnitEntity.EntityAdd<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
                 }
             }
         }

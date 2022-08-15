@@ -16,18 +16,18 @@ namespace Game.ClientServer.Services
         {
             var entity = world.NewEntity();
             
-            entity.EntityAddComponent<UnitComponent>(world);
-            entity.EntityAddComponent<LookDirectionComponent>(world).value = new Vector3(0,0,1);
-            entity.EntityAddComponent<PositionComponent>(world).value = new Vector3(0, 0, 0);
-            entity.EntityAddComponent<FoodCollectedComponent>(world).Value = 0;
-            entity.EntityAddComponent<AmmoCollectedComponent>(world).Value = 0;
-            entity.EntityAddComponent<Rotation2DComponent>(world);
+            entity.EntityAdd<UnitComponent>(world);
+            entity.EntityAdd<LookDirectionComponent>(world).value = new Vector3(0,0,1);
+            entity.EntityAdd<PositionComponent>(world).value = new Vector3(0, 0, 0);
+            entity.EntityAdd<FoodCollectedComponent>(world).Value = 0;
+            entity.EntityAdd<AmmoCollectedComponent>(world).Value = 0;
+            entity.EntityAdd<Rotation2DComponent>(world);
 
 
-            ref var radiusComponent = ref entity.EntityAddComponent<RadiusComponent>(world);
+            ref var radiusComponent = ref entity.EntityAdd<RadiusComponent>(world);
             radiusComponent.radius = 0.4f;
 
-            ref var healthComponent = ref entity.EntityAddComponent<HealthComponent>(world);
+            ref var healthComponent = ref entity.EntityAdd<HealthComponent>(world);
             healthComponent.maxHealth = 100;
             healthComponent.health = 50;
 

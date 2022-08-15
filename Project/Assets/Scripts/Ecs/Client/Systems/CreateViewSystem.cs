@@ -35,26 +35,26 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filter)
             {
-                var name = entity.EntityGetComponent<GameObjectNameComponent>(world).Id.ToString();
+                var name = entity.EntityGet<GameObjectNameComponent>(world).Id.ToString();
                 var go = GameObject.Find(name).gameObject;
                 go.gameObject.SetActive(true);
 
 
-                entity.EntityAddComponent<TransformComponent>(world).Transform = go.transform;
+                entity.EntityAdd<TransformComponent>(world).Transform = go.transform;
 
-                if (entity.EntityHasComponent<CollectableComponent>(world))
+                if (entity.EntityHas<CollectableComponent>(world))
                 {
                     if (entity.EntityHas<BushComponent>(world))
                     {
                         var view = go.GetComponent<BushView>();
                         ref var collectableTargetComponent =
-                            ref entity.EntityAddComponent<CollectableTargetComponent>(world);
+                            ref entity.EntityAdd<CollectableTargetComponent>(world);
                         collectableTargetComponent.targetObject = view.Berries.gameObject;
                     }
                     else
                     {
                         ref var collectableTargetComponent =
-                            ref entity.EntityAddComponent<CollectableTargetComponent>(world);
+                            ref entity.EntityAdd<CollectableTargetComponent>(world);
                         collectableTargetComponent.targetObject = go;
                     }
                 }
@@ -69,10 +69,10 @@ namespace Game.Ecs.Client.Systems
                 view.transform.position = entity.EntityGet<PositionComponent>(world).value;
                 view.Gun.gameObject.SetActive(false);
 
-                ref var component = ref entity.EntityAddComponent<TransformComponent>(world);
+                ref var component = ref entity.EntityAdd<TransformComponent>(world);
                 component.Transform = view.transform;
                 
-                ref var animatorComponent = ref entity.EntityAddComponent<AnimatorComponent>(world);
+                ref var animatorComponent = ref entity.EntityAdd<AnimatorComponent>(world);
                 animatorComponent.animator = view.Animator;
 
                 entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
@@ -88,7 +88,7 @@ namespace Game.Ecs.Client.Systems
                 view.transform.position = pos;
                 view.name = $"Bullet{entity}";
 
-                ref var component = ref entity.EntityAddComponent<TransformComponent>(world);
+                ref var component = ref entity.EntityAdd<TransformComponent>(world);
                 component.Transform = view.transform;
 
                 entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
