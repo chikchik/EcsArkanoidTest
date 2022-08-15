@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Fabros.EcsModules.Mech.ClientServer.Components;
+using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Inventory;
@@ -36,7 +37,7 @@ namespace Game.Ecs.ClientServer.Systems
         public void Init(EcsSystems systems)
         {
             world = systems.GetWorld();
-            inputWorld = systems.GetWorld("input");
+            inputWorld = systems.GetWorld(EcsWorlds.Input);
             filter = inputWorld.Filter<InputComponent>().End();
         }
         

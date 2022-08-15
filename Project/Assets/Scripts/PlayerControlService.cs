@@ -1,4 +1,5 @@
-﻿using Game.Ecs.ClientServer.Components;
+﻿using Game.ClientServer;
+using Game.Ecs.ClientServer.Components;
 using Game.View;
 using Game.ClientServer.Services;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace Game
         private IInputService input;
         
         public PlayerControlService(
-            [Inject(Id = "input")] EcsWorld inputWorld,
+            [Inject(Id = EcsWorlds.Input)] EcsWorld inputWorld,
             [InjectOptional] IInputService input,
             EcsWorld world)
         {

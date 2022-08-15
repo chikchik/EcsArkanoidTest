@@ -1,4 +1,5 @@
-﻿using Game.ClientServer.Services;
+﻿using Game.ClientServer;
+using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components.Inventory;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer.Components;
@@ -14,7 +15,7 @@ namespace Game.Ecs.ClientServer.Systems
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
-            var inputWorld = systems.GetWorld("input");
+            var inputWorld = systems.GetWorld(EcsWorlds.Input);
 
             var filter = inputWorld.Filter<InputJoinPlayerComponent>().End();
 

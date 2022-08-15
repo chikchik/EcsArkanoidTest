@@ -169,7 +169,9 @@ namespace Game.ClientServer
             container.Register<EventsSystem<ControlsMechComponent>>();
             container.RegisterClient<CreateViewSystem>();
 #endif
-            container.Register<RemoveEntitySystem>();
+            container.Register<DeleteEventEntitiesSystem>();
+            container.Register<RemoveEntitySystem>();//from inventory
+
             //write final Box2d transforms to components
             container.Register<Box2DWriteBodiesToComponentsSystem>();
         }

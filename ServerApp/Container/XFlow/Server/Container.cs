@@ -48,8 +48,10 @@ namespace XFlow.Server
         private ClientWebSocket socket;
 
         private EcsWorld world;
+
         private EcsWorld sentWorld;
         private EcsWorld inputWorld;
+        private EcsWorld eventWorld;
 
 
         private EcsSystems systems;
@@ -187,17 +189,18 @@ namespace XFlow.Server
             world.EntityDestroyedListeners.Add(destroyedListener);
 
  
-            inputWorld = new EcsWorld("input");
+            inputWorld = new EcsWorld(EcsWorlds.Input);
+            systems.AddWorld(inputWorld, EcsWorlds.Input);
 
             world.AddUnique(config);
             world.AddUnique<TickComponent>().Value = new Tick(0);
             world.AddUnique(new TickDeltaComponent { Value = new TickDelta(config.Tickrate) });
-
-
             
-            systems.AddWorld(inputWorld, "input");
 
-            
+            eventWorld = new EcsWorld(EcsWorlds.Event);
+            systems.AddWorld(eventWorld, EcsWorlds.Event);
+
+
             dif.ApplyChanges(world);
 
             systems.Init();

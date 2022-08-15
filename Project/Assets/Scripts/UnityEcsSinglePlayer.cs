@@ -30,7 +30,8 @@ namespace Game
         [Inject] private Joystick joystick;
         
         [Inject] private EcsWorld world;
-        [Inject(Id = "input")] private EcsWorld inputWorld;
+        [Inject(Id = EcsWorlds.Input)] private EcsWorld inputWorld;
+        [Inject(Id = EcsWorlds.Event)] private EcsWorld eventWorld;
         
         [Inject] 
         private PlayerControlService controlService;
@@ -54,7 +55,8 @@ namespace Game
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
 
             systems = new EcsSystems(world);
-            systems.AddWorld(inputWorld, "input");
+            systems.AddWorld(inputWorld, EcsWorlds.Input);
+            systems.AddWorld(eventWorld, EcsWorlds.Event);
             ClientServices.InitializeNewWorldFromScene(world);
             
             world.EntityDestroyedListeners.Add(entityDestroyedListener);
