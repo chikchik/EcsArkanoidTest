@@ -138,14 +138,14 @@ namespace Game.ClientServer
             //иначе в мультиплеере предсказание не будет работать правильно
             container.Register<Box2DInitSystem>();
             container.Register<Box2DCreateBodiesSystem>();
-            container.Register<Box2DCreateContactsSystem>();
+            container.Register<Box2DCreateEventContactsSystem>();
+            //container.Register<Box2DCreateContactsSystem>();
             container.Register<Box2DUpdateInternalObjectsSystem>();
             container.Register<Box2DUpdateSystem>();
             container.Register<BulletContactSystem>();      
             container.Register<DestructibleDamageApplySystem>();
-            container.Register<HitEntityDestructionSystem>();
 
-            container.Register<Box2DDeleteContactsSystem>();
+            //container.Register<Box2DDeleteContactsSystem>();
 
             container.Register<EventsSystem<WeaponComponent>>();
             container.Register<EventsSystem<FireComponent>>();

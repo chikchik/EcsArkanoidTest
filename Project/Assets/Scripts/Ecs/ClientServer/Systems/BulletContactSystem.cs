@@ -2,6 +2,7 @@
 
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Components.Other;
+using XFlow.Net.ClientServer;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
@@ -9,18 +10,28 @@ namespace Game.Ecs.ClientServer.Systems
     public class BulletContactSystem : IEcsRunSystem, IEcsInitSystem
     {
         private EcsWorld world;
+        private EcsWorld eventWorld;
+        
+        private EcsPool<DestructibleHealthComponent> poolDestructibleHealth;
+        private EcsPool<BulletComponent> poolBullet;
+        private EcsPool<BulletHitComponent> poolBulletHits;
+        
         public void Init(EcsSystems systems)
         {
             world = systems.GetWorld();
+            eventWorld = systems.GetWorld(EcsWorlds.Event);
+            
+            poolBulletHits = eventWorld.GetPool<BulletHitComponent>();
+            
+            poolDestructibleHealth = world.GetPool<DestructibleHealthComponent>();
+            poolBullet = world.GetPool<BulletComponent>();
         }
 
         public void Run(EcsSystems systems)
         {
-            var filter = world.Filter<Box2DBeginContactComponent>().End();
-            var poolContacts = world.GetPool<Box2DBeginContactComponent>();
-            var poolBulletHits = world.GetPool<BulletHitComponent>();
-            var poolDestructibleHealth = world.GetPool<DestructibleHealthComponent>();
-            var poolBullet = world.GetPool<BulletComponent>();
+            var filter = eventWorld.Filter<Box2DBeginContactComponent>().End();
+            var poolContacts = eventWorld.GetPool<Box2DBeginContactComponent>();
+            
             foreach (var entity in filter)
             {
                 var contact = poolContacts.Get(entity);
@@ -35,7 +46,7 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     if (poolDestructibleHealth.Has(entityB))
                     {
-                        CreateHitEntity(poolBullet.Get(entityA), world.PackEntity(entityB), poolBulletHits);
+                        CreateHitEventEntity(poolBullet.Get(entityA), world.PackEntity(entityB));
                     }
                     world.DelEntity(entityA);
                 }
@@ -44,20 +55,19 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     if (poolDestructibleHealth.Has(entityA))
                     {
-                        CreateHitEntity(poolBullet.Get(entityB), world.PackEntity(entityA), poolBulletHits);
+                        CreateHitEventEntity(poolBullet.Get(entityB), world.PackEntity(entityA));
                     }
                     world.DelEntity(entityB);
                 }
             }
         }
 
-        private void CreateHitEntity(
+        private void CreateHitEventEntity(
             BulletComponent bullet,
-            EcsPackedEntity entity,
-            EcsPool<BulletHitComponent> poolBulletHits)
+            EcsPackedEntity entity)
 
         {
-            var hitEntity = world.NewEntity();
+            var hitEntity = eventWorld.NewEntity();
             ref var bulletHit = ref poolBulletHits.Add(hitEntity);
             bulletHit.Bullet = bullet;
             bulletHit.EntityHit = entity;
