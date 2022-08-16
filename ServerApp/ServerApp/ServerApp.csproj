@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\module-ecs-container\SimpleContainerServer\SimpleContainerServer.csproj" />
+    <ProjectReference Include="..\..\Submodules\module-ecs-container\SimpleContainerServer\SimpleContainerServer.csproj" />
     <ProjectReference Include="..\Container\Container.csproj" />
   </ItemGroup>
 

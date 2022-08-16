@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Container", "Container\Cont
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerApp", "ServerApp\ServerApp.csproj", "{CD133AE1-DFBC-4EA8-9BEB-4120AB8E1877}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleContainerServer", "..\..\module-ecs-container\SimpleContainerServer\SimpleContainerServer.csproj", "{2F12DE59-6C5B-4C37-B22F-3D21F7E1A6E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleContainerServer", "..\Submodules\module-ecs-container\SimpleContainerServer\SimpleContainerServer.csproj", "{2F12DE59-6C5B-4C37-B22F-3D21F7E1A6E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "..\Submodules\module-ecs-container\Contracts\Contracts.csproj", "{684D6D15-7A76-463F-AE31-0130170A6AAD}"
 EndProject
