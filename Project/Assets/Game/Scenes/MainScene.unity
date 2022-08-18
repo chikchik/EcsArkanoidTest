@@ -7705,8 +7705,58 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
+      propertyPath: UdpHosts.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: SelectedUdpHostIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
       propertyPath: OverrideDefaultServer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: UdpHosts.Array.data[0].Port
+      value: 12345
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: UdpHosts.Array.data[0].addr
+      value: 127.0.0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: UdpHosts.Array.data[0].port
+      value: 12345
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: UdpHosts.Array.data[1].Port
+      value: 12345
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: UdpHosts.Array.data[1].addr
+      value: 164.90.172.253
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: UdpHosts.Array.data[1].port
+      value: 12345
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: UdpHosts.Array.data[0].Address
+      value: 127.0.0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: UdpHosts.Array.data[1].Address
+      value: c1.ecs.fbpub.net
       objectReference: {fileID: 0}
     - target: {fileID: 3448083649790090397, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}

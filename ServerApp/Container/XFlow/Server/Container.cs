@@ -479,41 +479,34 @@ namespace XFlow.Server
             writer.Reset();
             dif.WriteBinary(false, writer);
 
-            var difBytes = writer.CopyToByteArray();
-            var difBinary = Convert.ToBase64String(P2P.P2P.Compress(difBytes));
-
-            //leo.SyncLog.WriteLine($"send world {leo.GetPrevTick(world)}->{leo.GetCurrentTick(world)} to clients\n");
-
             //clients list could be modified
             Array.ForEach(clients.ToArray(), client =>
             {
-                var packet = new Packet
-                {
-                    hasWorldUpdate = true,
-                    WorldUpdate = new WorldUpdateProto
-                    {
-                        difBinary = difBinary,
-                        delay = client.Delay,
-                        LastClientTick = client.LastClientTick,
-                        LastServerTick = client.LastServerTick,
-                        Tick = world.GetTick()
-                    }
-                };
+                var writer = new HGlobalWriter();
+                var data = new BinaryProtocol.DataWorldDiff();
+                data.Tick = world.GetTick();
+                data.SourceTick = sentWorld.GetTick();
+                data.Delay = client.Delay;
+                data.Diff = dif;
+                BinaryProtocol.WriteWorldDiff(writer, data);
                 
-                SendAsync(packet, client);
-                
-                
+                var compressed = P2P.P2P.Compress(writer.CopyToByteArray());
                 if (client.EndPoint != null)
                 {
-                    var writer = new HGlobalWriter();
-                    writer.WriteInt32(world.GetTick());
-                    writer.WriteInt32(client.Delay);
-                    writer.WriteByteArray(difBytes, true);
-                    
-                    var data = P2P.P2P.Compress(writer.CopyToByteArray());
-                    int r = udpServer.Socket.SendTo(data, client.EndPoint);
+                    int r = udpServer.Socket.SendTo(compressed, client.EndPoint);
+                    if (r <= 0)
+                    {
+                        Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
+                    }
                 }
-                
+
+                //send to websocket server
+                //if ((data.Tick % 5) == 0)
+                {
+                    var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
+                    socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
+                }
+
                 client.Delay = -999;
             });
                                         

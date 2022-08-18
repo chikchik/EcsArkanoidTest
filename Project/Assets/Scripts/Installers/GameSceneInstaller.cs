@@ -1,3 +1,6 @@
+using System;
+using System.Net;
+using System.Threading;
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.ClientServer.Services;
@@ -27,6 +30,8 @@ namespace Game.Installers
     {
         [SerializeField] private GameSettings settings;
 
+        private CancellationTokenSource cancellationTokenSource;
+        
         public override void InstallBindings()
         {
             Container.Bind<Camera>().FromComponentsOn(GameObject.Find("Main Camera")).AsSingle();
@@ -59,7 +64,14 @@ namespace Game.Installers
             Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
 
-            if (settings.OverrideDefaultServer)
+            cancellationTokenSource = new CancellationTokenSource();
+            Container.Bind<CancellationToken>().FromInstance(cancellationTokenSource.Token).AsCached();
+
+            var udpHost = settings.UdpHosts[settings.SelectedUdpHostIndex];
+            var ipEndPoint = new IPEndPoint(IPAddress.Parse(udpHost.Address), udpHost.Port);
+            Container.Bind<IPEndPoint>().WithId("udp").FromInstance(ipEndPoint).AsCached();
+
+            if (settings.OverrideDefaultServerRoom)
             {
                 var url = $"{P2P.DEV_SERVER_WS}/{settings.OverrideRoom}";
                 Container.Bind<string>().WithId("serverUrl").FromInstance(url).AsCached();
@@ -115,6 +127,12 @@ namespace Game.Installers
                 var comp = settings.gameObject.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);
             }
+        }
+
+        private void OnApplicationQuit()
+        {
+            Debug.Log("OnApplicationQuit");
+            cancellationTokenSource.Cancel();
         }
     }
 }
