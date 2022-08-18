@@ -18,6 +18,7 @@ using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
+using XFlow.P2P;
 using Zenject;
 
 namespace Game.Installers
@@ -58,7 +59,16 @@ namespace Game.Installers
             Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
 
-            Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();
+            if (settings.OverrideDefaultServer)
+            {
+                var url = $"{P2P.DEV_SERVER_WS}/{settings.OverrideRoom}";
+                Container.Bind<string>().WithId("serverUrl").FromInstance(url).AsCached();
+            }
+            else
+            {
+                Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();    
+            }
+            
             Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
             
            

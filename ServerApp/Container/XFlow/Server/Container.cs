@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -36,6 +37,7 @@ namespace XFlow.Server
         public int LastClientTick;
         public int LastServerTick;
         public ClientAddr Address;
+        public EndPoint EndPoint;
         public Client(int id)
         {
             this.ID = id;
@@ -72,11 +74,12 @@ namespace XFlow.Server
         private TickrateConfigComponent config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1 };
 
         private Task runTask;
-        private CancellationToken runCancellationToken;
         private CancellationTokenSource runCancellationTokenSource;
         
         private IContainerConfig containerConfig;
         private string url;
+
+        private UDPServer udpServer = new UDPServer();
 
         public Container(IContainerConfig containerConfig, ILogger logger)
         {
@@ -86,14 +89,13 @@ namespace XFlow.Server
             url =  $"{P2P.P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.P2P.ADDR_SERVER.AddressString}";
             
             components = new ComponentsCollection();
-            ComponentsCollectionUtils.AddComponents(components);
+            ComponentsCollectionUtils.AddComponentsFromAssembly(components, System.Reflection.Assembly.GetExecutingAssembly());
             
             var dir = Directory.GetCurrentDirectory();
             Debug.Log($"working dir: {dir}");
             socket = new ClientWebSocket();
             
             runCancellationTokenSource = new CancellationTokenSource();
-            runCancellationToken = runCancellationTokenSource.Token;
         }
 
         public void Init()
@@ -102,13 +104,23 @@ namespace XFlow.Server
 
         public void Start()
         {
-            
-            runTask = Task.Run(AsyncRun, runCancellationToken);
-            //runTask = AsyncRun();
+            runTask = Task.Run(AsyncRun, runCancellationTokenSource.Token);
+            udpServer.Run(runCancellationTokenSource.Token);
         }
 
         public async  void Stop()
         {
+            Debug.Log("Container.Stop");
+            try
+            {
+                udpServer.Dispose();
+            }
+            catch (Exception e)
+            {
+                
+            }
+            
+            Debug.Log("Container.Stop1");
             runCancellationTokenSource.Cancel();
             
             try
@@ -121,9 +133,9 @@ namespace XFlow.Server
             }
             finally
             {
+                Debug.Log("Container.Stop2");
                 runCancellationTokenSource.Dispose();
             }
-
         }
 
         public string GetInfo()
@@ -265,6 +277,19 @@ namespace XFlow.Server
                     for (int i = 0; i < receivedCopy.Length; ++i)
                         ProcessMessage(receivedCopy[i]);
 
+                    while (true)
+                    {
+                        var udpPacketOpt = udpServer.GetPacket();
+                        if (udpPacketOpt == null)
+                            break;
+                        var udpPacket = udpPacketOpt.Value;
+                        var reader = new HGlobalReader(udpPacket.Data);
+                        var playerId = reader.ReadInt32();
+                        var client = GotInput1(reader, playerId);
+                        client.EndPoint = udpPacket.EndPoint;
+                    }
+                    
+
                     if (next <= DateTime.UtcNow && worldInitialized)
                     {
                         //Console.WriteLine($"tick {leo.GetCurrentTick(world)}");
@@ -307,7 +332,10 @@ namespace XFlow.Server
 
             if (msgBytes[0] == 0xff && msgBytes[1] == 0 && msgBytes[2] == 0 && msgBytes[3] == 0)
             {
-                GotInput(msgBytes);
+                var reader = new HGlobalReader(msgBytes);
+                reader.ReadInt32();//0xff
+                var playerId = reader.ReadInt32();
+                GotInput1(reader, playerId);
                 return;
             }
 
@@ -327,7 +355,7 @@ namespace XFlow.Server
                     StartSystems(Convert.FromBase64String(packet.hello.InitialWorld));
                 }
 
-                SendAsync(new Packet { hello = hello, hasHello = true }, client.Address);
+                SendAsync(new Packet { hello = hello, hasHello = true }, client);
 
                 var emptyWorld = new EcsWorld("empty");
                 SendInitialWorld(emptyWorld, client);
@@ -336,22 +364,15 @@ namespace XFlow.Server
                 BaseServices.JoinPlayer(inputWorld, packet.playerID);                
             }
         }
-
-        private void GotInput(byte[] data)
+        
+        private Client GotInput1(HGlobalReader reader, int playerId)
         {
-            var reader = new HGlobalReader(data);
-
             try            
             {
-                reader.ReadInt32();//0xff
-
-                var playerId = reader.ReadInt32();
-
                 var inputTime = reader.ReadInt32();
                 var time = inputTime;
 
                 var type = reader.ReadInt32();
-
 
                 Client client = clients.FirstOrDefault(client => client.ID == playerId);
                 if (client == null)
@@ -361,7 +382,7 @@ namespace XFlow.Server
                         missingClients.Add(playerId);
                         Debug.Log($"not found player {playerId}");
                     }
-                    return;
+                    return null;
                 }
 
 
@@ -407,6 +428,8 @@ namespace XFlow.Server
                     //leo.Inputs.Add(input);
                     //world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
                 }
+
+                return client;
             } finally
             {
                 reader.Dispose();
@@ -453,9 +476,11 @@ namespace XFlow.Server
                 return;
 
             var dif = WorldDiff.BuildDiff(components, sentWorld, world);
+            writer.Reset();
             dif.WriteBinary(false, writer);
 
-            var difBinary = Convert.ToBase64String(P2P.P2P.Compress(writer.CopyToByteArray()));
+            var difBytes = writer.CopyToByteArray();
+            var difBinary = Convert.ToBase64String(P2P.P2P.Compress(difBytes));
 
             //leo.SyncLog.WriteLine($"send world {leo.GetPrevTick(world)}->{leo.GetCurrentTick(world)} to clients\n");
 
@@ -470,12 +495,25 @@ namespace XFlow.Server
                         difBinary = difBinary,
                         delay = client.Delay,
                         LastClientTick = client.LastClientTick,
-                        LastServerTick = client.LastServerTick
-
+                        LastServerTick = client.LastServerTick,
+                        Tick = world.GetTick()
                     }
                 };
                 
-                SendAsync(packet, client.Address);
+                SendAsync(packet, client);
+                
+                
+                if (client.EndPoint != null)
+                {
+                    var writer = new HGlobalWriter();
+                    writer.WriteInt32(world.GetTick());
+                    writer.WriteInt32(client.Delay);
+                    writer.WriteByteArray(difBytes, true);
+                    
+                    var data = P2P.P2P.Compress(writer.CopyToByteArray());
+                    int r = udpServer.Socket.SendTo(data, client.EndPoint);
+                }
+                
                 client.Delay = -999;
             });
                                         
@@ -497,15 +535,15 @@ namespace XFlow.Server
                 }
             };
             
-            SendAsync(packet, client.Address);
+            SendAsync(packet, client);
             
             Debug.Log($"initial world send to client {client.ID}");
         }
 
-        private void SendAsync(Packet packet, ClientAddr addr)
+        private void SendAsync(Packet packet, Client client)
         {
-            var bytes = P2P.P2P.BuildRequest(addr, packet);            
-            socket.SendAsync(bytes, WebSocketMessageType.Text, true, new CancellationToken());            
+            var bytes = P2P.P2P.BuildRequest(client.Address, packet);            
+            socket.SendAsync(bytes, WebSocketMessageType.Text, true, new CancellationToken());
         }
     }
 }

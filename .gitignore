@@ -53,3 +53,4 @@ ServerApp/tools/libbox2d-unity.so
 Server/Container/obj/
 ServerApp/ServerApp/obj/
 ServerApp/ServerApp/bin/
+ServerApp/tools/__pycache__/
