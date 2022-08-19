@@ -38,6 +38,10 @@ namespace XFlow.Server
         public int LastServerTick;
         public ClientAddr Address;
         public EndPoint EndPoint;
+
+        public EcsWorld SentWorld;
+        public EcsWorld SentWorldRelaible;
+        
         public Client(int id)
         {
             this.ID = id;
@@ -52,7 +56,7 @@ namespace XFlow.Server
 
         private EcsWorld world;
 
-        private EcsWorld sentWorld;
+        private EcsWorld sentWorld_;
         private EcsWorld inputWorld;
         private EcsWorld eventWorld;
 
@@ -218,7 +222,7 @@ namespace XFlow.Server
 
             systems.Init();
 
-            sentWorld = WorldUtils.CopyWorld(components, world);
+            //sentWorld = WorldUtils.CopyWorld(components, world);
 
             worldInitialized = true;
         }
@@ -258,7 +262,7 @@ namespace XFlow.Server
 
                 _ = Task.Factory.StartNew(ReceiveData);
 
-                SendWorldToClients();
+                //SendWorldToClients();
 
 
                 Debug.Log("loop");
@@ -355,10 +359,34 @@ namespace XFlow.Server
                     StartSystems(Convert.FromBase64String(packet.hello.InitialWorld));
                 }
 
-                SendAsync(new Packet { hello = hello, hasHello = true }, client);
+                SendAsyncDeprecated(new Packet { hello = hello, hasHello = true }, client);
 
-                var emptyWorld = new EcsWorld("empty");
-                SendInitialWorld(emptyWorld, client);
+
+                client.SentWorldRelaible = new EcsWorld("empty");
+                /*
+                var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
+                var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
+                socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
+                client.SentWorldRelaible = WorldUtils.CopyWorld(components, world);
+                */
+                
+                var dif = WorldDiff.BuildDiff(components, client.SentWorldRelaible, world);
+
+                packet = new Packet
+                {
+                    hasWelcomeFromServer = true,
+                    WorldUpdate = new WorldUpdateProto
+                    {
+                        difStr = dif.ToBase64String(),
+                        delay = 1
+                    }
+                };
+            
+                SendAsyncDeprecated(packet, client);
+                
+                //client.
+                client.SentWorld = client.SentWorldRelaible = WorldUtils.CopyWorld(components, world);
+                
 
                 clients.Add(client);
                 BaseServices.JoinPlayer(inputWorld, packet.playerID);                
@@ -401,7 +429,7 @@ namespace XFlow.Server
                     time = currentTick;
 
 
-                var sentWorldTick = sentWorld.GetTick() - step.Value;
+                var sentWorldTick = client.SentWorld.GetTick() - step.Value;
 
                 if (delay == 0 && sentWorldTick == time)
                     time = currentTick + step.Value;
@@ -470,50 +498,68 @@ namespace XFlow.Server
            // Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId}  Tick End {time0.Value}");
         }
 
+        void BuildDiff(Client client, EcsWorld srcWorld, ref BinaryProtocol.DataWorldDiff data)
+        {
+            var dif = WorldDiff.BuildDiff(components, srcWorld, world);
+            data.Tick = world.GetTick();
+            if (srcWorld.HasUnique<TickComponent>())
+                data.SourceTick = srcWorld.GetTick();
+            data.Delay = client.Delay;
+            data.Diff = dif;
+        }
+
+        byte[] BuildDiffBytes(Client client, EcsWorld srcWorld)
+        {
+            var data = new BinaryProtocol.DataWorldDiff();
+            BuildDiff(client, srcWorld, ref data);
+                
+            writer.Reset();
+            data.Diff.WriteBinary(false, writer);
+            var compressed = P2P.P2P.Compress(writer.CopyToByteArray());
+            
+            return compressed;
+        }
+
         void SendWorldToClients()
         {
             if (clients.Count == 0)
                 return;
-
-            var dif = WorldDiff.BuildDiff(components, sentWorld, world);
-            writer.Reset();
-            dif.WriteBinary(false, writer);
-
-            //clients list could be modified
-            Array.ForEach(clients.ToArray(), client =>
+            
+            //if ((world.GetTick()  % 5) != 0)
+            //    return;
+           
+            foreach (var client in clients)
             {
-                var writer = new HGlobalWriter();
-                var data = new BinaryProtocol.DataWorldDiff();
-                data.Tick = world.GetTick();
-                data.SourceTick = sentWorld.GetTick();
-                data.Delay = client.Delay;
-                data.Diff = dif;
-                BinaryProtocol.WriteWorldDiff(writer, data);
-                
-                var compressed = P2P.P2P.Compress(writer.CopyToByteArray());
                 if (client.EndPoint != null)
                 {
+                    var compressed = BuildDiffBytes(client, client.SentWorld);
+                    
                     int r = udpServer.Socket.SendTo(compressed, client.EndPoint);
                     if (r <= 0)
                     {
                         Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
                     }
+
+                    client.SentWorld = WorldUtils.CopyWorld(components, world);
                 }
 
                 //send to websocket server
-                //if ((data.Tick % 5) == 0)
+                if ((world.GetTick() % 5) == 0)
                 {
+                    var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
                     var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
                     socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
+                    client.SentWorldRelaible = WorldUtils.CopyWorld(components, world);
                 }
 
                 client.Delay = -999;
-            });
+            }
                                         
             //сохраняем отправленный мир чтоб с ним потом считать diff
-            sentWorld = WorldUtils.CopyWorld(components, world);
+           // sentWorld = WorldUtils.CopyWorld(components, world);
         }
 
+        /*
         void SendInitialWorld(EcsWorld prevWorld, Client client)
         {
             var dif = WorldDiff.BuildDiff(components, prevWorld, sentWorld);
@@ -531,12 +577,12 @@ namespace XFlow.Server
             SendAsync(packet, client);
             
             Debug.Log($"initial world send to client {client.ID}");
-        }
+        }*/
 
-        private void SendAsync(Packet packet, Client client)
+        private void SendAsyncDeprecated(Packet packet, Client client)
         {
             var bytes = P2P.P2P.BuildRequest(client.Address, packet);            
-            socket.SendAsync(bytes, WebSocketMessageType.Text, true, new CancellationToken());
+            socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
         }
     }
 }
