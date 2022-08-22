@@ -453,9 +453,9 @@ namespace XFlow.Server
                 }
                 else
                 {
-                    var cname = component.GetComponentType().Name;
-                    cname = cname.Replace("Component", "C.");
-                    var end = inputTime < currentTick ? "!!!" : "";
+                    //var cname = component.GetComponentType().Name;
+                    //cname = cname.Replace("Component", "C.");
+                    //var end = inputTime < currentTick ? "!!!" : "";
                     //log($"got input {cname}:{inputTime} at {currentTick.Value} {end}");
                     
                     var componentData = component.ReadSingleComponent(reader) as IInputComponent;
@@ -474,36 +474,15 @@ namespace XFlow.Server
 
         private void Tick()
         {
-            //var time0 = leo.GetCurrentTick(world);
-
-            //Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} Tick Begin {time0.Value}");
             var time = world.GetTick();
-
             SyncServices.FilterInputs(inputWorld, time);
-
-            //ref var component = ref world.GetUniqueRef<PendingInputComponent>();
-
-            //Console.WriteLine($"tick {time} at {TimeUtils.GetUnixTimeMS()}");
             //обновляем мир 1 раз
             SyncServices.Tick(systems, inputWorld, world);
-        
-            //time = world.GetTick();
-
-            //var cfg = leo.GetConfig(world);
-
-            //if (world.GetTick() % cfg.ServerSyncStep == 0)
+            
+            foreach (var client in clients)
             {
-                //если у сервера высокий tickrate, например 60
-                //то отправлять миру 60 раз в секунду - накладно
-                //можно делать это реже, например 20 раз в секунду если serverSyncStep==3
-                SendWorldToClients();
-                //удаляем ввод игрока который устарел
-                //var abc = component.data.Where(input => input.Tick >= time);
-                //component.data = abc.ToArray();
-                //leo.FilterInputs(time);
+                SendWorldToClient(client);
             }
-
-           // Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId}  Tick End {time0.Value}");
         }
 
         void BuildDiff(Client client, EcsWorld srcWorld, ref BinaryProtocol.DataWorldDiff data)
@@ -527,62 +506,32 @@ namespace XFlow.Server
             var compressed = P2P.P2P.Compress(writer.CopyToByteArray());
             return compressed;
         }
-
-        void SendWorldToClients()
+        
+        void SendWorldToClient(Client client)
         {
-            if (clients.Count == 0)
-                return;
-            
-            //if ((world.GetTick()  % 5) != 0)
-            //    return;
-           
-            foreach (var client in clients)
+            if (client.EndPoint != null)
             {
-                //if (false)
-                if (client.EndPoint != null)
-                {
-                    var compressed = BuildDiffBytes(client, client.SentWorld);
+                var compressed = BuildDiffBytes(client, client.SentWorld);
                     
-                    int r = udpServer.Socket.SendTo(compressed, client.EndPoint);
-                    if (r <= 0)
-                    {
-                        Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
-                    }
-
-                    client.SentWorld = WorldUtils.CopyWorld(components, world);
-                    client.Delay = -999;
-                }
-
-                //send to websocket server
-                //if (false)
-                if ((world.GetTick() % 5) == 0)
+                int r = udpServer.Socket.SendTo(compressed, client.EndPoint);
+                if (r <= 0)
                 {
-                    var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
-                    var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
-                    socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
-                    client.SentWorldRelaible = WorldUtils.CopyWorld(components, world);
+                    Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
                 }
+
+                client.SentWorld = WorldUtils.CopyWorld(components, world);
+                client.Delay = -999;
+            }
+
+            //send to websocket server
+            //if (false)
+            if ((world.GetTick() % 5) == 0)
+            {
+                var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
+                var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
+                socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
+                client.SentWorldRelaible = WorldUtils.CopyWorld(components, world);
             }
         }
-
-        /*
-        void SendInitialWorld(EcsWorld prevWorld, Client client)
-        {
-            var dif = WorldDiff.BuildDiff(components, prevWorld, sentWorld);
-
-            var packet = new Packet
-            {
-                hasWelcomeFromServer = true,
-                WorldUpdate = new WorldUpdateProto
-                {
-                    difStr = dif.ToBase64String(),
-                    delay = 1
-                }
-            };
-            
-            SendAsync(packet, client);
-            
-            Debug.Log($"initial world send to client {client.ID}");
-        }*/
     }
 }
