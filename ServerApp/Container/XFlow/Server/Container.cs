@@ -372,7 +372,7 @@ namespace XFlow.Server
                 
                 var dif = WorldDiff.BuildDiff(components, client.SentWorldRelaible, world);
 
-                /*
+                
                 packet = new Packet
                 {
                     hasWelcomeFromServer = true,
@@ -383,17 +383,11 @@ namespace XFlow.Server
                         difStr = dif.ToBase64String(),
                         delay = 1
                     }
-                };*/
+                };
 
-                writer.Reset();
-                
-                var data = new BinaryProtocol.DataWorldDiff();
-                data.Diff = dif;
-                BinaryProtocol.WriteWorldDiff(writer, data);
-                //var bytes = P2P.P2P.BuildRequest(client.Address, dif.ToByteArray(true));
-                var bytes = writer.CopyToByteArray();
-                //socket.SendAsync()
-                socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
+
+                var data = P2P.P2P.BuildRequest(client.Address, packet);
+                socket.SendAsync(data, WebSocketMessageType.Binary, true, new CancellationToken());
                 
                 //SendAsyncDeprecated(packet, client);
                 Debug.Log($"send initial world at tick {world.GetTick()}");
@@ -411,11 +405,6 @@ namespace XFlow.Server
         {
             try            
             {
-                var inputTime = reader.ReadInt32();
-                var time = inputTime;
-
-                var type = reader.ReadInt32();
-
                 Client client = clients.FirstOrDefault(client => client.ID == playerId);
                 if (client == null)
                 {
@@ -426,6 +415,11 @@ namespace XFlow.Server
                     }
                     return null;
                 }
+                
+                var inputTime = reader.ReadInt32();
+                var time = inputTime;
+
+                var type = reader.ReadInt32();
 
 
                 var currentTick = world.GetTick();
@@ -544,7 +538,7 @@ namespace XFlow.Server
            
             foreach (var client in clients)
             {
-                if (false)
+                //if (false)
                 if (client.EndPoint != null)
                 {
                     var compressed = BuildDiffBytes(client, client.SentWorld);
@@ -556,6 +550,7 @@ namespace XFlow.Server
                     }
 
                     client.SentWorld = WorldUtils.CopyWorld(components, world);
+                    client.Delay = -999;
                 }
 
                 //send to websocket server
@@ -567,12 +562,7 @@ namespace XFlow.Server
                     socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
                     client.SentWorldRelaible = WorldUtils.CopyWorld(components, world);
                 }
-
-                client.Delay = -999;
             }
-                                        
-            //сохраняем отправленный мир чтоб с ним потом считать diff
-           // sentWorld = WorldUtils.CopyWorld(components, world);
         }
 
         /*
