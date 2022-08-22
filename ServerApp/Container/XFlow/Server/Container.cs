@@ -359,7 +359,7 @@ namespace XFlow.Server
                     StartSystems(Convert.FromBase64String(packet.hello.InitialWorld));
                 }
 
-                SendAsyncDeprecated(new Packet { hello = hello, hasHello = true }, client);
+                //SendAsyncDeprecated(new Packet { hello = hello, hasHello = true }, client);
 
 
                 client.SentWorldRelaible = new EcsWorld("empty");
@@ -372,24 +372,38 @@ namespace XFlow.Server
                 
                 var dif = WorldDiff.BuildDiff(components, client.SentWorldRelaible, world);
 
+                /*
                 packet = new Packet
                 {
                     hasWelcomeFromServer = true,
+                    hello =  hello,
+                    hasHello = true,
                     WorldUpdate = new WorldUpdateProto
                     {
                         difStr = dif.ToBase64String(),
                         delay = 1
                     }
-                };
-            
-                SendAsyncDeprecated(packet, client);
+                };*/
+
+                writer.Reset();
+                
+                var data = new BinaryProtocol.DataWorldDiff();
+                data.Diff = dif;
+                BinaryProtocol.WriteWorldDiff(writer, data);
+                //var bytes = P2P.P2P.BuildRequest(client.Address, dif.ToByteArray(true));
+                var bytes = writer.CopyToByteArray();
+                //socket.SendAsync()
+                socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
+                
+                //SendAsyncDeprecated(packet, client);
+                Debug.Log($"send initial world at tick {world.GetTick()}");
                 
                 //client.
                 client.SentWorld = client.SentWorldRelaible = WorldUtils.CopyWorld(components, world);
                 
 
                 clients.Add(client);
-                BaseServices.JoinPlayer(inputWorld, packet.playerID);                
+                BaseServices.JoinPlayer(inputWorld, client.ID);                
             }
         }
         
@@ -501,9 +515,9 @@ namespace XFlow.Server
         void BuildDiff(Client client, EcsWorld srcWorld, ref BinaryProtocol.DataWorldDiff data)
         {
             var dif = WorldDiff.BuildDiff(components, srcWorld, world);
-            data.Tick = world.GetTick();
+            data.DestTick = world.GetTick();
             if (srcWorld.HasUnique<TickComponent>())
-                data.SourceTick = srcWorld.GetTick();
+                data.SrcTick = srcWorld.GetTick();
             data.Delay = client.Delay;
             data.Diff = dif;
         }
@@ -512,11 +526,11 @@ namespace XFlow.Server
         {
             var data = new BinaryProtocol.DataWorldDiff();
             BuildDiff(client, srcWorld, ref data);
-                
-            writer.Reset();
-            data.Diff.WriteBinary(false, writer);
-            var compressed = P2P.P2P.Compress(writer.CopyToByteArray());
             
+            writer.Reset();
+            BinaryProtocol.WriteWorldDiff(writer, data);
+            
+            var compressed = P2P.P2P.Compress(writer.CopyToByteArray());
             return compressed;
         }
 
@@ -530,6 +544,7 @@ namespace XFlow.Server
            
             foreach (var client in clients)
             {
+                if (false)
                 if (client.EndPoint != null)
                 {
                     var compressed = BuildDiffBytes(client, client.SentWorld);
@@ -544,6 +559,7 @@ namespace XFlow.Server
                 }
 
                 //send to websocket server
+                //if (false)
                 if ((world.GetTick() % 5) == 0)
                 {
                     var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
@@ -578,11 +594,5 @@ namespace XFlow.Server
             
             Debug.Log($"initial world send to client {client.ID}");
         }*/
-
-        private void SendAsyncDeprecated(Packet packet, Client client)
-        {
-            var bytes = P2P.P2P.BuildRequest(client.Address, packet);            
-            socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
-        }
     }
 }
