@@ -27,6 +27,7 @@ using XFlow.Net.ClientServer.Protocol;
 using XFlow.P2P;
 using XFlow.Utils;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace XFlow.Server
 {
@@ -512,11 +513,14 @@ namespace XFlow.Server
             if (client.EndPoint != null)
             {
                 var compressed = BuildDiffBytes(client, client.SentWorld);
-                    
-                int r = udpServer.Socket.SendTo(compressed, client.EndPoint);
-                if (r <= 0)
+
+                //if (Random.Range(0, 1) > 0.8f)//sim lost
                 {
-                    Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
+                    int r = udpServer.Socket.SendTo(compressed, client.EndPoint);
+                    if (r <= 0)
+                    {
+                        Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
+                    }
                 }
 
                 client.SentWorld = WorldUtils.CopyWorld(components, world);
