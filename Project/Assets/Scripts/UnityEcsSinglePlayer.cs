@@ -55,7 +55,7 @@ namespace Game
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
 
-            systems = new EcsSystems(world);
+            systems = new EcsSystems(world, "systems");
             systems.AddWorld(inputWorld, EcsWorlds.Input);
             systems.AddWorld(eventWorld, EcsWorlds.Event);
             ClientServices.InitializeNewWorldFromScene(world);
@@ -75,7 +75,6 @@ namespace Game
             
 #if UNITY_EDITOR
             systems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
-            XFlow.Editor.EntityDebugger.EcsDebugger.instance.AddSystems(systems, "systems");
 #endif
             
             
@@ -86,16 +85,13 @@ namespace Game
 
             systems.Init();
             
-            viewSystems = new EcsSystems(world);
+            viewSystems = new EcsSystems(world, "viewSystems");
             viewSystems.Add(new SyncTransformSystem(true));
             viewSystems.Add(new RotateCharacterSystem());
 
             viewSystems.Add(new RotateRigidbodySystem());
             viewSystems.Add(new CameraFollowSystem(Camera.main));
             
-#if UNITY_EDITOR
-            XFlow.Editor.EntityDebugger.EcsDebugger.instance.AddSystems(viewSystems, "view");
-#endif
             viewSystems.Init();
             
             world.AddUnique(new MainPlayerIdComponent{value = playerId});
