@@ -37,7 +37,7 @@ namespace Game
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
 
             
-            viewSystems = new EcsSystems(world);
+            viewSystems = new EcsSystems(world, "viewSystems");
             viewSystems.Add(new SyncTransformSystem(false));
             viewSystems.Add(new RotateCharacterSystem());
 
