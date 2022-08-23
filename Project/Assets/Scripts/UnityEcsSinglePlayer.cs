@@ -75,8 +75,8 @@ namespace Game
             
 #if UNITY_EDITOR
             systems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
+            XFlow.Editor.EntityDebugger.EcsDebugger.instance.AddSystems(systems, "systems");
 #endif
-           
             
             
             systemsFactory.AddNewSystems(systems, 
@@ -93,6 +93,9 @@ namespace Game
             viewSystems.Add(new RotateRigidbodySystem());
             viewSystems.Add(new CameraFollowSystem(Camera.main));
             
+#if UNITY_EDITOR
+            XFlow.Editor.EntityDebugger.EcsDebugger.instance.AddSystems(viewSystems, "view");
+#endif
             viewSystems.Init();
             
             world.AddUnique(new MainPlayerIdComponent{value = playerId});

@@ -46,6 +46,7 @@ namespace Game
             
 #if UNITY_EDITOR
             viewSystems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
+            XFlow.Editor.EntityDebugger.EcsDebugger.instance.AddSystems(viewSystems, "view");
 #endif
             
             //глобальный обработчик удаления entity, чтоб никакой GameObject не утек
