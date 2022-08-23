@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,7 +5,6 @@ using UnityEngine;
 public class CustomCircleColliderEditor : Editor
 {
     private bool _editMode;
-    private Vector3 han;
     private float _handlerSize;
 
     public override void OnInspectorGUI()
@@ -26,7 +23,7 @@ public class CustomCircleColliderEditor : Editor
             if (!_editMode) return;
 
             var p = targetCollider.transform.position;
-            var handlers = new (Vector3, Vector3)[]
+            var handlers = new[]
             {
                 (new Vector3(p.x, p.y, p.z + targetCollider.radius), Vector3.forward),
                 (new Vector3(p.x, p.y, p.z - targetCollider.radius), Vector3.back),
@@ -41,7 +38,7 @@ public class CustomCircleColliderEditor : Editor
                 handlers[i].Item1 = Handles.Slider(handlers[i].Item1, handlers[i].Item2, _handlerSize, Handles.DotHandleCap, 0f);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Undo.RecordObject(targetCollider, "Change radius");
+                    Undo.RecordObject(targetCollider, "Change collider radius");
                     targetCollider.radius = (p - handlers[i].Item1).magnitude;
                     break;
                 }
