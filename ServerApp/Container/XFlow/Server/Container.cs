@@ -519,7 +519,7 @@ namespace XFlow.Server
             {
                 var compressed = BuildDiffBytes(client, client.SentWorld);
 
-                //if (Random.Range(0, 1) > 0.1f)//sim lost
+                //if (Random.Range(0, 1) > 0.95f)//sim lost
                 {
                     int r = udpServer.Socket.SendTo(compressed, client.EndPoint);
                     if (r <= 0)

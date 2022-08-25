@@ -54,3 +54,4 @@ Server/Container/obj/
 ServerApp/ServerApp/obj/
 ServerApp/ServerApp/bin/
 ServerApp/tools/__pycache__/
+_tmp/
