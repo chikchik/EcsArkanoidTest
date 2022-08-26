@@ -20,7 +20,8 @@ public class CustomBoxColliderEditor : Editor
 
         Handles.color = _editMode ? Color.green : Color.green * 0.7f;
         var pos = targetCollider.transform.position;
-        var rot = targetCollider.transform.rotation;
+        var rotEuler = targetCollider.transform.rotation.eulerAngles;
+        var rot = Quaternion.Euler(new Vector3(0f, rotEuler.y, 0f));
         var halfsize = targetCollider.size * 0.5f;
         var lineVertices = new[]
         {
