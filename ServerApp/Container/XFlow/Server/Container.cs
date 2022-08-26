@@ -512,6 +512,16 @@ namespace XFlow.Server
             var compressed = P2P.P2P.Compress(writer.CopyToByteArray());
             return compressed;
         }
+
+        async void SimRandomSend(byte[] compressed, Client client)
+        {
+            await Task.Delay(Random.Range(0, 1000));
+            int r = udpServer.Socket.SendTo(compressed, client.EndPoint);
+            if (r <= 0)
+            {
+                Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
+            }
+        } 
         
         void SendWorldToClient(Client client)
         {
@@ -519,8 +529,11 @@ namespace XFlow.Server
             {
                 var compressed = BuildDiffBytes(client, client.SentWorld);
 
-                //if (Random.Range(0, 1) > 0.95f)//sim lost
+                //if (Random.Range(0, 1) > 0.8f)//sim lost
+                //if (false)
                 {
+                    //SimRandomSend(compressed, client);
+                    
                     int r = udpServer.Socket.SendTo(compressed, client.EndPoint);
                     if (r <= 0)
                     {
@@ -534,7 +547,7 @@ namespace XFlow.Server
 
             //send to websocket server
             //if (false)
-            if ((world.GetTick() % 30) == 0)
+            if ((world.GetTick() % 15) == 0)
             {
                 var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
                 var bytes = P2P.P2P.BuildRequest(client.Address, compressed);

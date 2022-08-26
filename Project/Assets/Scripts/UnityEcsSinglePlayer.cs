@@ -174,22 +174,7 @@ namespace Game
         }
         public void Update()
         {
-            /*
-            UnityEcsClient.CheckInput(inputWorld, world, unitEntity, playerInput, camera, input =>
-            {
-                if (world.HasUnique<RootMotionComponent>())
-                {
-                    //todo, dublicated code
-                    input.hasUnitPos = true;
-                    input.unitPos = world.GetUnique<RootMotionComponent>().Position;
-                }
-
-                InputService.ApplyInput(inputWorld, playerId, input);
-            });*/
-
-
             CheckInput(camera, joystick, controlService);
-            
             viewSystems.Run();
         }
 
