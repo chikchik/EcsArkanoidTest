@@ -17,6 +17,7 @@ using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
+using XFlow.Modules.Box2D.ClientServer;
 using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Systems;
@@ -89,6 +90,8 @@ namespace XFlow.Server
         public Container(IContainerConfig containerConfig, ILogger logger)
         {
             Debug.SetLogDelegate(logger.Log);
+            Box2DServices.CheckNative();
+            
             this.containerConfig = containerConfig;
             
             url =  $"{P2P.P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.P2P.ADDR_SERVER.AddressString}";
