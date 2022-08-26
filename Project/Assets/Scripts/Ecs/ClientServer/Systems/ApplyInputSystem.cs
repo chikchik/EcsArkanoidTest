@@ -162,7 +162,7 @@ namespace Game.Ecs.ClientServer.Systems
             if (entity.EntityHas<SpawnGunComponent>(world))
             {
                 unitEntity.EntityGetOrCreateRef<WeaponComponent>(world);
-                TryHideCollected(entity);
+                //TryHideCollected(entity);
             }
             
             if (entity.EntityHas<BushComponent>(world))
@@ -198,8 +198,8 @@ namespace Game.Ecs.ClientServer.Systems
             if (entity.EntityHas<AmmoComponent>(world))
             {
                 unitEntity.EntityGetOrCreateRef<AmmoCollectedComponent>(world).Value += 10;
-                entity.EntityDel<InteractableComponent>(world);
-                TryHideCollected(entity);
+                //entity.EntityDel<InteractableComponent>(world);
+                //TryHideCollected(entity);
             }
         }
 

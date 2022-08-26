@@ -55,3 +55,4 @@ ServerApp/ServerApp/obj/
 ServerApp/ServerApp/bin/
 ServerApp/tools/__pycache__/
 _tmp/
+ServerApp/ServerApp/log.txt

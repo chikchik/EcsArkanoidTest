@@ -935,7 +935,7 @@ PrefabInstance:
     - target: {fileID: 5325153350957643427, guid: 79de6ae39d93b9b4d9eb54401a0ae2de,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.054947
+      value: -4.1
       objectReference: {fileID: 0}
     - target: {fileID: 5325153350957643427, guid: 79de6ae39d93b9b4d9eb54401a0ae2de,
         type: 3}
@@ -945,7 +945,7 @@ PrefabInstance:
     - target: {fileID: 5325153350957643427, guid: 79de6ae39d93b9b4d9eb54401a0ae2de,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.663481
+      value: 0.22
       objectReference: {fileID: 0}
     - target: {fileID: 5325153350957643427, guid: 79de6ae39d93b9b4d9eb54401a0ae2de,
         type: 3}
@@ -5141,7 +5141,7 @@ PrefabInstance:
     - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.22
+      value: -5.25
       objectReference: {fileID: 0}
     - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
         type: 3}
@@ -5151,7 +5151,7 @@ PrefabInstance:
     - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.58
+      value: 1.16
       objectReference: {fileID: 0}
     - target: {fileID: 5325153350957643427, guid: aadd2cf48fdf84ea2a2a8fd816d57637,
         type: 3}
@@ -7692,71 +7692,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: MultiPlayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: OverrideRoom
-      value: 5000
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: UdpHosts.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: SelectedUdpHostIndex
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: OverrideDefaultServer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: UdpHosts.Array.data[0].Port
-      value: 12345
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: UdpHosts.Array.data[0].addr
-      value: 127.0.0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: UdpHosts.Array.data[0].port
-      value: 12345
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: UdpHosts.Array.data[1].Port
-      value: 12345
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: UdpHosts.Array.data[1].addr
-      value: 164.90.172.253
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: UdpHosts.Array.data[1].port
-      value: 12345
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: UdpHosts.Array.data[0].Address
-      value: 127.0.0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
-        type: 3}
-      propertyPath: UdpHosts.Array.data[1].Address
-      value: c1.ecs.fbpub.net
       objectReference: {fileID: 0}
     - target: {fileID: 3448083649790090397, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
