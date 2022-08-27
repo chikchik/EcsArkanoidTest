@@ -90,6 +90,8 @@ namespace XFlow.Server
         public Container(IContainerConfig containerConfig, ILogger logger)
         {
             Debug.SetLogDelegate(logger.Log);
+            Debug.Log("created Container");
+            
             Box2DServices.CheckNative();
             
             this.containerConfig = containerConfig;
