@@ -7693,6 +7693,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: SelectedUdpHostIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448083649790090375, guid: 67af7d865b18e9b4b9e30d31de404c5c,
+        type: 3}
+      propertyPath: OverrideDefaultServerRoom
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3448083649790090397, guid: 67af7d865b18e9b4b9e30d31de404c5c,
         type: 3}
       propertyPath: m_Name

@@ -21,7 +21,7 @@ public static class Config
     public static string TMP_HASHES_PATH = "../tmp";
 #else
     public static string SYNC_LOG_PATH = "../server.log";
-    public static string TMP_HASHES_PATH = "../tmp";
+    public static string TMP_HASHES_PATH = "../../tmp";
 #endif
     
     public static string ROOM_A = DEFAULT_ROOM_A;

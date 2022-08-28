@@ -251,9 +251,11 @@ namespace XFlow.Server
 
                 world = new EcsWorld("serv");
                 systems = new EcsSystems(world);
+                systems.Add(systemsFactory.CreateSyncDebugSystem(true));
                 systemsFactory.AddNewSystems(systems,
                     new IEcsSystemsFactory.Settings { AddClientSystems = false, AddServerSystems = true });
                 systems.Add(new TickSystem());
+                systems.Add(systemsFactory.CreateSyncDebugSystem(false));
 
 
                 syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);

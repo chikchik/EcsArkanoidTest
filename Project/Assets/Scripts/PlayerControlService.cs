@@ -51,7 +51,7 @@ namespace Game
             
             var component = new InputShotComponent();
             var lookDir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
-            var dir = Quaternion.Euler(0, -22, 0) * lookDir;
+            var dir = Quaternion.Euler(0, -0, 0) * lookDir;
             component.dir = dir;
             component.pos = view.BulletSpawnPos.transform.position; 
             
