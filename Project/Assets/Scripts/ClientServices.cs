@@ -38,6 +38,7 @@ namespace Game
                 if (entities.TryGetValue(go, out var entity)) return entity;
 
                 entity = world.NewEntity();
+                entity.EntityAdd<DebugNameComponent>(world).Name = go.name;
 
                 ref var gameObjectNameComponent = ref entity.EntityAdd<GameObjectNameComponent>(world);
                 gameObjectNameComponent.Id = NameId;

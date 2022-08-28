@@ -8,22 +8,29 @@ using XFlow.Net.ClientServer.Ecs.Components;
 
 namespace Game.Ecs.View.Systems
 {
-    public class SyncTransformSystem : IEcsRunSystem
+    public class SyncTransformSystem : IEcsRunSystem, IEcsInitSystem
     {
         private bool singlePlayer;
+        EcsFilter filter;
+        EcsWorld world;
+        
         public SyncTransformSystem(bool singlePlayer)
         {
             this.singlePlayer = singlePlayer;
         }
         
-        public void Run(EcsSystems systems)
+        
+        public void Init(EcsSystems systems)
         {
-            var world = systems.GetWorld();
-            var filter = world
+            world = systems.GetWorld();
+            filter = world
                 .Filter<TransformComponent>()
                 .Inc<PositionComponent>()
                 .End();
-
+        }
+        
+        public void Run(EcsSystems systems)
+        {
             var poolTransform = world.GetPool<TransformComponent>();
             var poolPosition = world.GetPool<PositionComponent>();
             var poolLerp = world.GetPool<LerpComponent>();
@@ -71,5 +78,6 @@ namespace Game.Ecs.View.Systems
                 }
             }
         }
+
     }
 }
