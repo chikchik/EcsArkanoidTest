@@ -32,12 +32,12 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in sceneWorld.Filter<GameObjectNameComponent>().End())
             {
-                var name = poolSceneWorldObjectNames.Get(entity).Id.ToString();
+                var name = poolSceneWorldObjectNames.Get(entity).Name;
                 sceneEntitiesByName[name] = poolSceneWorldObjects.Get(entity).Transform;
             }
 
             foreach (var entity in world.Filter<GameObjectNameComponent>().End())
-                sceneEntitiesByName.Remove(poolWorldObjectNames.Get(entity).Id.ToString());
+                sceneEntitiesByName.Remove(poolWorldObjectNames.Get(entity).Name);
 
             /*
              * все кто остался в sceneEntitiesByName можно удалить со сцены
@@ -45,6 +45,7 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var tr in sceneEntitiesByName.Values)
             {
+                Debug.LogError($"destroying go {tr.name}");
                 Object.Destroy(tr.gameObject);
             }
         }

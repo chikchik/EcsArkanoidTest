@@ -57,35 +57,27 @@ namespace Game.Ecs.ClientServer.Systems
                     continue;
                 }
 
-                if (poolBullet.Has(entityA))
-                {
-                    if (poolDestructibleHealth.Has(entityB))
-                    {
-                        CreateHitEventEntity(poolBullet.Get(entityA), world.PackEntity(entityB));
-                    }
-                    world.DelEntity(entityA);
-                }
-
-                if (poolBullet.Has(entityB))
-                {
-                    if (poolDestructibleHealth.Has(entityA))
-                    {
-                        CreateHitEventEntity(poolBullet.Get(entityB), world.PackEntity(entityA));
-                    }
-                    world.DelEntity(entityB);
-                }
+                
+                Check(entityA, entityB);
+                Check(entityB, entityA);
             }
         }
 
-        private void CreateHitEventEntity(
-            BulletComponent bullet,
-            EcsPackedEntity entity)
-
+        private void Check(int entityA, int entityB)
         {
-            var hitEntity = eventWorld.NewEntity();
-            ref var bulletHit = ref poolBulletHits.Add(hitEntity);
-            bulletHit.Bullet = bullet;
-            bulletHit.EntityHit = entity;
+            BulletComponent bulletComponent;
+            if (poolBullet.TryGet(entityA, out bulletComponent))
+            {
+                if (poolDestructibleHealth.Has(entityB))
+                {
+                    var hitEntity = eventWorld.NewEntity();
+                    
+                    ref var bulletHit = ref poolBulletHits.Add(hitEntity);
+                    bulletHit.Bullet = bulletComponent;
+                    bulletHit.EntityHit = world.PackEntity(entityB);
+                }
+                world.DelEntity(entityA);
+            }
         }
     }
 }
