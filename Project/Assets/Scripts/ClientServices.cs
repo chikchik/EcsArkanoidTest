@@ -168,7 +168,7 @@ namespace Game
             ForEachObject<DestructibleView>(view =>
             {
                 var entity = GetOrCreateGameEntity(view.gameObject);
-                entity.EntityAdd<DestructibleHealthComponent>(world).Health = 3f;
+                entity.EntityAdd<DestructibleHealthComponent>(world).Health = 30f;
             });
 
             ForEachObject<Collider2D>(collider =>
