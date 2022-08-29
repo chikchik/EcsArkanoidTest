@@ -46,12 +46,10 @@ public class CustomMeshColliderEditor : Editor
     private void DrawColliderShapes()
     {
         Handles.color = _editMode ? Color.green : Color.green * 0.7f;
-        var pos = _target.transform.position;
         for (var i = 0; i < _target.pathCount; i++)
         {
-            var lineVerts = _target.GetPath(i).Select(vert => _rotation * new Vector3(vert.x, 0f, vert.y) + pos).ToList();
-            var first = lineVerts[0];
-            lineVerts.Add(first);
+            var lineVerts = _target.GetPath(i).Select(FromColliderSpace).ToList();
+            lineVerts.Add(lineVerts[0]);
             Handles.DrawPolyLine(lineVerts.ToArray());
         }
     }
