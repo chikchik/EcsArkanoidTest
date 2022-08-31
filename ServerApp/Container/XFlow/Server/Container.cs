@@ -56,9 +56,7 @@ namespace XFlow.Server
         private SyncDebugService syncDebug;
         private ClientWebSocket socket;
 
-        private EcsWorld world;
-
-        private EcsWorld sentWorld_;
+        private EcsWorld mainWorld;
         private EcsWorld inputWorld;
         private EcsWorld eventWorld;
 
@@ -106,6 +104,9 @@ namespace XFlow.Server
             socket = new ClientWebSocket();
             
             runCancellationTokenSource = new CancellationTokenSource();
+            
+            syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
+            WorldLoggerExt.logger = syncDebug.CreateLogger();
         }
 
         public void Init()
@@ -152,10 +153,10 @@ namespace XFlow.Server
         {
             var sb = new StringBuilder(512);
             sb.AppendLine($"url: {url}");
-            sb.AppendLine($"tick: {world.GetTick()}");
+            sb.AppendLine($"tick: {mainWorld.GetTick()}");
             sb.AppendLine($"tickrate: {config.Tickrate}");
-            sb.AppendLine($"world entities: {world.GetAliveEntitiesCount()}");
-            sb.AppendLine($"world size: {world.GetAllocMemorySizeInBytes()/1024} kb");
+            sb.AppendLine($"world entities: {mainWorld.GetAliveEntitiesCount()}");
+            sb.AppendLine($"world size: {mainWorld.GetAllocMemorySizeInBytes()/1024} kb");
             
             sb.AppendLine($"clients: {clients.Count}");
             for (int i = 0; i < clients.Count; ++i)
@@ -209,22 +210,22 @@ namespace XFlow.Server
             }
 
             
-            world.EntityDestroyedListeners.Add(destroyedListener);
+            mainWorld.EntityDestroyedListeners.Add(destroyedListener);
 
  
             inputWorld = new EcsWorld(EcsWorlds.Input);
             systems.AddWorld(inputWorld, EcsWorlds.Input);
 
-            world.AddUnique(config);
-            world.AddUnique<TickComponent>().Value = new Tick(0);
-            world.AddUnique(new TickDeltaComponent { Value = new TickDelta(config.Tickrate) });
+            mainWorld.AddUnique(config);
+            mainWorld.AddUnique<TickComponent>().Value = new Tick(0);
+            mainWorld.AddUnique(new TickDeltaComponent { Value = new TickDelta(config.Tickrate) });
             
 
             eventWorld = new EcsWorld(EcsWorlds.Event);
             systems.AddWorld(eventWorld, EcsWorlds.Event);
 
 
-            dif.ApplyChanges(world);
+            dif.ApplyChanges(mainWorld);
 
             systems.Init();
 
@@ -249,17 +250,14 @@ namespace XFlow.Server
             {
                 CreateSystemsFactory();
 
-                world = new EcsWorld("serv");
-                systems = new EcsSystems(world);
+                mainWorld = new EcsWorld("serv");
+                systems = new EcsSystems(mainWorld);
                 systems.Add(systemsFactory.CreateSyncDebugSystem(true));
                 systemsFactory.AddNewSystems(systems,
                     new IEcsSystemsFactory.Settings { AddClientSystems = false, AddServerSystems = true });
                 systems.Add(new TickSystem());
                 systems.Add(systemsFactory.CreateSyncDebugSystem(false));
 
-
-                syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
-                WorldLoggerExt.logger = syncDebug.CreateLogger();
 
                 //var url = $"{Config.URL}/{P2P.ADDR_SERVER.AddressString}";
                 
@@ -384,9 +382,9 @@ namespace XFlow.Server
                 client.SentWorldRelaible = WorldUtils.CopyWorld(components, world);
                 */
                 
-                var dif = WorldDiff.BuildDiff(components, client.SentWorldRelaible, world);
-                client.SentWorldRelaible.CopyFrom(world, components.ContainsCollection);
-                client.SentWorld.CopyFrom(world, components.ContainsCollection);
+                var dif = WorldDiff.BuildDiff(components, client.SentWorldRelaible, mainWorld);
+                client.SentWorldRelaible.CopyFrom(mainWorld, components.ContainsCollection);
+                client.SentWorld.CopyFrom(mainWorld, components.ContainsCollection);
                 
                 packet = new Packet
                 {
@@ -405,7 +403,7 @@ namespace XFlow.Server
                 socket.SendAsync(data, WebSocketMessageType.Binary, true, new CancellationToken());
                 
                 //SendAsyncDeprecated(packet, client);
-                Debug.Log($"send initial world at tick {world.GetTick()}");
+                Debug.Log($"send initial world at tick {mainWorld.GetTick()}");
 
                 
 
@@ -435,8 +433,8 @@ namespace XFlow.Server
                 var type = reader.ReadInt32();
 
 
-                var currentTick = world.GetTick();
-                var step = world.GetUnique<TickDeltaComponent>().Value;
+                var currentTick = mainWorld.GetTick();
+                var step = mainWorld.GetUnique<TickDeltaComponent>().Value;
                 //на сколько тиков мы опередили сервер или отстали
                 var delay = time - currentTick;
                 /**
@@ -487,10 +485,10 @@ namespace XFlow.Server
 
         private void Tick()
         {
-            var time = world.GetTick();
+            var time = mainWorld.GetTick();
             SyncServices.FilterInputs(inputWorld, time);
             //обновляем мир 1 раз
-            SyncServices.Tick(systems, inputWorld, world);
+            SyncServices.Tick(systems, inputWorld, mainWorld);
             
             foreach (var client in clients)
             {
@@ -500,8 +498,8 @@ namespace XFlow.Server
 
         void BuildDiff(Client client, EcsWorld srcWorld, ref BinaryProtocol.DataWorldDiff data)
         {
-            var dif = WorldDiff.BuildDiff(components, srcWorld, world);
-            data.DestTick = world.GetTick();
+            var dif = WorldDiff.BuildDiff(components, srcWorld, mainWorld);
+            data.DestTick = mainWorld.GetTick();
             if (srcWorld.HasUnique<TickComponent>())
                 data.SrcTick = srcWorld.GetTick();
             data.Delay = client.Delay;
@@ -548,18 +546,18 @@ namespace XFlow.Server
                     }
                 }
 
-                client.SentWorld.CopyFrom(world, components.ContainsCollection);
+                client.SentWorld.CopyFrom(mainWorld, components.ContainsCollection);
                 client.Delay = -999;
             }
 
             //send to websocket server
             //if (false)
-            if ((world.GetTick() % 15) == 0)
+            if ((mainWorld.GetTick() % 15) == 0)
             {
                 var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
                 var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
                 socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
-                client.SentWorldRelaible.CopyFrom(world, components.ContainsCollection);
+                client.SentWorldRelaible.CopyFrom(mainWorld, components.ContainsCollection);
             }
         }
     }
