@@ -50,7 +50,7 @@ namespace Tests.Runtime.Tests
             ecsSystems.Add(new EventsSystem<ComponentC>());
             ecsSystems.Init();
             
-            destWorld.CopyFrom(srcWorld);
+            destWorld.CopyFrom(srcWorld, null);
             
             Assert.AreEqual(destWorld.FilterAdded<ComponentA>().End().GetEntitiesCount(), 0);
             Assert.AreEqual(destWorld.FilterChanged<ComponentA>().End().GetEntitiesCount(), 0);
@@ -62,10 +62,10 @@ namespace Tests.Runtime.Tests
             srcWorld.DelEntity(e1);
             srcWorld.DelEntity(e3);
         
-            destWorld.CopyFrom(srcWorld);
+            destWorld.CopyFrom(srcWorld, null);
             AssertEcsWorld.WorldsAreEqual(collection, srcWorld, destWorld);
         
-            srcWorld.CopyFrom(destWorld);
+            srcWorld.CopyFrom(destWorld, null);
             AssertEcsWorld.WorldsAreEqual(collection,srcWorld, destWorld);
 
             destWorld.NewEntity();
@@ -74,7 +74,7 @@ namespace Tests.Runtime.Tests
             destWorld.NewEntity().EntityAdd<ComponentB>(destWorld);
             destWorld.DelEntity(ee);
         
-            srcWorld.CopyFrom(destWorld);
+            srcWorld.CopyFrom(destWorld, null);
             AssertEcsWorld.WorldsAreEqual(collection,srcWorld, destWorld);
         }
 

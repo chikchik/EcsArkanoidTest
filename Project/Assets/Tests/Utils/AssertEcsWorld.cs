@@ -22,13 +22,16 @@ namespace Tests.Runtime.utils
                 Assert.AreEqual(g1.ChangedEntities, g2.ChangedEntities);
                 Assert.AreEqual(g1.RemovedFromEntities, g2.RemovedFromEntities);
                 Assert.AreEqual(g1.Data, g2.Data);
-                
-                /*
-                var c1 = g1.Component.ListToArray(g1.Data);
-                var c2 = g2.Component.ListToArray(g2.Data);
+            }
             
-                StructsDeepAreEqual(c1, c2);
-                */
+            Assert.AreEqual(d1.InnerWorldEntity, d2.InnerWorldEntity);
+            Assert.AreEqual(d1.InnerWorldsDiff.Count, d2.InnerWorldsDiff.Count);
+
+            for (int i = 0; i < d1.InnerWorldsDiff.Count; ++i)
+            {
+                var innerD1 = d1.InnerWorldsDiff[i];
+                var innerD2 = d2.InnerWorldsDiff[i];
+                DiffsAreEqual(innerD1, innerD2);
             }
         }
         

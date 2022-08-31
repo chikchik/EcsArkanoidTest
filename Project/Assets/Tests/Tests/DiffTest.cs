@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Tests.Runtime.utils;
 using UnityEngine;
+using XFlow.Ecs.Client.Components;
+using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
@@ -296,6 +298,56 @@ namespace Tests.Runtime.Tests
 
         
             AssertEcsWorld.DiffsAreEqual(diff1, diff2);
+        }
+
+        [Test]
+        public void TestInnerWorlds()
+        {
+            var srcWorld = new EcsWorld("world");
+            
+
+            var se1 = srcWorld.NewEntity();
+            var srcInner1 = new EcsWorld("sinner1");
+            se1.EntityAdd<WorldComponent>(srcWorld).World = srcInner1;
+            
+            srcInner1.NewEntity().EntityAdd<ComponentA>(srcInner1).Value = 123;
+            
+            var se2 = srcWorld.NewEntity();
+            
+            //will be copied
+            var se3 = srcWorld.NewEntity();
+            var srcInner3 = new EcsWorld("sinner3");
+            se3.EntityAdd<WorldComponent>(srcWorld).World = srcInner3;
+
+
+            var destWorld = new EcsWorld("dest");
+            
+            var de1 = destWorld.NewEntity();
+            
+            //will be deleted
+            var de2 = destWorld.NewEntity();
+            de2.EntityAdd<WorldComponent>(destWorld).World = new EcsWorld("dinner2");
+            
+            //will be reused
+            var de3 = destWorld.NewEntity();
+            de3.EntityAdd<WorldComponent>(destWorld).World = new EcsWorld("dinner3");
+
+
+            WorldUtils.CopyWithInnerWorld(srcWorld, destWorld, _collection);
+            
+            AssertEcsWorld.WorldsAreEqual(_collection, srcWorld, destWorld);
+            
+            
+            Assert.AreEqual(destWorld.EntityGet<WorldComponent>(de1).World.GetDebugName(), "sinner1");
+            Assert.AreEqual(destWorld.EntityGet<WorldComponent>(de3).World.GetDebugName(), "dinner3");
+            
+            Assert.AreNotEqual(
+                srcWorld.EntityGet<WorldComponent>(de3).World,
+                destWorld.EntityGet<WorldComponent>(de3).World);
+            Assert.AreNotEqual(
+                srcWorld.EntityGet<WorldComponent>(de1).World,
+                destWorld.EntityGet<WorldComponent>(de1).World);
+            
         }
         /*
         [Test]
