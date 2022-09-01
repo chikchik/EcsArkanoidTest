@@ -14,6 +14,7 @@ namespace Game.Ecs.ClientServer.Systems
         private EcsPool<MovingComponent> _movingPool;
         private EcsPool<MoveDirectionComponent> _moveDirectionPool;
         private EcsPool<AverageSpeedComponent> _speedPool;
+        private EcsPool<CantMoveComponent> _cantMovePool;
 
         private EcsFilter _moveFilter;
         private EcsFilter _stopFilter;
@@ -22,6 +23,12 @@ namespace Game.Ecs.ClientServer.Systems
         {
             foreach (var entity in _moveFilter)
             {
+                if (_cantMovePool.Has(entity))
+                {
+                    _rbPool.GetRef(entity).LinearVelocity = Vector2.zero;
+                    continue;
+                }
+
                 SetLinearVelToBody(entity);
                 _movingPool.Replace(entity, new MovingComponent());
             }
@@ -35,6 +42,7 @@ namespace Game.Ecs.ClientServer.Systems
 
         private void SetLinearVelToBody(int entity)
         {
+            
             var moveDirectionComponent = _moveDirectionPool.Get(entity);
             var speedComponent = _speedPool.Get(entity);
             ref var rbComponent = ref _rbPool.GetRef(entity);
@@ -50,6 +58,7 @@ namespace Game.Ecs.ClientServer.Systems
             _movingPool = world.GetPool<MovingComponent>();
             _moveDirectionPool = world.GetPool<MoveDirectionComponent>();
             _speedPool = world.GetPool<AverageSpeedComponent>();
+            _cantMovePool = world.GetPool<CantMoveComponent>();
 
             _moveFilter = world
                 .Filter<MoveDirectionComponent>()
