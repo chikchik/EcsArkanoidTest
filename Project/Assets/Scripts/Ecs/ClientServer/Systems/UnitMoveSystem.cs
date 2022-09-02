@@ -37,7 +37,7 @@ namespace Game.Ecs.ClientServer.Systems
             var moveDirectionComponent = poolMoveDirection.Get(entity);
             var speedComponent = poolSpeed.Get(entity);
 
-            Box2DApi.SetLinearVelocity(bodyReference,
+            Box2DApiSafe.SetLinearVelocity(bodyReference,
                 new Vector2(moveDirectionComponent.value.x, moveDirectionComponent.value.z) *
                 speedComponent.Value);
         }
