@@ -299,8 +299,7 @@ namespace XFlow.Server
                             break;
                         var udpPacket = udpPacketOpt.Value;
                         var reader = new HGlobalReader(udpPacket.Data);
-                        var playerId = reader.ReadInt32();
-                        var client = GotInput1(reader, playerId);
+                        var client = GotInput1(reader);
                         client.EndPoint = udpPacket.EndPoint;
                     }
                     
@@ -349,8 +348,7 @@ namespace XFlow.Server
             {
                 var reader = new HGlobalReader(msgBytes);
                 reader.ReadInt32();//0xff
-                var playerId = reader.ReadInt32();
-                GotInput1(reader, playerId);
+                GotInput1(reader);
                 return;
             }
 
@@ -417,10 +415,11 @@ namespace XFlow.Server
             }
         }
         
-        private Client GotInput1(HGlobalReader reader, int playerId)
+        private Client GotInput1(HGlobalReader reader)
         {
             try            
             {
+                var playerId = reader.ReadInt32();
                 Client client = clients.FirstOrDefault(client => client.ID == playerId);
                 if (client == null)
                 {
