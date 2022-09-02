@@ -74,7 +74,7 @@ namespace Game
             
             
 #if UNITY_EDITOR
-            systems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
+            //systems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
             
             

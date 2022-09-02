@@ -28,6 +28,6 @@ public static class ConvertWorld
         
         var dif = WorldDiff.BuildDiff(collection, new EcsWorld("save"), world);
 
-        File.WriteAllText("../ServerApp/world.ecs.json", dif.ToJsonString(true));
+        File.WriteAllText("../ServerApp/ServerApp/world.ecs.json", dif.ToJsonString(true));
     }
 }

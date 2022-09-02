@@ -197,6 +197,8 @@ namespace XFlow.Server
         
         private void StartSystems(byte[] initialWorld)
         {
+            if (worldInitialized)
+                return;
             Debug.Log("StartSystems");
             WorldDiff dif = null;
             if (initialWorld?.Length > 0)
@@ -269,6 +271,9 @@ namespace XFlow.Server
                 _ = Task.Factory.StartNew(ReceiveData);
 
                 //SendWorldToClients();
+                
+                
+                StartSystems(null);
 
 
                 Debug.Log("loop");
