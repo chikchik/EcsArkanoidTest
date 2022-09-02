@@ -189,15 +189,26 @@ namespace Game
             ForEachObject<RevoluteJointView>(joint =>
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
-                var entityB = GetOrCreateGameEntity(joint._connectedBody.gameObject);
+                var entityB = GetOrCreateGameEntity(joint.ConnectedBody.gameObject);
                 ref var component = ref entityA.EntityAdd<Box2DRevoluteJointComponent>(world);
                 component.ConnectedBody = entityB;
-                component.JointOffset = joint._jointOffset;
-                component.ConnectedJointOffset = joint._connectedJointOffset;
-                component.EnableLimits = joint._enableLimits;
-                component.LowerAngleLimit = joint._lowerAngleLimit;
-                component.UpperAngleLimit = joint._upperAngleLimit;
-                component.CollideConnected = joint._collideConnected;
+
+                if (joint.AutoCalculateOffsets)
+                {
+                    component.ConnectedJointOffset = Vector2.zero;
+                    var offset = joint.ConnectedBody.transform.position - joint.transform.position;
+                    component.JointOffset = new Vector2(offset.x, offset.z);
+                }
+                else
+                {
+                    component.JointOffset = joint.JointOffset;
+                    component.ConnectedJointOffset = joint.ConnectedJointOffset;
+                }
+
+                component.EnableLimits = joint.EnableLimits;
+                component.LowerAngleLimit = joint.LowerAngleLimit;
+                component.UpperAngleLimit = joint.UpperAngleLimit;
+                component.CollideConnected = joint.CollideConnected;
 
             });
             

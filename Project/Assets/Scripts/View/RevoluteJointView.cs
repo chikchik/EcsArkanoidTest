@@ -6,12 +6,13 @@ namespace Game.View
 {
     public class RevoluteJointView : MonoBehaviour
     {
-        public GameObject _connectedBody;
-        public Vector2 _jointOffset;
-        public Vector2 _connectedJointOffset;
-        public bool _enableLimits;
-        public float _upperAngleLimit;
-        public float _lowerAngleLimit;
-        public bool _collideConnected;
+        public GameObject ConnectedBody;
+        public bool AutoCalculateOffsets;
+        public Vector2 JointOffset;
+        public Vector2 ConnectedJointOffset;
+        public bool EnableLimits;
+        public float UpperAngleLimit;
+        public float LowerAngleLimit;
+        public bool CollideConnected;
     }
 }
