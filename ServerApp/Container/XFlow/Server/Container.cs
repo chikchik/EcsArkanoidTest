@@ -260,7 +260,11 @@ namespace XFlow.Server
                 //SendWorldToClients();
                 
                 
-                StartSystems(null);
+                /*
+                 * по умолчанию сервер получает начальный мир от первого подключенного игрока
+                 * если включи StartSystems тут, то сцена будет грузиться из файла 
+                 */
+                //StartSystems(null);
 
 
                 Debug.Log("loop");
