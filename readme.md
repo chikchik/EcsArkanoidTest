@@ -1,6 +1,13 @@
+Прочти это!
+https://docs.google.com/document/d/12cwab45YODC4_BvD84uAc8gblUUg3BT1NP0QhpSWiEg
+
+
+
+
+
+
 tick = world.GetCurrentTick | Leo.GetCurrentTick(world)
 tick - значение, означающее на каком тике остановилась игра, любой добавленный инпут с этим значением будет обработан со следующий systems.Run()
-
 
 
 Основной луп:

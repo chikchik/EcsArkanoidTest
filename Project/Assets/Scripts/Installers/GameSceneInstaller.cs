@@ -1,3 +1,6 @@
+using System;
+using System.Net;
+using System.Threading;
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.ClientServer.Services;
@@ -18,6 +21,7 @@ using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
+using XFlow.P2P;
 using Zenject;
 
 namespace Game.Installers
@@ -26,6 +30,8 @@ namespace Game.Installers
     {
         [SerializeField] private GameSettings settings;
 
+        private CancellationTokenSource cancellationTokenSource;
+        
         public override void InstallBindings()
         {
             Container.Bind<Camera>().FromComponentsOn(GameObject.Find("Main Camera")).AsSingle();
@@ -58,7 +64,23 @@ namespace Game.Installers
             Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
 
-            Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();
+            cancellationTokenSource = new CancellationTokenSource();
+            Container.Bind<CancellationToken>().FromInstance(cancellationTokenSource.Token).AsCached();
+
+            var udpHost = settings.UdpHosts[settings.SelectedUdpHostIndex];
+            var ipEndPoint = new IPEndPoint(IPAddress.Parse(udpHost.Address), udpHost.Port);
+            Container.Bind<IPEndPoint>().WithId("udp").FromInstance(ipEndPoint).AsCached();
+
+            if (settings.OverrideDefaultServerRoom)
+            {
+                var url = $"{P2P.DEV_SERVER_WS}/{settings.OverrideRoom}";
+                Container.Bind<string>().WithId("serverUrl").FromInstance(url).AsCached();
+            }
+            else
+            {
+                Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();    
+            }
+            
             Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
             
            
@@ -105,6 +127,12 @@ namespace Game.Installers
                 var comp = settings.gameObject.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);
             }
+        }
+
+        private void OnApplicationQuit()
+        {
+            Debug.Log("OnApplicationQuit");
+            cancellationTokenSource.Cancel();
         }
     }
 }

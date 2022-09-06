@@ -41,14 +41,17 @@ namespace Game
         public void Shot()
         {
             if (unitEntity == -1)
+            {
+                Debug.LogWarning("unitEntity == -1");
                 return;
+            }
 
             var view = unitEntity.EntityGet<TransformComponent>(world).Transform.GetComponent<CharacterView>();
             //view.
             
             var component = new InputShotComponent();
             var lookDir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
-            var dir = Quaternion.Euler(0, -22, 0) * lookDir;
+            var dir = Quaternion.Euler(0, -0, 0) * lookDir;
             component.dir = dir;
             component.pos = view.BulletSpawnPos.transform.position; 
             
@@ -58,7 +61,10 @@ namespace Game
         public void Interact()
         {
             if (unitEntity == -1)
+            {
+                Debug.LogWarning("unitEntity == -1");
                 return;
+            }
             
             var component = new InputActionComponent();
             Apply(component);
@@ -67,7 +73,10 @@ namespace Game
         public void Kick()
         {
             if (unitEntity == -1)
+            {
+                Debug.LogWarning("unitEntity == -1");
                 return;
+            }
             
             var component = new InputKickComponent();
             component.dir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
@@ -78,7 +87,10 @@ namespace Game
         public void MechEnterLeave()
         {
             if (unitEntity == -1)
+            {
+                Debug.LogWarning("unitEntity == -1");
                 return;
+            }
 
             Apply(new InputMechEnterLeaveComponent());
         }
@@ -108,7 +120,10 @@ namespace Game
         public void MoveToDirection(Vector3 dir)
         {
             if (unitEntity == -1)
+            {
+                Debug.LogWarning("unitEntity == -1");
                 return;
+            }
             
             var component = new InputMoveDirectionComponent();
             component.Dir = dir;
@@ -119,7 +134,10 @@ namespace Game
         public void StopMoveToDirection()
         {
             if (unitEntity == -1)
+            {
+                Debug.LogWarning("unitEntity == -1");
                 return;
+            }
 
             var entity = ApplyInputWorldService.GetControlledEntity(world, unitEntity);
             
@@ -135,8 +153,11 @@ namespace Game
         public void MoveToPoint(Vector3 pos)
         {
             if (unitEntity == -1)
+            {
+                Debug.LogWarning("unitEntity == -1");
                 return;
-            
+            }
+
             var component = new InputMoveToPointComponent();
             component.Value = pos;
             Apply(component);

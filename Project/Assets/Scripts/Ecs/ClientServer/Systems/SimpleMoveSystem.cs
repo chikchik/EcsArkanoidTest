@@ -42,8 +42,8 @@ namespace Game.Ecs.ClientServer.Systems
                 var direction = poolMoveDirection.Get(entity).value;
                 var pos = poolPosition.Get(entity).value;
 
-                Box2DApi.RaycastOutputReturnType ret = new Box2DApi.RaycastOutputReturnType();
-                Box2DApi.RayCast(b2world, pos, direction, ref ret, 10);
+                var ret = new Box2DApiInternal.RaycastOutputReturnType();
+                Box2DApiInternal.RayCast(b2world, pos, direction, ref ret, 10);
                 //if (ret == )
                     
                 var time = poolTime.Get(entity).time;

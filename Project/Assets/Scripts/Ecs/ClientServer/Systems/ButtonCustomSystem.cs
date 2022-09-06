@@ -61,12 +61,12 @@ namespace Game.Ecs.ClientServer.Systems
                         var b2d = bodyEntity.EntityGet<Box2DBodyComponent>(world).BodyReference;
                         var dir = new Vector2(NextFloat(-1,1), NextFloat(-1,1));
                         dir.Normalize();
-                        Box2DApi.ApplyForce(b2d, dir * NextFloat(5,20), new Vector2(0.4f,0));
+                        Box2DApiSafe.ApplyForce(b2d, dir * NextFloat(5,20), new Vector2(0.4f,0));
                             
                         var dir2 = new Vector2(NextFloat(-1,1), NextFloat(-1,1));
                         dir2.Normalize();
                             
-                        Box2DApi.ApplyForceToCenter(b2d, dir2 * NextFloat(50,100));
+                        Box2DApiSafe.ApplyForceToCenter(b2d, dir2 * NextFloat(50,100));
                     }
                 }
             }

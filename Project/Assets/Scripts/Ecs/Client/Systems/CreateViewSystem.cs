@@ -35,9 +35,13 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filter)
             {
-                var name = entity.EntityGet<GameObjectNameComponent>(world).Id.ToString();
-                var go = GameObject.Find(name).gameObject;
-                go.gameObject.SetActive(true);
+                var name = entity.EntityGet<GameObjectNameComponent>(world).Name.ToString();
+                var go = GameObject.Find(name);
+                if (go == null)
+                {
+                    Debug.LogError($"not found gameobject {name}");
+                }
+                go.SetActive(true);
 
 
                 entity.EntityAdd<TransformComponent>(world).Transform = go.transform;

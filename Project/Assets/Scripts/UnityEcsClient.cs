@@ -45,7 +45,7 @@ namespace Game
             viewSystems.Add(new CameraFollowSystem(Camera.main));
             
 #if UNITY_EDITOR
-            viewSystems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
+            //viewSystems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
             
             //глобальный обработчик удаления entity, чтоб никакой GameObject не утек

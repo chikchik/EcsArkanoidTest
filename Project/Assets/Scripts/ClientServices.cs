@@ -32,17 +32,21 @@ namespace Game
         {
             var entities = new Dictionary<GameObject, int>();
 
-            int NameId = 0;
+            //int NameId = 0;
             int GetOrCreateGameEntity(GameObject go)
             {
                 if (entities.TryGetValue(go, out var entity)) return entity;
 
                 entity = world.NewEntity();
-
+                //go.name = $"{go.name}[{entity}]";
+                
+                
+                entity.EntityAdd<DebugNameComponent>(world).Name = go.name;
+                
+                
                 ref var gameObjectNameComponent = ref entity.EntityAdd<GameObjectNameComponent>(world);
-                gameObjectNameComponent.Id = NameId;
-                go.name = NameId.ToString();
-                NameId++;
+                gameObjectNameComponent.Name = go.name;
+                //NameId++;
 
                 ref var transformComponent = ref entity.EntityAdd<TransformComponent>(world);
                 transformComponent.Transform = go.transform;
@@ -168,7 +172,7 @@ namespace Game
             ForEachObject<DestructibleView>(view =>
             {
                 var entity = GetOrCreateGameEntity(view.gameObject);
-                entity.EntityAdd<DestructibleHealthComponent>(world).Health = 3f;
+                entity.EntityAdd<DestructibleHealthComponent>(world).Health = 30f;
             });
 
             ForEachObject<Collider2D>(collider =>

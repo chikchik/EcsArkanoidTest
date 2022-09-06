@@ -1,5 +1,4 @@
 ﻿using Game.Ecs.ClientServer.Components.Inventory;
-using Unity.VisualScripting.IonicZip;
 using UnityEngine;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.Client.Demo.Services;

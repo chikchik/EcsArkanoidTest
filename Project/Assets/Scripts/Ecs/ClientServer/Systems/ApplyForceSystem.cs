@@ -28,14 +28,14 @@ namespace Game.Ecs.ClientServer.Systems
                 var pos = entity.EntityGet<PositionComponent>(world).value;
                 var dir = poolApplyForce.Get(entity).Direction;// entity.EntityGet<LookDirectionComponent>(world).value;
                 
-                Box2DApi.RaycastOutputReturnType ret = new Box2DApi.RaycastOutputReturnType();
-                if (Box2DApi.RayCast(worldReference, pos.ToVector2XZ(),
+                Box2DApiInternal.RaycastOutputReturnType ret = new Box2DApiInternal.RaycastOutputReturnType();
+                if (Box2DApiInternal.RayCast(worldReference, pos.ToVector2XZ(),
                         dir.ToVector2XZ(), ref ret, 1))
                 {
                     //Debug.Log("raycast ok");
                     var contactPos = ret.Point;
                     var body = ret.Body;
-                    Box2DApi.ApplyForce(body, dir.ToVector2XZ() * 100, contactPos);
+                    Box2DApiSafe.ApplyForce(body, dir.ToVector2XZ() * 100, contactPos);
                     if (world.GetDebugName() == "copyServerWorld")
                     {
                         int w = 0;
