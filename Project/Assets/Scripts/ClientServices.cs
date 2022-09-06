@@ -200,7 +200,7 @@ namespace Game
                 if (joint.AutoCalculateOffsets)
                 {
                     component.ConnectedJointOffset = Vector2.zero;
-                    var offset = joint.ConnectedBody.transform.position - joint.transform.position;
+                    var offset = Vector3.Scale(joint.transform.InverseTransformPoint(joint.ConnectedBody.transform.position), joint.transform.lossyScale);
                     component.JointOffset = new Vector2(offset.x, offset.z);
                 }
                 else
@@ -210,8 +210,8 @@ namespace Game
                 }
 
                 component.EnableLimits = joint.EnableLimits;
-                component.LowerAngleLimit = joint.LowerAngleLimit;
-                component.UpperAngleLimit = joint.UpperAngleLimit;
+                component.LowerAngleLimit = joint.LowerAngleLimit * Mathf.Deg2Rad;
+                component.UpperAngleLimit = joint.UpperAngleLimit * Mathf.Deg2Rad;
                 component.CollideConnected = joint.CollideConnected;
 
             });
