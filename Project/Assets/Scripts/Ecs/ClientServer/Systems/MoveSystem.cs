@@ -15,6 +15,7 @@ namespace Game.Ecs.ClientServer.Systems
             var filter = world
                 .Filter<MoveDirectionComponent>()
                 .Inc<PositionComponent>()
+                .Exc<UnitComponent>()
                 .End();
             
             var deltaTime = world.GetDeltaSeconds();
