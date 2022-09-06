@@ -17,10 +17,8 @@ public static class Config
 
     
 #if CLIENT
-    public static string SYNC_LOG_PATH = "../client.log"; 
     public static string TMP_HASHES_PATH = "../tmp";
 #else
-    public static string SYNC_LOG_PATH = "../server.log";
     public static string TMP_HASHES_PATH = "../../tmp";
 #endif
     
