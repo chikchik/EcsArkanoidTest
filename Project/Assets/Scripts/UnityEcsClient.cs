@@ -13,23 +13,22 @@ namespace Game
 {
     public class UnityEcsClient : MonoBehaviour
     {
-        [Inject] private Camera camera;
-        [Inject] private Global global;
-        [Inject] private UI.UI ui;
-        [Inject] private Joystick joystick;
-        [Inject] private NetClient client;
+        [Inject] private Camera _camera;
+        [Inject] private UI.UI _ui;
+        [Inject] private Joystick _joystick;
+        [Inject] private NetClient _client;
         
-        [Inject] private PlayerControlService controlService;
+        [Inject] private PlayerControlService _controlService;
         
-        [Inject] private EcsWorld world;
-        
-        [Inject] 
-        private EntityDestroyedListener entityDestroyedListener;
+        [Inject] private EcsWorld _world;
         
         [Inject] 
-        private ComponentsCollection components;
+        private EntityDestroyedListener _entityDestroyedListener;
+        
+        [Inject] 
+        private ComponentsCollection _components;
 
-        private EcsSystems viewSystems;
+        private EcsSystems _viewSystems;
 
         private void Start()
         {
@@ -37,12 +36,12 @@ namespace Game
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
 
             
-            viewSystems = new EcsSystems(world, "viewSystems");
-            viewSystems.Add(new SyncTransformSystem(false));
-            viewSystems.Add(new RotateCharacterSystem());
+            _viewSystems = new EcsSystems(_world, "viewSystems");
+            _viewSystems.Add(new SyncTransformSystem());
+            _viewSystems.Add(new RotateCharacterSystem());
 
-            viewSystems.Add(new RotateRigidbodySystem());
-            viewSystems.Add(new CameraFollowSystem(Camera.main));
+            _viewSystems.Add(new RotateRigidbodySystem());
+            _viewSystems.Add(new CameraFollowSystem(Camera.main));
             
 #if UNITY_EDITOR
             //viewSystems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
@@ -51,12 +50,12 @@ namespace Game
             //глобальный обработчик удаления entity, чтоб никакой GameObject не утек
             //если случайно удалить entity самостоятельно или преждевременно
             //на сервере он тоже есть
-            world.EntityDestroyedListeners.Add(entityDestroyedListener);
+            _world.EntityDestroyedListeners.Add(_entityDestroyedListener);
             
             
-            client.ConnectedAction = () =>
+            _client.ConnectedAction = () =>
             {
-                viewSystems.Init();
+                _viewSystems.Init();
             };
             
             
@@ -66,11 +65,11 @@ namespace Game
             {
                 var initialWorld = new EcsWorld("initial");
                 ClientServices.InitializeNewWorldFromScene(initialWorld);
-                var dif = WorldDiff.BuildDiff(components, new EcsWorld("save"), initialWorld);
+                var dif = WorldDiff.BuildDiff(_components, new EcsWorld("save"), initialWorld);
                 initialWorldJson = dif.ToBase64String();
             }
 
-            client.Start(initialWorldJson);
+            _client.Start(initialWorldJson);
         }
 
         private void Update()
@@ -80,30 +79,30 @@ namespace Game
                 return;
             #endif
             
-            if (!client.Connected)
+            if (!_client.Connected)
                 return;
 
-            client.Update();
+            _client.Update();
             
-            UnityEcsSinglePlayer.CheckInput(camera, joystick, controlService);
+            UnityEcsSinglePlayer.CheckInput(_camera, _joystick, _controlService);
             
-            viewSystems.Run();
+            _viewSystems.Run();
 
-            ui.View.DebugText.text = client.GetDebugString();
+            _ui.View.DebugText.text = _client.GetDebugString();
         }
 
         private void OnDestroy()
         {
-            if (client == null)
+            if (_client == null)
                 return;
-            client.OnDestroy();
+            _client.OnDestroy();
         }
 
         private void OnDrawGizmos()
         {
             if (!Application.isPlaying)
                 return;
-            EcsWorldDebugDraw.Draw(world);
+            EcsWorldDebugDraw.Draw(_world);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Game.Installers
     {
         [SerializeField] private GameSettings settings;
 
-        private CancellationTokenSource cancellationTokenSource;
+        private CancellationTokenSource _cancellationTokenSource;
         
         public override void InstallBindings()
         {
@@ -64,8 +64,8 @@ namespace Game.Installers
             Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
 
-            cancellationTokenSource = new CancellationTokenSource();
-            Container.Bind<CancellationToken>().FromInstance(cancellationTokenSource.Token).AsCached();
+            _cancellationTokenSource = new CancellationTokenSource();
+            Container.Bind<CancellationToken>().FromInstance(_cancellationTokenSource.Token).AsCached();
 
             var udpHost = settings.UdpHosts[settings.SelectedUdpHostIndex];
             var ipEndPoint = new IPEndPoint(IPAddress.Parse(udpHost.Address), udpHost.Port);
@@ -132,7 +132,7 @@ namespace Game.Installers
         private void OnApplicationQuit()
         {
             Debug.Log("OnApplicationQuit");
-            cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Cancel();
         }
     }
 }

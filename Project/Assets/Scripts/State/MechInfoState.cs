@@ -12,10 +12,10 @@ namespace Game.State
         EventsSystem<ControlsMechComponent>.IComponentChangedListener,
         EventsSystem<ControlsMechComponent>.IComponentRemovedListener
     {
-        private EcsWorld world;
-        private PlayerControlService playerControlService;
+        private EcsWorld _world;
+        private PlayerControlService _playerControlService;
 
-        private int unitEntity;
+        private int _unitEntity;
         
         public MechInfoState(
             States states,
@@ -24,8 +24,8 @@ namespace Game.State
             PlayerControlService playerControlService):base(states)
         {
             this.view = view;
-            this.world = world;
-            this.playerControlService = playerControlService;
+            this._world = world;
+            this._playerControlService = playerControlService;
         }
 
         protected override void DoInitialize()
@@ -37,36 +37,36 @@ namespace Game.State
             
             view.ButtonJoinMech.onClick.AddListener(() =>
             {
-                playerControlService.MechEnterLeave();
+                _playerControlService.MechEnterLeave();
             });
             
             view.ButtonLeaveMech.onClick.AddListener(() =>
             {
-                playerControlService.MechEnterLeave();
+                _playerControlService.MechEnterLeave();
             });
         }
 
         protected override void DoEnter()
         {
-            var playerId = world.GetUnique<MainPlayerIdComponent>().value;
-            unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerId);
+            var playerId = _world.GetUnique<MainPlayerIdComponent>().value;
+            _unitEntity = BaseServices.GetUnitEntityByPlayerId(_world, playerId);
             
-            unitEntity.AddChangedListener<ControlsMechComponent>(world, this);
-            unitEntity.AddRemovedListener<ControlsMechComponent>(world, this);
+            _unitEntity.AddChangedListener<ControlsMechComponent>(_world, this);
+            _unitEntity.AddRemovedListener<ControlsMechComponent>(_world, this);
 
             UpdateButtonState();
         }
 
         protected override void DoExit()
         {
-            unitEntity.DelChangedListener<ControlsMechComponent>(world, this);
-            unitEntity.DelRemovedListener<ControlsMechComponent>(world, this);
+            _unitEntity.DelChangedListener<ControlsMechComponent>(_world, this);
+            _unitEntity.DelRemovedListener<ControlsMechComponent>(_world, this);
         }
 
 
         private void UpdateButtonState()
         {
-            var hasControl = unitEntity.EntityHas<ControlsMechComponent>(world);
+            var hasControl = _unitEntity.EntityHas<ControlsMechComponent>(_world);
             view.ButtonJoinMech.gameObject.SetActive(!hasControl);
             view.ButtonLeaveMech.gameObject.SetActive(hasControl);
         }

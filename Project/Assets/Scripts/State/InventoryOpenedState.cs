@@ -11,10 +11,10 @@ namespace Game.State
 {
     public class InventoryOpenedState : StateWithUI
     {
-        private InventoryFactory inventoryFactory;
-        private UIInventory inventoryView;
-        private UI.UI uiView;
-        private EcsWorld world;
+        private InventoryFactory _inventoryFactory;
+        private UIInventory _inventoryView;
+        private UI.UI _uiView;
+        private EcsWorld _world;
         
         public InventoryOpenedState(States states,
             EcsWorld world,
@@ -23,54 +23,54 @@ namespace Game.State
             UI.UI uiView
             ) : base(states)
         {
-            this.inventoryFactory = inventoryFactory;
-            this.uiView = uiView;
-            this.world = world;
+            this._inventoryFactory = inventoryFactory;
+            this._uiView = uiView;
+            this._world = world;
         }
 
         public override void Enter()
         {
             base.Enter();
 
-            inventoryView = inventoryFactory.CreateInventory(uiView.View.transform);
-            inventoryView.GetCloseButton().onClick.AddListener(() =>
+            _inventoryView = _inventoryFactory.CreateInventory(_uiView.View.transform);
+            _inventoryView.GetCloseButton().onClick.AddListener(() =>
             {
                 Close();
             });
 
-            var playerId = world.GetUnique<MainPlayerIdComponent>().value;
-            var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerId);
+            var playerId = _world.GetUnique<MainPlayerIdComponent>().value;
+            var unitEntity = BaseServices.GetUnitEntityByPlayerId(_world, playerId);
 
-            var poolInventoryLink = world.GetPool<InventoryLinkComponent>();
+            var poolInventoryLink = _world.GetPool<InventoryLinkComponent>();
             if (!poolInventoryLink.Has(unitEntity))
             {
                 return;
             }
 
-            if (!poolInventoryLink.Get(unitEntity).Inventory.Unpack(world, out var inventoryEntity))
+            if (!poolInventoryLink.Get(unitEntity).Inventory.Unpack(_world, out var inventoryEntity))
             {
                 return;
             }
 
-            var poolTrashLink = world.GetPool<TrashLinkComponent>();
+            var poolTrashLink = _world.GetPool<TrashLinkComponent>();
             if (!poolTrashLink.Has(unitEntity))
             {
                 return;
             }
 
-            if (!poolTrashLink.Get(unitEntity).Trash.Unpack(world, out var trashEntity))
+            if (!poolTrashLink.Get(unitEntity).Trash.Unpack(_world, out var trashEntity))
             {
                 return;
             }
 
-            inventoryView.Init(inventoryEntity, trashEntity, world);
+            _inventoryView.Init(inventoryEntity, trashEntity, _world);
         }
 
         public override void Exit()
         {
             base.Exit();
-            GameObject.Destroy(inventoryView.gameObject);
-            inventoryView = null;
+            GameObject.Destroy(_inventoryView.gameObject);
+            _inventoryView = null;
         }
     }
 }

@@ -29,11 +29,11 @@ namespace Game.ClientServer
 {
     public class EcsSystemsFactory : IEcsSystemsFactory
     {
-        private EcsSystemsContainer container;
+        private EcsSystemsContainer _container;
         
         public EcsSystemsFactory(DiContainer di)
         {
-            container = new EcsSystemsContainer(di);
+            _container = new EcsSystemsContainer(di);
             
             /*
              * регистрация аналогична прямым вызовам через systems.AddSystem, за тем исключением,
@@ -90,138 +90,138 @@ namespace Game.ClientServer
                            
              */
 #if SERVER
-            container.Register<CreateGameSystem>();
+            _container.Register<CreateGameSystem>();
 #endif
             
 #if CLIENT
-            container.RegisterClient<DetectPlayerIdChangesSystem>();
+            _container.RegisterClient<DetectPlayerIdChangesSystem>();
 #endif
-            container.RegisterServer<CustomInitSystem>();
-            container.RegisterServer<JoinPlayerSystem>();
+            _container.RegisterServer<CustomInitSystem>();
+            _container.RegisterServer<JoinPlayerSystem>();
             
 #if CLIENT
-            container.RegisterClient<InitSceneSystem>();
-            container.RegisterClient<Box2DDebugViewSystem>();
+            _container.RegisterClient<InitSceneSystem>();
+            _container.RegisterClient<Box2DDebugViewSystem>();
 #endif
             
-            container.RegisterServer<AIPlayerSystem>();
+            _container.RegisterServer<AIPlayerSystem>();
 
-            container.Register<MoveToTargetPositionSystem>();
-            container.Register<MoveSystem>();
-            container.Register<LookDirectionSystem>();
-            container.Register<SimpleMoveSystem>();
-            container.Register<UnitMoveSystem>();
-            container.Register<FollowSystem>();
-            container.Register<PushingSystem>();
+            _container.Register<MoveToTargetPositionSystem>();
+            _container.Register<MoveSystem>();
+            _container.Register<LookDirectionSystem>();
+            _container.Register<SimpleMoveSystem>();
+            _container.Register<UnitMoveSystem>();
+            _container.Register<FollowSystem>();
+            _container.Register<PushingSystem>();
 
-            container.Register<MechAdapterSystem>();
+            _container.Register<MechAdapterSystem>();
             
-            container.Register<EntitiesLifeTimeSystem>();
+            _container.Register<EntitiesLifeTimeSystem>();
             
-            container.Register<GridSystem>();
+            _container.Register<GridSystem>();
             
-            container.Register<DeleteComponentHereSystem<ShootStartedComponent>>();//если ставить в конец, то на клиент этот компонент даже придет
+            _container.Register<DeleteComponentHereSystem<ShootStartedComponent>>();//если ставить в конец, то на клиент этот компонент даже придет
             
-            container.Register<ApplyInputSystem>();
+            _container.Register<ApplyInputSystem>();
 
 
-            container.RegisterServer<FootprintSystem>();
+            _container.RegisterServer<FootprintSystem>();
 
 #if CLIENT
-            container.RegisterClient<FootprintViewSystem>();
-            container.RegisterClient<HighlightInteractableSystem>();
-            container.RegisterClient<VFXCreationSystem>();
+            _container.RegisterClient<FootprintViewSystem>();
+            _container.RegisterClient<HighlightInteractableSystem>();
+            _container.RegisterClient<VFXCreationSystem>();
 #endif
             
 
 #if CLIENT
-            container.RegisterClient<CollectableSystem>();
-            container.RegisterClient<WeaponEquipSystem>();
+            _container.RegisterClient<CollectableSystem>();
+            _container.RegisterClient<WeaponEquipSystem>();
 #endif
             // gates and buttons
-            container.Register<ButtonsInteractionSystem>();
-            container.RegisterServer<ButtonCustomSystem>();
-            container.Register<GateSystem>();
-            container.Register<MoveByProgressSystem>();
+            _container.Register<ButtonsInteractionSystem>();
+            _container.RegisterServer<ButtonCustomSystem>();
+            _container.Register<GateSystem>();
+            _container.Register<MoveByProgressSystem>();
 
-            container.Register<FireSystem>();
+            _container.Register<FireSystem>();
 
-            container.Register<ApplyForceSystem>();
+            _container.Register<ApplyForceSystem>();
             
             
 
 #if CLIENT
-            container.RegisterClient<CreateViewSystem>();
-            container.RegisterClient<FireViewSystem>();
-            container.RegisterClient<InventoryImageSystem>();
-            container.RegisterClient<CreateMechViewSystem>();
-            container.RegisterClient<MechAnimationSystem>();
+            _container.RegisterClient<CreateViewSystem>();
+            _container.RegisterClient<FireViewSystem>();
+            _container.RegisterClient<InventoryImageSystem>();
+            _container.RegisterClient<CreateMechViewSystem>();
+            _container.RegisterClient<MechAnimationSystem>();
 #endif
 
-            container.Register<DeleteEntityHereSystem<DestroyComponent>>();
+            _container.Register<DeleteEntityHereSystem<DestroyComponent>>();
 
-            container.RegisterServer<DeleteInputEntitiesSystem>();
-            container.RegisterServer<DeleteOutdatedInputEntitiesSystem>();
+            _container.RegisterServer<DeleteInputEntitiesSystem>();
+            _container.RegisterServer<DeleteOutdatedInputEntitiesSystem>();
 
-            container.Register<FireDestroyEntitySystem>();
+            _container.Register<FireDestroyEntitySystem>();
 
-            container.RegisterServer<ObjectivesSystem>();
+            _container.RegisterServer<ObjectivesSystem>();
 
-            container.Register<DestroyAtTimeSystem>();
+            _container.Register<DestroyAtTimeSystem>();
 
 #if CLIENT
-            container.RegisterClient<CharacterAnimationSystem>();
-            container.RegisterClient<AddLerpSystem>();
+            _container.RegisterClient<CharacterAnimationSystem>();
+            _container.RegisterClient<AddLerpSystem>();
 #endif
 
 
-            container.Register<ShootSystem>();
+            _container.Register<ShootSystem>();
             
             //Основная Box2dSystem должна быть в конце после всех основных систем,
             //иначе в мультиплеере предсказание не будет работать правильно
-            container.Register<Box2DInitSystem>();
-            container.Register<Box2DCreateBodiesSystem>();
-            container.Register<Box2DCreateEventContactsSystem>();
+            _container.Register<Box2DInitSystem>();
+            _container.Register<Box2DCreateBodiesSystem>();
+            _container.Register<Box2DCreateEventContactsSystem>();
             //container.Register<Box2DCreateContactsSystem>();
-            container.Register<Box2DUpdateInternalObjectsSystem>();
-            container.Register<Box2DUpdateSystem>();
-            container.Register<BulletContactSystem>();      
-            container.Register<DestructibleDamageApplySystem>();
+            _container.Register<Box2DUpdateInternalObjectsSystem>();
+            _container.Register<Box2DUpdateSystem>();
+            _container.Register<BulletContactSystem>();      
+            _container.Register<DestructibleDamageApplySystem>();
 
             //container.Register<Box2DDeleteContactsSystem>();
 
-            container.Register<EventsSystem<WeaponComponent>>();
-            container.Register<EventsSystem<FireComponent>>();
-            container.Register<EventsSystem<ButtonPressedComponent>>();
-            container.Register<EventsSystem<PlayerComponent>>();
-            container.Register<EventsSystem<ButtonPushCompleted>>();
-            container.Register<EventsSystem<ObjectiveOpenedComponent>>();
-            container.Register<EventsSystem<ObjectiveCompletedComponent>>();
-            container.Register<EventsSystem<GateOpenedComponent>>();
-            container.Register<EventsSystem<FoodCollectedComponent>>();
-            container.Register<EventsSystem<AmmoCollectedComponent>>();
-            container.Register<EventsSystem<PushingComponent>>();
-            container.Register<EventsSystem<CantMoveComponent>>();
+            _container.Register<EventsSystem<WeaponComponent>>();
+            _container.Register<EventsSystem<FireComponent>>();
+            _container.Register<EventsSystem<ButtonPressedComponent>>();
+            _container.Register<EventsSystem<PlayerComponent>>();
+            _container.Register<EventsSystem<ButtonPushCompleted>>();
+            _container.Register<EventsSystem<ObjectiveOpenedComponent>>();
+            _container.Register<EventsSystem<ObjectiveCompletedComponent>>();
+            _container.Register<EventsSystem<GateOpenedComponent>>();
+            _container.Register<EventsSystem<FoodCollectedComponent>>();
+            _container.Register<EventsSystem<AmmoCollectedComponent>>();
+            _container.Register<EventsSystem<PushingComponent>>();
+            _container.Register<EventsSystem<CantMoveComponent>>();
             
 #if CLIENT
-            container.Register<EventsSystem<MovingComponent>>();
-            container.Register<EventsSystem<InventorySlotComponent>>();
-            container.Register<EventsSystem<ActiveInventoryCategoryComponent>>();
-            container.Register<EventsSystem<EntityRemoveEventComponent>>();
-            container.Register<EventsSystem<TickComponent>>();
-            container.Register<EventsSystem<ControlsMechComponent>>();
-            container.RegisterClient<CreateViewSystem>();
+            _container.Register<EventsSystem<MovingComponent>>();
+            _container.Register<EventsSystem<InventorySlotComponent>>();
+            _container.Register<EventsSystem<ActiveInventoryCategoryComponent>>();
+            _container.Register<EventsSystem<EntityRemoveEventComponent>>();
+            _container.Register<EventsSystem<TickComponent>>();
+            _container.Register<EventsSystem<ControlsMechComponent>>();
+            _container.RegisterClient<CreateViewSystem>();
 #endif
-            container.Register<DeleteEventEntitiesSystem>();
-            container.Register<RemoveEntitySystem>();//from inventory
+            _container.Register<DeleteEventEntitiesSystem>();
+            _container.Register<RemoveEntitySystem>();//from inventory
 
             //write final Box2d transforms to components
-            container.Register<Box2DWriteBodiesToComponentsSystem>();
+            _container.Register<Box2DWriteBodiesToComponentsSystem>();
         }
         
         public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)
         {
-            systems.Add(container.CreateNewSystems(systems.GetWorld(), settings.AddClientSystems, settings.AddServerSystems));
+            systems.Add(_container.CreateNewSystems(systems.GetWorld(), settings.AddClientSystems, settings.AddServerSystems));
         }
 
         public IEcsSystem CreateSyncDebugSystem(bool pre)

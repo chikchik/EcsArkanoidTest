@@ -15,13 +15,12 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class ButtonCustomSystem : IEcsRunSystem
     {
-        
-        private Random rnd = new Random(1);
+        private Random _rnd = new Random(1);
 
 
         private float NextFloat(float left, float right)
         {
-            return (float)rnd.NextDouble() * (right - left) + left;
+            return (float)_rnd.NextDouble() * (right - left) + left;
         }
 
         

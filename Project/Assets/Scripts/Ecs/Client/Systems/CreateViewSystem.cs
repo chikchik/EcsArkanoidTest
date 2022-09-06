@@ -13,12 +13,12 @@ namespace Game.Ecs.Client.Systems
 {
     public class CreateViewSystem : IEcsInitSystem, IEcsRunSystem
     {
-        private CharacterView viewPrefab;
-        private BulletView bulletPrefab;
+        private CharacterView _viewPrefab;
+        private BulletView _bulletPrefab;
         public CreateViewSystem(CharacterView viewPrefab, BulletView bulletPrefab)
         {
-            this.bulletPrefab = bulletPrefab;
-            this.viewPrefab = viewPrefab;
+            this._bulletPrefab = bulletPrefab;
+            this._viewPrefab = viewPrefab;
         }
         
         private EcsWorld world;
@@ -69,7 +69,7 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filterUnits)
             {
-                var view = Object.Instantiate(viewPrefab);
+                var view = Object.Instantiate(_viewPrefab);
                 view.transform.position = entity.EntityGet<PositionComponent>(world).value;
                 view.Gun.gameObject.SetActive(false);
 
@@ -87,7 +87,7 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filterBullets)
             {
-                var view = Object.Instantiate(bulletPrefab);
+                var view = Object.Instantiate(_bulletPrefab);
                 var pos = entity.EntityGet<PositionComponent>(world).value;
                 view.transform.position = pos;
                 view.name = $"Bullet{entity}";

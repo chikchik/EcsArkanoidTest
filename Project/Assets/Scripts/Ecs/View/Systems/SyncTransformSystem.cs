@@ -10,20 +10,18 @@ namespace Game.Ecs.View.Systems
 {
     public class SyncTransformSystem : IEcsRunSystem, IEcsInitSystem
     {
-        private bool singlePlayer;
-        EcsFilter filter;
-        EcsWorld world;
+        EcsFilter _filter;
+        EcsWorld _world;
         
-        public SyncTransformSystem(bool singlePlayer)
+        public SyncTransformSystem()
         {
-            this.singlePlayer = singlePlayer;
         }
         
         
         public void Init(EcsSystems systems)
         {
-            world = systems.GetWorld();
-            filter = world
+            _world = systems.GetWorld();
+            _filter = _world
                 .Filter<TransformComponent>()
                 .Inc<PositionComponent>()
                 .End();
@@ -31,16 +29,16 @@ namespace Game.Ecs.View.Systems
         
         public void Run(EcsSystems systems)
         {
-            var poolTransform = world.GetPool<TransformComponent>();
-            var poolPosition = world.GetPool<PositionComponent>();
-            var poolLerp = world.GetPool<LerpComponent>();
-            var poolAverage = world.GetPool<AverageSpeedComponent>();
-            var poolMainPlayer = world.GetPool<IsMainPlayerComponent>();
+            var poolTransform = _world.GetPool<TransformComponent>();
+            var poolPosition = _world.GetPool<PositionComponent>();
+            var poolLerp = _world.GetPool<LerpComponent>();
+            var poolAverage = _world.GetPool<AverageSpeedComponent>();
+            var poolMainPlayer = _world.GetPool<IsMainPlayerComponent>();
             
             var dt = Time.deltaTime;
             var lerpScale = 12;
 
-            foreach (var entity in filter)
+            foreach (var entity in _filter)
             {
                 var transform = poolTransform.Get(entity).Transform;
                 var targetPosition = poolPosition.Get(entity).value;

@@ -10,28 +10,28 @@ namespace Game.Ecs.Client.Systems
     public class VFXCreationSystem : IEcsInitSystem, IEcsRunSystem
     {
 
-        private readonly string fireVFX = "FireRed";
+        private readonly string _fireVFX = "FireRed";
 
-        private EcsWorld world;
+        private EcsWorld _world;
 
         public void Init(EcsSystems systems)
         {
-            world = systems.GetWorld();
+            _world = systems.GetWorld();
         }
 
         public void Run(EcsSystems systems)
         {
-            var tm = world.GetTime();
+            var tm = _world.GetTime();
 
-            var filterDestructibleDamaged = world.Filter<DestructibleDamagedComponent>().End();
+            var filterDestructibleDamaged = _world.Filter<DestructibleDamagedComponent>().End();
 
-            var poolDestructibleDamaged = world.GetPool<DestructibleDamagedComponent>();
-            var poolActiveVFX = world.GetPool<ActiveVFX>();
-            var poolTransform = world.GetPool<TransformComponent>();
+            var poolDestructibleDamaged = _world.GetPool<DestructibleDamagedComponent>();
+            var poolActiveVFX = _world.GetPool<ActiveVFX>();
+            var poolTransform = _world.GetPool<TransformComponent>();
 
             foreach (var request in filterDestructibleDamaged)
             {
-                if (!poolDestructibleDamaged.Get(request).vfxEntity.Unpack(world, out var vfxEntity))
+                if (!poolDestructibleDamaged.Get(request).vfxEntity.Unpack(_world, out var vfxEntity))
                 {
                     poolDestructibleDamaged.Del(request);
                     continue;
@@ -42,7 +42,7 @@ namespace Game.Ecs.Client.Systems
                     continue;
                 }
 
-                var vfxGameObject = Object.Instantiate(Resources.Load<GameObject>(fireVFX));
+                var vfxGameObject = Object.Instantiate(Resources.Load<GameObject>(_fireVFX));
 
                 ref var activeVfx = ref poolActiveVFX.Add(vfxEntity);
                 activeVfx.VFX = vfxGameObject;

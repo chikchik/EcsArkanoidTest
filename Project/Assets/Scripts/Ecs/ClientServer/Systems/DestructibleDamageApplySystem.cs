@@ -8,8 +8,8 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class DestructibleDamageApplySystem : IEcsRunSystem, IEcsInitSystem
     {
-        private readonly float boxDestructionTime = 3f;
-        private readonly float fireDuration = 5f;
+        private readonly float _boxDestructionTime = 3f;
+        private readonly float _fireDuration = 5f;
 
         private EcsWorld _world;
         private EcsWorld _eventWorld;
@@ -56,8 +56,8 @@ namespace Game.Ecs.ClientServer.Systems
                         poolFollow.Add(vfxEntity).Entity = _world.PackEntity(entityHit);
                         poolDestructibleDamaged.Add(entityHit).vfxEntity = _world.PackEntity(vfxEntity);
                         poolDestructibleHealth.Del(entityHit);
-                        poolDestroyAtTime.Add(entityHit).Time = tm + boxDestructionTime;
-                        poolDestroyAtTime.Add(vfxEntity).Time = tm + fireDuration;
+                        poolDestroyAtTime.Add(entityHit).Time = tm + _boxDestructionTime;
+                        poolDestroyAtTime.Add(vfxEntity).Time = tm + _fireDuration;
                     }
                 }
             }

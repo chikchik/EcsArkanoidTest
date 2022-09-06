@@ -14,7 +14,7 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class ButtonsInteractionSystem : IEcsRunSystem
     {
-        private List<int> entities = new List<int>(32);
+        private List<int> _entities = new List<int>(32);
         
         public void Run(EcsSystems systems)
         {
@@ -38,10 +38,10 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 var pos = buttonEntity.EntityGet<PositionComponent>(world).value;
 
-                world.GetNearestEntities(buttonEntity, pos, 0.5f, ref entities, entity =>
+                world.GetNearestEntities(buttonEntity, pos, 0.5f, ref _entities, entity =>
                     !poolBullet.Has(entity) &&(poolUnit.Has(entity) || poolBody.Has(entity)));
                 
-                var pressed = entities.Count > 0;
+                var pressed = _entities.Count > 0;
                 poolButton.ReplaceIfChanged(buttonEntity, new ButtonComponent{isActivated = pressed});
 
                 if (pressed)

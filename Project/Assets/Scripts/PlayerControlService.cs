@@ -19,24 +19,24 @@ namespace Game
 {
     public class PlayerControlService : IInventoryInputService
     {
-        private EcsWorld inputWorld;
-        private EcsWorld world;
+        private EcsWorld _inputWorld;
+        private EcsWorld _world;
 
-        private IInputService input;
+        private IInputService _input;
         
         public PlayerControlService(
             [Inject(Id = EcsWorlds.Input)] EcsWorld inputWorld,
             [InjectOptional] IInputService input,
             EcsWorld world)
         {
-            this.inputWorld = inputWorld;
-            this.world = world;
-            this.input = input;
+            this._inputWorld = inputWorld;
+            this._world = world;
+            this._input = input;
         }
         
-        private int playerId => world.GetUnique<MainPlayerIdComponent>().value;
-        private int unitEntity => BaseServices.GetUnitEntityByPlayerId(world, playerId);
-        private int tick => world.GetTick();
+        private int playerId => _world.GetUnique<MainPlayerIdComponent>().value;
+        private int unitEntity => BaseServices.GetUnitEntityByPlayerId(_world, playerId);
+        private int tick => _world.GetTick();
         
         public void Shot()
         {
@@ -46,11 +46,11 @@ namespace Game
                 return;
             }
 
-            var view = unitEntity.EntityGet<TransformComponent>(world).Transform.GetComponent<CharacterView>();
+            var view = unitEntity.EntityGet<TransformComponent>(_world).Transform.GetComponent<CharacterView>();
             //view.
             
             var component = new InputShotComponent();
-            var lookDir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
+            var lookDir = _world.EntityGet<LookDirectionComponent>(unitEntity).value;
             var dir = Quaternion.Euler(0, -0, 0) * lookDir;
             component.dir = dir;
             component.pos = view.BulletSpawnPos.transform.position; 
@@ -79,7 +79,7 @@ namespace Game
             }
             
             var component = new InputKickComponent();
-            component.dir = world.EntityGet<LookDirectionComponent>(unitEntity).value;
+            component.dir = _world.EntityGet<LookDirectionComponent>(unitEntity).value;
             
             Apply(component);
         }
@@ -99,8 +99,8 @@ namespace Game
         {
             var component = new MoveItemComponent
             {
-                Inventory = world.PackEntity(inventory),
-                Item = world.PackEntity(item),
+                Inventory = _world.PackEntity(inventory),
+                Item = _world.PackEntity(item),
                 Amount = amount
             };
             
@@ -111,7 +111,7 @@ namespace Game
         {
             var component = new ClearInventoryComponent
             {
-                Inventory = world.PackEntity(inventory)
+                Inventory = _world.PackEntity(inventory)
             };
 
             Apply(component);
@@ -139,9 +139,9 @@ namespace Game
                 return;
             }
 
-            var entity = ApplyInputWorldService.GetControlledEntity(world, unitEntity);
+            var entity = ApplyInputWorldService.GetControlledEntity(_world, unitEntity);
             
-            if (!entity.EntityHas<MoveDirectionComponent>(world))
+            if (!entity.EntityHas<MoveDirectionComponent>(_world))
                 return;
             
             var component = new InputMoveDirectionComponent();
@@ -166,10 +166,10 @@ namespace Game
         private void Apply(IInputComponent component)
         {
             //reused on server
-            ApplyInputWorldService.CreateInputEntity(inputWorld, playerId, tick, component);
+            ApplyInputWorldService.CreateInputEntity(_inputWorld, playerId, tick, component);
             
             //send player input to server
-            input?.Input(inputWorld, playerId, tick, component);
+            _input?.Input(_inputWorld, playerId, tick, component);
         }
     }
 }

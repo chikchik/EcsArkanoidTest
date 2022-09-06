@@ -13,22 +13,22 @@ namespace Game.UI
         EventsSystem<ObjectiveCompletedComponent>.IAnyComponentChangedListener,
         EventsSystem<ObjectiveOpenedComponent>.IAnyComponentChangedListener
     {
-        private readonly TextMeshProUGUI textPrefab;
-        private readonly RectTransform verticalLayoutGroup;
-        private EcsWorld world;
+        private readonly TextMeshProUGUI _textPrefab;
+        private readonly RectTransform _verticalLayoutGroup;
+        private EcsWorld _world;
         public Objectives(MainUI ui, EcsWorld world)
         {
-            this.world = world;
+            this._world = world;
 
-            verticalLayoutGroup = ui.ObjectivesRectTransform;
+            _verticalLayoutGroup = ui.ObjectivesRectTransform;
         
             var listener = world.CreateAnyListener();
             listener.SetAnyChangedListener<ObjectiveOpenedComponent>(this);
             listener.SetAnyChangedListener<ObjectiveCompletedComponent>(this);
         
         
-            textPrefab = verticalLayoutGroup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            textPrefab.gameObject.SetActive(false);
+            _textPrefab = _verticalLayoutGroup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _textPrefab.gameObject.SetActive(false);
         }
 
         public void OnAnyComponentChanged(EcsWorld world, int entity, ObjectiveCompletedComponent data, bool added)
@@ -43,7 +43,7 @@ namespace Game.UI
 
         public void OnAnyComponentChanged(EcsWorld world, int entity, ObjectiveOpenedComponent data, bool added)
         {
-            var text = Object.Instantiate(textPrefab, verticalLayoutGroup.transform);
+            var text = Object.Instantiate(_textPrefab, _verticalLayoutGroup.transform);
             text.text = entity.EntityGet<ObjectiveDescriptionComponent>(world).text;
             text.gameObject.SetActive(true);
 

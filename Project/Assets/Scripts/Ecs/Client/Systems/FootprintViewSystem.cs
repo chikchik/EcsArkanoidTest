@@ -13,13 +13,13 @@ namespace Game.Ecs.Client.Systems
 {
     public class FootprintViewSystem : IEcsRunSystem
     {
-        private FootprintView leftPrefab;
-        private FootprintView rightPrefab;
+        private FootprintView _leftPrefab;
+        private FootprintView _rightPrefab;
         
         public FootprintViewSystem([Inject(Id="left")]FootprintView leftPrefab, [Inject(Id="right")]FootprintView rightPrefab)
         {
-            this.leftPrefab = leftPrefab;
-            this.rightPrefab = rightPrefab;
+            this._leftPrefab = leftPrefab;
+            this._rightPrefab = rightPrefab;
         }
         
         public void Run(EcsSystems systems)
@@ -54,7 +54,7 @@ namespace Game.Ecs.Client.Systems
 
         private void CreateView(EcsWorld world, int entity, FootprintComponent footprintComponent)
         {
-            var footprintPrefab = footprintComponent.isLeftHand ? leftPrefab : rightPrefab;
+            var footprintPrefab = footprintComponent.isLeftHand ? _leftPrefab : _rightPrefab;
 
             var view = GameObject.Instantiate(footprintPrefab);
             var transform = view.transform;

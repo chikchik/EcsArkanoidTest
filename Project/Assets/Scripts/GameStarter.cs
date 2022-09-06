@@ -10,28 +10,28 @@ namespace Game
     public class GameStarter : MonoBehaviour
     {
         [Inject]
-        private States states;
+        private States _states;
 
-        [Inject] private RootState rootState;
-        [Inject] private MechInfoState mechInfoState;
-        [Inject] private InventoryOpenedState inventoryOpenedState;
+        [Inject] private RootState _rootState;
+        [Inject] private MechInfoState _mechInfoState;
+        [Inject] private InventoryOpenedState _inventoryOpenedState;
     
     
         // Start is called before the first frame update
         void Start()
         {
-            RegisterStateWithUI(mechInfoState);
-            states.RegisterState(inventoryOpenedState);
+            RegisterStateWithUI(_mechInfoState);
+            _states.RegisterState(_inventoryOpenedState);
             
-            states.RegisterState(rootState);
+            _states.RegisterState(_rootState);
         
-            states.StartFrom<RootState>();
+            _states.StartFrom<RootState>();
         }
 
         private void RegisterStateWithUI<T>(StateWithUI<T> state) where T:BaseUIView
         {
             state.GetView().gameObject.SetActive(false);
-            states.RegisterState(state);
+            _states.RegisterState(state);
         }
     }
 }

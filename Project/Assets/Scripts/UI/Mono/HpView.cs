@@ -10,13 +10,13 @@ namespace Game.UI.Mono
     public class HpView : MonoBehaviour
     {
         public Image Image;
-        private float offset;
+        private float _offset;
 
-        private Transform target;
+        private Transform _target;
 
         private void LateUpdate()
         {
-            if (target == null) return;
+            if (_target == null) return;
 
             /*
 
@@ -33,8 +33,8 @@ namespace Game.UI.Mono
 
         public void Init(Transform target, float offset)
         {
-            this.offset = offset;
-            this.target = target;
+            this._offset = offset;
+            this._target = target;
         }
 
         /*

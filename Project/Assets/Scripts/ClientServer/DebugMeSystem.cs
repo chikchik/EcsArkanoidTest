@@ -12,42 +12,42 @@ namespace Game.ClientServer
      */
     public class DebugMeSystem : IEcsInitSystem, IEcsRunSystem
     {
-        private bool pre;
-        private EcsWorld world;
-        private EcsFilter filter;
+        private bool _pre;
+        private EcsWorld _world;
+        private EcsFilter _filter;
         
         public DebugMeSystem(bool pre)
         {
-            this.pre = pre;
+            this._pre = pre;
         }
         
         public void Run(EcsSystems systems)
         {
             //if logging disabled skip
-            if (world.GetSyncLogger() == null)
+            if (_world.GetSyncLogger() == null)
                 return;
             
-            foreach (var entity in filter)
+            foreach (var entity in _filter)
             {
                 var str = "";
-                if (pre)
+                if (_pre)
                     str += "beg-";
                 else
                     str += "end-";
 
-                if (entity.EntityHas<PositionComponent>(world))
-                    str += entity.EntityGet<PositionComponent>(world).value;
-                if (entity.EntityHas<Box2DRigidbodyComponent>(world))
-                    str += entity.EntityGet<Box2DRigidbodyComponent>(world).LinearVelocity;
+                if (entity.EntityHas<PositionComponent>(_world))
+                    str += entity.EntityGet<PositionComponent>(_world).value;
+                if (entity.EntityHas<Box2DRigidbodyComponent>(_world))
+                    str += entity.EntityGet<Box2DRigidbodyComponent>(_world).LinearVelocity;
                     
-                world.LogVerbose(str);
+                _world.LogVerbose(str);
             }
         }
 
         public void Init(EcsSystems systems)
         {
-            world = systems.GetWorld();
-            filter = world.Filter<DebugMeComponent>().End();
+            _world = systems.GetWorld();
+            _filter = _world.Filter<DebugMeComponent>().End();
         }
     }
 }

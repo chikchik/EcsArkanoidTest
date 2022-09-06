@@ -15,16 +15,16 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class CustomInitSystem : IEcsInitSystem
     {
-        private MechService mechService;
+        private MechService _mechService;
         public CustomInitSystem(MechService mechService)
         {
-            this.mechService = mechService;
+            this._mechService = mechService;
         }
         
         public void Init(EcsSystems systems)
         {
             var world = systems.GetWorld();
-            var mechEntity = mechService.CreateMechEntity(world);
+            var mechEntity = _mechService.CreateMechEntity(world);
             mechEntity.EntityGetRef<PositionComponent>(world).value = new Vector3(5, 0, -15f);
 
             mechEntity.EntityAdd<InteractableComponent>(world);

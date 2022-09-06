@@ -19,10 +19,10 @@ namespace Game.UI
         EventsSystem<TickComponent>.IAnyComponentChangedListener
     {
         public MainUI View { get; private set; }
-        private EcsWorld world;
+        private EcsWorld _world;
         
-        private PlayerControlService controlService;
-        private ClientServerServices clientServerServices;
+        private PlayerControlService _controlService;
+        private ClientServerServices _clientServerServices;
         
         public UI(
             EcsWorld world, 
@@ -32,9 +32,9 @@ namespace Game.UI
             ClientServerServices clientServerServices)
         {
             this.View = view;
-            this.world = world;
-            this.controlService = controlService;
-            this.clientServerServices = clientServerServices;
+            this._world = world;
+            this._controlService = controlService;
+            this._clientServerServices = clientServerServices;
 
 
             view.InteractionButton.onClick.AddListener(() =>
@@ -78,18 +78,18 @@ namespace Game.UI
 
         private bool IsPlayerUnitEntity(int entity)
         {
-            if (!world.HasUnique<ClientPlayerComponent>())
+            if (!_world.HasUnique<ClientPlayerComponent>())
                 return false;
             
-            return world.GetUnique<ClientPlayerComponent>().entity == entity;
+            return _world.GetUnique<ClientPlayerComponent>().entity == entity;
         }
         
         private int GetPlayerUnitEntity()
         {
-            if (!world.HasUnique<ClientPlayerComponent>())
+            if (!_world.HasUnique<ClientPlayerComponent>())
                 return -1;
             
-            return world.GetUnique<ClientPlayerComponent>().entity;
+            return _world.GetUnique<ClientPlayerComponent>().entity;
         }
 
         
@@ -129,7 +129,7 @@ namespace Game.UI
             if (unitEntity == -1)
                 return;
 
-            var mechEntity = clientServerServices.GetInteractionMechEntity(world, unitEntity);
+            var mechEntity = _clientServerServices.GetInteractionMechEntity(_world, unitEntity);
             View.MechButton.gameObject.SetActive(mechEntity != -1);
         }
     }

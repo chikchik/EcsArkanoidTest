@@ -25,55 +25,52 @@ namespace Game
 {
     public class UnityEcsSinglePlayer: MonoBehaviour
     {
-        [Inject] private Camera camera;
-        [Inject] private Global global;
-        [Inject] private UI.UI ui;
+        [Inject] private Camera _camera;
+        [Inject] private Joystick _joystick;
         
-        [Inject] private Joystick joystick;
-        
-        [Inject] private EcsWorld world;
-        [Inject(Id = EcsWorlds.Input)] private EcsWorld inputWorld;
-        [Inject(Id = EcsWorlds.Event)] private EcsWorld eventWorld;
+        [Inject] private EcsWorld _world;
+        [Inject(Id = EcsWorlds.Input)] private EcsWorld _inputWorld;
+        [Inject(Id = EcsWorlds.Event)] private EcsWorld _eventWorld;
         
         [Inject] 
-        private PlayerControlService controlService;
+        private PlayerControlService _controlService;
         
         [Inject] 
-        private EntityDestroyedListener entityDestroyedListener;
+        private EntityDestroyedListener _entityDestroyedListener;
 
         [Inject]
-        private IEcsSystemsFactory systemsFactory;
+        private IEcsSystemsFactory _systemsFactory;
 
-        private EcsSystems systems;
-        private EcsSystems viewSystems;
+        private EcsSystems _systems;
+        private EcsSystems _viewSystems;
         
 
-        private int unitEntity = -1;
-        private int playerId = 1;
+        private int _unitEntity = -1;
+        private int _playerId = 1;
 
         public void Start()
         {
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
 
-            systems = new EcsSystems(world, "systems");
-            systems.AddWorld(inputWorld, EcsWorlds.Input);
-            systems.AddWorld(eventWorld, EcsWorlds.Event);
-            ClientServices.InitializeNewWorldFromScene(world);
+            _systems = new EcsSystems(_world, "systems");
+            _systems.AddWorld(_inputWorld, EcsWorlds.Input);
+            _systems.AddWorld(_eventWorld, EcsWorlds.Event);
+            ClientServices.InitializeNewWorldFromScene(_world);
             
-            world.EntityDestroyedListeners.Add(entityDestroyedListener);
+            _world.EntityDestroyedListeners.Add(_entityDestroyedListener);
 
-            world.AddUnique<PrimaryWorldComponent>();
+            _world.AddUnique<PrimaryWorldComponent>();
             
-            world.AddUnique(new TickDeltaComponent
+            _world.AddUnique(new TickDeltaComponent
             {
                 Value = new TickDelta((int)(1f/Time.fixedDeltaTime))
             });
 
-            world.AddUnique(new TickComponent{Value = new Tick(0)});
+            _world.AddUnique(new TickComponent{Value = new Tick(0)});
 
-            unitEntity = UnitService.CreateUnitEntity(world);
-            world.AddUnique(new ClientPlayerComponent{ entity = unitEntity});
+            _unitEntity = UnitService.CreateUnitEntity(_world);
+            _world.AddUnique(new ClientPlayerComponent{ entity = _unitEntity});
             
             
 #if UNITY_EDITOR
@@ -81,33 +78,33 @@ namespace Game
 #endif
             
             
-            systemsFactory.AddNewSystems(systems, 
+            _systemsFactory.AddNewSystems(_systems, 
                 new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = true});
-            systems.Add(new TickSystem());
+            _systems.Add(new TickSystem());
             
 
-            systems.Init();
+            _systems.Init();
             
-            viewSystems = new EcsSystems(world, "viewSystems");
-            viewSystems.Add(new SyncTransformSystem(true));
-            viewSystems.Add(new RotateCharacterSystem());
+            _viewSystems = new EcsSystems(_world, "viewSystems");
+            _viewSystems.Add(new SyncTransformSystem());
+            _viewSystems.Add(new RotateCharacterSystem());
 
-            viewSystems.Add(new RotateRigidbodySystem());
-            viewSystems.Add(new CameraFollowSystem(Camera.main));
+            _viewSystems.Add(new RotateRigidbodySystem());
+            _viewSystems.Add(new CameraFollowSystem(Camera.main));
             
-            viewSystems.Init();
+            _viewSystems.Init();
             
-            world.AddUnique(new MainPlayerIdComponent{value = playerId});
-            unitEntity.EntityAdd<PlayerComponent>(world).id = playerId;
+            _world.AddUnique(new MainPlayerIdComponent{value = _playerId});
+            _unitEntity.EntityAdd<PlayerComponent>(_world).id = _playerId;
 
-            var inventory = world.NewEntity();
-            inventory.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
+            var inventory = _world.NewEntity();
+            inventory.EntityAdd<InventoryComponent>(_world).SlotCapacity = 10;
             
-            var trash = world.NewEntity();
-            trash.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
+            var trash = _world.NewEntity();
+            trash.EntityAdd<InventoryComponent>(_world).SlotCapacity = 10;
 
-            unitEntity.EntityAdd<InventoryLinkComponent>(world).Inventory = world.PackEntity(inventory);
-            unitEntity.EntityAdd<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
+            _unitEntity.EntityAdd<InventoryLinkComponent>(_world).Inventory = _world.PackEntity(inventory);
+            _unitEntity.EntityAdd<TrashLinkComponent>(_world).Trash = _world.PackEntity(trash);
         }
 
         public static bool IsPointerOverUIObject()
@@ -177,8 +174,8 @@ namespace Game
         }
         public void Update()
         {
-            CheckInput(camera, joystick, controlService);
-            viewSystems.Run();
+            CheckInput(_camera, _joystick, _controlService);
+            _viewSystems.Run();
         }
 
 
@@ -188,7 +185,7 @@ namespace Game
         {
             if (!Application.isPlaying)
                 return;
-            systems.Run();
+            _systems.Run();
         }
         
 
@@ -197,7 +194,7 @@ namespace Game
             if (!Application.isPlaying)
                 return;
         
-            EcsWorldDebugDraw.Draw(world);
+            EcsWorldDebugDraw.Draw(_world);
         }
     }
 }

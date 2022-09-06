@@ -10,12 +10,12 @@ namespace Game.Ecs.View.Systems
 {
     public class CameraFollowSystem : IEcsRunSystem
     {
-        private readonly Vector3 CameraOffset = new Vector3(-4, 8, 4) * 1.5f;
+        private readonly Vector3 _cameraOffset = new Vector3(-4, 8, 4) * 1.5f;
 
-        private Camera camera;
+        private Camera _camera;
         public CameraFollowSystem(Camera camera)
         {
-            this.camera = camera;
+            this._camera = camera;
         }
         
         public void Run(EcsSystems systems)
@@ -36,10 +36,10 @@ namespace Game.Ecs.View.Systems
                 dist = 2.5f;
 
             var targetEntityTransform = poolTransform.Get(controlledEntity).Transform;
-            var targetPosition = targetEntityTransform.position + CameraOffset*dist;
+            var targetPosition = targetEntityTransform.position + _cameraOffset*dist;
 
-            camera.transform.position = Vector3.Lerp(
-                camera.transform.position,
+            _camera.transform.position = Vector3.Lerp(
+                _camera.transform.position,
                 targetPosition,
                 2f * deltaTime);
         }

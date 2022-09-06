@@ -6,23 +6,23 @@ namespace Game.Ecs.Client.Systems
 {
     public class AddLerpSystem : IEcsInitSystem, IEcsRunSystem
     {
-        private EcsWorld world;
-        private EcsFilter filter;
-        private EcsPool<LerpComponent> poolLerp;
+        private EcsWorld _world;
+        private EcsFilter _filter;
+        private EcsPool<LerpComponent> _poolLerp;
         
         public void Run(EcsSystems systems)
         {
-            foreach (var entity in filter)
+            foreach (var entity in _filter)
             {
-                poolLerp.Add(entity).value = 0.5f;
+                _poolLerp.Add(entity).value = 0.5f;
             }
         }
 
         public void Init(EcsSystems systems)
         {
-            world = systems.GetWorld();
-            filter = world.Filter<Box2DBodyComponent>().Exc<LerpComponent>().End();
-            poolLerp = world.GetPool<LerpComponent>();
+            _world = systems.GetWorld();
+            _filter = _world.Filter<Box2DBodyComponent>().Exc<LerpComponent>().End();
+            _poolLerp = _world.GetPool<LerpComponent>();
         }
     }
 }

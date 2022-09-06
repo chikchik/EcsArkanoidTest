@@ -12,7 +12,7 @@ namespace Game.ClientServer.Services
     
     public class ClientServerServices//todo find better name
     {
-        List<int> entities = new List<int>();
+        List<int> _entities = new List<int>();
         
         public int GetInteractionMechEntity(EcsWorld world, int unitEntity)
         {
@@ -26,12 +26,12 @@ namespace Game.ClientServer.Services
             
             world.GetNearestEntities(unitEntity,
                 unitEntity.EntityGet<PositionComponent>(world).value,
-                1, ref entities, entity=> entity.EntityHas<MechComponent>(world));
+                1, ref _entities, entity=> entity.EntityHas<MechComponent>(world));
 
-            if (entities.Count == 0)
+            if (_entities.Count == 0)
                 return -1;
             
-            return entities[0];
+            return _entities[0];
         }
     }
 }

@@ -10,41 +10,41 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class BulletContactSystem : IEcsRunSystem, IEcsInitSystem
     {
-        private EcsWorld world;
-        private EcsWorld eventWorld;
+        private EcsWorld _world;
+        private EcsWorld _eventWorld;
         
-        private EcsPool<DestructibleHealthComponent> poolDestructibleHealth;
-        private EcsPool<BulletComponent> poolBullet;
-        private EcsPool<BulletHitComponent> poolBulletHits;
-        private EcsPool<Box2DBeginContactComponent> poolContacts;
-        private EcsFilter filter;
+        private EcsPool<DestructibleHealthComponent> _poolDestructibleHealth;
+        private EcsPool<BulletComponent> _poolBullet;
+        private EcsPool<BulletHitComponent> _poolBulletHits;
+        private EcsPool<Box2DBeginContactComponent> _poolContacts;
+        private EcsFilter _filter;
         
         public void Init(EcsSystems systems)
         {
-            world = systems.GetWorld();
-            eventWorld = systems.GetWorld(EcsWorlds.Event);
+            _world = systems.GetWorld();
+            _eventWorld = systems.GetWorld(EcsWorlds.Event);
             
-            poolBulletHits = eventWorld.GetPool<BulletHitComponent>();
+            _poolBulletHits = _eventWorld.GetPool<BulletHitComponent>();
             
-            poolDestructibleHealth = world.GetPool<DestructibleHealthComponent>();
-            poolBullet = world.GetPool<BulletComponent>();
-            poolContacts = eventWorld.GetPool<Box2DBeginContactComponent>();
-            filter = eventWorld.Filter<Box2DBeginContactComponent>().End();
+            _poolDestructibleHealth = _world.GetPool<DestructibleHealthComponent>();
+            _poolBullet = _world.GetPool<BulletComponent>();
+            _poolContacts = _eventWorld.GetPool<Box2DBeginContactComponent>();
+            _filter = _eventWorld.Filter<Box2DBeginContactComponent>().End();
         }
 
         public void Run(EcsSystems systems)
         {
-            foreach (var entity in filter)
+            foreach (var entity in _filter)
             {
-                var contact = poolContacts.Get(entity);
+                var contact = _poolContacts.Get(entity);
 
-                if (!contact.Data.EntityA.Unpack(world, out var entityA))
+                if (!contact.Data.EntityA.Unpack(_world, out var entityA))
                 {
                     Debug.Log($"contact {entity} entityA dead {contact.Data.EntityA.ToString()}");
                     continue;
                 }
 
-                if (!contact.Data.EntityB.Unpack(world, out var entityB))
+                if (!contact.Data.EntityB.Unpack(_world, out var entityB))
                 {
                     Debug.Log($"contact {entity} entityB dead {contact.Data.EntityA.ToString()}");
                     continue;
@@ -66,17 +66,17 @@ namespace Game.Ecs.ClientServer.Systems
         private void Check(int entityA, int entityB)
         {
             BulletComponent bulletComponent;
-            if (poolBullet.TryGet(entityA, out bulletComponent))
+            if (_poolBullet.TryGet(entityA, out bulletComponent))
             {
-                if (poolDestructibleHealth.Has(entityB))
+                if (_poolDestructibleHealth.Has(entityB))
                 {
-                    var hitEntity = eventWorld.NewEntity();
+                    var hitEntity = _eventWorld.NewEntity();
                     
-                    ref var bulletHit = ref poolBulletHits.Add(hitEntity);
+                    ref var bulletHit = ref _poolBulletHits.Add(hitEntity);
                     bulletHit.Bullet = bulletComponent;
-                    bulletHit.EntityHit = world.PackEntity(entityB);
+                    bulletHit.EntityHit = _world.PackEntity(entityB);
                 }
-                world.DelEntity(entityA);
+                _world.DelEntity(entityA);
             }
         }
     }

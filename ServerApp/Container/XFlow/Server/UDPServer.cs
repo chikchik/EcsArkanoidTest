@@ -17,12 +17,12 @@ namespace XFlow.Server
     
     public class UDPServer: IDisposable
     {
-        private const int listenPort = 11000;
-        private List<UdpPacket> packets = new List<UdpPacket>();
-        private Socket socket;
-        private Thread thread;
+        private const int _listenPort = 11000;
+        private List<UdpPacket> _packets = new List<UdpPacket>();
+        private Socket _socket;
+        private Thread _thread;
 
-        public Socket Socket => socket;
+        public Socket Socket => _socket;
 
         public UDPServer()
         {
@@ -60,12 +60,12 @@ namespace XFlow.Server
 
         public UdpPacket? GetPacket()
         {
-            lock (packets)
+            lock (_packets)
             {
-                if (packets.Count == 0)
+                if (_packets.Count == 0)
                     return null;
-                var data = packets[0];
-                packets.RemoveAt(0);
+                var data = _packets[0];
+                _packets.RemoveAt(0);
                 return data;
             }
         }
@@ -74,10 +74,10 @@ namespace XFlow.Server
         {
             try
             {
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 var addr = new IPEndPoint(IPAddress.Any, 12345);
 
-                socket.Bind(addr);
+                _socket.Bind(addr);
 
                 //EndPoint remote = new IPEndPoint(IPAddress.Any, 0);
 
@@ -87,12 +87,12 @@ namespace XFlow.Server
                 {
                     var packet = new UdpPacket();
                     packet.EndPoint = new IPEndPoint(IPAddress.Any, 0);
-                    int res = socket.ReceiveFrom(data, ref packet.EndPoint);
+                    int res = _socket.ReceiveFrom(data, ref packet.EndPoint);
                     packet.Data = new byte[res];
                     Array.Copy(data, packet.Data, res);
-                    lock (packets)
+                    lock (_packets)
                     {
-                        packets.Add(packet);
+                        _packets.Add(packet);
                     }
 
                     //socket.SendTo(copy, (IPEndPoint)remote);
@@ -108,8 +108,8 @@ namespace XFlow.Server
         {
             Debug.Log("UDPServer.Run");
             //this.token = token;
-            thread = new Thread(Serve);
-            thread.Start();
+            _thread = new Thread(Serve);
+            _thread.Start();
         }
 
         public void Dispose()
@@ -117,11 +117,11 @@ namespace XFlow.Server
             Debug.Log("UDPServer.Dispose");
             try
             {
-                socket.Shutdown(SocketShutdown.Both);
+                _socket.Shutdown(SocketShutdown.Both);
             }
             finally
             {
-                socket.Close();
+                _socket.Close();
             }
         }
     }

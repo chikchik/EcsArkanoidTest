@@ -22,49 +22,49 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class ApplyInputSystem : IEcsInitSystem, IEcsRunSystem
     {
-        EcsFilter filter;
-        private EcsWorld world;
-        private EcsWorld inputWorld;
+        private EcsFilter _filter;
+        private EcsWorld _world;
+        private EcsWorld _inputWorld;
 
-        private MyInventoryService inventoryService;
+        private MyInventoryService _inventoryService;
         
-        List<int> entities = new List<int>();
+        List<int> _entities = new List<int>();
 
         public ApplyInputSystem(MyInventoryService myInventoryService)
         {
-            inventoryService = myInventoryService;
+            _inventoryService = myInventoryService;
         }
         
         public void Init(EcsSystems systems)
         {
-            world = systems.GetWorld();
-            inputWorld = systems.GetWorld(EcsWorlds.Input);
-            filter = inputWorld.Filter<InputComponent>().End();
+            _world = systems.GetWorld();
+            _inputWorld = systems.GetWorld(EcsWorlds.Input);
+            _filter = _inputWorld.Filter<InputComponent>().End();
         }
         
         public void Run(EcsSystems systems)
         {
             var mainPlayerId = -1;
-            if (world.HasUnique<MainPlayerIdComponent>())//если это мир на клиенте
-                mainPlayerId = world.GetUnique<MainPlayerIdComponent>().value;
+            if (_world.HasUnique<MainPlayerIdComponent>())//если это мир на клиенте
+                mainPlayerId = _world.GetUnique<MainPlayerIdComponent>().value;
            
             
-            var poolInputShot   = inputWorld.GetPool<InputShotComponent>();
-            var poolPlayer      = inputWorld.GetPool<InputPlayerComponent>();
-            var poolInputMoveDir= inputWorld.GetPool<InputMoveDirectionComponent>();
-            var poolInputMoveTo = inputWorld.GetPool<InputMoveToPointComponent>();
-            var poolMoveItem = inputWorld.GetPool<MoveItemComponent>();
-            var poolClearInventory = inputWorld.GetPool<ClearInventoryComponent>();
-            var poolInputAction = inputWorld.GetPool<InputActionComponent>();
-            var poolInputKick   = inputWorld.GetPool<InputKickComponent>();
-            var poolInputTick   = inputWorld.GetPool<InputTickComponent>();
+            var poolInputShot   = _inputWorld.GetPool<InputShotComponent>();
+            var poolPlayer      = _inputWorld.GetPool<InputPlayerComponent>();
+            var poolInputMoveDir= _inputWorld.GetPool<InputMoveDirectionComponent>();
+            var poolInputMoveTo = _inputWorld.GetPool<InputMoveToPointComponent>();
+            var poolMoveItem = _inputWorld.GetPool<MoveItemComponent>();
+            var poolClearInventory = _inputWorld.GetPool<ClearInventoryComponent>();
+            var poolInputAction = _inputWorld.GetPool<InputActionComponent>();
+            var poolInputKick   = _inputWorld.GetPool<InputKickComponent>();
+            var poolInputTick   = _inputWorld.GetPool<InputTickComponent>();
             
             
             
 
-            var tick = world.GetTick();
+            var tick = _world.GetTick();
             
-            foreach (var inputEntity in filter)
+            foreach (var inputEntity in _filter)
             {
                 if (poolInputTick.GetNullable(inputEntity)?.Tick != tick)
                     continue;
@@ -73,14 +73,14 @@ namespace Game.Ecs.ClientServer.Systems
                 if (poolPlayer.Has(inputEntity))
                     playerId = poolPlayer.Get(inputEntity).PlayerID;
 
-                var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerId);
-                if (!world.IsEntityAliveInternal(unitEntity))
+                var unitEntity = BaseServices.GetUnitEntityByPlayerId(_world, playerId);
+                if (!_world.IsEntityAliveInternal(unitEntity))
                 {
                     Debug.LogError($"unit entity {unitEntity} is not alive");
                     continue;
                 }
 
-                if (!unitEntity.EntityHas<UnitComponent>(world))
+                if (!unitEntity.EntityHas<UnitComponent>(_world))
                 {
                     Debug.LogError($"entity {unitEntity} is not unit");
                     continue;
@@ -103,7 +103,7 @@ namespace Game.Ecs.ClientServer.Systems
                 
                 if (poolInputAction.Has(inputEntity))
                 {
-                    Interract(world, unitEntity);
+                    Interract(_world, unitEntity);
                 }
                 
                 if (poolInputKick.Has(inputEntity))
@@ -112,17 +112,17 @@ namespace Game.Ecs.ClientServer.Systems
                     Kick(unitEntity, dir);
                 }
 
-                if (inputEntity.EntityHas<InputMechEnterLeaveComponent>(inputWorld))
+                if (inputEntity.EntityHas<InputMechEnterLeaveComponent>(_inputWorld))
                 {
                     EnterLeaveMech(unitEntity);
                 }
 
-                if (inputEntity.EntityHas<MoveItemComponent>(inputWorld))
+                if (inputEntity.EntityHas<MoveItemComponent>(_inputWorld))
                 {
                     MoveItem(poolMoveItem.Get(inputEntity));
                 }
 
-                if (inputEntity.EntityHas<ClearInventoryComponent>(inputWorld))
+                if (inputEntity.EntityHas<ClearInventoryComponent>(_inputWorld))
                 {
                     ClearInventory(poolClearInventory.Get(inputEntity));
                 }
@@ -131,34 +131,34 @@ namespace Game.Ecs.ClientServer.Systems
 
         public void EnterLeaveMech(int unitEntity)
         {
-            if (unitEntity.EntityHas<ControlsMechComponent>(world))
+            if (unitEntity.EntityHas<ControlsMechComponent>(_world))
             {
-                unitEntity.EntityDel<ControlsMechComponent>(world);
+                unitEntity.EntityDel<ControlsMechComponent>(_world);
                 return;
             }
             
-            world.GetNearestEntities(unitEntity,
-                unitEntity.EntityGet<PositionComponent>(world).value,
-                1, ref entities, entity=> entity.EntityHas<MechComponent>(world));
+            _world.GetNearestEntities(unitEntity,
+                unitEntity.EntityGet<PositionComponent>(_world).value,
+                1, ref _entities, entity=> entity.EntityHas<MechComponent>(_world));
 
-            if (entities.Count == 0)
+            if (_entities.Count == 0)
                 return;
             
-            var entity = entities[0];
-            ref var packedEntity = ref unitEntity.EntityAdd<ControlsMechComponent>(world).PackedEntity;
-            packedEntity = world.PackEntity(entity);
+            var entity = _entities[0];
+            ref var packedEntity = ref unitEntity.EntityAdd<ControlsMechComponent>(_world).PackedEntity;
+            packedEntity = _world.PackEntity(entity);
         }
         
         public void Interract(EcsWorld world, int unitEntity)
         {
             world.GetNearestEntities(unitEntity,
                 unitEntity.EntityGet<PositionComponent>(world).value,
-                1, ref entities, entity=> entity.EntityHas<InteractableComponent>(world));
+                1, ref _entities, entity=> entity.EntityHas<InteractableComponent>(world));
 
-            if (entities.Count == 0)
+            if (_entities.Count == 0)
                 return;
             
-            var entity = entities[0];
+            var entity = _entities[0];
             if (entity.EntityHas<SpawnGunComponent>(world))
             {
                 unitEntity.EntityGetOrCreateRef<WeaponComponent>(world);
@@ -192,7 +192,7 @@ namespace Game.Ecs.ClientServer.Systems
                 berryEntity.EntityAdd<AmountComponent>(world).Value = 1;
                 berryEntity.EntityAdd<ItemIdComponent>(world).ItemId = "Berry";
 
-                inventoryService.Add(world, inventory, berryEntity);
+                _inventoryService.Add(world, inventory, berryEntity);
             }
 
             if (entity.EntityHas<AmmoComponent>(world))
@@ -205,25 +205,25 @@ namespace Game.Ecs.ClientServer.Systems
 
         void TryHideCollected(int entity)
         {
-            if (entity.EntityHas<CollectableComponent>(world))
+            if (entity.EntityHas<CollectableComponent>(_world))
             {
-                entity.EntityGetRef<CollectableComponent>(world).isCollected = true;
+                entity.EntityGetRef<CollectableComponent>(_world).isCollected = true;
             }
         }
         
         public void Kick(int unitEntity, Vector3 dir)
         {
-            if (unitEntity.EntityHas<PushingComponent>(world))
+            if (unitEntity.EntityHas<PushingComponent>(_world))
                 return;
                 
-            unitEntity.EntityAdd<PushingComponent>(world).EndTime = world.GetTime() + 1.3f;
-            unitEntity.EntityGetOrCreateRef<CantMoveComponent>(world);
+            unitEntity.EntityAdd<PushingComponent>(_world).EndTime = _world.GetTime() + 1.3f;
+            unitEntity.EntityGetOrCreateRef<CantMoveComponent>(_world);
             
-            if (unitEntity.EntityHas<LookDirectionComponent>(world) && 
-                !unitEntity.EntityHas<ApplyForceComponent>(world))
+            if (unitEntity.EntityHas<LookDirectionComponent>(_world) && 
+                !unitEntity.EntityHas<ApplyForceComponent>(_world))
             {
-                ref var component = ref unitEntity.EntityAdd<ApplyForceComponent>(world);
-                component.Time = world.GetTime() + 1f;
+                ref var component = ref unitEntity.EntityAdd<ApplyForceComponent>(_world);
+                component.Time = _world.GetTime() + 1f;
                 var angle = Math.PI / 8f;
                 var rotated = new Vector3();
                 rotated.x = (float)(dir.x * Math.Cos(angle) - dir.z * Math.Sin(angle));
@@ -234,39 +234,39 @@ namespace Game.Ecs.ClientServer.Systems
         
         private void Shoot(int unitEntity, InputShotComponent shoot)
         {
-            if (unitEntity.EntityHas<ShootingComponent>(world) &&
-                !unitEntity.EntityGet<ShootingComponent>(world).ShootMade)
+            if (unitEntity.EntityHas<ShootingComponent>(_world) &&
+                !unitEntity.EntityGet<ShootingComponent>(_world).ShootMade)
             {
                 //Debug.Log("skip");
                 return;
             }
             
-            if (unitEntity.EntityHas<AmmoCollectedComponent>(world) &&
-                unitEntity.EntityGet<AmmoCollectedComponent>(world).Value <= 0)
+            if (unitEntity.EntityHas<AmmoCollectedComponent>(_world) &&
+                unitEntity.EntityGet<AmmoCollectedComponent>(_world).Value <= 0)
             {
                 return;
             }
 
-            world.LogVerbose($"input shot");
+            _world.LogVerbose($"input shot");
 
             //unitEntity.EntityGetOrCreateRef<CantMoveComponent>(world);
-            unitEntity.EntityAdd<ShootStartedComponent>(world);
-            unitEntity.EntityReplace(world, new ShootingComponent
+            unitEntity.EntityAdd<ShootStartedComponent>(_world);
+            unitEntity.EntityReplace(_world, new ShootingComponent
             {
                 Direction = shoot.dir,
                 Position = shoot.pos,
-                ShootAtTime = world.GetTime() + 0.2f, 
-                TotalTime = world.GetTime() + 0.5f
+                ShootAtTime = _world.GetTime() + 0.2f, 
+                TotalTime = _world.GetTime() + 0.5f
             });
         }
 
 
         private int GetControlledEntity(int unitEntity)
         {
-            if (unitEntity.EntityHas<ControlsMechComponent>(world))
+            if (unitEntity.EntityHas<ControlsMechComponent>(_world))
             {
                 int mechEntity;
-                if (unitEntity.EntityGet<ControlsMechComponent>(world).PackedEntity.Unpack(world, out mechEntity))
+                if (unitEntity.EntityGet<ControlsMechComponent>(_world).PackedEntity.Unpack(_world, out mechEntity))
                     return mechEntity;
             }
 
@@ -277,20 +277,20 @@ namespace Game.Ecs.ClientServer.Systems
         {
             var entity = GetControlledEntity(unitEntity);
 
-            if (entity.EntityHas<CantMoveComponent>(world))
+            if (entity.EntityHas<CantMoveComponent>(_world))
                 return;
                     
             if (dir.sqrMagnitude > 0.001f)
             {
-                entity.EntityDel<TargetPositionComponent>(world);
-                entity.EntityGetOrCreateRef<MoveDirectionComponent>(world).value = dir;
+                entity.EntityDel<TargetPositionComponent>(_world);
+                entity.EntityGetOrCreateRef<MoveDirectionComponent>(_world).value = dir;
             }
             else
             {
-                if (entity.EntityHas<MoveDirectionComponent>(world))
+                if (entity.EntityHas<MoveDirectionComponent>(_world))
                 {
-                    entity.EntityDel<MoveDirectionComponent>(world);
-                    entity.EntityDel<MovingComponent>(world);
+                    entity.EntityDel<MoveDirectionComponent>(_world);
+                    entity.EntityDel<MovingComponent>(_world);
                 }
             }
         }
@@ -299,40 +299,40 @@ namespace Game.Ecs.ClientServer.Systems
         {
             var entity = GetControlledEntity(unitEntity);
             
-            ref var targetPositionComponent = ref entity.EntityGetOrCreateRef<TargetPositionComponent>(world);
+            ref var targetPositionComponent = ref entity.EntityGetOrCreateRef<TargetPositionComponent>(_world);
             targetPositionComponent.Value = pos;
             
         }
         
         private void MoveItem(MoveItemComponent data)
         {
-            if (!data.Inventory.Unpack(world, out var inventory))
+            if (!data.Inventory.Unpack(_world, out var inventory))
             {
                 return;
             }
             
-            if (!data.Item.Unpack(world, out var item))
+            if (!data.Item.Unpack(_world, out var item))
             {
                 return;
             }
 
             if (data.Amount == -1)
             {
-                inventoryService.Add(world, inventory, item);
+                _inventoryService.Add(_world, inventory, item);
                 return;
             }
 
-            inventoryService.Add(world, inventory, item, data.Amount);
+            _inventoryService.Add(_world, inventory, item, data.Amount);
         }
 
         private void ClearInventory(ClearInventoryComponent data)
         {
-            if (!data.Inventory.Unpack(world, out var inventory))
+            if (!data.Inventory.Unpack(_world, out var inventory))
             {
                 return;
             }
 
-            inventoryService.Clear(world, inventory);
+            _inventoryService.Clear(_world, inventory);
         }
     }
 }

@@ -8,11 +8,11 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class AIPlayerSystem : IEcsRunSystem
     {
-        private readonly Random random;
+        private readonly Random _random;
 
         public AIPlayerSystem()
         {
-            random = new Random(2);
+            _random = new Random(2);
         }
 
         public void Run(EcsSystems systems)
@@ -41,7 +41,7 @@ namespace Game.Ecs.ClientServer.Systems
         private float GetRandom(float min, float max)
         {
             var range = max - min;
-            var randomValue = random.NextDouble();
+            var randomValue = _random.NextDouble();
             var rangedValue = randomValue * range + min;
 
             return (float) rangedValue;
