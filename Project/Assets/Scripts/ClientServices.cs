@@ -189,6 +189,32 @@ namespace Game
                 var entityB = GetOrCreateGameEntity(joint.Connect);
                 entityA.EntityAdd<JointTestComponent>(world).Entity = entityB;
             });
+
+            ForEachObject<RevoluteJointView>(joint =>
+            {
+                var entityA = GetOrCreateGameEntity(joint.gameObject);
+                var entityB = GetOrCreateGameEntity(joint.ConnectedBody.gameObject);
+                ref var component = ref entityA.EntityAdd<Box2DRevoluteJointComponent>(world);
+                component.ConnectedBody = entityB;
+
+                if (joint.AutoCalculateOffsets)
+                {
+                    component.ConnectedJointOffset = Vector2.zero;
+                    var offset = Vector3.Scale(joint.transform.InverseTransformPoint(joint.ConnectedBody.transform.position), joint.transform.lossyScale);
+                    component.JointOffset = new Vector2(offset.x, offset.z);
+                }
+                else
+                {
+                    component.JointOffset = joint.JointOffset;
+                    component.ConnectedJointOffset = joint.ConnectedJointOffset;
+                }
+
+                component.EnableLimits = joint.EnableLimits;
+                component.LowerAngleLimit = joint.LowerAngleLimit * Mathf.Deg2Rad;
+                component.UpperAngleLimit = joint.UpperAngleLimit * Mathf.Deg2Rad;
+                component.CollideConnected = joint.CollideConnected;
+
+            });
             
             ForEachObject<SpawnGunView>(view =>
             {

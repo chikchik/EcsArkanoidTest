@@ -31,8 +31,8 @@ namespace Game.ClientServer.Services
             healthComponent.maxHealth = 100;
             healthComponent.health = 50;
 
-            Box2DServices.AddRigidbodyDefinition(world, entity, BodyType.Kinematic).SetDensity(985f).SetFriction(0.3f)
-                .SetRestitution(0).SetRestitutionThreshold(0.5f);
+            Box2DServices.AddRigidbodyDefinition(world, entity, BodyType.Dynamic).SetDensity(700f).SetFriction(0f)
+                .SetRestitution(0).SetRestitutionThreshold(0.5f).SetSleepingAllowed(false);//.SetLinearDamping(0);
             Box2DServices.AddCircleCollider(world, entity, 0.4f);
 
             entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();
