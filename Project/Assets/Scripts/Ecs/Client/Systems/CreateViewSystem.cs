@@ -97,7 +97,7 @@ namespace Game.Ecs.Client.Systems
 
                 entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
                 
-                world.Log($"create view {entity} at {pos}");
+                world.LogVerbose($"create view {entity} at {pos}");
             }
         }
     }

@@ -247,7 +247,7 @@ namespace Game.Ecs.ClientServer.Systems
                 return;
             }
 
-            world.Log($"input shot");
+            world.LogVerbose($"input shot");
 
             //unitEntity.EntityGetOrCreateRef<CantMoveComponent>(world);
             unitEntity.EntityAdd<ShootStartedComponent>(world);

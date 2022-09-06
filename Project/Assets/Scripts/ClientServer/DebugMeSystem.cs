@@ -40,7 +40,7 @@ namespace Game.ClientServer
                 if (entity.EntityHas<Box2DRigidbodyComponent>(world))
                     str += entity.EntityGet<Box2DRigidbodyComponent>(world).LinearVelocity;
                     
-                world.Log(str);
+                world.LogVerbose(str);
             }
         }
 

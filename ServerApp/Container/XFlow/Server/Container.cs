@@ -22,6 +22,7 @@ using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Systems;
 using XFlow.Modules.Tick.Other;
+using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Protocol;
@@ -206,6 +207,7 @@ namespace XFlow.Server
             mainWorld.AddUnique(config);
             mainWorld.AddUnique<TickComponent>().Value = new Tick(0);
             mainWorld.AddUnique(new TickDeltaComponent { Value = new TickDelta(config.Tickrate) });
+            mainWorld.AddUnique<PrimaryWorldComponent>();
             
 
             eventWorld = new EcsWorld(EcsWorlds.Event);

@@ -49,7 +49,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                     var force = dir.ToVector2XZ() * 20;
                     Box2DApiSafe.ApplyForce(body, force, pos.ToVector2XZ());
-                    world.Log($"ApplyForce {pos.ToVector2XZ()} {force}");
+                    world.LogVerbose($"ApplyForce {pos.ToVector2XZ()} {force}");
                     //var bodyInfo = Box2DApi.GetBodyInfo(body);
 
                     //защита от бесконечного полета в пустоте

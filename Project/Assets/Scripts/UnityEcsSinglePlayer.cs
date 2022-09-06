@@ -15,6 +15,7 @@ using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Systems;
 using XFlow.Modules.Tick.Other;
+using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
@@ -61,6 +62,8 @@ namespace Game
             ClientServices.InitializeNewWorldFromScene(world);
             
             world.EntityDestroyedListeners.Add(entityDestroyedListener);
+
+            world.AddUnique<PrimaryWorldComponent>();
             
             world.AddUnique(new TickDeltaComponent
             {
