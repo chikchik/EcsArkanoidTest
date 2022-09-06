@@ -23,24 +23,24 @@ namespace Game.State
             MechInfoView view,
             PlayerControlService playerControlService):base(states)
         {
-            this.view = view;
+            this._view = view;
             this._world = world;
             this._playerControlService = playerControlService;
         }
 
         protected override void DoInitialize()
         {
-            view.ButtonClose.onClick.AddListener(() =>
+            _view.ButtonClose.onClick.AddListener(() =>
             {
                 Close();
             });
             
-            view.ButtonJoinMech.onClick.AddListener(() =>
+            _view.ButtonJoinMech.onClick.AddListener(() =>
             {
                 _playerControlService.MechEnterLeave();
             });
             
-            view.ButtonLeaveMech.onClick.AddListener(() =>
+            _view.ButtonLeaveMech.onClick.AddListener(() =>
             {
                 _playerControlService.MechEnterLeave();
             });
@@ -67,8 +67,8 @@ namespace Game.State
         private void UpdateButtonState()
         {
             var hasControl = _unitEntity.EntityHas<ControlsMechComponent>(_world);
-            view.ButtonJoinMech.gameObject.SetActive(!hasControl);
-            view.ButtonLeaveMech.gameObject.SetActive(hasControl);
+            _view.ButtonJoinMech.gameObject.SetActive(!hasControl);
+            _view.ButtonLeaveMech.gameObject.SetActive(hasControl);
         }
 
         public void OnComponentChanged(EcsWorld world, int entity, ControlsMechComponent data, bool newComponent)
