@@ -101,7 +101,6 @@ namespace Game.ClientServer
             
 #if CLIENT
             _container.RegisterClient<InitSceneSystem>();
-            _container.RegisterClient<Box2DDebugViewSystem>();
 #endif
             
             _container.RegisterServer<AIPlayerSystem>();
@@ -211,6 +210,7 @@ namespace Game.ClientServer
             _container.Register<EventsSystem<TickComponent>>();
             _container.Register<EventsSystem<ControlsMechComponent>>();
             _container.RegisterClient<CreateViewSystem>();
+            _container.RegisterClient<Box2DDebugViewSystem>();
 #endif
             _container.Register<DeleteEventEntitiesSystem>();
             _container.Register<RemoveEntitySystem>();//from inventory
