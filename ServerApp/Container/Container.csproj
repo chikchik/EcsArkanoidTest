@@ -29,7 +29,7 @@
 
 	<ItemGroup>
 		<Compile Include="$(XFlowEcsPackage)\**\*.cs">
-			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+			<Link>module-ecs\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
 		<Compile Remove="$(XFlowEcsPackage)\XFlow\UnityEditor\**"></Compile>
 		<Compile Remove="$(XFlowEcsPackage)\XFlow\UniLeo\**"></Compile>
@@ -37,10 +37,10 @@
 
 	<ItemGroup>
 		<Compile Include="$(XFlowCentral)\Package\XFlow\**\*.cs">
-			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+			<Link>module-ecs-central\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
 		<Compile Include="$(XFlowCentral)\UnityEngine\**\*.cs">
-			<Link>External\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+			<Link>UnityEngine\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
 		<Compile Remove="$(XFlowCentral)\**\Client\**"></Compile>
 		<Compile Remove="$(XFlowCentral)\**\UnityEditor\**"></Compile>
@@ -49,7 +49,7 @@
 
 	<ItemGroup>
 		<Compile Include="$(XFlowBox2D)\**\*.cs">
-			<Link>External\XFlowBox2D\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+			<Link>module-ecs-box2d\XFlowBox2D\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 		</Compile>
 		<Compile Remove="$(XFlowBox2D)\**\Client\**" />
 		<Compile Remove="Container\**" />
