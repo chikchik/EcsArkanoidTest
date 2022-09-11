@@ -33,7 +33,7 @@ namespace Game.ClientServer.Services
 
             Box2DServices.AddRigidbodyDefinition(world, entity, BodyType.Dynamic).SetDensity(700f).SetFriction(0f)
                 .SetRestitution(0).SetRestitutionThreshold(0.5f).SetSleepingAllowed(false);//.SetLinearDamping(0);
-            Box2DServices.AddCircleCollider(world, entity, 0.4f);
+            Box2DServices.AddCircleColliderToDefinition(world, entity, 0.2f, Vector2.zero);
 
             entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();
 

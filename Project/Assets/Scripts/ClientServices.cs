@@ -175,12 +175,11 @@ namespace Game
                 entity.EntityAdd<DestructibleHealthComponent>(world).Health = 30f;
             });
 
-            ForEachObject<Collider2D>(collider =>
+            
+            ForEachObject<Rigidbody2D>(body =>
             {
-                if (!collider.enabled)
-                    return;
-                var entity = GetOrCreateGameEntity(collider.gameObject);
-                ClientBox2DServices.CreateBody(world, entity, collider);
+                var entity = GetOrCreateGameEntity(body.gameObject);
+                ClientBox2DServices.AddRigidBodyDefinitionWithColliders(world, entity, body);
             });
 
             ForEachObject<JointConnectView>(joint =>

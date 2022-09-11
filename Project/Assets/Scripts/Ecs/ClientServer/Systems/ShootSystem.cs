@@ -1,4 +1,5 @@
 ﻿using Game.Ecs.ClientServer.Components;
+using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
@@ -40,7 +41,7 @@ namespace Game.Ecs.ClientServer.Systems
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
                     
                     Box2DServices.AddRigidbodyDefinition(world, bulletEntity).SetBullet(true).SetDensity(20).SetLinearDamping(0);
-                    Box2DServices.AddCircleCollider(world, bulletEntity, 0.02f);
+                    Box2DServices.AddCircleColliderToDefinition(world, bulletEntity, 0.02f, Vector2.zero);
                     
                     bulletEntity.EntityAdd<DebugMeComponent>(world);
 
