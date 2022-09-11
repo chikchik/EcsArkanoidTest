@@ -534,7 +534,7 @@ namespace XFlow.Server
             _writer.Reset();
             BinaryProtocol.WriteWorldDiff(_writer, data);
             
-            var compressed = P2P.P2P.Compress(_writer.CopyToByteArray());
+            var compressed = P2P.P2P.Compress(_writer.ToByteArray());
             return compressed;
         }
 
