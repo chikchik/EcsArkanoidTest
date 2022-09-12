@@ -1,4 +1,5 @@
-﻿using Game.UIView;
+﻿using System;
+using Game.UIView;
 using Game.View;
 using TMPro;
 using UnityEngine;
@@ -26,5 +27,12 @@ namespace Game.UI.Mono
 
         public MechInfoView mechInfo;
         public BaseUIView[] UIViews;
+
+        public Action OnLateUpdate;
+
+        public void LateUpdate()
+        {
+            OnLateUpdate?.Invoke();
+        }
     }
 }

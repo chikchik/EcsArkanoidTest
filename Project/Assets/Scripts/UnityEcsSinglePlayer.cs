@@ -56,6 +56,13 @@ namespace Game
             _systems = new EcsSystems(_world, "systems");
             _systems.AddWorld(_inputWorld, EcsWorlds.Input);
             _systems.AddWorld(_eventWorld, EcsWorlds.Event);
+            _systemsFactory.AddNewSystems(_systems, 
+                new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = true});
+            _systems.Add(new TickSystem());
+            
+            _systems.PreInit();
+            
+            
             ClientServices.InitializeNewWorldFromScene(_world);
             
             _world.EntityDestroyedListeners.Add(_entityDestroyedListener);
@@ -78,9 +85,7 @@ namespace Game
 #endif
             
             
-            _systemsFactory.AddNewSystems(_systems, 
-                new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = true});
-            _systems.Add(new TickSystem());
+            
             
 
             _systems.Init();

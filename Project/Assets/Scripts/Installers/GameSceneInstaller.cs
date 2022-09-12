@@ -5,6 +5,7 @@ using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Dev;
+using Game.Ecs.Client.Components;
 using Game.State;
 using Game.UI;
 using Game.UI.Mono;
@@ -60,6 +61,11 @@ namespace Game.Installers
             Container.Bind<MainUI>().FromInstance(mainUI).AsSingle();
             Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();
             Container.Bind<UI.UI>().AsSingle().NonLazy();
+            Container.Bind<Canvas>().WithId("HpViewCanvas").FromInstance(global.HpViewCanvas).AsSingle();
+            
+
+            Container.Bind<HpView>().FromInstance(global.HpViewPrefab).AsSingle();
+            Container.Bind<HpViewManager>().AsSingle().NonLazy();
 
             Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
