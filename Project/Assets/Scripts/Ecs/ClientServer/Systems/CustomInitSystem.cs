@@ -32,7 +32,8 @@ namespace Game.Ecs.ClientServer.Systems
             mechEntity.EntityAdd<AverageSpeedComponent>(world).Value = 8;
 
             Box2DServices.AddRigidbodyDefinition(world, mechEntity, BodyType.Kinematic).SetFriction(0.3f).SetRestitutionThreshold(0.5f);
-            Box2DServices.AddCircleColliderToDefinition(world, mechEntity, 3, Vector2.zero);
+            Box2DServices.AddCircleColliderToDefinition(world, mechEntity, 1.2f, new Vector2(-1.5f, 0));
+            Box2DServices.AddCircleColliderToDefinition(world, mechEntity, 1.2f, new Vector2(1.5f, 0));
 
             /*
             var world = systems.GetWorld();
