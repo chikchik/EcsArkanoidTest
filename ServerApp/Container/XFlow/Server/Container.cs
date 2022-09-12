@@ -213,6 +213,7 @@ namespace XFlow.Server
             _eventWorld = new EcsWorld(EcsWorlds.Event);
             _systems.AddWorld(_eventWorld, EcsWorlds.Event);
 
+            _systems.PreInit();
 
             dif.ApplyChanges(_mainWorld);
 
