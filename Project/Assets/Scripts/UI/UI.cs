@@ -23,19 +23,23 @@ namespace Game.UI
         
         private PlayerControlService _controlService;
         private ClientServerServices _clientServerServices;
+        private HpViewManager _hpViewManager;
         
         public UI(
             EcsWorld world, 
             MainUI view, 
             States states,
             PlayerControlService controlService,
-            ClientServerServices clientServerServices)
+            ClientServerServices clientServerServices,
+            HpViewManager hpViewManager
+            )
         {
             this.View = view;
             this._world = world;
             this._controlService = controlService;
             this._clientServerServices = clientServerServices;
 
+            _hpViewManager = hpViewManager;
 
             view.InteractionButton.onClick.AddListener(() =>
             {

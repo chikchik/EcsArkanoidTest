@@ -209,6 +209,7 @@ namespace Game.ClientServer
             _container.Register<EventsSystem<EntityRemoveEventComponent>>();
             _container.Register<EventsSystem<TickComponent>>();
             _container.Register<EventsSystem<ControlsMechComponent>>();
+            _container.Register<EventsSystem<HPComponent>>();
             _container.RegisterClient<CreateViewSystem>();
             _container.RegisterClient<Box2DDebugViewSystem>();
 #endif
