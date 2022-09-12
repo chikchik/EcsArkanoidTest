@@ -3,8 +3,9 @@
 namespace Game.Ecs.ClientServer.Components
 {
     [Serializable]
-    public struct DestructibleHealthComponent
+    public struct HpComponent
     {
-        public float Health;
+        public float Value;
+        public float MaxValue;
     }
 }

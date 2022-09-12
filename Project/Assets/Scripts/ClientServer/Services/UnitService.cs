@@ -27,9 +27,11 @@ namespace Game.ClientServer.Services
             ref var radiusComponent = ref entity.EntityAdd<RadiusComponent>(world);
             radiusComponent.radius = 0.4f;
 
-            ref var healthComponent = ref entity.EntityAdd<HealthComponent>(world);
+            /*
+            ref var healthComponent = ref entity.EntityAdd<HpComponent>(world);
             healthComponent.maxHealth = 100;
             healthComponent.health = 50;
+            */
 
             Box2DServices.AddRigidbodyDefinition(world, entity, BodyType.Dynamic).SetDensity(700f).SetFriction(0f)
                 .SetRestitution(0).SetRestitutionThreshold(0.5f).SetSleepingAllowed(false);//.SetLinearDamping(0);

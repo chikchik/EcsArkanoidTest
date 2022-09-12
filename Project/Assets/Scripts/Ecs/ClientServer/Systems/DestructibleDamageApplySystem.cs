@@ -27,7 +27,7 @@ namespace Game.Ecs.ClientServer.Systems
 
             var poolBulletHit = _eventWorld.GetPool<BulletHitComponent>();
             var poolFollow = _world.GetPool<FollowComponent>();
-            var poolDestructibleHealth = _world.GetPool<DestructibleHealthComponent>();
+            var poolDestructibleHealth = _world.GetPool<HpComponent>();
             var poolDestructibleDamaged = _world.GetPool<DestructibleDamagedComponent>();
             var poolDestroyAtTime = _world.GetPool<DestroyAtTimeComponent>();
 
@@ -46,10 +46,10 @@ namespace Game.Ecs.ClientServer.Systems
 
                 ref var destructibleHealth = ref poolDestructibleHealth.GetRef(entityHit);
 
-                if (destructibleHealth.Health > 0)
+                if (destructibleHealth.Value > 0)
                 {
-                    destructibleHealth.Health -= bulletHit.Bullet.Damage;
-                    if (destructibleHealth.Health <= 0)
+                    destructibleHealth.Value -= bulletHit.Bullet.Damage;
+                    if (destructibleHealth.Value <= 0)
                     {
                         var vfxEntity = _world.NewEntity();
 

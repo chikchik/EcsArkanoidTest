@@ -172,7 +172,8 @@ namespace Game
             ForEachObject<DestructibleView>(view =>
             {
                 var entity = GetOrCreateGameEntity(view.gameObject);
-                entity.EntityAdd<DestructibleHealthComponent>(world).Health = 30f;
+                
+                entity.EntityAdd<HpComponent>(world) = new HpComponent{Value = 10f, MaxValue = 10f};
             });
 
             

@@ -13,7 +13,7 @@ namespace Game.Ecs.ClientServer.Systems
         private EcsWorld _world;
         private EcsWorld _eventWorld;
         
-        private EcsPool<DestructibleHealthComponent> _poolDestructibleHealth;
+        private EcsPool<HpComponent> _poolDestructibleHealth;
         private EcsPool<BulletComponent> _poolBullet;
         private EcsPool<BulletHitComponent> _poolBulletHits;
         private EcsPool<Box2DBeginContactComponent> _poolContacts;
@@ -26,7 +26,7 @@ namespace Game.Ecs.ClientServer.Systems
             
             _poolBulletHits = _eventWorld.GetPool<BulletHitComponent>();
             
-            _poolDestructibleHealth = _world.GetPool<DestructibleHealthComponent>();
+            _poolDestructibleHealth = _world.GetPool<HpComponent>();
             _poolBullet = _world.GetPool<BulletComponent>();
             _poolContacts = _eventWorld.GetPool<Box2DBeginContactComponent>();
             _filter = _eventWorld.Filter<Box2DBeginContactComponent>().End();
