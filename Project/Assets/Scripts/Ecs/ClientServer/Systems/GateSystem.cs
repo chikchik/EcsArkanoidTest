@@ -2,7 +2,10 @@ using System;
 using Game.Ecs.ClientServer.Components;
 
 using XFlow.EcsLite;
+using XFlow.Modules.Box2D.ClientServer.Api;
+using XFlow.Modules.Box2D.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
+using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
 {
@@ -39,7 +42,11 @@ namespace Game.Ecs.ClientServer.Systems
                 var progress = progressComponent.progress + deltaTime;
 
                 if (progress >= 1f)
+                {
                     poolOpened.Add(gateEntity);
+                    var bodyLink = gateEntity.EntityGetNullable<Box2DBodyComponent>(world);
+                    if (bodyLink.HasValue) Box2DApiSafe.SetEnabled(bodyLink.Value.BodyReference, false);
+                }
 
                 poolProgress.ReplaceIfChanged(gateEntity, new ProgressComponent{progress = Math.Clamp(progress, 0, 1)});
             }
