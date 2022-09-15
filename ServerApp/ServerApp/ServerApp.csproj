@@ -18,4 +18,10 @@
     <ProjectReference Include="..\Container\Container.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="libbox2d-unity.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
