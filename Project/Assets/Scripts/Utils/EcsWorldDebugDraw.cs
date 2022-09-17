@@ -22,6 +22,8 @@ namespace Game.Utils
 
                 Gizmos.color = Color.red;
 
+                var rad = 0.1f;
+
                 if (!entity.EntityHas<FootprintComponent>(world))
                 {
                     pos = pos.WithAddedToY(1.0f);
@@ -34,8 +36,11 @@ namespace Game.Utils
 //                    Debug.Log($"unit {entity} {pos}");
                 }
 
+                if (entity.EntityHas<BulletComponent>(world))
+                    rad = 0.02f;
 
-                Gizmos.DrawWireSphere(pos, 0.2f);
+
+                Gizmos.DrawWireSphere(pos, rad);
 
                 entity.EntityWith<MoveDirectionComponent>(world, data =>
                 {
