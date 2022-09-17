@@ -31,12 +31,16 @@ namespace Game
         [Inject] private EcsWorld _world;
         [Inject(Id = EcsWorlds.Input)] private EcsWorld _inputWorld;
         [Inject(Id = EcsWorlds.Event)] private EcsWorld _eventWorld;
+        [Inject(Id = EcsWorlds.Dead)]  private EcsWorld _deadWorld;
         
         [Inject] 
         private PlayerControlService _controlService;
         
         [Inject] 
         private EntityDestroyedListener _entityDestroyedListener;
+
+        [Inject] 
+        private DeadWorldDestroyedListener _deadWorldDestroyedListener;
 
         [Inject]
         private IEcsSystemsFactory _systemsFactory;
@@ -56,6 +60,8 @@ namespace Game
             _systems = new EcsSystems(_world, "systems");
             _systems.AddWorld(_inputWorld, EcsWorlds.Input);
             _systems.AddWorld(_eventWorld, EcsWorlds.Event);
+            _systems.AddWorld(_deadWorld, EcsWorlds.Dead);
+            
             _systemsFactory.AddNewSystems(_systems, 
                 new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = true});
             _systems.Add(new TickSystem());
@@ -63,9 +69,12 @@ namespace Game
             _systems.PreInit();
             
             
+            _world.EntityCreatedListeners.Add(new AllEntitiesAreReliableListener(_world));
+            
             ClientServices.InitializeNewWorldFromScene(_world);
             
             _world.EntityDestroyedListeners.Add(_entityDestroyedListener);
+            _world.EntityDestroyedListeners.Add(_deadWorldDestroyedListener);
 
             _world.AddUnique<PrimaryWorldComponent>();
             

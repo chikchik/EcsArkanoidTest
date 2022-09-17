@@ -24,7 +24,10 @@ namespace Game
         
         [Inject] 
         private EntityDestroyedListener _entityDestroyedListener;
-        
+
+        [Inject]
+        private DeadWorldDestroyedListener _deadWorldDestroyedListener;
+
         [Inject] 
         private ComponentsCollection _components;
 
@@ -46,6 +49,9 @@ namespace Game
 #if UNITY_EDITOR
             //viewSystems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
 #endif
+            
+            
+            _world.EntityDestroyedListeners.Add(_deadWorldDestroyedListener);
             
             //глобальный обработчик удаления entity, чтоб никакой GameObject не утек
             //если случайно удалить entity самостоятельно или преждевременно

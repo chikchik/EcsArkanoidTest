@@ -212,7 +212,11 @@ namespace Game.ClientServer
             _container.Register<EventsSystem<HpComponent>>();
             _container.RegisterClient<CreateViewSystem>();
             _container.RegisterClient<Box2DDebugViewSystem>();
+            _container.RegisterClient<BulletDestroyFxSystem>();
+            
+            _container.RegisterClient<DeadWorldClearSystem>();
 #endif
+            
             _container.Register<DeleteEventEntitiesSystem>();
             _container.Register<RemoveEntitySystem>();//from inventory
 
