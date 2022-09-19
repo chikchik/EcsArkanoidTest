@@ -54,7 +54,12 @@ namespace Game.Installers
             Container.Bind<EcsWorld>().FromInstance(new EcsWorld("main")).AsCached();
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Input).FromInstance(new EcsWorld(EcsWorlds.Input)).AsCached();
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Event).FromInstance(new EcsWorld(EcsWorlds.Event)).AsCached();
-
+            Container.Bind<EcsWorld>().WithId(EcsWorlds.Dead).FromInstance(new EcsWorld(EcsWorlds.Dead)).AsCached();
+            
+            
+            //Container.Bind
+            Container.Bind<DeadWorldDestroyedListener>().AsSingle();
+            
             Container.Bind<EntityDestroyedListener>().AsSingle();
             
             var mainUI = FindObjectOfType<MainUI>();

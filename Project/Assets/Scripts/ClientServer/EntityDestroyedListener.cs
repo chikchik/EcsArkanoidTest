@@ -1,4 +1,5 @@
-﻿using XFlow.EcsLite;
+﻿using XFlow.Ecs.ClientServer.Utils;
+using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Api;
 using XFlow.Modules.Box2D.ClientServer.Components;
 using XFlow.Utils;
@@ -18,11 +19,13 @@ namespace Game.ClientServer
         public void OnEntityWillBeDestroyed(EcsWorld world, int entity)
         {
 #if CLIENT
+            /*
             if (entity.EntityHas<TransformComponent>(world))
             {
                 var go = entity.EntityGet<TransformComponent>(world).Transform.gameObject;
                 GameObject.Destroy(go);
             }
+            */
 #endif
             
             if (entity.EntityHas<Box2DBodyComponent>(world))
@@ -30,6 +33,11 @@ namespace Game.ClientServer
                 Box2DApiSafe.DestroyBody(entity.EntityGet<Box2DBodyComponent>(world).BodyReference);
                 entity.EntityDel<Box2DBodyComponent>(world);
             }
+        }
+
+        public bool IsCopyable()
+        {
+            return true;
         }
     }
 }
