@@ -1,4 +1,5 @@
-﻿using Game.Ecs.ClientServer.Components;
+﻿using System;
+using Game.Ecs.ClientServer.Components;
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
@@ -7,7 +8,10 @@ using XFlow.Modules.Box2D.ClientServer;
 using XFlow.Modules.Box2D.ClientServer.Api;
 using XFlow.Modules.Box2D.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
+using XFlow.Net.ClientServer.Ecs.Components;
+using XFlow.Net.ClientServer.Utils;
 using XFlow.Utils;
+using Utils = XFlow.Net.ClientServer.Utils.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
 {
@@ -39,6 +43,8 @@ namespace Game.Ecs.ClientServer.Systems
                     var dir = entity.EntityGet<ShootingComponent>(world).Direction;
                     bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
+                    
+                    bulletEntity.EntityAdd<UniqueIdComponent>(world).Value = HashUtils.CustomHash(entity, world.GetTick());
                     
                     Box2DServices.AddRigidbodyDefinition(world, bulletEntity).SetBullet(true).SetDensity(20).SetLinearDamping(0);
                     Box2DServices.AddCircleColliderToDefinition(world, bulletEntity, 0.02f, Vector2.zero);
