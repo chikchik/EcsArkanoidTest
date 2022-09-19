@@ -173,7 +173,8 @@ namespace Game
             {
                 var entity = GetOrCreateGameEntity(view.gameObject);
                 
-                entity.EntityAdd<HpComponent>(world) = new HpComponent{Value = 10f, MaxValue = 10f};
+                entity.EntityAdd<HpComponent>(world).Value = 10;
+                entity.EntityAdd<MaxHpComponent>(world).Value = 10;
             });
 
             

@@ -6,6 +6,11 @@ namespace Game.Ecs.ClientServer.Components
     public struct HpComponent
     {
         public float Value;
-        public float MaxValue;
+    }
+    
+    [Serializable]
+    public struct MaxHpComponent
+    {
+        public float Value;
     }
 }

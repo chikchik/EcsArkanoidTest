@@ -21,7 +21,9 @@ namespace Game.UI
         private AnyListener _listener;
         
         private EcsPool<HpViewComponent> _poolView;
+        
         private EcsPool<PositionComponent> _poolPosition;
+        private EcsPool<MaxHpComponent> _poolMaxHp;
         
 
         private EcsFilter _filter;
@@ -36,6 +38,7 @@ namespace Game.UI
 
             _poolView = world.GetPool<HpViewComponent>();
             _poolPosition = world.GetPool<PositionComponent>();
+            _poolMaxHp = world.GetPool<MaxHpComponent>();
             _filter = world.Filter<HpViewComponent>().End();
 
             _listener = world.CreateAnyListener();
@@ -57,7 +60,8 @@ namespace Game.UI
                 _poolView.Add(entity).View = view;
             }
 
-            var p = data.Value / data.MaxValue;
+            var max = _poolMaxHp.Get(entity);
+            var p = data.Value / max.Value;
             view.SetValue(p);
         }
 
