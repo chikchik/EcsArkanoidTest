@@ -1,6 +1,7 @@
 ﻿using Game.Ecs.ClientServer.Components;
 using UnityEngine;
 using XFlow.Ecs.ClientServer;
+using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Components.Other;
 using XFlow.Net.ClientServer;

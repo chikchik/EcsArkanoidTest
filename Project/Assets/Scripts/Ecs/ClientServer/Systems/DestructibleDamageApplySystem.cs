@@ -1,5 +1,6 @@
 ﻿using Game.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer;
+using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
