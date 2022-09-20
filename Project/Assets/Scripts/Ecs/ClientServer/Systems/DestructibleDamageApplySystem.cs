@@ -56,7 +56,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                         poolFollow.Add(vfxEntity).Entity = _world.PackEntity(entityHit);
                         poolDestructibleDamaged.Add(entityHit).vfxEntity = _world.PackEntity(vfxEntity);
-                        poolDestructibleHealth.Del(entityHit);
+                        //poolDestructibleHealth.Del(entityHit);
                         poolDestroyAtTime.Add(entityHit).Time = tm + _boxDestructionTime;
                         poolDestroyAtTime.Add(vfxEntity).Time = tm + _fireDuration;
                     }

@@ -29,7 +29,9 @@ namespace Game.Ecs.Client.Systems
         {
             foreach (var entity in _filter)
             {
-                var transform = entity.EntityGet<TransformComponent>(_deadWorld).Transform;
+                if (!entity.EntityTryGet<TransformComponent>(_deadWorld, out TransformComponent component))
+                    continue;
+                var transform = component.Transform;
                 if (!_poolReliable.Has(entity))
                 {
                     GameObject.Destroy(transform.gameObject);
