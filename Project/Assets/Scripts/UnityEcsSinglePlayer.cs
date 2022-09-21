@@ -18,6 +18,7 @@ using XFlow.Modules.Tick.Other;
 using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
+using XFlow.Net.ClientServer.Ecs.Systems;
 using XFlow.Utils;
 using Zenject;
 
@@ -40,7 +41,7 @@ namespace Game
         private EntityDestroyedListener _entityDestroyedListener;
 
         [Inject] 
-        private DeadWorldDestroyedListener _deadWorldDestroyedListener;
+        private CopyToDeadWorldListener _copyToDeadWorldListener;
 
         [Inject]
         private IEcsSystemsFactory _systemsFactory;
@@ -65,6 +66,7 @@ namespace Game
             _systemsFactory.AddNewSystems(_systems, 
                 new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = true});
             _systems.Add(new TickSystem());
+            _systems.Add(new DeleteDestroyedEntitiesSystem());
             
             _systems.PreInit();
             
@@ -74,7 +76,7 @@ namespace Game
             ClientServices.InitializeNewWorldFromScene(_world);
             
             _world.EntityDestroyedListeners.Add(_entityDestroyedListener);
-            _world.EntityDestroyedListeners.Add(_deadWorldDestroyedListener);
+            _world.EntityDestroyedListeners.Add(_copyToDeadWorldListener);
 
             _world.AddUnique<PrimaryWorldComponent>();
             

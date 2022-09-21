@@ -31,6 +31,7 @@ namespace Game.ClientServer
     public class EcsSystemsFactory : IEcsSystemsFactory
     {
         private EcsSystemsContainer _container;
+        //private bool _singlePlayer;
         
         public EcsSystemsFactory(DiContainer di)
         {
@@ -211,15 +212,25 @@ namespace Game.ClientServer
             _container.Register<EventsSystem<TickComponent>>();
             _container.Register<EventsSystem<ControlsMechComponent>>();
             _container.Register<EventsSystem<HpComponent>>();
+            _container.Register<EventsSystem<DestroyedEntityComponent>>();
             _container.RegisterClient<CreateViewSystem>();
             _container.RegisterClient<Box2DDebugViewSystem>();
             _container.RegisterClient<BulletDestroyFxSystem>();
             
-            _container.RegisterClient<DeadWorldClearSystem>();
+            _container.RegisterClient<DestroyViewSystem>();
 #endif
             
             _container.Register<DeleteEventEntitiesSystem>();
             _container.Register<RemoveEntitySystem>();//from inventory
+            _container.Register<Box2DDestroyBodiesSystem>();
+            
+            _container.RegisterClient<DeleteDeadWorldEntitiesSystem>();
+            
+            //_container.RegisterServer<DeleteDestroyedEntitiesSystem>();
+#if CLIENT
+            //!!! важно, для сингла нужно удалять их
+            //_container.RegisterSe<DeleteDestroyedEntitiesSystem>();
+#endif
 
             //write final Box2d transforms to components
             _container.Register<Box2DWriteBodiesToComponentsSystem>();

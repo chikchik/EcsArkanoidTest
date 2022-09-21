@@ -77,7 +77,8 @@ namespace Game.Ecs.ClientServer.Systems
                     bulletHit.Bullet = bulletComponent;
                     bulletHit.EntityHit = _world.PackEntity(entityB);
                 }
-                _world.DelEntity(entityA);
+                _world.DelEntityByComponent(entityA);
+                //_world.DelEntity(entityA);
             }
         }
     }

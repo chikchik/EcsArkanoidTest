@@ -58,7 +58,7 @@ namespace Game.Installers
             
             
             //Container.Bind
-            Container.Bind<DeadWorldDestroyedListener>().AsSingle();
+            Container.Bind<CopyToDeadWorldListener>().AsSingle();
             
             Container.Bind<EntityDestroyedListener>().AsSingle();
             

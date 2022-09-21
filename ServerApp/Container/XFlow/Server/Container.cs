@@ -14,6 +14,7 @@ using Game.ClientServer;
 using Game.ClientServer.Services;
 using UnityEngine;
 using XFlow.Ecs.ClientServer;
+using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
@@ -22,7 +23,6 @@ using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Systems;
 using XFlow.Modules.Tick.Other;
-using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Protocol;
@@ -39,6 +39,7 @@ namespace XFlow.Server
         private ClientWebSocket _socket;
 
         private EcsWorld _mainWorld;
+        private EcsWorld _deadWorld;
         private EcsWorld _inputWorld;
         private EcsWorld _eventWorld;
 
@@ -48,6 +49,7 @@ namespace XFlow.Server
         private List<int> _missingClients = new List<int>();
         private ApplyInputWorldService _inputService = new ApplyInputWorldService();
         private EntityDestroyedListener _destroyedListener = new EntityDestroyedListener();
+        private CopyToDeadWorldListener _copyToDeadWorldListener;
 
         private List<byte[]> _receivedMessages = new List<byte[]>();
         private HGlobalWriter _writer = new HGlobalWriter();
@@ -199,6 +201,7 @@ namespace XFlow.Server
 
             
             _mainWorld.EntityDestroyedListeners.Add(_destroyedListener);
+            _mainWorld.EntityDestroyedListeners.Add(_copyToDeadWorldListener);
 
  
             _inputWorld = new EcsWorld(EcsWorlds.Input);
@@ -208,7 +211,8 @@ namespace XFlow.Server
             _mainWorld.AddUnique<TickComponent>().Value = new Tick(0);
             _mainWorld.AddUnique(new TickDeltaComponent { Value = new TickDelta(_config.Tickrate) });
             _mainWorld.AddUnique<PrimaryWorldComponent>();
-            
+
+            _systems.AddWorld(_deadWorld, EcsWorlds.Dead);
 
             _eventWorld = new EcsWorld(EcsWorlds.Event);
             _systems.AddWorld(_eventWorld, EcsWorlds.Event);
@@ -240,6 +244,10 @@ namespace XFlow.Server
             {
                 CreateSystemsFactory();
 
+                _deadWorld = new EcsWorld(EcsWorlds.Dead);
+                _copyToDeadWorldListener = new CopyToDeadWorldListener(_deadWorld);
+                
+                
                 _mainWorld = new EcsWorld("serv");
                 _systems = new EcsSystems(_mainWorld);
                 _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
@@ -548,6 +556,12 @@ namespace XFlow.Server
                     var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
                     _socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
                     client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
+                }
+
+                var filter = _mainWorld.Filter<DestroyedEntityComponent>(false).End();
+                foreach (var entity in filter)
+                {
+                    _mainWorld.DelEntity(entity);
                 }
             }
         }

@@ -15,7 +15,7 @@ namespace Game.UI
     public class HpViewManager:
         EventsSystem<HpComponent>.IAnyComponentChangedListener,
         EventsSystem<HpComponent>.IAnyComponentRemovedListener,
-        IEcsEntityDestroyedListener
+        EventsSystem<DestroyedEntityComponent>.IAnyComponentChangedListener
     {
         private HpView _hpViewPrefab;
         private Canvas _canvas;
@@ -26,7 +26,7 @@ namespace Game.UI
         private AnyListener _listener;
         
         private EcsPool<HpViewComponent> _poolView;
-        private EcsPool<HpViewComponent> _poolDeadView;
+        //private EcsPool<HpViewComponent> _poolDeadView;
         
         private EcsPool<PositionComponent> _poolPosition;
         private EcsPool<MaxHpComponent> _poolMaxHp;
@@ -44,15 +44,16 @@ namespace Game.UI
             _deadWorld = deadWorld;
 
             _poolView = world.GetPool<HpViewComponent>();
-            _poolDeadView = deadWorld.GetPool<HpViewComponent>();
+            //_poolDeadView = deadWorld.GetPool<HpViewComponent>();
             _poolPosition = world.GetPool<PositionComponent>();
             _poolMaxHp = world.GetPool<MaxHpComponent>();
             _filter = world.Filter<HpViewComponent>().End();
 
             _listener = world.CreateAnyListener();
             _listener.SetAnyChangedListener<HpComponent>(this);
+            _listener.SetAnyChangedListener<DestroyedEntityComponent>(this);
 
-            _deadWorld.EntityDestroyedListeners.Add(this);
+            //_deadWorld.EntityDestroyedListeners.Add(this);
         }
 
 
@@ -60,12 +61,15 @@ namespace Game.UI
         {
             HpView view;
             
+            Debug.Log($"update view {data.Value}");
+            
             if (_poolView.TryGet(entity, out HpViewComponent viewComponent))
             {
                 view = viewComponent.View;
             }
             else
             {
+                Debug.Log($"create view {data.Value}");
                 view = GameObject.Instantiate(_hpViewPrefab, _canvas.transform);
                 _poolView.Add(entity).View = view;
             }
@@ -74,11 +78,19 @@ namespace Game.UI
             var p = data.Value / max.Value;
             view.SetValue(p);
         }
+        
+        
+        public void OnAnyComponentChanged(EcsWorld world, int entity, DestroyedEntityComponent data, bool added)
+        {
+            Debug.Log("DestroyView DestroyedEntityComponent");
+            DestroyView(_poolView, entity);
+        }
 
         private void DestroyView(EcsPool<HpViewComponent> pool, int entity)
         {
             if (!pool.TryGet(entity, out HpViewComponent viewComponent))
                 return;
+            Debug.Log("DestroyView");
             var view = viewComponent.View;
             view.transform.DOScaleY(0, 0.3f).OnComplete(() =>
             {
@@ -107,12 +119,13 @@ namespace Game.UI
 
         public void OnEntityWillBeDestroyed(EcsWorld world, int entity)
         {
-            DestroyView(_poolDeadView, entity);
+           // DestroyView(_poolDeadView, entity);
         }
 
         public bool IsCopyable()
         {
             throw new System.NotImplementedException();
         }
+
     }
 }

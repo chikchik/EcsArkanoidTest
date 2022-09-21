@@ -7,6 +7,7 @@ using UnityEngine;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Net.Client;
+using XFlow.Net.ClientServer;
 using Zenject;
 
 namespace Game
@@ -26,7 +27,7 @@ namespace Game
         private EntityDestroyedListener _entityDestroyedListener;
 
         [Inject]
-        private DeadWorldDestroyedListener _deadWorldDestroyedListener;
+        private CopyToDeadWorldListener _copyToDeadWorldListener;
 
         [Inject] 
         private ComponentsCollection _components;
@@ -51,7 +52,7 @@ namespace Game
 #endif
             
             
-            _world.EntityDestroyedListeners.Add(_deadWorldDestroyedListener);
+            _world.EntityDestroyedListeners.Add(_copyToDeadWorldListener);
             
             //глобальный обработчик удаления entity, чтоб никакой GameObject не утек
             //если случайно удалить entity самостоятельно или преждевременно
