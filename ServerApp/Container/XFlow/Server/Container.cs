@@ -511,9 +511,44 @@ namespace XFlow.Server
             //обновляем мир 1 раз
             SyncServices.Tick(_systems, _inputWorld, _mainWorld);
             
-            foreach (var client in _clientsFilter)
+            //UDP send to clients
+            foreach (var clientEntity in _clientsFilter)
             {
-                SendWorldToClient(ref _poolClients.GetRef(client));
+                ref var client = ref _poolClients.GetRef(clientEntity);
+                if (client.EndPoint != null)
+                {
+                    var compressed = BuildDiffBytes(client, client.SentWorld);
+
+                    //if (Random.Range(0, 1) > 0.8f)//sim lost
+                    //if (false)
+                    {
+                        //SimRandomSend(compressed, client);
+                    
+                        int r = _udpServer.Socket.SendTo(compressed, client.EndPoint);
+                        if (r <= 0)
+                        {
+                            Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
+                        }
+                    }
+
+                    client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
+                    client.Delay = -999;
+                }
+            }
+            
+            
+            //TCP send to clients
+            if ((_mainWorld.GetTick() % 15) == 0)
+            {
+                foreach (var clientEntity in _clientsFilter)
+                {
+                    ref var client = ref _poolClients.GetRef(clientEntity);
+                    
+                    var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
+                    var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
+                    _socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
+                    client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
+                }
             }
         }
 
@@ -546,39 +581,6 @@ namespace XFlow.Server
             if (r <= 0)
             {
                 Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
-            }
-        } 
-        
-        void SendWorldToClient(ref ClientComponent client)
-        {
-            if (client.EndPoint != null)
-            {
-                var compressed = BuildDiffBytes(client, client.SentWorld);
-
-                //if (Random.Range(0, 1) > 0.8f)//sim lost
-                //if (false)
-                {
-                    //SimRandomSend(compressed, client);
-                    
-                    int r = _udpServer.Socket.SendTo(compressed, client.EndPoint);
-                    if (r <= 0)
-                    {
-                        Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
-                    }
-                }
-
-                client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
-                client.Delay = -999;
-            }
-
-            //send to websocket server
-            //if (false)
-            if ((_mainWorld.GetTick() % 15) == 0)
-            {
-                var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
-                var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
-                _socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
-                client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
             }
         }
     }
