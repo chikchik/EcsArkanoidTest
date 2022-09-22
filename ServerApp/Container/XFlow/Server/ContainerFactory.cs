@@ -1,13 +1,15 @@
-using Contracts.XFlow.Container;
-using Contracts.XFlow.Container.Host;
+using System.Threading.Tasks;
+using Gaming.ContainerManager.ImageContracts.V1;
 
 namespace XFlow.Server
 {
-    public class ContainerFactory: IContainerFactory
+    public class ContainerFactory : IContainerFactory
     {
-        public IContainer Create(IHost host)
+        public async ValueTask<IContainer> StartContainerAsync(ContainerStartingContext context)
         {
-            return new Container(host.GetConfig(), host.GetLogger());
+            var c = new SimpleContainer(context);
+            await c.Start();
+            return c;
         }
     }
 }

@@ -12,6 +12,8 @@ using Contracts.XFlow.Container.Host;
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.ClientServer.Services;
+using Gaming.ContainerManager.ImageContracts.V1;
+using Gaming.ContainerManager.Models.V1;
 using UnityEngine;
 using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Utils;
@@ -33,7 +35,7 @@ using Random = UnityEngine.Random;
 
 namespace XFlow.Server
 {
-    public class Container: IContainer
+    public class Container : IContainer
     {
         private SyncDebugService _syncDebug;
         private ClientWebSocket _socket;
@@ -57,11 +59,11 @@ namespace XFlow.Server
 
         private ComponentsCollection _components;
 
-        private TickrateConfigComponent _config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1 };
+        private TickrateConfigComponent _config = new TickrateConfigComponent {Tickrate = 30, ServerSyncStep = 1};
 
         private Task _runTask;
         private CancellationTokenSource _runCancellationTokenSource;
-        
+
         private IContainerConfig _containerConfig;
         private string _url;
 
@@ -72,24 +74,26 @@ namespace XFlow.Server
 
         public Container(IContainerConfig containerConfig, ILogger logger)
         {
-            Debug.SetLogDelegate(logger.Log);
+            Debug.SetLogDelegate(log => logger.Log(LogLevel.Trace, log));
             Debug.Log("created Container");
-            
+
             Box2DServices.CheckNative();
-            
+
             this._containerConfig = containerConfig;
-            
-            _url =  $"{P2P.P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.P2P.ADDR_SERVER.AddressString}";
-            
+
+            _url =
+                $"{P2P.P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.P2P.ADDR_SERVER.AddressString}";
+
             _components = new ComponentsCollection();
-            ComponentsCollectionUtils.AddComponentsFromAssembly(_components, System.Reflection.Assembly.GetExecutingAssembly());
-            
+            ComponentsCollectionUtils.AddComponentsFromAssembly(_components,
+                System.Reflection.Assembly.GetExecutingAssembly());
+
             var dir = Directory.GetCurrentDirectory();
             Debug.Log($"working dir: {dir}");
             _socket = new ClientWebSocket();
-            
+
             _runCancellationTokenSource = new CancellationTokenSource();
-            
+
             _syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
             WorldLoggerExt.logger = _syncDebug.CreateLogger();
         }
@@ -104,7 +108,7 @@ namespace XFlow.Server
             _udpServer.Run(_runCancellationTokenSource.Token);
         }
 
-        public async  void Stop()
+        public async ValueTask StopAsync()
         {
             Debug.Log("Container.Stop");
             try
@@ -113,12 +117,11 @@ namespace XFlow.Server
             }
             catch (Exception e)
             {
-                
             }
-            
+
             Debug.Log("Container.Stop1");
             _runCancellationTokenSource.Cancel();
-            
+
             try
             {
                 await _runTask;
@@ -134,27 +137,28 @@ namespace XFlow.Server
             }
         }
 
-        public string GetInfo()
+
+        public async ValueTask<string> GetInfoAsync()
         {
             var sb = new StringBuilder(512);
             sb.AppendLine($"url: {_url}");
             sb.AppendLine($"tick: {_mainWorld.GetTick()}");
             sb.AppendLine($"tickrate: {_config.Tickrate}");
             sb.AppendLine($"world entities: {_mainWorld.GetAliveEntitiesCount()}");
-            sb.AppendLine($"world size: {_mainWorld.GetAllocMemorySizeInBytes()/1024} kb");
-            
+            sb.AppendLine($"world size: {_mainWorld.GetAllocMemorySizeInBytes() / 1024} kb");
+
             sb.AppendLine($"clients: {_clientsFilter.GetEntitiesCount()}");
             foreach (var entity in _clientsFilter)
             {
                 var client = entity.EntityGet<ClientComponent>(_mainWorld);
                 sb.AppendLine($"  id: {client.ID}, lastTick: {client.LastClientTick}");
             }
+
             return sb.ToString();
         }
-        
+
         async Task ReceiveData()
         {
-
             var ct = new CancellationTokenSource();
 
             var rcvBytes = new byte[64000];
@@ -171,7 +175,7 @@ namespace XFlow.Server
                     lock (_receivedMessages)
                     {
                         _receivedMessages.Add(msgBytes);
-                    }                    
+                    }
                 }
             }
             catch (Exception e)
@@ -179,12 +183,12 @@ namespace XFlow.Server
                 Debug.LogError(e);
             }
         }
-        
+
         private void StartSystems(byte[] initialWorld)
         {
             if (_worldInitialized)
                 return;
-            
+
             Debug.Log("StartSystems");
             WorldDiff dif = null;
             if (initialWorld?.Length > 0)
@@ -197,18 +201,18 @@ namespace XFlow.Server
                 dif = WorldDiff.FromJsonString(_components, File.ReadAllText("world.ecs.json"));
             }
 
-            
+
             _mainWorld.EntityDestroyedListeners.Add(_destroyedListener);
 
- 
+
             _inputWorld = new EcsWorld(EcsWorlds.Input);
             _systems.AddWorld(_inputWorld, EcsWorlds.Input);
 
             _mainWorld.AddUnique(_config);
             _mainWorld.AddUnique<TickComponent>().Value = new Tick(0);
-            _mainWorld.AddUnique(new TickDeltaComponent { Value = new TickDelta(_config.Tickrate) });
+            _mainWorld.AddUnique(new TickDeltaComponent {Value = new TickDelta(_config.Tickrate)});
             _mainWorld.AddUnique<PrimaryWorldComponent>();
-            
+
 
             _eventWorld = new EcsWorld(EcsWorlds.Event);
             _systems.AddWorld(_eventWorld, EcsWorlds.Event);
@@ -244,7 +248,7 @@ namespace XFlow.Server
                 _systems = new EcsSystems(_mainWorld);
                 _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
                 _systemsFactory.AddNewSystems(_systems,
-                    new IEcsSystemsFactory.Settings { AddClientSystems = false, AddServerSystems = true });
+                    new IEcsSystemsFactory.Settings {AddClientSystems = false, AddServerSystems = true});
                 _systems.Add(new TickSystem());
                 _systems.Add(_systemsFactory.CreateSyncDebugSystem(false));
 
@@ -252,7 +256,7 @@ namespace XFlow.Server
                 _poolClients = _mainWorld.GetPool<ClientComponent>();
 
                 //var url = $"{Config.URL}/{P2P.ADDR_SERVER.AddressString}";
-                
+
                 await _socket.ConnectAsync(new Uri(_url, UriKind.Absolute), new CancellationToken());
 
                 Debug.Log($"connected to host\n{_url}");
@@ -261,8 +265,8 @@ namespace XFlow.Server
                 _ = Task.Factory.StartNew(ReceiveData);
 
                 //SendWorldToClients();
-                
-                
+
+
                 /*
                  * по умолчанию сервер получает начальный мир от первого подключенного игрока
                  * если включи StartSystems тут, то сцена будет грузиться из файла 
@@ -295,7 +299,7 @@ namespace XFlow.Server
                         var reader = new HGlobalReader(udpPacket.Data);
                         GotInput1(reader, udpPacket.EndPoint);
                     }
-                    
+
 
                     if (next <= DateTime.UtcNow && _worldInitialized)
                     {
@@ -317,7 +321,7 @@ namespace XFlow.Server
             }
             finally
             {
-                Debug.Log("Ended1");   
+                Debug.Log("Ended1");
             }
         }
 
@@ -327,20 +331,23 @@ namespace XFlow.Server
             string errAddr = "";
             if (P2P.P2P.CheckError(msgBytes, out errAddr))
             {
-                var clientEntity = GetClientEntity(Int32.Parse(errAddr));//  clients.FirstOrDefault(client => client.ID.ToString() == errAddr);
+                var clientEntity =
+                    GetClientEntity(
+                        Int32.Parse(errAddr)); //  clients.FirstOrDefault(client => client.ID.ToString() == errAddr);
                 if (clientEntity != -1)
                 {
                     _mainWorld.DelEntity(clientEntity);
                     Debug.Log($"removed client {errAddr}");
                     BaseServices.InputLeavePlayer(_inputWorld, Int32.Parse(errAddr));
                 }
+
                 return;
             }
 
             if (msgBytes[0] == 0xff && msgBytes[1] == 0 && msgBytes[2] == 0 && msgBytes[3] == 0)
             {
                 var reader = new HGlobalReader(msgBytes);
-                reader.ReadInt32();//0xff
+                reader.ReadInt32(); //0xff
                 GotInput1(reader, null);
                 return;
             }
@@ -351,14 +358,16 @@ namespace XFlow.Server
             {
                 var client = new ClientComponent();
                 client.ID = packet.playerID;
-                client.Address= new ClientAddr(client.ID.ToString());
+                client.Address = new ClientAddr(client.ID.ToString());
 
                 Debug.Log($"got hello from client {packet.playerID}");
 
                 var hello = new Hello();
-                hello.Components = _components.Components.Select(component => component.GetComponentType().FullName).ToArray();
+                hello.Components = _components.Components.Select(component => component.GetComponentType().FullName)
+                    .ToArray();
 
-                if (!_worldInitialized) {
+                if (!_worldInitialized)
+                {
                     //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
                     var state = packet.hello.InitialWorld;
                     if (!String.IsNullOrEmpty(state))
@@ -367,29 +376,28 @@ namespace XFlow.Server
 
                 //SendAsyncDeprecated(new Packet { hello = hello, hasHello = true }, client);
 
-                
+
                 client.SentWorld = new EcsWorld("sent");
-               // client.SentWorld.CopyFrom(world);
-                
+                // client.SentWorld.CopyFrom(world);
+
                 client.SentWorldRelaible = new EcsWorld("rela");
-                
-                
-                
+
+
                 /*
                 var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
                 var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
                 socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
                 client.SentWorldRelaible = WorldUtils.CopyWorld(components, world);
                 */
-                
+
                 var dif = WorldDiff.BuildDiff(_components, client.SentWorldRelaible, _mainWorld);
                 client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
                 client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
-                
+
                 packet = new Packet
                 {
                     hasWelcomeFromServer = true,
-                    hello =  hello,
+                    hello = hello,
                     hasHello = true,
                     WorldUpdate = new WorldUpdateProto
                     {
@@ -401,7 +409,7 @@ namespace XFlow.Server
 
                 var data = P2P.P2P.BuildRequest(client.Address, packet);
                 _socket.SendAsync(data, WebSocketMessageType.Binary, true, new CancellationToken());
-                
+
                 //SendAsyncDeprecated(packet, client);
                 Debug.Log($"send initial world at tick {_mainWorld.GetTick()}");
 
@@ -425,10 +433,10 @@ namespace XFlow.Server
 
             return -1;
         }
-        
+
         private void GotInput1(HGlobalReader reader, EndPoint endPoint)
         {
-            try            
+            try
             {
                 var playerId = reader.ReadInt32();
 
@@ -440,6 +448,7 @@ namespace XFlow.Server
                         _missingClients.Add(playerId);
                         Debug.Log($"not found player {playerId}");
                     }
+
                     return;
                 }
 
@@ -447,7 +456,7 @@ namespace XFlow.Server
 
                 if (endPoint != null)
                     client.EndPoint = endPoint;
-                
+
                 var inputTime = reader.ReadInt32();
                 var time = inputTime;
 
@@ -458,7 +467,7 @@ namespace XFlow.Server
                 var step = _mainWorld.GetUnique<TickDeltaComponent>().Value;
                 //на сколько тиков мы опередили сервер или отстали
                 var delay = time - currentTick;
-                
+
                 /*
                  * delay > 0 - клиент опережает сервер
                  * delay == 0 - клиент идет оптимально с сервером
@@ -478,10 +487,10 @@ namespace XFlow.Server
                 client.LastClientTick = inputTime;
                 client.LastServerTick = currentTick;
 
-                var component = _components.GetComponent(type);                
+                var component = _components.GetComponent(type);
 
-                if (component.GetComponentType() == typeof(PingComponent))//ping
-                {                    
+                if (component.GetComponentType() == typeof(PingComponent)) //ping
+                {
                     client.Delay = delay;
                 }
                 else
@@ -490,15 +499,15 @@ namespace XFlow.Server
                     //cname = cname.Replace("Component", "C.");
                     //var end = inputTime < currentTick ? "!!!" : "";
                     //log($"got input {cname}:{inputTime} at {currentTick.Value} {end}");
-                    
+
                     var componentData = component.ReadSingleComponent(reader) as IInputComponent;
 
                     _inputService.Input(_inputWorld, playerId, time, componentData);
                     //leo.Inputs.Add(input);
                     //world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
                 }
-
-            } finally
+            }
+            finally
             {
                 reader.Dispose();
             }
@@ -510,7 +519,7 @@ namespace XFlow.Server
             SyncServices.FilterInputs(_inputWorld, time);
             //обновляем мир 1 раз
             SyncServices.Tick(_systems, _inputWorld, _mainWorld);
-            
+
             foreach (var client in _clientsFilter)
             {
                 SendWorldToClient(ref _poolClients.GetRef(client));
@@ -531,10 +540,10 @@ namespace XFlow.Server
         {
             var data = new BinaryProtocol.DataWorldDiff();
             BuildDiff(client, srcWorld, ref data);
-            
+
             _writer.Reset();
             BinaryProtocol.WriteWorldDiff(_writer, data);
-            
+
             var compressed = P2P.P2P.Compress(_writer.ToByteArray());
             return compressed;
         }
@@ -547,8 +556,8 @@ namespace XFlow.Server
             {
                 Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
             }
-        } 
-        
+        }
+
         void SendWorldToClient(ref ClientComponent client)
         {
             if (client.EndPoint != null)
@@ -559,7 +568,7 @@ namespace XFlow.Server
                 //if (false)
                 {
                     //SimRandomSend(compressed, client);
-                    
+
                     int r = _udpServer.Socket.SendTo(compressed, client.EndPoint);
                     if (r <= 0)
                     {
@@ -580,6 +589,11 @@ namespace XFlow.Server
                 _socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
                 client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
             }
+        }
+
+        public async ValueTask<ContainerState> GetStateAsync()
+        {
+            return ContainerState.Empty;
         }
     }
 }

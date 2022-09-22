@@ -70,6 +70,12 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Gaming.ContainerManager.ImageContracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\Submodules\module-ecs-container\Contracts\Gaming.ContainerManager.ImageContracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Gaming.ContainerManager.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\Submodules\module-ecs-container\Contracts\Gaming.ContainerManager.Models.dll</HintPath>
+    </Reference>
     <Reference Include="Zenject">
       <HintPath>Zenject.dll</HintPath>
     </Reference>
