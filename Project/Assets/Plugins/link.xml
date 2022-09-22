@@ -1,0 +1,40 @@
+<linker>
+    <assembly fullname="Newtonsoft.Json" />
+    <assembly fullname="System.IdentityModel.Tokens.Jwt">
+        <type fullname="System.IdentityModel.Tokens.Jwt.JwtHeader" preserve="all" />
+        <type fullname="System.IdentityModel.Tokens.Jwt.JwtPayload" preserve="all" />
+    </assembly>
+    <assembly fullname="System.Core">
+        <type fullname="System.Linq.Expressions.Interpreter.LightLambda" preserve = "all" />
+    </assembly>
+    <assembly fullname="Gaming.ClientUtilities" />
+    <assembly fullname="Gaming.Collections" />
+    <assembly fullname="Gaming.ContainerManager.Client" />
+    <assembly fullname="Gaming.ContainerManager.Contracts" />
+    <assembly fullname="Gaming.ContainerManager.ImageContracts" />
+    <assembly fullname="Gaming.ContainerManager.Models" />
+    <assembly fullname="Gaming.Contracts.Annotations" />
+    <assembly fullname="Gaming.Facade.Containers" />
+    <assembly fullname="Gaming.Facade.Modules.Containers.V1" />
+    <assembly fullname="Gaming.Facade.Modules.FileSystem.V1" />
+    <assembly fullname="Gaming.Facade.Modules.Http.V1" />
+    <assembly fullname="Gaming.Facade.Modules.Identity.V1" />
+    <assembly fullname="Gaming.Facade" />
+    <assembly fullname="Gaming.FunctionalExtensions.Serialization" />
+    <assembly fullname="Gaming.FunctionalExtensions" />
+    <assembly fullname="Gaming.Http.Abstractions" />
+    <assembly fullname="Gaming.Http" />
+    <assembly fullname="Gaming.IdentityProvider.Client" />
+    <assembly fullname="Gaming.IdentityProvider.Contracts" />
+    <assembly fullname="Gaming.Messaging.Abstractions" />
+    <assembly fullname="Gaming.ServiceModel.Abstractions" />
+    <assembly fullname="Gaming.ServiceModel.Authorization.Abstractions" />
+    <assembly fullname="Gaming.ServiceModel.ErrorFlow.Serialization" />
+    <assembly fullname="Gaming.ServiceModel.ErrorFlow" />
+    <assembly fullname="Gaming.ServiceModel.Serialization" />
+    <assembly fullname="Gaming.TokenExchange.Abstractions" />
+    <assembly fullname="Gaming.Tracing.Common.Abstractions" />
+    <assembly fullname="Gaming.Tracing.WriteSide.Abstractions" />
+    <assembly fullname="Gaming.Tracing.WriteSide.EndUser" />
+    <assembly fullname="Gaming.Tracing.WriteSide" />
+</linker>
