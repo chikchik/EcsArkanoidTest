@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game.Ecs.ClientServer.Components;
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
@@ -11,6 +12,7 @@ using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Utils;
 using XFlow.Utils;
+using Random = UnityEngine.Random;
 using Utils = XFlow.Net.ClientServer.Utils.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
@@ -35,16 +37,31 @@ namespace Game.Ecs.ClientServer.Systems
 
                     var shoot = entity.EntityGet<ShootingComponent>(world);
 
+                    int rd = Random.Range(1, 5);
+                    var lst = new List<int>();
+                    for (int i = 0; i < rd; ++i)
+                    {
+                        lst.Add(world.NewEntity());
+                    }
+
                     var bulletEntity = world.NewEntity();
                     bulletEntity.EntityAdd<BulletComponent>(world).Damage = 1f;
+                    
+                    foreach (var en in lst)
+                    {
+                        //world.DelEntity(en);
+                    }
 
                     //var unitPos = entity.EntityGet<PositionComponent>(world).value;
                     var pos = shoot.Position;
                     var dir = entity.EntityGet<ShootingComponent>(world).Direction;
                     bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
-                    
-                    bulletEntity.EntityAdd<UniqueIdComponent>(world).Value = HashUtils.CustomHash(entity, world.GetTick());
+
+
+                    var customHash = (uint)Random.Range(1, 1111); // HashUtils.CustomHash(entity, world.GetTick());
+                    world.Log($"created bullet {entity}-{world.InternalGetEntityGen(entity)} at tick {world.GetTick()} , hash: {customHash}");
+                    bulletEntity.EntityAdd<UniqueIdComponent>(world).Value = customHash;
                     
                     Box2DServices.AddRigidbodyDefinition(world, bulletEntity).SetBullet(true).SetDensity(20).SetLinearDamping(0);
                     Box2DServices.AddCircleColliderToDefinition(world, bulletEntity, 0.02f, Vector2.zero);

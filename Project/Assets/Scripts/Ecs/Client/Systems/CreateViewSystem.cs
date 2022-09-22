@@ -8,6 +8,7 @@ using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Utils;
+using Zenject;
 
 namespace Game.Ecs.Client.Systems
 {
@@ -15,8 +16,10 @@ namespace Game.Ecs.Client.Systems
     {
         private CharacterView _viewPrefab;
         private BulletView _bulletPrefab;
-        public CreateViewSystem(CharacterView viewPrefab, BulletView bulletPrefab)
+        private DiContainer _container;
+        public CreateViewSystem(CharacterView viewPrefab, BulletView bulletPrefab, DiContainer container)
         {
+            _container = container;
             this._bulletPrefab = bulletPrefab;
             this._viewPrefab = viewPrefab;
         }
@@ -87,17 +90,19 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filterBullets)
             {
-                var view = Object.Instantiate(_bulletPrefab);
+                var viewGo = _container.InstantiatePrefab(_bulletPrefab);
+                var view = viewGo.GetComponent<BulletView>();
                 var pos = entity.EntityGet<PositionComponent>(world).value;
                 view.transform.position = pos;
                 view.name = $"Bullet{entity}";
+                view.PackedEntity = world.PackEntity(entity);
 
                 ref var component = ref entity.EntityAdd<TransformComponent>(world);
                 component.Transform = view.transform;
 
                 entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
                 
-                world.LogVerbose($"create view {entity} at {pos}");
+                world.Log($"create view {entity} at {pos}");
             }
         }
     }

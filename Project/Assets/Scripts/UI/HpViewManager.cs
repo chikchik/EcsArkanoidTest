@@ -82,7 +82,7 @@ namespace Game.UI
         
         public void OnAnyComponentChanged(EcsWorld world, int entity, DestroyedEntityComponent data, bool added)
         {
-            Debug.Log("DestroyView DestroyedEntityComponent");
+            //Debug.Log("DestroyView DestroyedEntityComponent");
             DestroyView(_poolView, entity);
         }
 

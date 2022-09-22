@@ -22,7 +22,7 @@ namespace Game.Ecs.ClientServer.Systems
                 if (poolDestroyAt.Get(entity).Time > tm)
                     continue;
                 world.Log($"time is out bullet {entity}");                             
-                world.DelEntity(entity);
+                world.MarkEntityAsDeleted(entity);
             }
         }
     }
