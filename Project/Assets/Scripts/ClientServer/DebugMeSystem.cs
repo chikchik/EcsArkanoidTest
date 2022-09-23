@@ -35,6 +35,8 @@ namespace Game.ClientServer
                 else
                     str += "end-";
 
+                str += $"{entity.e2name(_world)}-";
+
                 if (entity.EntityHas<PositionComponent>(_world))
                     str += entity.EntityGet<PositionComponent>(_world).value;
                 if (entity.EntityHas<Box2DRigidbodyComponent>(_world))

@@ -4,6 +4,7 @@ using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
+using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
@@ -31,6 +32,8 @@ namespace Game.Ecs.Client.Systems
                 var transform = _poolTransform.Get(entity).Transform;
                 GameObject.Destroy(transform.gameObject);
                 entity.EntityDel<TransformComponent>(_world);
+                
+                _world.Log($"destroy view {entity.e2name(_world)} go: {transform.name}");
                 /*
                 
                 if (!_poolReliable.Has(entity))

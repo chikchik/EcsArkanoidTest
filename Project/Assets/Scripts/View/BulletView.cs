@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using XFlow.EcsLite;
+using XFlow.Utils;
 using Zenject;
 
 namespace Game.View
@@ -19,7 +20,7 @@ namespace Game.View
             
             if (PackedEntity.Unpack(MainWorld, out int entity))
             {
-                Debug.Log($"bullet {entity} {PackedEntity.Id}");
+                Debug.Log($"bullet {PackedEntity} {entity.e2name(MainWorld)}");
             }
         }
     }

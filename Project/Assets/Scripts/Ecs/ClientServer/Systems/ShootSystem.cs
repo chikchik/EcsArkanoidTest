@@ -58,9 +58,9 @@ namespace Game.Ecs.ClientServer.Systems
                     bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
 
+                    bulletEntity.EntityAdd<DebugNameComponent>(world).Name = "Bullet";
 
                     var customHash = (uint)Random.Range(1, 1111); // HashUtils.CustomHash(entity, world.GetTick());
-                    world.Log($"created bullet {entity}-{world.InternalGetEntityGen(entity)} at tick {world.GetTick()} , hash: {customHash}");
                     bulletEntity.EntityAdd<UniqueIdComponent>(world).Value = customHash;
                     
                     Box2DServices.AddRigidbodyDefinition(world, bulletEntity).SetBullet(true).SetDensity(20).SetLinearDamping(0);
@@ -77,7 +77,10 @@ namespace Game.Ecs.ClientServer.Systems
                     //var bodyInfo = Box2DApi.GetBodyInfo(body);
 
                     //защита от бесконечного полета в пустоте
-                    bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 5f;
+                    bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 1.5f;
+                    
+                    
+                    world.Log($"created bullet {bulletEntity.e2name(world)} at tick {world.GetTick()} , hash: {customHash}");
                 }
 
                 if (shootingComponent.TotalTime < tm)

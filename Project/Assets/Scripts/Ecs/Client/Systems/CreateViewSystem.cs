@@ -102,7 +102,7 @@ namespace Game.Ecs.Client.Systems
 
                 entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
                 
-                world.Log($"create view {entity} at {pos}");
+                world.Log($"create view '{view.name}'  {entity.e2name(world)} at {pos}");
             }
         }
     }
