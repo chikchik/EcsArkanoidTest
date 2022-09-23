@@ -249,6 +249,7 @@ namespace XFlow.Server
                 
                 
                 _mainWorld = new EcsWorld("serv");
+                _mainWorld.SetDefaultGen(InternalConfig.ServerWorldGenMin, InternalConfig.ServerWorldGenMax);
                 _systems = new EcsSystems(_mainWorld);
                 _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
                 _systemsFactory.AddNewSystems(_systems,

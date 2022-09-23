@@ -14,6 +14,7 @@ namespace Game.Ecs.Client.Systems
 {
     public class CreateViewSystem : IEcsInitSystem, IEcsRunSystem
     {
+        private static int N = 0;
         private CharacterView _viewPrefab;
         private BulletView _bulletPrefab;
         private DiContainer _container;
@@ -94,8 +95,8 @@ namespace Game.Ecs.Client.Systems
                 var view = viewGo.GetComponent<BulletView>();
                 var pos = entity.EntityGet<PositionComponent>(world).value;
                 view.transform.position = pos;
-                view.name = $"Bullet{entity}";
-                view.PackedEntity = world.PackEntity(entity);
+                view.name = $"Bullet{entity.e2name(world)}-{N}";
+                //view.PackedEntity = world.PackEntity(entity);
 
                 ref var component = ref entity.EntityAdd<TransformComponent>(world);
                 component.Transform = view.transform;
@@ -103,6 +104,8 @@ namespace Game.Ecs.Client.Systems
                 entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
                 
                 world.Log($"create view '{view.name}'  {entity.e2name(world)} at {pos}");
+
+                ++N;
             }
         }
     }

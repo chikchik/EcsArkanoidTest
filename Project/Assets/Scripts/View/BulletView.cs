@@ -8,6 +8,7 @@ namespace Game.View
 {
     public class BulletView : MonoBehaviour
     {
+        /*
         [Inject] 
         private EcsWorld MainWorld;
         
@@ -20,8 +21,8 @@ namespace Game.View
             
             if (PackedEntity.Unpack(MainWorld, out int entity))
             {
-                Debug.Log($"bullet {PackedEntity} {entity.e2name(MainWorld)}");
+                //Debug.Log($"bullet {PackedEntity} {entity.e2name(MainWorld)}");
             }
-        }
+        }*/
     }
 }
