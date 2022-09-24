@@ -58,11 +58,6 @@ namespace Game.Installers
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Dead).FromInstance(new EcsWorld(EcsWorlds.Dead)).AsCached();
             
             
-            //Container.Bind
-            Container.Bind<CopyToDeadWorldListener>().AsSingle();
-            
-            Container.Bind<EntityDestroyedListener>().AsSingle();
-            
             var mainUI = FindObjectOfType<MainUI>();
             Container.Bind<MainUI>().FromInstance(mainUI).AsSingle();
             Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();
@@ -106,8 +101,8 @@ namespace Game.Installers
             Container.Bind<InventoryOpenedState>().AsSingle();
             
 
-
-            Container.Bind<NetClient>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EntityDestroyedListener>().AsSingle();
+            
             Container.BindInterfacesAndSelfTo<EcsSystemsFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<EcsViewSystemsFactory>().AsSingle();
             
@@ -129,6 +124,8 @@ namespace Game.Installers
 
             if (settings.MultiPlayer)
             {
+                Container.Bind<NetClient>().AsSingle();
+                
                 Container.Bind<IInputService>().To<ClientInputService>()
                     .AsSingle().WhenInjectedInto<PlayerControlService>();
                 
@@ -137,6 +134,8 @@ namespace Game.Installers
             }
             else
             {
+                Container.Bind<SingleGame>().AsSingle();
+                
                 var comp = settings.gameObject.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);
             }

@@ -18,17 +18,12 @@ namespace Game
         [Inject] private Camera _camera;
         [Inject] private UI.UI _ui;
         [Inject] private Joystick _joystick;
-        [Inject] private NetClient _client;
+        
         
         [Inject] private PlayerControlService _controlService;
         
         [Inject] private EcsWorld _world;
         
-        [Inject] 
-        private EntityDestroyedListener _entityDestroyedListener;
-
-        [Inject]
-        private CopyToDeadWorldListener _copyToDeadWorldListener;
 
         [Inject] 
         private ComponentsCollection _components;
@@ -40,27 +35,21 @@ namespace Game
         [Inject]
         private IEcsViewSystemsFactory _viewSystemsFactory;
 
+        [Inject] private DiContainer _diContainer;
+        
+        [Inject] private NetClient _client;
+
         private void Start()
         {
             UnityEngine.Physics.autoSimulation = false;
             UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
-
+           
+            
             
             _viewSystems = new EcsSystems(_world, "viewSystems");
             _viewSystems.AddWorld(_deadWorld, EcsWorlds.Dead);
             _viewSystemsFactory.AddNewSystems(_viewSystems);
             
-#if UNITY_EDITOR
-            //viewSystems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
-#endif
-            
-            
-            _world.EntityDestroyedListeners.Add(_copyToDeadWorldListener);
-            
-            //глобальный обработчик удаления entity, чтоб никакой GameObject не утек
-            //если случайно удалить entity самостоятельно или преждевременно
-            //на сервере он тоже есть
-            _world.EntityDestroyedListeners.Add(_entityDestroyedListener);
             
             
             _client.ConnectedAction = () =>

@@ -13,7 +13,7 @@ using Zenject;
 
 namespace Game
 {
-    public class SinglePlayerGame
+    public class SingleGame
     {
         [Inject] private EcsWorld _world;
         [Inject(Id = EcsWorlds.Input)] private EcsWorld _inputWorld;
@@ -22,10 +22,8 @@ namespace Game
         
         
         [Inject] 
-        private EntityDestroyedListener _entityDestroyedListener;
+        private IEcsEntityDestroyedListener _entityDestroyedListener;
 
-        [Inject] 
-        private CopyToDeadWorldListener _copyToDeadWorldListener;
 
         [Inject]
         private IEcsSystemsFactory _systemsFactory;
@@ -59,7 +57,7 @@ namespace Game
             _world.EntityCreatedListeners.Add(new AllEntitiesAreReliableListener(_world));
             
             _world.EntityDestroyedListeners.Add(_entityDestroyedListener);
-            _world.EntityDestroyedListeners.Add(_copyToDeadWorldListener);
+            _world.EntityDestroyedListeners.Add(new CopyToDeadWorldListener(_deadWorld));
 
             _world.AddUnique<PrimaryWorldComponent>();
             

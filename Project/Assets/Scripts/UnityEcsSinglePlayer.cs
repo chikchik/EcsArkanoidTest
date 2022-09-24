@@ -28,7 +28,8 @@ namespace Game
         [Inject] 
         private PlayerControlService _controlService;
 
-        private SinglePlayerGame _game;
+        [Inject]
+        private SingleGame _game;
         
 
         private int _unitEntity = -1;
@@ -36,7 +37,6 @@ namespace Game
 
         public void Start()
         {
-            _game = _diContainer.Instantiate<SinglePlayerGame>();
             _game.PreInit();
             
             ClientServices.InitializeNewWorldFromScene(_world);
