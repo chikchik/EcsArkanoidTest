@@ -24,7 +24,6 @@ namespace Game.Client
             _container.Register<Box2DDebugViewSystem>();
             
             _container.Register<DestroyViewSystem>();
-            _container.Register<DeleteDeadWorldEntitiesSystem>();
         }
         
         public void AddNewSystems(EcsSystems systems)

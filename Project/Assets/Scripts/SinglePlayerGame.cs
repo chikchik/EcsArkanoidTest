@@ -51,6 +51,7 @@ namespace Game
             _systemsFactory.AddNewSystems(_systems, 
                 new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = true});
             _systems.Add(new TickSystem());
+            _systems.Add(new DeleteDeadWorldEntitiesSystem());
             
             _systems.PreInit();
             
