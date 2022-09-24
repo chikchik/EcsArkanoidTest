@@ -33,7 +33,7 @@ namespace Game.Ecs.ClientServer.Systems
                     var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerID);
                     if (unitEntity != -1)
                     {
-                        world.DelEntity(unitEntity);
+                        world.MarkEntityAsDeleted(unitEntity);
                         //unitEntity.EntityWithRef(world, (ref PlayerComponent data) => { data.id = -1; });
                     }
                 }

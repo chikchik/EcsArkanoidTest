@@ -17,14 +17,21 @@ using Utils = XFlow.Net.ClientServer.Utils.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-    public class ShootSystem : IEcsRunSystem
+    public class ShootSystem : IEcsRunSystem, IEcsInitSystem
     {
+        EcsWorld world;
+        EcsFilter filter;
+        EcsPool<ShootingComponent> poolShooting;
+        
+        public void Init(EcsSystems systems)
+        {
+            world = systems.GetWorld();
+            filter = world.Filter<ShootingComponent>().End();
+            poolShooting = world.GetPool<ShootingComponent>();
+        }
+        
         public void Run(EcsSystems systems)
         {
-            var world = systems.GetWorld();
-            var filter = world.Filter<ShootingComponent>().End();
-            var poolShooting = world.GetPool<ShootingComponent>();
-
             var tm = world.GetTime();
             foreach (var entity in filter)
             {
@@ -37,20 +44,9 @@ namespace Game.Ecs.ClientServer.Systems
 
                     var shoot = entity.EntityGet<ShootingComponent>(world);
 
-                    int rd = Random.Range(1, 5);
-                    var lst = new List<int>();
-                    for (int i = 0; i < rd; ++i)
-                    {
-                       // lst.Add(world.NewEntity());
-                    }
 
                     var bulletEntity = world.NewEntity();
                     bulletEntity.EntityAdd<BulletComponent>(world).Damage = 1f;
-                    
-                    foreach (var en in lst)
-                    {
-                        //world.DelEntity(en);
-                    }
 
                     //var unitPos = entity.EntityGet<PositionComponent>(world).value;
                     var pos = shoot.Position;
