@@ -44,7 +44,6 @@ namespace Game.ClientServer
             
             /*
              * системы регистрируются в порядке следования
-             * RegisterClient - система, которая будет отрабатывать в мире где есть Unity Client
              * RegisterServer - система, которая будет создана и на стороне сервера (или синглплеера)
              * Register - система, регистрируется для всех случаев
              */
@@ -53,8 +52,7 @@ namespace Game.ClientServer
              ПРИМЕРЫ
              
              container.RegisterServer<JoinPlayerSystem>();
-             Система создается только на сервере и вход игрока может быть произведен только на сервере, никак не стартует в юнити
-             
+             Система создается только на сервере и вход игрока может быть произведен только на сервере, никак не стартует в юнити             
              
 
              container.RegisterServer<AIPlayerSystem>();
@@ -64,11 +62,7 @@ namespace Game.ClientServer
              система открытия ворот нужна везде, чтоб клиент мог на опережение начинать открывать ворота локально
              а позже результат ее работы долетит и с сервера
              
-              
-             container.RegisterClient<CreateViewSystem>();
-             любые системы которые создают View, а значит чисто клиентские регаются через RegisterClient
-             
-             
+                                       
              container.RegisterClient<AddLerpSystem>();
              Эта система успешно может работать и на сервере, но там она не имеет смысла, потому что она добавляет
               LerpComponent для текущего игрока,а текущий игрок существует только у клиента, для сервера все равны
@@ -95,16 +89,10 @@ namespace Game.ClientServer
             _container.Register<CreateGameSystem>();
 #endif
             
-#if CLIENT
-            _container.RegisterClient<DetectPlayerIdChangesSystem>();
-#endif
             _container.RegisterServer<CustomInitSystem>();
             _container.RegisterServer<JoinPlayerSystem>();
-            
-#if CLIENT
-            _container.RegisterClient<InitSceneSystem>();
-#endif
-            
+           
+           
             _container.RegisterServer<AIPlayerSystem>();
 
             _container.Register<MoveToTargetPositionSystem>();
@@ -128,17 +116,7 @@ namespace Game.ClientServer
 
             _container.RegisterServer<FootprintSystem>();
 
-#if CLIENT
-            _container.RegisterClient<FootprintViewSystem>();
-            _container.RegisterClient<HighlightInteractableSystem>();
-            _container.RegisterClient<VFXCreationSystem>();
-#endif
-            
 
-#if CLIENT
-            _container.RegisterClient<CollectableSystem>();
-            _container.RegisterClient<WeaponEquipSystem>();
-#endif
             // gates and buttons
             _container.Register<ButtonsInteractionSystem>();
             _container.RegisterServer<ButtonCustomSystem>();
@@ -151,13 +129,6 @@ namespace Game.ClientServer
             
             
 
-#if CLIENT
-            _container.RegisterClient<CreateViewSystem>();
-            _container.RegisterClient<FireViewSystem>();
-            _container.RegisterClient<InventoryImageSystem>();
-            _container.RegisterClient<CreateMechViewSystem>();
-            _container.RegisterClient<MechAnimationSystem>();
-#endif
 
             _container.Register<DeleteEntityHereSystem<DestroyComponent>>();
 
@@ -169,12 +140,6 @@ namespace Game.ClientServer
             _container.RegisterServer<ObjectivesSystem>();
 
             _container.Register<DestroyAtTimeSystem>();
-
-#if CLIENT
-            _container.RegisterClient<CharacterAnimationSystem>();
-            _container.RegisterClient<AddLerpSystem>();
-#endif
-
 
             _container.Register<ShootSystem>();
             
@@ -191,33 +156,7 @@ namespace Game.ClientServer
 
             //container.Register<Box2DDeleteContactsSystem>();
 
-            _container.Register<EventsSystem<WeaponComponent>>();
-            _container.Register<EventsSystem<FireComponent>>();
-            _container.Register<EventsSystem<ButtonPressedComponent>>();
-            _container.Register<EventsSystem<PlayerComponent>>();
-            _container.Register<EventsSystem<ButtonPushCompleted>>();
-            _container.Register<EventsSystem<ObjectiveOpenedComponent>>();
-            _container.Register<EventsSystem<ObjectiveCompletedComponent>>();
-            _container.Register<EventsSystem<GateOpenedComponent>>();
-            _container.Register<EventsSystem<FoodCollectedComponent>>();
-            _container.Register<EventsSystem<AmmoCollectedComponent>>();
-            _container.Register<EventsSystem<PushingComponent>>();
-            _container.Register<EventsSystem<CantMoveComponent>>();
             
-#if CLIENT
-            _container.Register<EventsSystem<MovingComponent>>();
-            _container.Register<EventsSystem<InventorySlotComponent>>();
-            _container.Register<EventsSystem<ActiveInventoryCategoryComponent>>();
-            _container.Register<EventsSystem<EntityRemoveEventComponent>>();
-            _container.Register<EventsSystem<TickComponent>>();
-            _container.Register<EventsSystem<ControlsMechComponent>>();
-            _container.Register<EventsSystem<HpComponent>>();
-            _container.Register<EventsSystem<DestroyedEntityComponent>>();
-            _container.RegisterClient<CreateViewSystem>();
-            _container.RegisterClient<BulletDestroyFxSystem>();
-            
-            
-#endif
             
             _container.Register<DeleteEventEntitiesSystem>();
             _container.Register<InventoryRemoveEntitySystem>();
