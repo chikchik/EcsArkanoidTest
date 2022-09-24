@@ -16,7 +16,7 @@ namespace Game.Client
         public EcsViewSystemsFactory(DiContainer di)
         {
             _container = new EcsSystemsContainer(di);
-
+            _container.Register<PlayerInputSystem>();
             _container.Register<SyncTransformSystem>();
             _container.Register<RotateCharacterSystem>();
             _container.Register<RotateRigidbodySystem>();

@@ -15,50 +15,16 @@ namespace Game
 {
     public class UnityEcsClient : MonoBehaviour
     {
-        [Inject] private Camera _camera;
         [Inject] private UI.UI _ui;
-        [Inject] private Joystick _joystick;
+        [Inject] private EcsWorld _mainWorld;
         
-        
-        [Inject] private PlayerControlService _controlService;
-        
-        [Inject] private EcsWorld _world;
-        
-
         [Inject] 
         private ComponentsCollection _components;
-        
-        [Inject(Id = EcsWorlds.Dead)]  private EcsWorld _deadWorld;
-
-        private EcsSystems _viewSystems;
-        
-        [Inject]
-        private IEcsViewSystemsFactory _viewSystemsFactory;
-
-        [Inject] private DiContainer _diContainer;
         
         [Inject] private NetClient _client;
 
         private void Start()
         {
-            UnityEngine.Physics.autoSimulation = false;
-            UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
-           
-            
-            
-            _viewSystems = new EcsSystems(_world, "viewSystems");
-            _viewSystems.AddWorld(_deadWorld, EcsWorlds.Dead);
-            _viewSystemsFactory.AddNewSystems(_viewSystems);
-            
-            
-            
-            _client.ConnectedAction = () =>
-            {
-                _viewSystems.Init();
-            };
-            
-            
-
             string initialWorldJson = null;
             if (true)
             {
@@ -82,11 +48,6 @@ namespace Game
                 return;
 
             _client.Update();
-            
-            UnityEcsSinglePlayer.CheckInput(_camera, _joystick, _controlService);
-            
-            _viewSystems.Run();
-
             _ui.View.DebugText.text = _client.GetDebugString();
         }
 
@@ -101,7 +62,7 @@ namespace Game
         {
             if (!Application.isPlaying)
                 return;
-            EcsWorldDebugDraw.Draw(_world);
+            EcsWorldDebugDraw.Draw(_mainWorld);
         }
     }
 }
