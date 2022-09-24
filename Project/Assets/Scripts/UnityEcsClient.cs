@@ -4,6 +4,7 @@ using Game.Ecs.View.Systems;
 
 using Game.Utils;
 using UnityEngine;
+using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Net.Client;
@@ -31,6 +32,8 @@ namespace Game
 
         [Inject] 
         private ComponentsCollection _components;
+        
+        [Inject(Id = EcsWorlds.Dead)]  private EcsWorld _deadWorld;
 
         private EcsSystems _viewSystems;
         
@@ -44,6 +47,7 @@ namespace Game
 
             
             _viewSystems = new EcsSystems(_world, "viewSystems");
+            _viewSystems.AddWorld(_deadWorld, EcsWorlds.Dead);
             _viewSystemsFactory.AddNewSystems(_viewSystems);
             
 #if UNITY_EDITOR

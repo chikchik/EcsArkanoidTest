@@ -90,7 +90,7 @@ namespace Game.UI
         {
             if (!pool.TryGet(entity, out HpViewComponent viewComponent))
                 return;
-            Debug.Log("DestroyView");
+            Debug.Log("Destroy Hp View");
             var view = viewComponent.View;
             view.transform.DOScaleY(0, 0.3f).OnComplete(() =>
             {

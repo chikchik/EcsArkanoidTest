@@ -216,15 +216,13 @@ namespace Game.ClientServer
             _container.RegisterClient<CreateViewSystem>();
             _container.RegisterClient<BulletDestroyFxSystem>();
             
-            _container.RegisterClient<DestroyViewSystem>();
+            
 #endif
             
             _container.Register<DeleteEventEntitiesSystem>();
             _container.Register<InventoryRemoveEntitySystem>();
             _container.Register<Box2DDestroyBodiesSystem>();
             
-            _container.RegisterClient<DeleteDeadWorldEntitiesSystem>();
-
             //write final Box2d transforms to components
             _container.Register<Box2DWriteBodiesToComponentsSystem>();
         }

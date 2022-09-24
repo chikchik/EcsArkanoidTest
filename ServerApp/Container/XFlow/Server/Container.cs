@@ -25,6 +25,7 @@ using XFlow.Modules.Tick.ClientServer.Systems;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
+using XFlow.Net.ClientServer.Ecs.Systems;
 using XFlow.Net.ClientServer.Protocol;
 using XFlow.P2P;
 using XFlow.Utils;
@@ -256,6 +257,7 @@ namespace XFlow.Server
                     new IEcsSystemsFactory.Settings { AddClientSystems = false, AddServerSystems = true });
                 _systems.Add(new TickSystem());
                 _systems.Add(_systemsFactory.CreateSyncDebugSystem(false));
+                _systems.Add(new DeleteDeadWorldEntitiesSystem());
 
                 _clientsFilter = _mainWorld.Filter<ClientComponent>().End();
                 _poolClients = _mainWorld.GetPool<ClientComponent>();

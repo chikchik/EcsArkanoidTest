@@ -1,8 +1,10 @@
 ﻿using Game.ClientServer;
+using Game.Ecs.Client.Systems;
 using Game.Ecs.View.Systems;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.Client.Systems;
 using XFlow.Net.ClientServer;
+using XFlow.Net.ClientServer.Ecs.Systems;
 using Zenject;
 
 namespace Game.Client
@@ -20,6 +22,9 @@ namespace Game.Client
             _container.Register<RotateRigidbodySystem>();
             _container.Register<CameraFollowSystem>();
             _container.Register<Box2DDebugViewSystem>();
+            
+            _container.Register<DestroyViewSystem>();
+            _container.Register<DeleteDeadWorldEntitiesSystem>();
         }
         
         public void AddNewSystems(EcsSystems systems)
