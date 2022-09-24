@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Threading;
 using Fabros.EcsModules.Mech.ClientServer;
+using Game.Client;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Dev;
@@ -108,6 +109,7 @@ namespace Game.Installers
 
             Container.Bind<NetClient>().AsSingle();
             Container.BindInterfacesAndSelfTo<EcsSystemsFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EcsViewSystemsFactory>().AsSingle();
             
             var collection = new ComponentsCollection();
             ComponentsCollectionUtils.AddComponents(collection);

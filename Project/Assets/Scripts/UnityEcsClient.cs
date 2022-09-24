@@ -33,6 +33,9 @@ namespace Game
         private ComponentsCollection _components;
 
         private EcsSystems _viewSystems;
+        
+        [Inject]
+        private IEcsViewSystemsFactory _viewSystemsFactory;
 
         private void Start()
         {
@@ -41,11 +44,7 @@ namespace Game
 
             
             _viewSystems = new EcsSystems(_world, "viewSystems");
-            _viewSystems.Add(new SyncTransformSystem());
-            _viewSystems.Add(new RotateCharacterSystem());
-
-            _viewSystems.Add(new RotateRigidbodySystem());
-            _viewSystems.Add(new CameraFollowSystem(Camera.main));
+            _viewSystemsFactory.AddNewSystems(_viewSystems);
             
 #if UNITY_EDITOR
             //viewSystems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));

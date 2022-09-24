@@ -1827,7 +1827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 418edcff6ff32674a957080cdb9e61d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MultiPlayer: 1
+  MultiPlayer: 0
   OverrideDefaultServerRoom: 0
   OverrideRoom: 5000
   UdpHosts:
@@ -1860,7 +1860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7edeef391b40d40a4b622904f22e59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OffsetY: 0
+  OffsetY: 0.12
   draw: 1
 --- !u!114 &2435304065424668930
 MonoBehaviour:
