@@ -47,7 +47,7 @@ namespace Game
             _systems.AddWorld(_deadWorld, EcsWorlds.Dead);
             
             _systemsFactory.AddNewSystems(_systems, 
-                new IEcsSystemsFactory.Settings{AddClientSystems = true, AddServerSystems = true});
+                new IEcsSystemsFactory.Settings{AddServerSystems = true});
             _systems.Add(new TickSystem());
             _systems.Add(new DeleteDeadWorldEntitiesSystem());
             

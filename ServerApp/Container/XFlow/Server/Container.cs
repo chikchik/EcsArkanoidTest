@@ -254,7 +254,7 @@ namespace XFlow.Server
                 _systems = new EcsSystems(_mainWorld);
                 _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
                 _systemsFactory.AddNewSystems(_systems,
-                    new IEcsSystemsFactory.Settings { AddClientSystems = false, AddServerSystems = true });
+                    new IEcsSystemsFactory.Settings { AddServerSystems = true });
                 _systems.Add(new TickSystem());
                 _systems.Add(_systemsFactory.CreateSyncDebugSystem(false));
                 _systems.Add(new DeleteDeadWorldEntitiesSystem());

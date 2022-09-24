@@ -31,14 +31,18 @@ namespace Game.Ecs.ClientServer.Systems
             var filter = world
                 .Filter<ButtonComponent>()
                 .Inc<ButtonCustomComponent>()
-                .IncAdded<ButtonPressedComponent>()
+                .Inc<ButtonStateChangedComponent>()
                 .End();
 
             var poolCustom = world.GetPool<ButtonCustomComponent>();
+            var poolPressed = world.GetPool<ButtonPressedComponent>();
             
             foreach (var buttonEntity in filter)
             {
                 var custom = poolCustom.Get(buttonEntity);
+                if (!poolPressed.Has(buttonEntity))
+                    continue;
+                
                 if (custom.Spawn)
                 {
                     var botEntity = UnitService.CreateUnitEntity(world);

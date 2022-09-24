@@ -168,7 +168,7 @@ namespace Game.ClientServer
         
         public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)
         {
-            systems.Add(_container.CreateNewSystems(systems.GetWorld(), settings.AddClientSystems, settings.AddServerSystems));
+            systems.Add(_container.CreateNewSystems(systems.GetWorld(), settings.AddServerSystems));
         }
 
         public IEcsSystem CreateSyncDebugSystem(bool pre)

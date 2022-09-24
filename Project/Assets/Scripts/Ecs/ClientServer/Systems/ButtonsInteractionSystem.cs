@@ -28,6 +28,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolUnit = world.GetPool<UnitComponent>();
             var poolButton = world.GetPool<ButtonComponent>();
             var poolPressed = world.GetPool<ButtonPressedComponent>();
+            var poolStateChanged = world.GetPool<ButtonStateChangedComponent>();
             var poolBody = world.GetPool<Box2DRigidbodyComponent>();
             var poolBullet = world.GetPool<BulletComponent>();
             
@@ -44,10 +45,25 @@ namespace Game.Ecs.ClientServer.Systems
                 var pressed = _entities.Count > 0;
                 poolButton.ReplaceIfChanged(buttonEntity, new ButtonComponent{isActivated = pressed});
 
+
                 if (pressed)
+                {
+                    if (poolPressed.Has(buttonEntity))
+                        poolStateChanged.Del(buttonEntity);
+                    else
+                        poolStateChanged.Add(buttonEntity);
+                    
                     poolPressed.GetOrCreateRef(buttonEntity);
+                }
                 else
+                {
+                    if (!poolPressed.Has(buttonEntity))
+                        poolStateChanged.Del(buttonEntity);
+                    else
+                        poolStateChanged.Add(buttonEntity);
+                    
                     poolPressed.Del(buttonEntity);
+                }
                     
                 var progressComponent = poolProgress.Get(buttonEntity);
                 

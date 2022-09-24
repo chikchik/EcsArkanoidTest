@@ -29,7 +29,7 @@ namespace Game.Client
             
             _container.Register<PlayerInputSystem>();
             
-            _container.RegisterClient<InitSceneSystem>();
+            _container.Register<InitSceneSystem>();
             
             _container.Register<DetectPlayerIdChangesSystem>();
 
@@ -50,14 +50,13 @@ namespace Game.Client
             _container.Register<WeaponEquipSystem>();
             
             
+            _container.Register<AddLerpSystem>();
+            
             _container.Register<SyncTransformSystem>();
             _container.Register<RotateCharacterSystem>();
             _container.Register<RotateRigidbodySystem>();
             _container.Register<CameraFollowSystem>();
-            
-            _container.Register<AddLerpSystem>();
 
-            
             _container.Register<EventsSystem<WeaponComponent>>();
             _container.Register<EventsSystem<FireComponent>>();
             _container.Register<EventsSystem<ButtonPressedComponent>>();
@@ -88,7 +87,7 @@ namespace Game.Client
         
         public void AddNewSystems(EcsSystems systems)
         {
-            systems.Add(_container.CreateNewSystems(systems.GetWorld(), true, true));
+            systems.Add(_container.CreateNewSystems(systems.GetWorld(), true));
         }
     }
 }
