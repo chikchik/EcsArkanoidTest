@@ -76,6 +76,7 @@ namespace Game
             
             // в мультиплеере это контролируется на стороне сервера
             _viewSystems.Add(new DeleteDestroyedEntitiesSystem());
+            _viewSystems.PreInit();
         }
 
         public void Init()
