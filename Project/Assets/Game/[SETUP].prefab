@@ -1788,7 +1788,6 @@ GameObject:
   - component: {fileID: 3448083649790090375}
   - component: {fileID: 1356377918}
   - component: {fileID: 2052144125}
-  - component: {fileID: 2435304065424668930}
   m_Layer: 0
   m_Name: '[SETUP]'
   m_TagString: Untagged
@@ -1827,7 +1826,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 418edcff6ff32674a957080cdb9e61d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MultiPlayer: 0
+  MultiPlayer: 1
   OverrideDefaultServerRoom: 0
   OverrideRoom: 5000
   UdpHosts:
@@ -1861,20 +1860,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OffsetY: 0.12
-  draw: 1
---- !u!114 &2435304065424668930
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3448083649790090397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a7edeef391b40d40a4b622904f22e59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OffsetY: 0
   draw: 1
 --- !u!1 &3448083649973742954
 GameObject:

@@ -561,7 +561,7 @@ namespace XFlow.Server
                     client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
                 }
 
-                var filter = _mainWorld.Filter<DestroyedEntityComponent>(false).End();
+                var filter = _mainWorld.Filter<DeletedEntityComponent>(false).End();
                 foreach (var entity in filter)
                 {
                     _mainWorld.DelEntity(entity);

@@ -23,7 +23,8 @@ namespace Game.Ecs.ClientServer.Systems
                 if (tick < lifeTimeComponent.destroyTick)
                     continue;
 
-                entity.EntityAdd<DestroyComponent>(world);
+                world.MarkEntityAsDeleted(entity);
+                //entity.EntityAdd<DestroyComponent>(world);
             }
         }
     }

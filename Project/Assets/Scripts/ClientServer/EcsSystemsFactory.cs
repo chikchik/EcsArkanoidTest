@@ -130,7 +130,7 @@ namespace Game.ClientServer
             
 
 
-            _container.Register<DeleteEntityHereSystem<DestroyComponent>>();
+            //_container.Register<DeleteEntityHereSystem<DestroyComponent>>();
 
             _container.RegisterServer<DeleteInputEntitiesSystem>();
             _container.RegisterServer<DeleteOutdatedInputEntitiesSystem>();

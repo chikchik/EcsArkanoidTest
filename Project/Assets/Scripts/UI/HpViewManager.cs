@@ -15,7 +15,7 @@ namespace Game.UI
     public class HpViewManager:
         EventsSystem<HpComponent>.IAnyComponentChangedListener,
         EventsSystem<HpComponent>.IAnyComponentRemovedListener,
-        EventsSystem<DestroyedEntityComponent>.IAnyComponentChangedListener
+        EventsSystem<DeletedEntityComponent>.IAnyComponentChangedListener
     {
         private HpView _hpViewPrefab;
         private Canvas _canvas;
@@ -51,7 +51,7 @@ namespace Game.UI
 
             _listener = world.CreateAnyListener();
             _listener.SetAnyChangedListener<HpComponent>(this);
-            _listener.SetAnyChangedListener<DestroyedEntityComponent>(this);
+            _listener.SetAnyChangedListener<DeletedEntityComponent>(this);
 
             //_deadWorld.EntityDestroyedListeners.Add(this);
         }
@@ -80,7 +80,7 @@ namespace Game.UI
         }
         
         
-        public void OnAnyComponentChanged(EcsWorld world, int entity, DestroyedEntityComponent data, bool added)
+        public void OnAnyComponentChanged(EcsWorld world, int entity, DeletedEntityComponent data, bool added)
         {
             //Debug.Log("DestroyView DestroyedEntityComponent");
             DestroyView(_poolView, entity);

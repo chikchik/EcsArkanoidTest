@@ -58,7 +58,6 @@ namespace Game.Client
             _container.Register<CameraFollowSystem>();
 
             _container.Register<EventsSystem<WeaponComponent>>();
-            _container.Register<EventsSystem<FireComponent>>();
             _container.Register<EventsSystem<ButtonPressedComponent>>();
             _container.Register<EventsSystem<PlayerComponent>>();
             _container.Register<EventsSystem<ButtonPushCompleted>>();
@@ -77,10 +76,11 @@ namespace Game.Client
             _container.Register<EventsSystem<TickComponent>>();
             _container.Register<EventsSystem<ControlsMechComponent>>();
             _container.Register<EventsSystem<HpComponent>>();
-            _container.Register<EventsSystem<DestroyedEntityComponent>>();
+            _container.Register<EventsSystem<DeletedEntityComponent>>();
             
             _container.Register<BulletDestroyFxSystem>();
             
+            _container.Register<Box2DDebugViewSystem>();
             
             _container.Register<DestroyViewSystem>();
         }

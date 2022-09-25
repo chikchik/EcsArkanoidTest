@@ -51,7 +51,7 @@ namespace Game.Ecs.ClientServer.Systems
                     botEntity.EntityAdd<FireComponent>(world) = new FireComponent
                     {
                         size = 1,
-                        endTime = world.GetTime() + 10,
+                        endTime = world.GetTime() + 4,
                         destroyEntity = false
                     };
                 }

@@ -29,7 +29,6 @@ namespace Game.Ecs.Client.Systems
             var filter = world
                 .Filter<FootprintComponent>()
                 .Exc<TransformComponent>()
-                .Exc<DestroyComponent>()
                 .End();
             var poolFootprint = world.GetPool<FootprintComponent>();
 
@@ -39,6 +38,7 @@ namespace Game.Ecs.Client.Systems
                 CreateView(world, entity, footprintComponent);
             }
 
+            /*
             var destroyEntities = world
                 .Filter<FootprintComponent>()
                 .Inc<TransformComponent>()
@@ -49,7 +49,7 @@ namespace Game.Ecs.Client.Systems
             {
                 var transform = entity.EntityGetRef<TransformComponent>(world).Transform;
                 Object.Destroy(transform.gameObject);
-            }
+            }*/
         }
 
         private void CreateView(EcsWorld world, int entity, FootprintComponent footprintComponent)
