@@ -21,7 +21,7 @@ namespace Game.Ecs.Client.Systems
         public void Init(EcsSystems systems)
         {
             _world = systems.GetWorld();
-            _filter = _world.FilterBase().Inc<DeletedEntityComponent>().Inc<BulletComponent>().Inc<TransformComponent>().End();
+            _filter = _world.FilterMarkedDeleted().Inc<BulletComponent>().Inc<TransformComponent>().End();
             _poolReliable = _world.GetPool<ReliableComponent>();
         }
 

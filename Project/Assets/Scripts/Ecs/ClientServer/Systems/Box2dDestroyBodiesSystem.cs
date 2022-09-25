@@ -16,7 +16,9 @@ namespace Game.Ecs.ClientServer.Systems
         {
             _world = systems.GetWorld();
             _poolBodies = _world.GetPool<Box2DBodyComponent>();
-            _filter = _world.FilterBase().Inc<DeletedEntityComponent>().Inc<Box2DBodyComponent>().End();
+            
+            //_filter = _world.FilterBase().Inc<DeletedEntityComponent>().Inc<Box2DBodyComponent>().End();
+            _filter = _world.FilterMarkedDeleted().Inc<Box2DBodyComponent>().End();
         }
         
         public void Run(EcsSystems systems)

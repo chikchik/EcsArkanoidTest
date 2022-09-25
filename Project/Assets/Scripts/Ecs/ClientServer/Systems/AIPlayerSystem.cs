@@ -6,25 +6,33 @@ using Random = System.Random;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-    public class AIPlayerSystem : IEcsRunSystem
+    public class AIPlayerSystem : IEcsInitSystem, IEcsRunSystem
     {
         private readonly Random _random;
+        
+        private EcsFilter _filter;
+        private EcsWorld _world;
+        private EcsPool<TargetPositionComponent> _poolTargetPosition;
 
         public AIPlayerSystem()
         {
             _random = new Random(2);
         }
-
-        public void Run(EcsSystems systems)
+        
+        public void Init(EcsSystems systems)
         {
-            var world = systems.GetWorld();
-            var filter = world
+            _world = systems.GetWorld();
+            
+            _filter = _world
                 .Filter<AIPlayerComponent>()
                 .Exc<TargetPositionComponent>()
                 .End();
-            var poolTargetPosition = world.GetPool<TargetPositionComponent>();
+            _poolTargetPosition = _world.GetPool<TargetPositionComponent>();
+        }
 
-            foreach (var entity in filter)
+        public void Run(EcsSystems systems)
+        {
+            foreach (var entity in _filter)
             {
                 var position = new Vector3
                 {
@@ -33,7 +41,7 @@ namespace Game.Ecs.ClientServer.Systems
                     z = GetRandom(-2f, 18f)
                 };
 
-                ref var targetPositionComponent = ref poolTargetPosition.Add(entity);
+                ref var targetPositionComponent = ref _poolTargetPosition.Add(entity);
                 targetPositionComponent.Value = position;
             }
         }

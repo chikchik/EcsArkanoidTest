@@ -2,6 +2,7 @@
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Modules.Tick.Other;
+using XFlow.Utils;
 #if CLIENT
 #endif
 
@@ -21,7 +22,7 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 if (poolDestroyAt.Get(entity).Time > tm)
                     continue;
-                world.Log($"time is out bullet {entity}");                             
+                world.Log($"time is out bullet {entity.e2name(world)}");                             
                 world.MarkEntityAsDeleted(entity);
             }
         }
