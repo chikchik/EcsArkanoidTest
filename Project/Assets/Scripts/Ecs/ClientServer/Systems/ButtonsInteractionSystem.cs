@@ -51,7 +51,7 @@ namespace Game.Ecs.ClientServer.Systems
                     if (poolPressed.Has(buttonEntity))
                         poolStateChanged.Del(buttonEntity);
                     else
-                        poolStateChanged.Add(buttonEntity);
+                        poolStateChanged.GetOrCreateRef(buttonEntity);
                     
                     poolPressed.GetOrCreateRef(buttonEntity);
                 }
@@ -60,7 +60,7 @@ namespace Game.Ecs.ClientServer.Systems
                     if (!poolPressed.Has(buttonEntity))
                         poolStateChanged.Del(buttonEntity);
                     else
-                        poolStateChanged.Add(buttonEntity);
+                        poolStateChanged.GetOrCreateRef(buttonEntity);
                     
                     poolPressed.Del(buttonEntity);
                 }

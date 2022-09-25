@@ -61,7 +61,7 @@ namespace Game.UI
         {
             HpView view;
             
-            Debug.Log($"update view {data.Value}");
+            //Debug.Log($"update view {data.Value}");
             
             if (_poolView.TryGet(entity, out HpViewComponent viewComponent))
             {
@@ -69,7 +69,7 @@ namespace Game.UI
             }
             else
             {
-                Debug.Log($"create view {data.Value}");
+                //Debug.Log($"create view {data.Value}");
                 view = GameObject.Instantiate(_hpViewPrefab, _canvas.transform);
                 _poolView.Add(entity).View = view;
             }
@@ -90,7 +90,7 @@ namespace Game.UI
         {
             if (!pool.TryGet(entity, out HpViewComponent viewComponent))
                 return;
-            Debug.Log("Destroy Hp View");
+            //Debug.Log("Destroy Hp View");
             var view = viewComponent.View;
             view.transform.DOScaleY(0, 0.3f).OnComplete(() =>
             {
