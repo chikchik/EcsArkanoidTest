@@ -2,13 +2,14 @@ using Game.Ecs.ClientServer.Components;
 
 using UnityEngine;
 using XFlow.EcsLite;
+using XFlow.Modules.Tick.Other;
 using Random = System.Random;
 
 namespace Game.Ecs.ClientServer.Systems
 {
     public class AIPlayerSystem : IEcsInitSystem, IEcsRunSystem
     {
-        private readonly Random _random;
+        private Random _random;
         
         private EcsFilter _filter;
         private EcsWorld _world;
@@ -32,13 +33,15 @@ namespace Game.Ecs.ClientServer.Systems
 
         public void Run(EcsSystems systems)
         {
+            _random = new Random(_world.GetTick());
+            
             foreach (var entity in _filter)
             {
                 var position = new Vector3
                 {
-                    x = GetRandom(-4.25f, 6.5f),
+                    x = GetRandom(-10, 4.5f),
                     y = 0,
-                    z = GetRandom(-2f, 18f)
+                    z = GetRandom(5, 22f)
                 };
 
                 ref var targetPositionComponent = ref _poolTargetPosition.Add(entity);

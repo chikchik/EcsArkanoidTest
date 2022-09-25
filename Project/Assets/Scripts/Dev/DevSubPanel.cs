@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Utils;
+using Unity.Plastic.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -92,9 +93,17 @@ namespace Game.Dev
             btn.Button.onClick.AddListener(() =>
             {
                 UnityEngine.Debug.Log("clicked dev button " + name);
-                if (closePanel)
-                    close();
-                handler(btn);
+                try
+                {
+                    handler(btn);
+                    if (closePanel)
+                        close();
+                }
+                catch (Exception e)
+                {
+                    btn.setColor(Color.red);
+                }
+                
             });
 
             return btn;

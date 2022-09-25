@@ -4,13 +4,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using XFlow.Net.Client;
 using XFlow.Utils;
+using Zenject;
 
 namespace Game
 {
     public class DevPanel
     {
-        public DevPanel(DevPanelController dev, GameSettings settings)
+        private bool simLags;
+        public DevPanel(DevPanelController dev, GameSettings settings, DiContainer container)
         {
             var root = dev.root;
             root.init();
@@ -18,6 +21,22 @@ namespace Game
             root.button("lunar console", () =>
             {
                 LunarConsolePlugin.LunarConsole.Show();    
+            });
+
+            root.toggleBool("pause network", () =>
+            {
+                return simLags;
+            }, b =>
+            {
+                var netClient = container.Resolve<NetClient>();
+                netClient.SimulateLags(b);
+                simLags = b;
+            });
+            
+            root.button("net client delay", () =>
+            {
+                var netClient = container.Resolve<NetClient>();
+                
             });
         
             root.subButton("connect to room", (sub) =>

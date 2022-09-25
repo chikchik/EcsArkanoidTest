@@ -39,7 +39,7 @@ namespace Game.Ecs.ClientServer.Systems
         {
             var filter = world
                 .Filter<TargetPositionComponent>()
-                .Inc<PositionComponent>()
+                .Inc<PositionComponent>().Inc<Box2DRigidbodyComponent>()
                 .End();
 
             var deltaTime = world.GetDeltaSeconds();

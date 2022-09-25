@@ -93,7 +93,8 @@ namespace Game.ClientServer
             _container.RegisterServer<JoinPlayerSystem>();
            
            
-            _container.RegisterServer<AIPlayerSystem>();
+            //_container.RegisterServer<AIPlayerSystem>();
+            _container.Register<AIPlayerSystem>();
 
             _container.Register<MoveToTargetPositionSystem>();
             _container.Register<MoveSystem>();

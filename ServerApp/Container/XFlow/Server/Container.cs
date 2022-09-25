@@ -492,7 +492,8 @@ namespace XFlow.Server
                 var component = _components.GetComponent(type);                
 
                 if (component.GetComponentType() == typeof(PingComponent))//ping
-                {                    
+                {
+                    client.LastPingTick = inputTime;
                     client.Delay = delay;
                 }
                 else
@@ -566,6 +567,11 @@ namespace XFlow.Server
                 {
                     _mainWorld.DelEntity(entity);
                 }
+            }
+
+            if (_mainWorld.GetTick() % 50 == 0)
+            {
+                Debug.Log($"tick {_mainWorld.GetTick()}");
             }
         }
 
