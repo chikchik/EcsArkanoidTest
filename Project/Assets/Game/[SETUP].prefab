@@ -1825,7 +1825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 418edcff6ff32674a957080cdb9e61d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MultiPlayer: 1
+  MultiPlayer: 0
   OverrideDefaultServerRoom: 0
   OverrideRoom: 5000
   UdpHosts:
@@ -3018,7 +3018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5eb4f109325749c68c8da56f835ac370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CharacterPrefab: {fileID: 2333436472338061716, guid: 80777c791d67b1a4ba63379591253e96,
+  CharacterPrefab: {fileID: 5943338729497338393, guid: edeb4c33494dbb1419c9964591df6919,
     type: 3}
   BulletPrefab: {fileID: 5730769562240561534, guid: 5924f3e6b0e8fd644bc48dce858d36ae,
     type: 3}
@@ -3270,7 +3270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3448083650884359269}
   - component: {fileID: 3448083650884359268}
-  - component: {fileID: 3448083650884359271}
+  - component: {fileID: 2046818692}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -3307,7 +3307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 3448083650884359271}
+  - {fileID: 2046818692}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -3325,7 +3325,7 @@ MonoBehaviour:
   _parentNewObjectsUnderSceneContext: 0
   _contractNames: []
   _parentContractNames: []
---- !u!114 &3448083650884359271
+--- !u!114 &2046818692
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3334,7 +3334,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3448083650884359270}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172cbfa03ba18c6488398ceb0ea0e228, type: 3}
+  m_Script: {fileID: 11500000, guid: bf22ebc1952e642e19fd7c5deca52efd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 3448083649790090375}
