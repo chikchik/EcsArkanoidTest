@@ -28,9 +28,9 @@ namespace Game
                 return simLags;
             }, b =>
             {
-                var netClient = container.Resolve<NetClient>();
-                netClient.SimulateLags(b);
-                simLags = b;
+                //var netClient = container.Resolve<NetClient>();
+                //netClient.SimulateLags(b);
+                //simLags = b;
             });
             
             root.button("net client delay", () =>
