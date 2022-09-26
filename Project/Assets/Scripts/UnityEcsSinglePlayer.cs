@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer.Components;
+using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
@@ -17,14 +18,6 @@ using Zenject;
 
 namespace Game
 {
-    public class UserInputUpdate
-    {
-        public void Update()
-        {
-            
-        }
-    }
-    
     public class UnityEcsSinglePlayer: MonoBehaviour
     {
         [Inject] private EcsWorld _mainWorld;
