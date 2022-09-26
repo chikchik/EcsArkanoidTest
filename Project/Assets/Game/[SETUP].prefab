@@ -3018,7 +3018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5eb4f109325749c68c8da56f835ac370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CharacterPrefab: {fileID: 5943338729497338393, guid: edeb4c33494dbb1419c9964591df6919,
+  CharacterPrefab: {fileID: 2333436472338061716, guid: 80777c791d67b1a4ba63379591253e96,
     type: 3}
   BulletPrefab: {fileID: 5730769562240561534, guid: 5924f3e6b0e8fd644bc48dce858d36ae,
     type: 3}
