@@ -14,14 +14,14 @@ public class SocketImpl : ISocket
 
     private readonly List<ISocket.SubscribeDelegate> _subscribers = new List<ISocket.SubscribeDelegate>();
 
-    public SocketImpl()
+    public SocketImpl(SocketType type, ProtocolType protocolType)
     {
-        _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        _socket = new Socket(AddressFamily.InterNetwork, type, protocolType);
     }
 
-    public void Connect()
+    public void Connect(IPAddress address, int port)
     {
-        _socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 12121));
+        _socket.Connect(new IPEndPoint(address, port));
         Debug.Log($"Connected = {_socket.Connected}");
     }
 
@@ -29,7 +29,7 @@ public class SocketImpl : ISocket
     {
         try
         {
-            var rcvBytes = new byte[64000];
+            var rcvBytes = new byte[1024 * 32];
             var rcvBuffer = new ArraySegment<byte>(rcvBytes);
 
             while (true)
@@ -55,7 +55,10 @@ public class SocketImpl : ISocket
         {
             var data = Encoding.Unicode.GetBytes("123123");
             Debug.Log($"Send = {data.Length}");
-            var res = await _socket.SendAsync(message, SocketFlags.None);
+            if (_socket.ProtocolType == ProtocolType.Udp)
+                await _socket.SendToAsync(message, SocketFlags.None, _socket.RemoteEndPoint);
+            else
+                await _socket.SendAsync(message, SocketFlags.None);
 
             return new SocketSendResult();
         }

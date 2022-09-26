@@ -13,6 +13,9 @@ namespace XFlow.Server
         private IReliableChannel _reliableChannel;
         private IAsyncDisposable _reliableChannelSubs;
 
+        private IUnreliableChannel _unreliableChannel;
+        private IAsyncDisposable _unreliableChannelSubs;
+
         private int _messagesReceived = 0;
 
         public SimpleContainer(ContainerStartingContext context)
@@ -24,6 +27,9 @@ namespace XFlow.Server
         {
             _reliableChannel = await _context.Host.ChannelProvider.GetReliableChannelAsync();
             _reliableChannelSubs = await _reliableChannel.SubscribeAsync(OnReliableMessageReceived);
+
+            _unreliableChannel = await _context.Host.ChannelProvider.GetUnreliableChannelAsync();
+            _unreliableChannelSubs = await _unreliableChannel.SubscribeAsync(OnUnreliableMessageReceived);
         }
 
         public async ValueTask<ContainerState> GetStateAsync()
@@ -40,6 +46,31 @@ namespace XFlow.Server
         {
             await _reliableChannel.DisposeAsync();
             await _reliableChannelSubs.DisposeAsync();
+            await _unreliableChannel.DisposeAsync();
+            await _unreliableChannelSubs.DisposeAsync();
+        }
+
+        private async ValueTask OnUnreliableMessageReceived(UnreliableChannelMessage message)
+        {
+            switch (message.Type)
+            {
+                case UnreliableChannelMessageType.MessageReceived:
+                    _messagesReceived++;
+                    var messageArgs = message.GetMessageReceivedArguments();
+                    _context.Host.LoggerFactory.System.Log(LogLevel.Information,
+                        $"OnUnreliableMessageReceived.MessageReceived mesCount={_messagesReceived} mes={messageArgs.Value.Message}");
+                    await _unreliableChannel.SendAsync(messageArgs.Value.UserAddress, messageArgs.Value.Message);
+                    break;
+
+                case UnreliableChannelMessageType.ChannelClosed:
+                    var closedArgs = message.GetChannelClosedArguments();
+                    _context.Host.LoggerFactory.System.Log(LogLevel.Information,
+                        $"OnUnreliableMessageReceived.ChannelClosed {closedArgs}");
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private async ValueTask OnReliableMessageReceived(ReliableChannelMessage message)
@@ -49,13 +80,13 @@ namespace XFlow.Server
                 case ReliableChannelMessageType.UserConnected:
                     var connectedArgs = message.GetUserConnectedArguments().Value;
                     _context.Host.LoggerFactory.System.Log(LogLevel.Information,
-                        $"user connected {connectedArgs.UserAddress}");
+                        $"OnReliableMessageReceived.UserConnected {connectedArgs.UserAddress}");
                     break;
 
                 case ReliableChannelMessageType.UserDisconnected:
                     var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
                     _context.Host.LoggerFactory.System.Log(LogLevel.Information,
-                        $"user disconnected {disconnectedArgs.UserAddress}");
+                        $"OnReliableMessageReceived.UserDisconnected {disconnectedArgs.UserAddress}");
                     break;
 
                 case ReliableChannelMessageType.MessageReceived:
@@ -63,13 +94,13 @@ namespace XFlow.Server
                     var messageArgs = message.GetMessageReceivedArguments().Value;
                     await _reliableChannel.SendAsync(messageArgs.UserAddress, messageArgs.Message);
                     _context.Host.LoggerFactory.System.Log(LogLevel.Information,
-                        $"MessageReceived recCount={_messagesReceived} mes={messageArgs.Message}");
+                        $"OnReliableMessageReceived.MessageReceived mesCount={_messagesReceived} mes={messageArgs.Message}");
                     break;
 
                 case ReliableChannelMessageType.ChannelClosed:
                     var closedArgs = message.GetChannelClosedArguments().Value;
                     _context.Host.LoggerFactory.System.Log(LogLevel.Information,
-                        $"ChannelClosed {closedArgs}");
+                        $"OnReliableMessageReceived.ChannelClosed {closedArgs}");
                     break;
 
                 default:

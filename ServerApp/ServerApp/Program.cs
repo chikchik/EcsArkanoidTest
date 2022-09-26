@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,22 +11,26 @@ namespace ServerApp2
 {
     internal class Program
     {
-        static async Task Main(string[] args_)
+        static async Task Main(string[] _)
         {
-            var serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            serverSocket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 12121));
-            serverSocket.Listen(10);
+            var tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            tcpSocket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 12121));
+            tcpSocket.Listen(10);
+
+            var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            udpSocket.Bind(new IPEndPoint(IPAddress.Any, 12345));
 
             var provider = new ChannelProvider();
-            provider.SetReliableSocket(serverSocket.Accept());
+            provider.SetReliableSocket(tcpSocket.Accept());
+            provider.SetUnreliableSocket(udpSocket);
 
             var containerId = ContainerId.Parse("06f988be-52d8-461d-8283-03d280e2b1a5");
-            Console.WriteLine($"Container id = {containerId.Value.ToString()}");
             var context = new ContainerStartingContext(
                 containerId,
                 new SimpleHost(new LoggerFactory(), provider),
                 ContainerState.Empty
             );
+            
             var container = await new ContainerFactory().StartContainerAsync(context);
             while (true)
             {
