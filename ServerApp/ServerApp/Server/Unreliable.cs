@@ -30,10 +30,15 @@ namespace ServerApp.Server
             {
                 while (true)
                 {
-                    var rcvResult = await _socket.ReceiveAsync(rcvBuffer, SocketFlags.None);
+                    var res = await _socket.ReceiveMessageFromAsync(rcvBuffer, SocketFlags.None,
+                        new IPEndPoint(IPAddress.Any, 0));
 
-                    byte[] msgBytes = rcvBuffer.Skip(rcvBuffer.Offset).Take(rcvResult).ToArray();
-                    var arguments = new MessageReceivedArguments(null, msgBytes);
+                    var address = new UserAddress
+                    {
+                        ConnectionId = res.RemoteEndPoint.ToString()
+                    };
+                    byte[] msgBytes = rcvBuffer.Skip(rcvBuffer.Offset).Take(res.ReceivedBytes).ToArray();
+                    var arguments = new MessageReceivedArguments(address, msgBytes);
                     var message = UnreliableChannelMessage.MessageReceived(arguments);
 
                     foreach (var subscriber in _subscribers)
@@ -55,8 +60,7 @@ namespace ServerApp.Server
         public async ValueTask<UnreliableChannelSendResult> SendAsync(IUserAddress userAddress,
             ReadOnlyMemory<byte> message)
         {
-            // todo fix address
-            await _socket.SendToAsync(message.ToArray(), SocketFlags.None, new IPEndPoint(IPAddress.Any, 0));
+            await _socket.SendToAsync(message.ToArray(), SocketFlags.None, IPEndPoint.Parse(userAddress.ConnectionId));
 
             return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Ok, null);
         }
@@ -66,6 +70,17 @@ namespace ServerApp.Server
             _subscribers.Add(subscriber);
 
             return new AnonymousDisposable(async () => _subscribers.Remove(subscriber));
+        }
+        
+        private class UserAddress : IUserAddress
+        {
+            public bool Equals(IUserAddress other)
+            {
+                return other.ConnectionId == ConnectionId;
+            }
+
+            public string UserId { get; }
+            public string ConnectionId { get; set; }
         }
     }
 }
