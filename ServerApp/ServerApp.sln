@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleContainerServer", "..
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "..\Submodules\module-ecs-container\Contracts\Contracts.csproj", "{684D6D15-7A76-463F-AE31-0130170A6AAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectBuilder", "tools\ProjectBuilder\ProjectBuilder.csproj", "{8FB66350-0F5A-4E8A-B3EF-86C172B76B46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{684D6D15-7A76-463F-AE31-0130170A6AAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{684D6D15-7A76-463F-AE31-0130170A6AAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{684D6D15-7A76-463F-AE31-0130170A6AAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FB66350-0F5A-4E8A-B3EF-86C172B76B46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FB66350-0F5A-4E8A-B3EF-86C172B76B46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FB66350-0F5A-4E8A-B3EF-86C172B76B46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FB66350-0F5A-4E8A-B3EF-86C172B76B46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
