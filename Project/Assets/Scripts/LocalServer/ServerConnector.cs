@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using Gaming.ContainerManager.Models.V1;
 using Gaming.Facade;
 using Gaming.Facade.Configuration;
 using Gaming.Facade.Sockets;
@@ -16,6 +15,8 @@ public class ServerConnector : MonoBehaviour
 
     private ISocket _containerTCPSocket;
     private ISocket _containerUDPSocket;
+
+    private const string ContainerId = "7bc2e57b-6721-49d1-9ac2-08854338a9c8";
 
     public async void Start()
     {
@@ -51,13 +52,14 @@ public class ServerConnector : MonoBehaviour
 
     public async void ConnectToContainer()
     {
-        var containerId = ContainerId.Parse("06f988be-52d8-461d-8283-03d280e2b1a5");
+        var containerId = Gaming.ContainerManager.Models.V1.ContainerId.Parse(ContainerId);
         await GamingServices.V1
             .ReliableConnectToContainer(containerId)
             .HandleResultAsync(
                 async socket =>
                 {
                     _containerTCPSocket = socket;
+                    Debug.Log($"Connected to container tcp");
                     await _containerTCPSocket.SubscribeAsync(OnMessageReceive);
                 },
                 async () => Debug.Log("container not found"),
@@ -68,9 +70,10 @@ public class ServerConnector : MonoBehaviour
             .UnreliableConnectToContainer(containerId)
             .HandleResultAsync(
                 async socket =>
-                {
+                {                
+                    Debug.Log($"Connected to container udp");
                     _containerUDPSocket = socket;
-                    await _containerTCPSocket.SubscribeAsync(OnMessageReceive);
+                    await _containerUDPSocket.SubscribeAsync(OnMessageReceive);
                 },
                 async () => Debug.Log("container not found"),
                 async status => Debug.LogError($"invalid container status = {status.Type}"),
@@ -95,4 +98,5 @@ public class ServerConnector : MonoBehaviour
         else
             Debug.Log($"No data received");
     }
+
 }

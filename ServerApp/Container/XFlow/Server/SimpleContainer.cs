@@ -80,13 +80,13 @@ namespace XFlow.Server
                 case ReliableChannelMessageType.UserConnected:
                     var connectedArgs = message.GetUserConnectedArguments().Value;
                     _context.Host.LoggerFactory.System.Log(LogLevel.Information,
-                        $"OnReliableMessageReceived.UserConnected {connectedArgs.UserAddress}");
+                        $"OnReliableMessageReceived.UserConnected {connectedArgs.UserAddress.ConnectionId}");
                     break;
 
                 case ReliableChannelMessageType.UserDisconnected:
                     var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
                     _context.Host.LoggerFactory.System.Log(LogLevel.Information,
-                        $"OnReliableMessageReceived.UserDisconnected {disconnectedArgs.UserAddress}");
+                        $"OnReliableMessageReceived.UserDisconnected {disconnectedArgs.UserAddress.ConnectionId}");
                     break;
 
                 case ReliableChannelMessageType.MessageReceived:
