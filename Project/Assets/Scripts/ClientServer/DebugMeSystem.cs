@@ -39,9 +39,9 @@ namespace Game.ClientServer
 
                 if (entity.EntityHas<PositionComponent>(_world))
                     str += entity.EntityGet<PositionComponent>(_world).value;
-                if (entity.EntityHas<Box2DRigidbodyComponent>(_world))
-                    str += entity.EntityGet<Box2DRigidbodyComponent>(_world).LinearVelocity;
-                    
+                if (entity.EntityHas<Box2DLinearVelocityComponent>(_world))
+                    str += entity.EntityGet<Box2DLinearVelocityComponent>(_world).Value;
+
                 _world.LogVerbose(str);
             }
         }

@@ -597,9 +597,9 @@ namespace XFlow.Server
             return compressed;
         }
 
-        async void SimRandomSend(byte[] compressed, ClientComponent client)
+        async void SimRandomSend(byte[] compressed, ClientComponent client, int delayMin, int delayMax)
         {
-            await Task.Delay(Random.Range(0, 1000));
+            await Task.Delay(Random.Range(delayMin, delayMax));
             int r = _udpServer.Socket.SendTo(compressed, client.EndPoint);
             if (r <= 0)
             {

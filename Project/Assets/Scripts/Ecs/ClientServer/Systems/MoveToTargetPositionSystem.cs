@@ -18,7 +18,7 @@ namespace Game.Ecs.ClientServer.Systems
         private EcsPool<CantMoveComponent> poolCantMove;
         private EcsPool<LookDirectionComponent> poolLookDirection;
         private EcsPool<AverageSpeedComponent> poolAverageSpeed;
-        private EcsPool<Box2DRigidbodyComponent> poolRigidBody;
+        private EcsPool<Box2DLinearVelocityComponent> poolLinearVelocity;
         private EcsWorld world;
 
         private const float _distanceTolerance = 0.1f;
@@ -32,14 +32,14 @@ namespace Game.Ecs.ClientServer.Systems
             poolMoving = world.GetPool<MovingComponent>();
             poolCantMove = world.GetPool<CantMoveComponent>();
             poolAverageSpeed = world.GetPool<AverageSpeedComponent>();
-            poolRigidBody = world.GetPool<Box2DRigidbodyComponent>();
+            poolLinearVelocity = world.GetPool<Box2DLinearVelocityComponent>();
         }
 
         public void Run(EcsSystems systems)
         {
             var filter = world
                 .Filter<TargetPositionComponent>()
-                .Inc<PositionComponent>().Inc<Box2DRigidbodyComponent>()
+                .Inc<PositionComponent>().Inc<Box2DBodyComponent>()
                 .End();
 
             var deltaTime = world.GetDeltaSeconds();
@@ -48,7 +48,7 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 if (poolCantMove.Has(entity))
                 {
-                    poolRigidBody.GetRef(entity).LinearVelocity = Vector2.zero;
+                    poolLinearVelocity.GetRef(entity).Value = Vector2.zero;
                     continue;
                 }
 
@@ -61,14 +61,14 @@ namespace Game.Ecs.ClientServer.Systems
                 //too close to target
                 if (direction2D.magnitude < _distanceTolerance)
                 {
-                    poolRigidBody.GetRef(entity).LinearVelocity = Vector2.zero;
+                    poolLinearVelocity.GetRef(entity).Value = Vector2.zero;
                     poolTargetPosition.Del(entity);
                     poolMoving.Del(entity);
                     continue;
                 }
 
                 var speed = poolAverageSpeed.GetNullable(entity)?.Value ?? 1.0f;
-                poolRigidBody.GetRef(entity).LinearVelocity = direction2D.normalized * speed;
+                poolLinearVelocity.GetRef(entity).Value = direction2D.normalized * speed;
                 poolLookDirection.GetOrCreateRef(entity).value = directionToTarget.normalized;
                 poolMoving.Replace(entity, new MovingComponent());
             }

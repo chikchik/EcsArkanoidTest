@@ -43,7 +43,8 @@ namespace Game.Ecs.Client.Systems
                 var go = GameObject.Find(name);
                 if (go == null)
                 {
-                    Debug.LogError($"not found gameobject {name}");
+                    Debug.LogError($"not found gameobject {name} for entity {entity.e2name(world)}");
+                    continue;
                 }
                 go.SetActive(true);
 
