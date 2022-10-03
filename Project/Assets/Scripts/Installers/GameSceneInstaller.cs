@@ -23,9 +23,7 @@ using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
-using XFlow.P2P;
 using Zenject;
-using ServerConnector = XFlow.Net.Client.ServerConnector;
 
 namespace Game.Installers
 {
