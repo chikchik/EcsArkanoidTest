@@ -71,7 +71,7 @@ namespace Game.Installers
             Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
 
-            Container.Bind<IServerConnector>().FromInstance(new Game.ServerConnector()).AsSingle();
+            Container.Bind<IServerConnector>().FromInstance(new Game.ServerConnector(12121,12345)).AsSingle();
 
             // _cancellationTokenSource = new CancellationTokenSource();
             // Container.Bind<CancellationToken>().FromInstance(_cancellationTokenSource.Token).AsCached();
