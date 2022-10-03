@@ -11,6 +11,7 @@ using Game.UI;
 using Game.UI.Mono;
 using Game.UIView;
 using Game.View;
+using Gaming.ContainerManager.Client.SocketContracts.V1;
 using UnityEngine;
 using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.WorldDiff;
@@ -24,6 +25,7 @@ using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
 using XFlow.P2P;
 using Zenject;
+using ServerConnector = XFlow.Net.Client.ServerConnector;
 
 namespace Game.Installers
 {
@@ -75,22 +77,24 @@ namespace Game.Installers
             Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
 
-            _cancellationTokenSource = new CancellationTokenSource();
-            Container.Bind<CancellationToken>().FromInstance(_cancellationTokenSource.Token).AsCached();
+            Container.Bind<IServerConnector>().FromInstance(new Game.ServerConnector()).AsSingle();
 
-            var udpHost = settings.UdpHosts[settings.SelectedUdpHostIndex];
-            var ipEndPoint = new IPEndPoint(IPAddress.Parse(udpHost.Address), udpHost.Port);
-            Container.Bind<IPEndPoint>().WithId("udp").FromInstance(ipEndPoint).AsCached();
+            // _cancellationTokenSource = new CancellationTokenSource();
+            // Container.Bind<CancellationToken>().FromInstance(_cancellationTokenSource.Token).AsCached();
 
-            if (settings.OverrideDefaultServerRoom)
-            {
-                var url = $"{P2P.DEV_SERVER_WS}/{settings.OverrideRoom}";
-                Container.Bind<string>().WithId("serverUrl").FromInstance(url).AsCached();
-            }
-            else
-            {
-                Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();    
-            }
+            // var udpHost = settings.UdpHosts[settings.SelectedUdpHostIndex];
+            // var ipEndPoint = new IPEndPoint(IPAddress.Parse(udpHost.Address), udpHost.Port);
+            // Container.Bind<IPEndPoint>().WithId("udp").FromInstance(ipEndPoint).AsCached();
+            //
+            // if (settings.OverrideDefaultServerRoom)
+            // {
+            //     var url = $"{P2P.DEV_SERVER_WS}/{settings.OverrideRoom}";
+            //     Container.Bind<string>().WithId("serverUrl").FromInstance(url).AsCached();
+            // }
+            // else
+            // {
+            //     Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();    
+            // }
             
             Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
             

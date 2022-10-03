@@ -28,6 +28,7 @@ namespace ServerApp2
             var context = new ContainerStartingContext(
                 containerId,
                 new SimpleHost(new LoggerFactory(), provider),
+                null,
                 ContainerState.Empty
             );
             

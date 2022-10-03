@@ -9,6 +9,8 @@ namespace ServerApp.Server
     {
         public ILoggerFactory LoggerFactory { get; }
         public IChannelProvider ChannelProvider { get; }
+        
+        public IFileSystem FileSystem { get; }
 
         public SimpleHost(ILoggerFactory loggerFactory, IChannelProvider channelProvider)
         {
