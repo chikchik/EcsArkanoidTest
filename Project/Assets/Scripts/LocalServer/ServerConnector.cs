@@ -3,9 +3,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Gaming.ContainerManager.Client.SocketContracts.V1;
 using Gaming.Facade;
 using Gaming.Facade.Configuration;
-using Gaming.Facade.Sockets;
 using UnityEngine;
 
 public class ServerConnector : MonoBehaviour
@@ -94,7 +94,7 @@ public class ServerConnector : MonoBehaviour
     {
         var data = message.GetMessage();
         if (data.HasValue)
-            Debug.Log($"receive {Encoding.Unicode.GetString(data.Value.Array)}");
+            Debug.Log($"receive {Encoding.Unicode.GetString(data.Value.ToArray())}");
         else
             Debug.Log($"No data received");
     }

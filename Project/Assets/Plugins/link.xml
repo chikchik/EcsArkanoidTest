@@ -9,6 +9,7 @@
     </assembly>
     <assembly fullname="Gaming.ClientUtilities" />
     <assembly fullname="Gaming.Collections" />
+    <assembly fullname="Gaming.ContainerManager.Client.SocketContracts" />
     <assembly fullname="Gaming.ContainerManager.Client" />
     <assembly fullname="Gaming.ContainerManager.Contracts" />
     <assembly fullname="Gaming.ContainerManager.ImageContracts" />

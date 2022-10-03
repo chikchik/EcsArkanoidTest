@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using Gaming.Facade.Sockets;
+using Gaming.ContainerManager.Client.SocketContracts.V1;
 using UnityEngine;
 
 public class SocketImpl : ISocket
@@ -49,14 +49,14 @@ public class SocketImpl : ISocket
         }
     }
 
-    public async Task<SocketSendResult> SendAsync(ArraySegment<byte> message)
+    public async ValueTask<SocketSendResult> SendAsync(ReadOnlyMemory<byte> message)
     {
         try
         {
             var data = Encoding.Unicode.GetBytes("123123");
             Debug.Log($"Send = {data.Length}");
             if (_socket.ProtocolType == ProtocolType.Udp)
-                await _socket.SendToAsync(message, SocketFlags.None, _socket.RemoteEndPoint);
+                await _socket.SendToAsync(message.ToArray(), SocketFlags.None, _socket.RemoteEndPoint);
             else
                 await _socket.SendAsync(message, SocketFlags.None);
 
@@ -70,14 +70,14 @@ public class SocketImpl : ISocket
         return new SocketSendResult();
     }
 
-    public async Task<IAsyncDisposable> SubscribeAsync(ISocket.SubscribeDelegate subscriber)
+    public async ValueTask<IAsyncDisposable> SubscribeAsync(ISocket.SubscribeDelegate subscriber)
     {
         _subscribers.Add(subscriber);
 
         return new AnonymousDisposable(async () => _subscribers.Remove(subscriber));
     }
 
-    public async Task CloseAsync()
+    public async ValueTask CloseAsync()
     {
         _socket.Disconnect(false);
         _socket.Dispose();
