@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Threading;
 using Fabros.EcsModules.Mech.ClientServer;
+using Game.Client;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Dev;
@@ -57,11 +58,6 @@ namespace Game.Installers
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Dead).FromInstance(new EcsWorld(EcsWorlds.Dead)).AsCached();
             
             
-            //Container.Bind
-            Container.Bind<DeadWorldDestroyedListener>().AsSingle();
-            
-            Container.Bind<EntityDestroyedListener>().AsSingle();
-            
             var mainUI = FindObjectOfType<MainUI>();
             Container.Bind<MainUI>().FromInstance(mainUI).AsSingle();
             Container.Bind<Joystick>().FromInstance(mainUI.Joystick).AsSingle();
@@ -107,9 +103,10 @@ namespace Game.Installers
             Container.Bind<InventoryOpenedState>().AsSingle();
             
 
-
-            Container.Bind<NetClient>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EntityDestroyedListener>().AsSingle();
+            
             Container.BindInterfacesAndSelfTo<EcsSystemsFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EcsViewSystemsFactory>().AsSingle();
             
             var collection = new ComponentsCollection();
             ComponentsCollectionUtils.AddComponents(collection);
@@ -129,6 +126,8 @@ namespace Game.Installers
 
             if (settings.MultiPlayer)
             {
+                Container.Bind<NetClient>().AsSingle();
+                
                 Container.Bind<IInputService>().To<ClientInputService>()
                     .AsSingle().WhenInjectedInto<PlayerControlService>();
                 
@@ -137,6 +136,8 @@ namespace Game.Installers
             }
             else
             {
+                Container.Bind<SingleGame>().AsSingle();
+                
                 var comp = settings.gameObject.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);
             }

@@ -4,68 +4,27 @@ using Game.Ecs.View.Systems;
 
 using Game.Utils;
 using UnityEngine;
+using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Net.Client;
+using XFlow.Net.ClientServer;
 using Zenject;
 
 namespace Game
 {
     public class UnityEcsClient : MonoBehaviour
     {
-        [Inject] private Camera _camera;
         [Inject] private UI.UI _ui;
-        [Inject] private Joystick _joystick;
-        [Inject] private NetClient _client;
+        [Inject] private EcsWorld _mainWorld;
         
-        [Inject] private PlayerControlService _controlService;
-        
-        [Inject] private EcsWorld _world;
-        
-        [Inject] 
-        private EntityDestroyedListener _entityDestroyedListener;
-
-        [Inject]
-        private DeadWorldDestroyedListener _deadWorldDestroyedListener;
-
         [Inject] 
         private ComponentsCollection _components;
-
-        private EcsSystems _viewSystems;
+        
+        [Inject] private NetClient _client;
 
         private void Start()
         {
-            UnityEngine.Physics.autoSimulation = false;
-            UnityEngine.Physics2D.simulationMode = SimulationMode2D.Script;
-
-            
-            _viewSystems = new EcsSystems(_world, "viewSystems");
-            _viewSystems.Add(new SyncTransformSystem());
-            _viewSystems.Add(new RotateCharacterSystem());
-
-            _viewSystems.Add(new RotateRigidbodySystem());
-            _viewSystems.Add(new CameraFollowSystem(Camera.main));
-            
-#if UNITY_EDITOR
-            //viewSystems.Add(new XFlow.EcsLite.UnityEditor.EcsWorldDebugSystem(bakeComponentsInName:true));
-#endif
-            
-            
-            _world.EntityDestroyedListeners.Add(_deadWorldDestroyedListener);
-            
-            //глобальный обработчик удаления entity, чтоб никакой GameObject не утек
-            //если случайно удалить entity самостоятельно или преждевременно
-            //на сервере он тоже есть
-            _world.EntityDestroyedListeners.Add(_entityDestroyedListener);
-            
-            
-            _client.ConnectedAction = () =>
-            {
-                _viewSystems.Init();
-            };
-            
-            
-
             string initialWorldJson = null;
             if (true)
             {
@@ -89,11 +48,6 @@ namespace Game
                 return;
 
             _client.Update();
-            
-            UnityEcsSinglePlayer.CheckInput(_camera, _joystick, _controlService);
-            
-            _viewSystems.Run();
-
             _ui.View.DebugText.text = _client.GetDebugString();
         }
 
@@ -108,7 +62,7 @@ namespace Game
         {
             if (!Application.isPlaying)
                 return;
-            EcsWorldDebugDraw.Draw(_world);
+            EcsWorldDebugDraw.Draw(_mainWorld);
         }
     }
 }

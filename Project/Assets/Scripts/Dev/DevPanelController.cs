@@ -55,7 +55,7 @@ namespace Game.Dev
             root.button("Show Log", () =>
             {
                 logPanel.SetActive(true);
-                showButton.gameObject.SetActive(false);
+                //showButton.gameObject.SetActive(false);
 
 
                 //logging = true;
@@ -87,7 +87,7 @@ namespace Game.Dev
         private void show(bool sh)
         {
             root.gameObject.SetActive(sh);
-            showButton.gameObject.SetActive(!sh);
+            //showButton.gameObject.SetActive(!sh);
         }
     
         // Start is called before the first frame update

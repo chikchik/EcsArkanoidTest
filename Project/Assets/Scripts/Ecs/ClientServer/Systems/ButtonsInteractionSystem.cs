@@ -28,7 +28,8 @@ namespace Game.Ecs.ClientServer.Systems
             var poolUnit = world.GetPool<UnitComponent>();
             var poolButton = world.GetPool<ButtonComponent>();
             var poolPressed = world.GetPool<ButtonPressedComponent>();
-            var poolBody = world.GetPool<Box2DRigidbodyComponent>();
+            var poolStateChanged = world.GetPool<ButtonStateChangedComponent>();
+            var poolBody = world.GetPool<Box2DBodyComponent>();
             var poolBullet = world.GetPool<BulletComponent>();
             
             var deltaTime = world.GetDeltaSeconds();
@@ -44,10 +45,25 @@ namespace Game.Ecs.ClientServer.Systems
                 var pressed = _entities.Count > 0;
                 poolButton.ReplaceIfChanged(buttonEntity, new ButtonComponent{isActivated = pressed});
 
+
                 if (pressed)
+                {
+                    if (poolPressed.Has(buttonEntity))
+                        poolStateChanged.Del(buttonEntity);
+                    else
+                        poolStateChanged.GetOrCreateRef(buttonEntity);
+                    
                     poolPressed.GetOrCreateRef(buttonEntity);
+                }
                 else
+                {
+                    if (!poolPressed.Has(buttonEntity))
+                        poolStateChanged.Del(buttonEntity);
+                    else
+                        poolStateChanged.GetOrCreateRef(buttonEntity);
+                    
                     poolPressed.Del(buttonEntity);
+                }
                     
                 var progressComponent = poolProgress.Get(buttonEntity);
                 

@@ -14,7 +14,7 @@ namespace Game.Ecs.View.Systems
         {
             var world = systems.GetWorld();
             var filter = world
-                .Filter<Box2DRigidbodyComponent>()
+                .Filter<Box2DBodyComponent>()
                 .Inc<TransformComponent>()
                 .Inc<Rotation2DComponent>()
                 .Exc<UnitComponent>()

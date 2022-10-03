@@ -10,7 +10,7 @@ namespace Game.Ecs.ClientServer.Systems
 {
     public class UnitMoveSystem : IEcsRunSystem, IEcsInitSystem
     {
-        private EcsPool<Box2DRigidbodyComponent> _rbPool;
+        private EcsPool<Box2DLinearVelocityComponent> _poolLinearVelocity;
         private EcsPool<MovingComponent> _movingPool;
         private EcsPool<MoveDirectionComponent> _moveDirectionPool;
         private EcsPool<AverageSpeedComponent> _speedPool;
@@ -25,36 +25,32 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 if (_cantMovePool.Has(entity))
                 {
-                    _rbPool.GetRef(entity).LinearVelocity = Vector2.zero;
+                    _poolLinearVelocity.GetRef(entity).Value = Vector2.zero;
                     continue;
                 }
 
-                SetLinearVelToBody(entity);
+                var moveDirectionComponent = _moveDirectionPool.Get(entity);
+                var speedComponent = _speedPool.Get(entity);
+                
+                _poolLinearVelocity.GetRef(entity).Value =
+                    new Vector2(moveDirectionComponent.value.x, moveDirectionComponent.value.z).normalized *
+                    speedComponent.Value;
+                
                 _movingPool.Replace(entity, new MovingComponent());
             }
 
             foreach (var entity in _stopFilter)
             {
-                ref var rbComponent = ref _rbPool.GetRef(entity);
-                rbComponent.LinearVelocity = Vector2.zero;
+                ref var rbComponent = ref _poolLinearVelocity.GetRef(entity);
+                rbComponent.Value = Vector2.zero;
             }
         }
 
-        private void SetLinearVelToBody(int entity)
-        {
-            
-            var moveDirectionComponent = _moveDirectionPool.Get(entity);
-            var speedComponent = _speedPool.Get(entity);
-            ref var rbComponent = ref _rbPool.GetRef(entity);
-            rbComponent.LinearVelocity =
-                new Vector2(moveDirectionComponent.value.x, moveDirectionComponent.value.z).normalized *
-                speedComponent.Value;
-        }
 
         public void Init(EcsSystems systems)
         {
             var world = systems.GetWorld();
-            _rbPool = world.GetPool<Box2DRigidbodyComponent>();
+            _poolLinearVelocity = world.GetPool<Box2DLinearVelocityComponent>();
             _movingPool = world.GetPool<MovingComponent>();
             _moveDirectionPool = world.GetPool<MoveDirectionComponent>();
             _speedPool = world.GetPool<AverageSpeedComponent>();
@@ -64,14 +60,14 @@ namespace Game.Ecs.ClientServer.Systems
                 .Filter<MoveDirectionComponent>()
                 .Inc<AverageSpeedComponent>()
                 .Inc<UnitComponent>()
-                .Inc<Box2DRigidbodyComponent>()
+                .Inc<Box2DBodyComponent>()
                 .End();
 
             _stopFilter = world
                 .Filter<UnitComponent>()
                 .Exc<MoveDirectionComponent>()
                 .Exc<TargetPositionComponent>()
-                .Inc<Box2DRigidbodyComponent>()
+                .Inc<Box2DBodyComponent>()
                 .End();
 
         }

@@ -9,17 +9,24 @@ using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-    public class SimpleMoveSystem : IEcsRunSystem
+    public class SimpleMoveSystem : IEcsRunSystem, IEcsInitSystem
     {
-        public void Run(EcsSystems systems)
+        EcsFilter filter;
+        EcsWorld world;
+        
+
+        public void Init(EcsSystems systems)
         {
-            var world = systems.GetWorld();
-            var filter = world
+            world = systems.GetWorld();
+            filter = world
                 .Filter<MoveSimpleDirectionComponent>()
                 .Inc<PositionComponent>()
                 .Inc<TimeComponent>()
                 .End();
-            
+        }
+        
+        public void Run(EcsSystems systems)
+        {
             var deltaTime = world.GetDeltaSeconds();
 
             var b2world = world.GetUnique<Box2DWorldComponent>().WorldReference;
@@ -56,7 +63,7 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     if (entity.EntityHas<DestroyWhenTimeIsOutComponent>(world))
                     {
-                        world.DelEntity(entity);
+                        world.MarkEntityAsDeleted(entity);
                     }
                 }
             }

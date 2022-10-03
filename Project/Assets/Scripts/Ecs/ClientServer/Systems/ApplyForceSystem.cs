@@ -8,42 +8,43 @@ using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-    public class ApplyForceSystem : IEcsRunSystem
+    public class ApplyForceSystem : IEcsRunSystem, IEcsInitSystem
     {
+        private EcsPool<ApplyForceComponent> _poolApplyForce;
+        private EcsFilter _filter;
+        private EcsWorld _world;
+        
+        public void Init(EcsSystems systems)
+        {
+            _world = systems.GetWorld();
+            _poolApplyForce = _world.GetPool<ApplyForceComponent>();
+            _filter = _world.Filter<ApplyForceComponent>().End();
+        }
+        
         public void Run(EcsSystems systems)
         {
-            
-            var world = systems.GetWorld();
-            var worldReference = world.GetUnique<Box2DWorldComponent>().WorldReference;
+            var worldReference = _world.GetUnique<Box2DWorldComponent>().WorldReference;
 
-            var poolApplyForce = world.GetPool<ApplyForceComponent>();
-            
-            var filter = world.Filter<ApplyForceComponent>().End();
-            foreach (var entity in filter)
+
+            foreach (var entity in _filter)
             {
-                var time = poolApplyForce.Get(entity).Time;
-                if (time > world.GetTime())
+                var time = _poolApplyForce.Get(entity).Time;
+                if (time > _world.GetTime())
                     continue;
                 
-                var pos = entity.EntityGet<PositionComponent>(world).value;
-                var dir = poolApplyForce.Get(entity).Direction;// entity.EntityGet<LookDirectionComponent>(world).value;
+                var pos = entity.EntityGet<PositionComponent>(_world).value;
+                var dir = _poolApplyForce.Get(entity).Direction;
                 
                 Box2DApiInternal.RaycastOutputReturnType ret = new Box2DApiInternal.RaycastOutputReturnType();
                 if (Box2DApiInternal.RayCast(worldReference, pos.ToVector2XZ(),
                         dir.ToVector2XZ(), ref ret, 1))
                 {
-                    //Debug.Log("raycast ok");
                     var contactPos = ret.Point;
                     var body = ret.Body;
                     Box2DApiSafe.ApplyForce(body, dir.ToVector2XZ() * 100, contactPos);
-                    if (world.GetDebugName() == "copyServerWorld")
-                    {
-                        int w = 0;
-                    }
-                    //Debug.Log($"Apply Force {world.GetDebugName()} - tick={world.GetUnique<TickComponent>().Value}  at {contactPos} from {pos}");
                 }
                 
-                poolApplyForce.Del(entity);
+                _poolApplyForce.Del(entity);
             }
         }
     }

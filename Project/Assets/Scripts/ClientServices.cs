@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.View;
@@ -173,7 +174,7 @@ namespace Game
             {
                 var entity = GetOrCreateGameEntity(view.gameObject);
                 
-                entity.EntityAdd<HpComponent>(world).Value = 10;
+                entity.EntityAdd<HpComponent>(world).Value = 2;
                 entity.EntityAdd<MaxHpComponent>(world).Value = 10;
             });
 

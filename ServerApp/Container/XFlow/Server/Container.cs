@@ -16,6 +16,7 @@ using Gaming.ContainerManager.ImageContracts.V1;
 using Gaming.ContainerManager.Models.V1;
 using UnityEngine;
 using XFlow.Ecs.ClientServer;
+using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
@@ -24,9 +25,9 @@ using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Systems;
 using XFlow.Modules.Tick.Other;
-using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
+using XFlow.Net.ClientServer.Ecs.Systems;
 using XFlow.Net.ClientServer.Protocol;
 using XFlow.P2P;
 using XFlow.Utils;
@@ -41,6 +42,7 @@ namespace XFlow.Server
         private ClientWebSocket _socket;
 
         private EcsWorld _mainWorld;
+        private EcsWorld _deadWorld;
         private EcsWorld _inputWorld;
         private EcsWorld _eventWorld;
 
@@ -50,6 +52,7 @@ namespace XFlow.Server
         private List<int> _missingClients = new List<int>();
         private ApplyInputWorldService _inputService = new ApplyInputWorldService();
         private EntityDestroyedListener _destroyedListener = new EntityDestroyedListener();
+        private CopyToDeadWorldListener _copyToDeadWorldListener;
 
         private List<byte[]> _receivedMessages = new List<byte[]>();
         private HGlobalWriter _writer = new HGlobalWriter();
@@ -203,6 +206,7 @@ namespace XFlow.Server
 
 
             _mainWorld.EntityDestroyedListeners.Add(_destroyedListener);
+            _mainWorld.EntityDestroyedListeners.Add(_copyToDeadWorldListener);
 
 
             _inputWorld = new EcsWorld(EcsWorlds.Input);
@@ -213,6 +217,7 @@ namespace XFlow.Server
             _mainWorld.AddUnique(new TickDeltaComponent {Value = new TickDelta(_config.Tickrate)});
             _mainWorld.AddUnique<PrimaryWorldComponent>();
 
+            _systems.AddWorld(_deadWorld, EcsWorlds.Dead);
 
             _eventWorld = new EcsWorld(EcsWorlds.Event);
             _systems.AddWorld(_eventWorld, EcsWorlds.Event);
@@ -244,13 +249,19 @@ namespace XFlow.Server
             {
                 CreateSystemsFactory();
 
+                _deadWorld = new EcsWorld(EcsWorlds.Dead);
+                _copyToDeadWorldListener = new CopyToDeadWorldListener(_deadWorld);
+                
+                
                 _mainWorld = new EcsWorld("serv");
+                _mainWorld.SetDefaultGen(InternalConfig.ServerWorldGenMin, InternalConfig.ServerWorldGenMax);
                 _systems = new EcsSystems(_mainWorld);
                 _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
                 _systemsFactory.AddNewSystems(_systems,
-                    new IEcsSystemsFactory.Settings {AddClientSystems = false, AddServerSystems = true});
+                    new IEcsSystemsFactory.Settings { AddServerSystems = true });
                 _systems.Add(new TickSystem());
                 _systems.Add(_systemsFactory.CreateSyncDebugSystem(false));
+                _systems.Add(new DeleteDeadWorldEntitiesSystem());
 
                 _clientsFilter = _mainWorld.Filter<ClientComponent>().End();
                 _poolClients = _mainWorld.GetPool<ClientComponent>();
@@ -491,6 +502,7 @@ namespace XFlow.Server
 
                 if (component.GetComponentType() == typeof(PingComponent)) //ping
                 {
+                    client.LastPingTick = inputTime;
                     client.Delay = delay;
                 }
                 else
@@ -520,9 +532,55 @@ namespace XFlow.Server
             //обновляем мир 1 раз
             SyncServices.Tick(_systems, _inputWorld, _mainWorld);
 
-            foreach (var client in _clientsFilter)
+            //UDP send to clients
+            foreach (var clientEntity in _clientsFilter)
             {
-                SendWorldToClient(ref _poolClients.GetRef(client));
+                ref var client = ref _poolClients.GetRef(clientEntity);
+                if (client.EndPoint != null)
+                {
+                    var compressed = BuildDiffBytes(client, client.SentWorld);
+
+                    //if (Random.Range(0, 1) > 0.8f)//sim lost
+                    //if (false)
+                    {
+                        //SimRandomSend(compressed, client);
+                    
+                        int r = _udpServer.Socket.SendTo(compressed, client.EndPoint);
+                        if (r <= 0)
+                        {
+                            Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
+                        }
+                    }
+
+                    client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
+                    client.Delay = -999;
+                }
+            }
+            
+            
+            //TCP send to clients
+            if ((_mainWorld.GetTick() % 15) == 0)
+            {
+                foreach (var clientEntity in _clientsFilter)
+                {
+                    ref var client = ref _poolClients.GetRef(clientEntity);
+                    
+                    var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
+                    var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
+                    _socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
+                    client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
+                }
+
+                var filter = _mainWorld.Filter<DeletedEntityComponent>(false).End();
+                foreach (var entity in filter)
+                {
+                    _mainWorld.DelEntity(entity);
+                }
+            }
+
+            if (_mainWorld.GetTick() % 50 == 0)
+            {
+                Debug.Log($"tick {_mainWorld.GetTick()}");
             }
         }
 
@@ -548,46 +606,13 @@ namespace XFlow.Server
             return compressed;
         }
 
-        async void SimRandomSend(byte[] compressed, ClientComponent client)
+        async void SimRandomSend(byte[] compressed, ClientComponent client, int delayMin, int delayMax)
         {
-            await Task.Delay(Random.Range(0, 1000));
+            await Task.Delay(Random.Range(delayMin, delayMax));
             int r = _udpServer.Socket.SendTo(compressed, client.EndPoint);
             if (r <= 0)
             {
                 Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
-            }
-        }
-
-        void SendWorldToClient(ref ClientComponent client)
-        {
-            if (client.EndPoint != null)
-            {
-                var compressed = BuildDiffBytes(client, client.SentWorld);
-
-                //if (Random.Range(0, 1) > 0.8f)//sim lost
-                //if (false)
-                {
-                    //SimRandomSend(compressed, client);
-
-                    int r = _udpServer.Socket.SendTo(compressed, client.EndPoint);
-                    if (r <= 0)
-                    {
-                        Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
-                    }
-                }
-
-                client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
-                client.Delay = -999;
-            }
-
-            //send to websocket server
-            //if (false)
-            if ((_mainWorld.GetTick() % 15) == 0)
-            {
-                var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
-                var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
-                _socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
-                client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
             }
         }
 

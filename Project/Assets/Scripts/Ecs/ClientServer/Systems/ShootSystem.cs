@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game.Ecs.ClientServer.Components;
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
@@ -11,18 +12,26 @@ using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Utils;
 using XFlow.Utils;
+using Random = UnityEngine.Random;
 using Utils = XFlow.Net.ClientServer.Utils.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
 {
-    public class ShootSystem : IEcsRunSystem
+    public class ShootSystem : IEcsRunSystem, IEcsInitSystem
     {
+        EcsWorld world;
+        EcsFilter filter;
+        EcsPool<ShootingComponent> poolShooting;
+        
+        public void Init(EcsSystems systems)
+        {
+            world = systems.GetWorld();
+            filter = world.Filter<ShootingComponent>().End();
+            poolShooting = world.GetPool<ShootingComponent>();
+        }
+        
         public void Run(EcsSystems systems)
         {
-            var world = systems.GetWorld();
-            var filter = world.Filter<ShootingComponent>().End();
-            var poolShooting = world.GetPool<ShootingComponent>();
-
             var tm = world.GetTime();
             foreach (var entity in filter)
             {
@@ -35,6 +44,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                     var shoot = entity.EntityGet<ShootingComponent>(world);
 
+
                     var bulletEntity = world.NewEntity();
                     bulletEntity.EntityAdd<BulletComponent>(world).Damage = 1f;
 
@@ -43,8 +53,12 @@ namespace Game.Ecs.ClientServer.Systems
                     var dir = entity.EntityGet<ShootingComponent>(world).Direction;
                     bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
-                    
-                    bulletEntity.EntityAdd<UniqueIdComponent>(world).Value = HashUtils.CustomHash(entity, world.GetTick());
+
+                    bulletEntity.EntityAdd<DebugNameComponent>(world).Name = "Bullet";
+
+                    //var customHash = (uint)Random.Range(1, 1111); // HashUtils.CustomHash(entity, world.GetTick());
+                    var customHash = HashUtils.CustomHash(entity, world.GetTick());
+                    bulletEntity.EntityAdd<UniqueIdComponent>(world).Value = customHash;
                     
                     Box2DServices.AddRigidbodyDefinition(world, bulletEntity).SetBullet(true).SetDensity(20).SetLinearDamping(0);
                     Box2DServices.AddCircleColliderToDefinition(world, bulletEntity, 0.02f, Vector2.zero);
@@ -60,7 +74,10 @@ namespace Game.Ecs.ClientServer.Systems
                     //var bodyInfo = Box2DApi.GetBodyInfo(body);
 
                     //защита от бесконечного полета в пустоте
-                    bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 5f;
+                    bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 1.5f;
+                    
+                    
+                    world.Log($"created bullet {bulletEntity.e2name(world)} at tick {world.GetTick()} , hash: {customHash}");
                 }
 
                 if (shootingComponent.TotalTime < tm)

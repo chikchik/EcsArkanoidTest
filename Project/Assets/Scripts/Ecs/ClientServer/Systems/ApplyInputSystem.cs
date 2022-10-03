@@ -28,7 +28,7 @@ namespace Game.Ecs.ClientServer.Systems
 
         private MyInventoryService _inventoryService;
         
-        List<int> _entities = new List<int>();
+        private List<int> _entities = new List<int>();
 
         public ApplyInputSystem(MyInventoryService myInventoryService)
         {

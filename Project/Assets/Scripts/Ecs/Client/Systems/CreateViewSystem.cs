@@ -8,15 +8,19 @@ using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Utils;
+using Zenject;
 
 namespace Game.Ecs.Client.Systems
 {
     public class CreateViewSystem : IEcsInitSystem, IEcsRunSystem
     {
+        private static int N = 0;
         private CharacterView _viewPrefab;
         private BulletView _bulletPrefab;
-        public CreateViewSystem(CharacterView viewPrefab, BulletView bulletPrefab)
+        private DiContainer _container;
+        public CreateViewSystem(CharacterView viewPrefab, BulletView bulletPrefab, DiContainer container)
         {
+            _container = container;
             this._bulletPrefab = bulletPrefab;
             this._viewPrefab = viewPrefab;
         }
@@ -39,7 +43,8 @@ namespace Game.Ecs.Client.Systems
                 var go = GameObject.Find(name);
                 if (go == null)
                 {
-                    Debug.LogError($"not found gameobject {name}");
+                    Debug.LogError($"not found gameobject {name} for entity {entity.e2name(world)}");
+                    continue;
                 }
                 go.SetActive(true);
 
@@ -87,17 +92,21 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filterBullets)
             {
-                var view = Object.Instantiate(_bulletPrefab);
+                var viewGo = _container.InstantiatePrefab(_bulletPrefab);
+                var view = viewGo.GetComponent<BulletView>();
                 var pos = entity.EntityGet<PositionComponent>(world).value;
                 view.transform.position = pos;
-                view.name = $"Bullet{entity}";
+                view.name = $"Bullet{entity.e2name(world)}-{N}";
+                //view.PackedEntity = world.PackEntity(entity);
 
                 ref var component = ref entity.EntityAdd<TransformComponent>(world);
                 component.Transform = view.transform;
 
                 entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
                 
-                world.LogVerbose($"create view {entity} at {pos}");
+                world.Log($"create view '{view.name}'  {entity.e2name(world)} at {pos}");
+
+                ++N;
             }
         }
     }
