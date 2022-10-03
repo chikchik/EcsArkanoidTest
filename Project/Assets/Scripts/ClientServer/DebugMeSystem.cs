@@ -35,7 +35,7 @@ namespace Game.ClientServer
                 else
                     str += "end-";
 
-                str += $"{entity.e2name(_world)}-";
+                str += $"{entity.e2name(_world, false, false)}-";
 
                 if (entity.EntityHas<PositionComponent>(_world))
                     str += entity.EntityGet<PositionComponent>(_world).value;
