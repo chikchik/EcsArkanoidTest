@@ -8,7 +8,7 @@ using Gaming.Facade;
 using Gaming.Facade.Configuration;
 using UnityEngine;
 
-public class ServerConnector : MonoBehaviour
+public class ServerConnector2 : MonoBehaviour
 {
     private SocketImpl _tcpSocket;
     private SocketImpl _udpSocket;

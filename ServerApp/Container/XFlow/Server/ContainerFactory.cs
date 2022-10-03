@@ -7,7 +7,7 @@ namespace XFlow.Server
     {
         public async ValueTask<IContainer> StartContainerAsync(ContainerStartingContext context)
         {
-            var c = new SimpleContainer(context);
+            var c = new Container(context);
             await c.Start();
             return c;
         }

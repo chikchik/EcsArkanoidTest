@@ -71,8 +71,6 @@ namespace Game.Installers
             Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
             Container.Bind<ClientServerServices>().AsSingle();
 
-            Container.Bind<IServerConnector>().FromInstance(new Game.ServerConnector(12121,12345)).AsSingle();
-
             // _cancellationTokenSource = new CancellationTokenSource();
             // Container.Bind<CancellationToken>().FromInstance(_cancellationTokenSource.Token).AsCached();
 
@@ -126,6 +124,10 @@ namespace Game.Installers
 
             if (settings.MultiPlayer)
             {
+                Container.Bind<IServerConnector>()
+                    .FromInstance(new ServerConnector(12121, 12345))
+                    .AsSingle();
+                
                 Container.Bind<NetClient>().AsSingle();
                 
                 Container.Bind<IInputService>().To<ClientInputService>()

@@ -32,24 +32,30 @@ namespace ServerApp.Server
             var rcvBytes = new byte[64000];
             var rcvBuffer = new ArraySegment<byte>(rcvBytes);
 
-            try
-            {
+            // try
+            // {
                 while (true)
                 {
                     var rcvResult = await _socket.ReceiveAsync(rcvBuffer, SocketFlags.None);
 
-                    byte[] msgBytes = rcvBuffer.Skip(rcvBuffer.Offset).Take(rcvResult).ToArray();
+                    if(rcvResult==0)
+                        continue;
+
+                    byte[] msgBytes = new byte[rcvResult];
+                    Array.Copy(rcvBuffer.Array, rcvBuffer.Offset, msgBytes, 0,rcvResult);
+                    
+                    // byte[] msgBytes = rcvBuffer.Skip(rcvBuffer.Offset).Take(rcvResult).ToArray();
                     var arguments = new MessageReceivedArguments(null, msgBytes);
                     var message = ReliableChannelMessage.MessageReceived(arguments);
 
                     foreach (var subscriber in _subscribers)
                         await subscriber.Invoke(message);
                 }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            // }
+            // catch (Exception e)
+            // {
+            //     throw e;
+            // }
         }
 
         public async ValueTask<ReliableChannelSendResult> SendAsync(IUserAddress userAddress,

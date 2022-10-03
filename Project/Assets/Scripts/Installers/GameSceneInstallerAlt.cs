@@ -70,6 +70,10 @@ namespace Game.Installers
 
             if (gameSettings.MultiPlayer)
             {
+                Container.Bind<IServerConnector>()
+                    .FromInstance(new ServerConnector(12121, 12345))
+                    .AsSingle();
+                
                 var comp = gameSettings.gameObject.AddComponent<UnityEcsClient>();
                 Container.QueueForInject(comp);
             }

@@ -14,7 +14,7 @@ namespace ServerApp2
         static async Task Main(string[] _)
         {
             var tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            tcpSocket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 12121));
+            tcpSocket.Bind(new IPEndPoint(IPAddress.Any, 12121));
             tcpSocket.Listen(10);
 
             var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);

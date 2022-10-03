@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Gaming.ContainerManager.ImageContracts.V1;
 using XFlow.EcsLite;
 using XFlow.P2P;
 
@@ -13,6 +14,7 @@ namespace XFlow.Server
         public int LastServerTick;
         public ClientAddr Address;
         public EndPoint EndPoint;
+        public IUserAddress UserAddress;
 
         public EcsWorld SentWorld;
         public EcsWorld SentWorldRelaible;

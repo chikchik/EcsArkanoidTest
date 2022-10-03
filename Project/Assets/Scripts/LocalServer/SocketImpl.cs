@@ -22,14 +22,13 @@ public class SocketImpl : ISocket
     public void Connect(IPAddress address, int port)
     {
         _socket.Connect(new IPEndPoint(address, port));
-        Debug.Log($"Connected = {_socket.Connected}");
     }
 
     public async Task Run()
     {
         try
         {
-            var rcvBytes = new byte[1024 * 32];
+            var rcvBytes = new byte[64000];
             var rcvBuffer = new ArraySegment<byte>(rcvBytes);
 
             while (true)
@@ -53,8 +52,6 @@ public class SocketImpl : ISocket
     {
         try
         {
-            var data = Encoding.Unicode.GetBytes("123123");
-            Debug.Log($"Send = {data.Length}");
             if (_socket.ProtocolType == ProtocolType.Udp)
                 await _socket.SendToAsync(message.ToArray(), SocketFlags.None, _socket.RemoteEndPoint);
             else

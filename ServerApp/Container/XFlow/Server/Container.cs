@@ -13,6 +13,7 @@ using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Gaming.ContainerManager.ImageContracts.V1;
+using Gaming.ContainerManager.ImageContracts.V1.Channels;
 using Gaming.ContainerManager.Models.V1;
 using UnityEngine;
 using XFlow.Ecs.ClientServer;
@@ -38,14 +39,22 @@ namespace XFlow.Server
 {
     public class Container : IContainer
     {
+        private readonly ContainerStartingContext _context;
+
+        private IReliableChannel _reliableChannel;
+        private IAsyncDisposable _reliableChannelSubs;
+
+        private IUnreliableChannel _unreliableChannel;
+        private IAsyncDisposable _unreliableChannelSubs;
+
+        private ILogger _logger => _context.Host.LoggerFactory.System;
+        
         private SyncDebugService _syncDebug;
-        private ClientWebSocket _socket;
 
         private EcsWorld _mainWorld;
         private EcsWorld _deadWorld;
         private EcsWorld _inputWorld;
         private EcsWorld _eventWorld;
-
 
         private EcsSystems _systems;
 
@@ -54,7 +63,6 @@ namespace XFlow.Server
         private EntityDestroyedListener _destroyedListener = new EntityDestroyedListener();
         private CopyToDeadWorldListener _copyToDeadWorldListener;
 
-        private List<byte[]> _receivedMessages = new List<byte[]>();
         private HGlobalWriter _writer = new HGlobalWriter();
         private IEcsSystemsFactory _systemsFactory;
 
@@ -64,87 +72,56 @@ namespace XFlow.Server
 
         private TickrateConfigComponent _config = new TickrateConfigComponent {Tickrate = 30, ServerSyncStep = 1};
 
-        private Task _runTask;
-        private CancellationTokenSource _runCancellationTokenSource;
-
-        private IContainerConfig _containerConfig;
-        private string _url;
-
-        private UDPServer _udpServer = new UDPServer();
-
         private EcsFilter _clientsFilter;
         private EcsPool<ClientComponent> _poolClients;
 
-        public Container(IContainerConfig containerConfig, ILogger logger)
+        private bool _isRun;
+
+        public Container(ContainerStartingContext context)
         {
-            Debug.SetLogDelegate(log => logger.Log(LogLevel.Trace, log));
-            Debug.Log("created Container");
-
+            _context = context;
+            
             Box2DServices.CheckNative();
-
-            this._containerConfig = containerConfig;
-
-            _url =
-                $"{P2P.P2P.DEV_SERVER_WS}/{containerConfig.GetValue(ContainerConfigParams.ROOM)}/{P2P.P2P.ADDR_SERVER.AddressString}";
-
+            
             _components = new ComponentsCollection();
             ComponentsCollectionUtils.AddComponentsFromAssembly(_components,
                 System.Reflection.Assembly.GetExecutingAssembly());
-
-            var dir = Directory.GetCurrentDirectory();
-            Debug.Log($"working dir: {dir}");
-            _socket = new ClientWebSocket();
-
-            _runCancellationTokenSource = new CancellationTokenSource();
-
+            
             _syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
             WorldLoggerExt.logger = _syncDebug.CreateLogger();
         }
-
-        public void Init()
+        
+        public async Task Start()
         {
-        }
+            _reliableChannel = await _context.Host.ChannelProvider.GetReliableChannelAsync();
+            _reliableChannelSubs = await _reliableChannel.SubscribeAsync(OnReliableMessageReceived);
 
-        public void Start()
-        {
-            _runTask = Task.Run(AsyncRun, _runCancellationTokenSource.Token);
-            _udpServer.Run(_runCancellationTokenSource.Token);
+            _unreliableChannel = await _context.Host.ChannelProvider.GetUnreliableChannelAsync();
+            _unreliableChannelSubs = await _unreliableChannel.SubscribeAsync(OnUnreliableMessageReceived);
+
+            InitWorld();
+
+            _logger.Log(LogLevel.Information,"Start done");
+
+            _isRun = true;
+            Loop();
         }
 
         public async ValueTask StopAsync()
         {
-            Debug.Log("Container.Stop");
-            try
-            {
-                _udpServer.Dispose();
-            }
-            catch (Exception e)
-            {
-            }
+            _logger.Log(LogLevel.Debug,"Container.Stop");
 
-            Debug.Log("Container.Stop1");
-            _runCancellationTokenSource.Cancel();
-
-            try
-            {
-                await _runTask;
-            }
-            catch (OperationCanceledException e)
-            {
-                Console.WriteLine($"{nameof(OperationCanceledException)} thrown with message: {e.Message}");
-            }
-            finally
-            {
-                Debug.Log("Container.Stop2");
-                _runCancellationTokenSource.Dispose();
-            }
+            _isRun = false;
+            
+            await _reliableChannel.DisposeAsync();
+            await _reliableChannelSubs.DisposeAsync();
+            await _unreliableChannel.DisposeAsync();
+            await _unreliableChannelSubs.DisposeAsync();
         }
-
 
         public async ValueTask<string> GetInfoAsync()
         {
             var sb = new StringBuilder(512);
-            sb.AppendLine($"url: {_url}");
             sb.AppendLine($"tick: {_mainWorld.GetTick()}");
             sb.AppendLine($"tickrate: {_config.Tickrate}");
             sb.AppendLine($"world entities: {_mainWorld.GetAliveEntitiesCount()}");
@@ -159,34 +136,74 @@ namespace XFlow.Server
 
             return sb.ToString();
         }
-
-        async Task ReceiveData()
+        
+        public async ValueTask<ContainerState> GetStateAsync()
         {
-            var ct = new CancellationTokenSource();
-
-            var rcvBytes = new byte[64000];
-            var rcvBuffer = new ArraySegment<byte>(rcvBytes);
-
-            try
+            return ContainerState.Empty;
+        }
+        
+        private async ValueTask OnUnreliableMessageReceived(UnreliableChannelMessage message)
+        {
+            switch (message.Type)
             {
-                while (true)
-                {
-                    WebSocketReceiveResult rcvResult = await _socket.ReceiveAsync(rcvBuffer, ct.Token);
+                case UnreliableChannelMessageType.MessageReceived:
+                    var messageArgs = message.GetMessageReceivedArguments().Value;
+                    GotInput1(new HGlobalReader(messageArgs.Message.ToArray()), messageArgs.UserAddress);
+                    break;
 
-                    byte[] msgBytes = rcvBuffer.Skip(rcvBuffer.Offset).Take(rcvResult.Count).ToArray();
-                    //ProcessMessage(msgBytes);
-                    lock (_receivedMessages)
-                    {
-                        _receivedMessages.Add(msgBytes);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
+                case UnreliableChannelMessageType.ChannelClosed:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
+        private async ValueTask OnReliableMessageReceived(ReliableChannelMessage message)
+        {
+            switch (message.Type)
+            {
+                case ReliableChannelMessageType.UserConnected:
+                    var connectedArgs = message.GetUserConnectedArguments().Value;
+                    break;
+
+                case ReliableChannelMessageType.UserDisconnected:
+                    var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
+                    break;
+
+                case ReliableChannelMessageType.MessageReceived:
+                    var messageArgs = message.GetMessageReceivedArguments().Value;
+                    ProcessMessage(messageArgs.Message.ToArray(), messageArgs.UserAddress);
+                    break;
+
+                case ReliableChannelMessageType.ChannelClosed:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void InitWorld()
+        {
+            CreateSystemsFactory();
+            
+            _deadWorld = new EcsWorld(EcsWorlds.Dead);
+            _copyToDeadWorldListener = new CopyToDeadWorldListener(_deadWorld);
+
+            _mainWorld = new EcsWorld("serv");
+            _mainWorld.SetDefaultGen(InternalConfig.ServerWorldGenMin, InternalConfig.ServerWorldGenMax);
+            _systems = new EcsSystems(_mainWorld);
+            _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
+            _systemsFactory.AddNewSystems(_systems,
+                new IEcsSystemsFactory.Settings { AddServerSystems = true });
+            _systems.Add(new TickSystem());
+            _systems.Add(_systemsFactory.CreateSyncDebugSystem(false));
+            _systems.Add(new DeleteDeadWorldEntitiesSystem());
+
+            _clientsFilter = _mainWorld.Filter<ClientComponent>().End();
+            _poolClients = _mainWorld.GetPool<ClientComponent>();
+        }   
+        
         private void StartSystems(byte[] initialWorld)
         {
             if (_worldInitialized)
@@ -243,101 +260,37 @@ namespace XFlow.Server
             _systemsFactory = new EcsSystemsFactory(container);
         }
 
-        async Task AsyncRun()
+        private async Task Loop()
         {
             try
             {
-                CreateSystemsFactory();
-
-                _deadWorld = new EcsWorld(EcsWorlds.Dead);
-                _copyToDeadWorldListener = new CopyToDeadWorldListener(_deadWorld);
-                
-                
-                _mainWorld = new EcsWorld("serv");
-                _mainWorld.SetDefaultGen(InternalConfig.ServerWorldGenMin, InternalConfig.ServerWorldGenMax);
-                _systems = new EcsSystems(_mainWorld);
-                _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
-                _systemsFactory.AddNewSystems(_systems,
-                    new IEcsSystemsFactory.Settings { AddServerSystems = true });
-                _systems.Add(new TickSystem());
-                _systems.Add(_systemsFactory.CreateSyncDebugSystem(false));
-                _systems.Add(new DeleteDeadWorldEntitiesSystem());
-
-                _clientsFilter = _mainWorld.Filter<ClientComponent>().End();
-                _poolClients = _mainWorld.GetPool<ClientComponent>();
-
-                //var url = $"{Config.URL}/{P2P.ADDR_SERVER.AddressString}";
-
-                await _socket.ConnectAsync(new Uri(_url, UriKind.Absolute), new CancellationToken());
-
-                Debug.Log($"connected to host\n{_url}");
-
-
-                _ = Task.Factory.StartNew(ReceiveData);
-
-                //SendWorldToClients();
-
-
-                /*
-                 * по умолчанию сервер получает начальный мир от первого подключенного игрока
-                 * если включи StartSystems тут, то сцена будет грузиться из файла 
-                 */
-                //StartSystems(null);
-
-
-                Debug.Log("loop");
+                _logger.Log(LogLevel.Debug, "loop");
                 var next = DateTime.UtcNow;
                 var step = 1.0 / _config.Tickrate;
-                while (!_runCancellationTokenSource.IsCancellationRequested)
+                while (_isRun)
                 {
-                    byte[][] receivedCopy = null;
-                    lock (_receivedMessages)
-                    {
-                        receivedCopy = _receivedMessages.ToArray();
-                        _receivedMessages.Clear();
-                    }
-
-
-                    for (int i = 0; i < receivedCopy.Length; ++i)
-                        ProcessMessage(receivedCopy[i]);
-
-                    while (true)
-                    {
-                        var udpPacketOpt = _udpServer.GetPacket();
-                        if (udpPacketOpt == null)
-                            break;
-                        var udpPacket = udpPacketOpt.Value;
-                        var reader = new HGlobalReader(udpPacket.Data);
-                        GotInput1(reader, udpPacket.EndPoint);
-                    }
-
-
-                    if (next <= DateTime.UtcNow && _worldInitialized)
-                    {
-                        //Console.WriteLine($"tick {leo.GetCurrentTick(world)}");
-                        next = next.AddSeconds(step);
-                        if (next <= DateTime.UtcNow)
-                            next = DateTime.UtcNow.AddSeconds(step);
-                        Tick();
-                    }
-
-                    Thread.Sleep(10);
+                    if (next > DateTime.UtcNow || !_worldInitialized) 
+                        continue;
+                    
+                    next = next.AddSeconds(step);
+                    if (next <= DateTime.UtcNow)
+                        next = DateTime.UtcNow.AddSeconds(step);
+                    Tick();
                 }
 
-                Debug.Log("Ended0");
+                _logger.Log(LogLevel.Debug, "Ended0");
             }
             catch (Exception e)
             {
-                Debug.LogError(e);
+                _logger.Log(LogLevel.Error, e);
             }
             finally
             {
-                Debug.Log("Ended1");
+                _logger.Log(LogLevel.Debug, "Ended1");
             }
         }
 
-
-        private void ProcessMessage(byte[] msgBytes)
+        private void ProcessMessage(byte[] msgBytes, IUserAddress userAddress)
         {
             string errAddr = "";
             if (P2P.P2P.CheckError(msgBytes, out errAddr))
@@ -370,6 +323,7 @@ namespace XFlow.Server
                 var client = new ClientComponent();
                 client.ID = packet.playerID;
                 client.Address = new ClientAddr(client.ID.ToString());
+                client.UserAddress = userAddress;
 
                 Debug.Log($"got hello from client {packet.playerID}");
 
@@ -392,7 +346,6 @@ namespace XFlow.Server
                 // client.SentWorld.CopyFrom(world);
 
                 client.SentWorldRelaible = new EcsWorld("rela");
-
 
                 /*
                 var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
@@ -419,7 +372,7 @@ namespace XFlow.Server
 
 
                 var data = P2P.P2P.BuildRequest(client.Address, packet);
-                _socket.SendAsync(data, WebSocketMessageType.Binary, true, new CancellationToken());
+                _reliableChannel.SendAsync(userAddress, data);
 
                 //SendAsyncDeprecated(packet, client);
                 Debug.Log($"send initial world at tick {_mainWorld.GetTick()}");
@@ -445,7 +398,7 @@ namespace XFlow.Server
             return -1;
         }
 
-        private void GotInput1(HGlobalReader reader, EndPoint endPoint)
+        private void GotInput1(HGlobalReader reader, IUserAddress address)
         {
             try
             {
@@ -464,9 +417,6 @@ namespace XFlow.Server
                 }
 
                 ref var client = ref _poolClients.GetRef(clientEntity);
-
-                if (endPoint != null)
-                    client.EndPoint = endPoint;
 
                 var inputTime = reader.ReadInt32();
                 var time = inputTime;
@@ -488,7 +438,6 @@ namespace XFlow.Server
                 //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
                 if (delay < 0)
                     time = currentTick;
-
 
                 var sentWorldTick = client.SentWorld.GetTick() - step.Value;
 
@@ -536,7 +485,7 @@ namespace XFlow.Server
             foreach (var clientEntity in _clientsFilter)
             {
                 ref var client = ref _poolClients.GetRef(clientEntity);
-                if (client.EndPoint != null)
+                // if (client.UserAddress != null)
                 {
                     var compressed = BuildDiffBytes(client, client.SentWorld);
 
@@ -544,20 +493,15 @@ namespace XFlow.Server
                     //if (false)
                     {
                         //SimRandomSend(compressed, client);
-                    
-                        int r = _udpServer.Socket.SendTo(compressed, client.EndPoint);
-                        if (r <= 0)
-                        {
-                            Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
-                        }
+
+                        _unreliableChannel.SendAsync(client.UserAddress, compressed);
                     }
 
                     client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
                     client.Delay = -999;
                 }
             }
-            
-            
+
             //TCP send to clients
             if ((_mainWorld.GetTick() % 15) == 0)
             {
@@ -567,7 +511,7 @@ namespace XFlow.Server
                     
                     var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
                     var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
-                    _socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
+                    _reliableChannel.SendAsync(client.UserAddress,bytes);
                     client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
                 }
 
@@ -580,7 +524,7 @@ namespace XFlow.Server
 
             if (_mainWorld.GetTick() % 50 == 0)
             {
-                Debug.Log($"tick {_mainWorld.GetTick()}");
+                _logger.Log(LogLevel.Information,$"tick {_mainWorld.GetTick()}");
             }
         }
 
@@ -604,21 +548,6 @@ namespace XFlow.Server
 
             var compressed = P2P.P2P.Compress(_writer.ToByteArray());
             return compressed;
-        }
-
-        async void SimRandomSend(byte[] compressed, ClientComponent client, int delayMin, int delayMax)
-        {
-            await Task.Delay(Random.Range(delayMin, delayMax));
-            int r = _udpServer.Socket.SendTo(compressed, client.EndPoint);
-            if (r <= 0)
-            {
-                Debug.LogError($"udpServer.Socket.SendTo {client.EndPoint} failed");
-            }
-        }
-
-        public async ValueTask<ContainerState> GetStateAsync()
-        {
-            return ContainerState.Empty;
         }
     }
 }
