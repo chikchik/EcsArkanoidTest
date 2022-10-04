@@ -23,31 +23,29 @@ namespace ServerApp.Server
 
         public async void Start()
         {
-            var rcvBytes = new byte[1024 * 32];
+            var rcvBytes = new byte[64000];
             var rcvBuffer = new ArraySegment<byte>(rcvBytes);
 
             try
             {
+                var endPoint = new IPEndPoint(IPAddress.Any, 0);
                 while (true)
                 {
-                    var res = await _socket.ReceiveMessageFromAsync(rcvBuffer, SocketFlags.None,
-                        new IPEndPoint(IPAddress.Any, 0));
+                    var res = await _socket.ReceiveMessageFromAsync(rcvBuffer, SocketFlags.None, endPoint);
 
-                    var address = new UserAddress
-                    {
-                        ConnectionId = res.RemoteEndPoint.ToString()
-                    };
-                    byte[] msgBytes = rcvBuffer.Skip(rcvBuffer.Offset).Take(res.ReceivedBytes).ToArray();
-                    var arguments = new MessageReceivedArguments(address, msgBytes);
+                    byte[] msgBytes = new byte[res.ReceivedBytes];
+                    Array.Copy(rcvBuffer.Array, rcvBuffer.Offset, msgBytes, 0, res.ReceivedBytes);
+
+                    var arguments = new MessageReceivedArguments(null, msgBytes);
                     var message = UnreliableChannelMessage.MessageReceived(arguments);
 
                     foreach (var subscriber in _subscribers)
                         await subscriber.Invoke(message);
                 }
             }
-            catch (Exception e)
+            finally
             {
-                throw e;
+                DisposeAsync();
             }
         }
 
@@ -70,17 +68,6 @@ namespace ServerApp.Server
             _subscribers.Add(subscriber);
 
             return new AnonymousDisposable(async () => _subscribers.Remove(subscriber));
-        }
-        
-        private class UserAddress : IUserAddress
-        {
-            public bool Equals(IUserAddress other)
-            {
-                return other.ConnectionId == ConnectionId;
-            }
-
-            public string UserId { get; }
-            public string ConnectionId { get; set; }
         }
     }
 }

@@ -34,22 +34,29 @@ namespace ServerApp.Server
             var rcvBytes = new byte[64000];
             var rcvBuffer = new ArraySegment<byte>(rcvBytes);
 
-            _listener = await _socket.AcceptAsync();
-            while (true)
+            try
             {
-                var rcvResult = await _listener.ReceiveAsync(rcvBuffer, SocketFlags.None);
+                _listener = await _socket.AcceptAsync();
+                while (true)
+                {
+                    var rcvResult = await _listener.ReceiveAsync(rcvBuffer, SocketFlags.None);
 
-                if (rcvResult == 0)
-                    continue;
+                    if (rcvResult == 0)
+                        continue;
 
-                byte[] msgBytes = new byte[rcvResult];
-                Array.Copy(rcvBuffer.Array, rcvBuffer.Offset, msgBytes, 0, rcvResult);
+                    byte[] msgBytes = new byte[rcvResult];
+                    Array.Copy(rcvBuffer.Array, rcvBuffer.Offset, msgBytes, 0, rcvResult);
 
-                var arguments = new MessageReceivedArguments(null, msgBytes);
-                var message = ReliableChannelMessage.MessageReceived(arguments);
+                    var arguments = new MessageReceivedArguments(null, msgBytes);
+                    var message = ReliableChannelMessage.MessageReceived(arguments);
 
-                foreach (var subscriber in _subscribers)
-                    await subscriber.Invoke(message);
+                    foreach (var subscriber in _subscribers)
+                        await subscriber.Invoke(message);
+                }
+            }
+            finally
+            {
+                DisposeAsync();
             }
         }
 

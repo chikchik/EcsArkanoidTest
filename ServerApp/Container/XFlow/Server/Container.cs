@@ -58,7 +58,7 @@ namespace XFlow.Server
 
         private EcsSystems _systems;
 
-        private List<int> _missingClients = new List<int>();
+        private List<IUserAddress> _missingClients = new List<IUserAddress>();
         private ApplyInputWorldService _inputService = new ApplyInputWorldService();
         private EntityDestroyedListener _destroyedListener = new EntityDestroyedListener();
         private CopyToDeadWorldListener _copyToDeadWorldListener;
@@ -292,17 +292,15 @@ namespace XFlow.Server
 
         private void ProcessMessage(byte[] msgBytes, IUserAddress userAddress)
         {
-            string errAddr = "";
-            if (P2P.P2P.CheckError(msgBytes, out errAddr))
+            if (P2P.P2P.CheckError(msgBytes))
             {
-                var clientEntity =
-                    GetClientEntity(
-                        Int32.Parse(errAddr)); //  clients.FirstOrDefault(client => client.ID.ToString() == errAddr);
+                var clientEntity = GetClientEntity(userAddress); 
                 if (clientEntity != -1)
                 {
+                    var client = _poolClients.Get(clientEntity);
                     _mainWorld.DelEntity(clientEntity);
-                    Debug.Log($"removed client {errAddr}");
-                    BaseServices.InputLeavePlayer(_inputWorld, Int32.Parse(errAddr));
+                    _logger.Log(LogLevel.Warning,$"removed client {userAddress}");
+                    BaseServices.InputLeavePlayer(_inputWorld, client.ID);
                 }
 
                 return;
@@ -310,9 +308,7 @@ namespace XFlow.Server
 
             if (msgBytes[0] == 0xff && msgBytes[1] == 0 && msgBytes[2] == 0 && msgBytes[3] == 0)
             {
-                var reader = new HGlobalReader(msgBytes);
-                reader.ReadInt32(); //0xff
-                GotInput1(reader, null);
+                GotInput1(new HGlobalReader(msgBytes), userAddress);
                 return;
             }
 
@@ -322,10 +318,9 @@ namespace XFlow.Server
             {
                 var client = new ClientComponent();
                 client.ID = packet.playerID;
-                client.Address = new ClientAddr(client.ID.ToString());
                 client.UserAddress = userAddress;
 
-                Debug.Log($"got hello from client {packet.playerID}");
+                _logger.Log(LogLevel.Information,$"got hello from client {packet.playerID}");
 
                 var hello = new Hello();
                 hello.Components = _components.Components.Select(component => component.GetComponentType().FullName)
@@ -339,20 +334,11 @@ namespace XFlow.Server
                         StartSystems(Convert.FromBase64String(state));
                 }
 
-                //SendAsyncDeprecated(new Packet { hello = hello, hasHello = true }, client);
-
 
                 client.SentWorld = new EcsWorld("sent");
                 // client.SentWorld.CopyFrom(world);
 
                 client.SentWorldRelaible = new EcsWorld("rela");
-
-                /*
-                var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
-                var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
-                socket.SendAsync(bytes, WebSocketMessageType.Binary, true, new CancellationToken());
-                client.SentWorldRelaible = WorldUtils.CopyWorld(components, world);
-                */
 
                 var dif = WorldDiff.BuildDiff(_components, client.SentWorldRelaible, _mainWorld);
                 client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
@@ -371,12 +357,11 @@ namespace XFlow.Server
                 };
 
 
-                var data = P2P.P2P.BuildRequest(client.Address, packet);
+                var data = P2P.P2P.BuildRequest(packet);
+                _logger.Log(LogLevel.Debug,$"Send hello, {data.Length}");
                 _reliableChannel.SendAsync(userAddress, data);
 
-                //SendAsyncDeprecated(packet, client);
-                Debug.Log($"send initial world at tick {_mainWorld.GetTick()}");
-
+                _logger.Log(LogLevel.Information,$"send initial world at tick {_mainWorld.GetTick()}");
 
                 var entity = _mainWorld.NewEntity();
                 _poolClients.Add(entity) = client;
@@ -386,12 +371,12 @@ namespace XFlow.Server
             }
         }
 
-        private int GetClientEntity(int playerID)
+        private int GetClientEntity(IUserAddress address)
         {
             foreach (var entity in _clientsFilter)
             {
                 var component = _poolClients.Get(entity);
-                if (component.ID == playerID)
+                if (component.UserAddress == address)
                     return entity;
             }
 
@@ -402,15 +387,13 @@ namespace XFlow.Server
         {
             try
             {
-                var playerId = reader.ReadInt32();
-
-                var clientEntity = GetClientEntity(playerId);
+                var clientEntity = GetClientEntity(address);
                 if (clientEntity == -1)
                 {
-                    if (!_missingClients.Contains(playerId))
+                    if (!_missingClients.Contains(address))
                     {
-                        _missingClients.Add(playerId);
-                        Debug.Log($"not found player {playerId}");
+                        _missingClients.Add(address);
+                        _logger.Log(LogLevel.Information,$"not found player {address}");
                     }
 
                     return;
@@ -422,7 +405,6 @@ namespace XFlow.Server
                 var time = inputTime;
 
                 var type = reader.ReadInt32();
-
 
                 var currentTick = _mainWorld.GetTick();
                 var step = _mainWorld.GetUnique<TickDeltaComponent>().Value;
@@ -438,7 +420,10 @@ namespace XFlow.Server
                 //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
                 if (delay < 0)
                     time = currentTick;
+                
+                _logger.Log(LogLevel.Debug,$"GotInput1 t={type}");
 
+                var r = client.SentWorld.GetUnique<TickComponent>();
                 var sentWorldTick = client.SentWorld.GetTick() - step.Value;
 
                 if (delay == 0 && sentWorldTick == time)
@@ -463,7 +448,7 @@ namespace XFlow.Server
 
                     var componentData = component.ReadSingleComponent(reader) as IInputComponent;
 
-                    _inputService.Input(_inputWorld, playerId, time, componentData);
+                    _inputService.Input(_inputWorld, client.ID, time, componentData);
                     //leo.Inputs.Add(input);
                     //world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
                 }
@@ -510,7 +495,7 @@ namespace XFlow.Server
                     ref var client = ref _poolClients.GetRef(clientEntity);
                     
                     var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
-                    var bytes = P2P.P2P.BuildRequest(client.Address, compressed);
+                    var bytes = P2P.P2P.BuildRequest(compressed);
                     _reliableChannel.SendAsync(client.UserAddress,bytes);
                     client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
                 }
