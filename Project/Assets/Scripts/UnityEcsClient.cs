@@ -8,7 +8,7 @@ using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Net.Client;
-using XFlow.Net.ClientServer;
+using XFlow.Net.Client.DebugUtils;
 using Zenject;
 
 namespace Game
@@ -22,9 +22,12 @@ namespace Game
         private ComponentsCollection _components;
         
         [Inject] private NetClient _client;
+        
+        [Inject] private DiContainer _container;
 
         private void Start()
         {
+            NetClientPanel.Create(_container);
             string initialWorldJson = null;
             if (true)
             {
@@ -48,7 +51,6 @@ namespace Game
                 return;
 
             _client.Update();
-            _ui.View.DebugText.text = _client.GetDebugString();
         }
 
         private void OnDestroy()
