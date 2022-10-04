@@ -1,10 +1,7 @@
 {
   "dependencies": {
-    "com.xflow.ecs": "file:../../Submodules/module-ecs/Package",
-    "com.xflow.ecs.box2d": "file:../../Submodules/module-ecs-box2d/Package",
-    "com.xflow.ecs.central": "file:../../Submodules/module-ecs-central/Package",
     "com.unity.cinemachine": "2.8.6",
-    "com.unity.collab-proxy": "1.15.18",
+    "com.unity.collab-proxy": "1.17.2",
     "com.unity.ext.nunit": "1.0.6",
     "com.unity.ide.rider": "3.0.15",
     "com.unity.ide.visualstudio": "2.0.16",
@@ -17,6 +14,9 @@
     "com.unity.timeline": "1.6.4",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.7.8",
+    "com.xflow.ecs": "file:../../Submodules/module-ecs/Package",
+    "com.xflow.ecs.box2d": "file:../../Submodules/module-ecs-box2d/Package",
+    "com.xflow.ecs.central": "file:../../Submodules/module-ecs-central/Package",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
