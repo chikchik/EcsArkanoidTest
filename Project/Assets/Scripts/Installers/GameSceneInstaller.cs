@@ -125,7 +125,7 @@ namespace Game.Installers
             if (settings.MultiPlayer)
             {
                 Container.Bind<IServerConnector>()
-                    .FromInstance(new ServerConnector(12121, 12345))
+                    .FromInstance(new LocalServerConnector(12121, 12345))
                     .AsSingle();
                 
                 Container.Bind<NetClient>().AsSingle();
