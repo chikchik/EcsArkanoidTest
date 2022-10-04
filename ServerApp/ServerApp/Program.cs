@@ -21,7 +21,7 @@ namespace ServerApp2
             udpSocket.Bind(new IPEndPoint(IPAddress.Any, 12345));
 
             var provider = new ChannelProvider();
-            provider.SetReliableSocket(tcpSocket.Accept());
+            provider.SetReliableSocket(tcpSocket);
             provider.SetUnreliableSocket(udpSocket);
 
             var containerId = ContainerId.Parse("06f988be-52d8-461d-8283-03d280e2b1a5");

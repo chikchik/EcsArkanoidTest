@@ -12,6 +12,7 @@ namespace ServerApp.Server
     public class Reliable : IReliableChannel
     {
         private readonly Socket _socket;
+        private Socket _listener;
 
         private readonly List<IReliableChannel.SubscribeDelegate> _subscribers;
 
@@ -23,6 +24,7 @@ namespace ServerApp.Server
 
         public async ValueTask DisposeAsync()
         {
+            _listener.Dispose();
             _socket.Dispose();
             _subscribers.Clear();
         }
@@ -32,37 +34,30 @@ namespace ServerApp.Server
             var rcvBytes = new byte[64000];
             var rcvBuffer = new ArraySegment<byte>(rcvBytes);
 
-            // try
-            // {
-                while (true)
-                {
-                    var rcvResult = await _socket.ReceiveAsync(rcvBuffer, SocketFlags.None);
+            _listener = await _socket.AcceptAsync();
+            while (true)
+            {
+                var rcvResult = await _listener.ReceiveAsync(rcvBuffer, SocketFlags.None);
 
-                    if(rcvResult==0)
-                        continue;
+                if (rcvResult == 0)
+                    continue;
 
-                    byte[] msgBytes = new byte[rcvResult];
-                    Array.Copy(rcvBuffer.Array, rcvBuffer.Offset, msgBytes, 0,rcvResult);
-                    
-                    // byte[] msgBytes = rcvBuffer.Skip(rcvBuffer.Offset).Take(rcvResult).ToArray();
-                    var arguments = new MessageReceivedArguments(null, msgBytes);
-                    var message = ReliableChannelMessage.MessageReceived(arguments);
+                byte[] msgBytes = new byte[rcvResult];
+                Array.Copy(rcvBuffer.Array, rcvBuffer.Offset, msgBytes, 0, rcvResult);
 
-                    foreach (var subscriber in _subscribers)
-                        await subscriber.Invoke(message);
-                }
-            // }
-            // catch (Exception e)
-            // {
-            //     throw e;
-            // }
+                var arguments = new MessageReceivedArguments(null, msgBytes);
+                var message = ReliableChannelMessage.MessageReceived(arguments);
+
+                foreach (var subscriber in _subscribers)
+                    await subscriber.Invoke(message);
+            }
         }
 
         public async ValueTask<ReliableChannelSendResult> SendAsync(IUserAddress userAddress,
             ReadOnlyMemory<byte> message)
         {
             var token = new CancellationToken();
-            await _socket.SendAsync(message, SocketFlags.None, token);
+            await _listener.SendAsync(message, SocketFlags.None, token);
 
             return new ReliableChannelSendResult(ReliableChannelSendStatus.Ok, null);
         }
