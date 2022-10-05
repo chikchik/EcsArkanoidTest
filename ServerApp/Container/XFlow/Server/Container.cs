@@ -148,7 +148,10 @@ namespace XFlow.Server
             {
                 case UnreliableChannelMessageType.MessageReceived:
                     var messageArgs = message.GetMessageReceivedArguments().Value;
-                    GotInput1(new HGlobalReader(messageArgs.Message.ToArray()), messageArgs.UserAddress);
+                    lock (_locker)
+                    {
+                        GotInput1(new HGlobalReader(messageArgs.Message.ToArray()), messageArgs.UserAddress);
+                    }
                     break;
 
                 case UnreliableChannelMessageType.ChannelClosed:
@@ -159,6 +162,8 @@ namespace XFlow.Server
             }
         }
 
+        private object _locker = new object();
+        
         private async ValueTask OnReliableMessageReceived(ReliableChannelMessage message)
         {
             switch (message.Type)
@@ -173,7 +178,11 @@ namespace XFlow.Server
 
                 case ReliableChannelMessageType.MessageReceived:
                     var messageArgs = message.GetMessageReceivedArguments().Value;
-                    ProcessMessage(messageArgs.Message.ToArray(), messageArgs.UserAddress);
+                    lock (_locker)
+                    {
+                        ProcessMessage(messageArgs.Message.ToArray(), messageArgs.UserAddress);
+                    }
+
                     break;
 
                 case ReliableChannelMessageType.ChannelClosed:
@@ -187,7 +196,7 @@ namespace XFlow.Server
         private void InitWorld()
         {
             CreateSystemsFactory();
-            
+
             _deadWorld = new EcsWorld(EcsWorlds.Dead);
             _copyToDeadWorldListener = new CopyToDeadWorldListener(_deadWorld);
 
@@ -276,7 +285,10 @@ namespace XFlow.Server
                     next = next.AddSeconds(step);
                     if (next <= DateTime.UtcNow)
                         next = DateTime.UtcNow.AddSeconds(step);
-                    Tick();
+                    lock (_locker)
+                    {
+                        Tick();
+                    }
                 }
 
                 _logger.Log(LogLevel.Debug, "Ended0");
@@ -447,7 +459,6 @@ namespace XFlow.Server
 
                 _logger.Log(LogLevel.Debug, $"GotInput1 t={type}");
 
-                var r = client.SentWorld.GetUnique<TickComponent>();
                 var sentWorldTick = client.SentWorld.GetTick() - step.Value;
 
                 if (delay == 0 && sentWorldTick == time)

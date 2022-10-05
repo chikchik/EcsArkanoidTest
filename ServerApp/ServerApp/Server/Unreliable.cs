@@ -19,6 +19,8 @@ namespace ServerApp.Server
 
         private readonly Dictionary<IUserAddress, EndPoint> _connections;
 
+        private readonly object _locker = new object();
+        
         public Unreliable(Socket socket)
         {
             _socket = socket;
@@ -45,16 +47,19 @@ namespace ServerApp.Server
                     var id = reader.ReadInt32().ToString();
                     var data = received[reader.GetPosition()..];
 
-                    var address = _connections.Keys.FirstOrDefault(address => address.UserId == id);
-                    if (address == null)
+                    IUserAddress address;
+                    lock (_locker)
                     {
-                        address = new UserAddress(id);
-                        _connections.Add(address, res.RemoteEndPoint);
+                        address = _connections.Keys.FirstOrDefault(address => address.UserId == id);
+                        if (address == null)
+                        {
+                            address = new UserAddress(id);
+                            _connections.Add(address, res.RemoteEndPoint);
+                        }
                     }
 
                     var arguments = new MessageReceivedArguments(address, data);
                     var message = UnreliableChannelMessage.MessageReceived(arguments);
-
                     foreach (var subscriber in _subscribers)
                         await subscriber.Invoke(message);
                 }
@@ -79,7 +84,7 @@ namespace ServerApp.Server
         {
             if (_isDisposed)
                 return new UnreliableChannelSendResult(UnreliableChannelSendStatus.ChannelIsClosed, null);
-            
+
             if (!_connections.ContainsKey(userAddress))
                 return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Unknown, $"Address not found");
 

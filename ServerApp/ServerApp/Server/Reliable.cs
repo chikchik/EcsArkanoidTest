@@ -13,6 +13,8 @@ namespace ServerApp.Server
         private readonly Socket _socket;
         private bool _isDisposed;
 
+        private readonly object _locker = new object();
+
         private readonly List<IReliableChannel.SubscribeDelegate> _subscribers;
 
         private readonly Dictionary<IUserAddress, Socket> _connections;
@@ -63,8 +65,12 @@ namespace ServerApp.Server
                     Console.WriteLine($"New connection id={id}");
 
                     var address = new UserAddress(id.ToString());
-                    _connections.Add(address, newSocket);
-                    _disposedConnections.Add(address, false);
+
+                    lock (_locker)
+                    {
+                        _connections.Add(address, newSocket);
+                        _disposedConnections.Add(address, false);
+                    }
 
                     await NotifySubscribers(ReliableChannelMessage.UserConnected(new UserConnectedArguments(address)));
 
@@ -106,8 +112,11 @@ namespace ServerApp.Server
                         await NotifySubscribers(ReliableChannelMessage.ChannelClosed(new ChannelClosedArguments()));
 
                         socket.Dispose();
-                        _disposedConnections[address] = true;
-                        _connections.Remove(address);
+                        lock (_locker)
+                        {
+                            _disposedConnections[address] = true;
+                            _connections.Remove(address);
+                        }
 
                         break;
                     }
@@ -167,24 +176,30 @@ namespace ServerApp.Server
 
             try
             {
+                Socket socket;
                 var packet = P2P.PackMessage(message.ToArray());
 
-                if (!_connections.ContainsKey(userAddress))
-                    return new ReliableChannelSendResult(ReliableChannelSendStatus.ClientNotFound,
-                        userAddress.ToString());
+                lock (_locker)
+                {
+                    if (!_connections.ContainsKey(userAddress))
+                        return new ReliableChannelSendResult(ReliableChannelSendStatus.ClientNotFound,
+                            userAddress.ToString());
 
-                if (_disposedConnections[userAddress])
-                    return new ReliableChannelSendResult(ReliableChannelSendStatus.ChannelIsClosed,
-                        userAddress.ToString());
+                    if (_disposedConnections[userAddress])
+                        return new ReliableChannelSendResult(ReliableChannelSendStatus.ChannelIsClosed,
+                            userAddress.ToString());
 
-                await _connections[userAddress].SendAsync(packet, SocketFlags.None);
+                    socket = _connections[userAddress];
+                }
+
+                await socket.SendAsync(packet, SocketFlags.None);
 
                 return new ReliableChannelSendResult(ReliableChannelSendStatus.Ok, null);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                
+
                 await DisposeAsync();
 
                 return new ReliableChannelSendResult(ReliableChannelSendStatus.Unknown,
@@ -194,7 +209,6 @@ namespace ServerApp.Server
 
         public async ValueTask<IAsyncDisposable> SubscribeAsync(IReliableChannel.SubscribeDelegate subscriber)
         {
-            Console.WriteLine($"SubscribeAsync c={_subscribers.Count}");
             _subscribers.Add(subscriber);
 
             return new AnonymousDisposable(async () => _subscribers.Remove(subscriber));
@@ -202,7 +216,6 @@ namespace ServerApp.Server
 
         private async Task NotifySubscribers(ReliableChannelMessage message)
         {
-            Console.WriteLine($"Notify {message.Type} {_subscribers.Count}");
             for (var i = 0; i < _subscribers.Count; i++)
                 await _subscribers[i].Invoke(message);
         }
