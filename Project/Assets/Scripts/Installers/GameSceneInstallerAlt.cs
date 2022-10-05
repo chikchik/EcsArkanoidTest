@@ -9,6 +9,7 @@ using Game.UI.Mono;
 using Game.UIView;
 using Game.View;
 using UnityEngine;
+using UnityEngine.Rendering;
 using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Modules.Inventory.Client.Demo.Interfaces;
 using XFlow.Modules.Inventory.Client.Demo.Services;
@@ -21,6 +22,15 @@ namespace Game.Installers
     {
         protected override void DoInstallBindings(GameSettings gameSettings)
         {
+            /*
+             * URP? Android exception workaround  2021.3.10f
+             * NullReferenceException: Object reference not set to an instance of an object.
+             * at UnityEngine.Rendering.DebugManager.UpdateActions () [0x00000] in <
+            */
+            DebugManager.instance.enableRuntimeUI = false;
+            
+            
+            
             Container.Bind<Camera>().FromComponentsOn(GameObject.Find("Main Camera")).AsSingle();
             
             var global = GameObject.Find("Global").GetComponent<Global>();
