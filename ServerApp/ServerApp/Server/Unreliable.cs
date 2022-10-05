@@ -13,6 +13,7 @@ namespace ServerApp.Server
     public class Unreliable : IUnreliableChannel
     {
         private readonly Socket _socket;
+        private bool _isDisposed;
 
         private readonly List<IUnreliableChannel.SubscribeDelegate> _subscribers;
 
@@ -66,6 +67,9 @@ namespace ServerApp.Server
 
         public async ValueTask DisposeAsync()
         {
+            _isDisposed = true;
+            if (_socket.Connected)
+                _socket.Disconnect(false);
             _socket.Dispose();
             _subscribers.Clear();
         }
@@ -73,6 +77,9 @@ namespace ServerApp.Server
         public async ValueTask<UnreliableChannelSendResult> SendAsync(IUserAddress userAddress,
             ReadOnlyMemory<byte> message)
         {
+            if (_isDisposed)
+                return new UnreliableChannelSendResult(UnreliableChannelSendStatus.ChannelIsClosed, null);
+            
             if (!_connections.ContainsKey(userAddress))
                 return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Unknown, $"Address not found");
 

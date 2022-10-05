@@ -60,6 +60,7 @@ namespace ServerApp.Server
                     }
 
                     var id = BitConverter.ToInt32(buffer[sizeof(long)..]);
+                    Console.WriteLine($"New connection id={id}");
 
                     var address = new UserAddress(id.ToString());
                     _connections.Add(address, newSocket);
