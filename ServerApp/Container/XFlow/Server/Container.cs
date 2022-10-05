@@ -70,7 +70,7 @@ namespace XFlow.Server
 
         private ComponentsCollection _components;
 
-        private TickrateConfigComponent _config = new TickrateConfigComponent {Tickrate = 30, ServerSyncStep = 1};
+        private TickrateConfigComponent _config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1 };
 
         private EcsFilter _clientsFilter;
         private EcsPool<ClientComponent> _poolClients;
@@ -101,7 +101,7 @@ namespace XFlow.Server
 
             InitWorld();
 
-            _logger.Log(LogLevel.Information,"Start done");
+            _logger.Log(LogLevel.Information, "Start done");
 
             _isRun = true;
             Loop();
@@ -109,7 +109,7 @@ namespace XFlow.Server
 
         public async ValueTask StopAsync()
         {
-            _logger.Log(LogLevel.Debug,"Container.Stop");
+            _logger.Log(LogLevel.Debug, "Container.Stop");
 
             _isRun = false;
             
@@ -152,6 +152,7 @@ namespace XFlow.Server
                     break;
 
                 case UnreliableChannelMessageType.ChannelClosed:
+                    var closedArgs = message.GetChannelClosedArguments().Value;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -231,7 +232,7 @@ namespace XFlow.Server
 
             _mainWorld.AddUnique(_config);
             _mainWorld.AddUnique<TickComponent>().Value = new Tick(0);
-            _mainWorld.AddUnique(new TickDeltaComponent {Value = new TickDelta(_config.Tickrate)});
+            _mainWorld.AddUnique(new TickDeltaComponent { Value = new TickDelta(_config.Tickrate) });
             _mainWorld.AddUnique<PrimaryWorldComponent>();
 
             _systems.AddWorld(_deadWorld, EcsWorlds.Dead);
@@ -294,12 +295,12 @@ namespace XFlow.Server
         {
             if (P2P.P2P.CheckError(msgBytes))
             {
-                var clientEntity = GetClientEntity(userAddress); 
+                var clientEntity = GetClientEntity(userAddress);
                 if (clientEntity != -1)
                 {
                     var client = _poolClients.Get(clientEntity);
                     _mainWorld.DelEntity(clientEntity);
-                    _logger.Log(LogLevel.Warning,$"removed client {userAddress}");
+                    _logger.Log(LogLevel.Warning, $"removed client {userAddress}");
                     BaseServices.InputLeavePlayer(_inputWorld, client.ID);
                 }
 
@@ -308,19 +309,21 @@ namespace XFlow.Server
 
             if (msgBytes[0] == 0xff && msgBytes[1] == 0 && msgBytes[2] == 0 && msgBytes[3] == 0)
             {
+                _logger.Log(LogLevel.Debug, $"receive input {msgBytes.Length}");
                 GotInput1(new HGlobalReader(msgBytes), userAddress);
                 return;
             }
 
+            _logger.Log(LogLevel.Debug, $"receive Packet {msgBytes.Length}");
             var packet = P2P.P2P.ParseResponse<Packet>(msgBytes);
 
             if (packet.hasHello)
             {
                 var client = new ClientComponent();
                 client.ID = packet.playerID;
-                client.UserAddress = userAddress;
+                client.ReliableAddress = userAddress;
 
-                _logger.Log(LogLevel.Information,$"got hello from client {packet.playerID}");
+                _logger.Log(LogLevel.Information, $"got hello from client {packet.playerID}");
 
                 var hello = new Hello();
                 hello.Components = _components.Components.Select(component => component.GetComponentType().FullName)
@@ -371,12 +374,25 @@ namespace XFlow.Server
             }
         }
 
+        private int GetClientEntityById(int id)
+        {
+            foreach (var entity in _clientsFilter)
+            {
+                var component = _poolClients.Get(entity);
+                if (component.ID == id)
+                    return entity;
+            }
+
+            return -1;
+        }
+
         private int GetClientEntity(IUserAddress address)
         {
             foreach (var entity in _clientsFilter)
             {
                 var component = _poolClients.Get(entity);
-                if (component.UserAddress == address)
+                if (component.ReliableAddress == address
+                    || component.UnreliableAddress == address)
                     return entity;
             }
 
@@ -388,12 +404,20 @@ namespace XFlow.Server
             try
             {
                 var clientEntity = GetClientEntity(address);
+
+                if (clientEntity == -1)
+                {
+                    clientEntity = GetClientEntityById(int.Parse(address.UserId));
+                    if (clientEntity != -1)
+                        _poolClients.GetRef(clientEntity).UnreliableAddress = address;
+                }
+
                 if (clientEntity == -1)
                 {
                     if (!_missingClients.Contains(address))
                     {
                         _missingClients.Add(address);
-                        _logger.Log(LogLevel.Information,$"not found player {address}");
+                        _logger.Log(LogLevel.Information, $"not found player {address}");
                     }
 
                     return;
@@ -470,7 +494,7 @@ namespace XFlow.Server
             foreach (var clientEntity in _clientsFilter)
             {
                 ref var client = ref _poolClients.GetRef(clientEntity);
-                // if (client.UserAddress != null)
+                if (client.UnreliableAddress != null)
                 {
                     var compressed = BuildDiffBytes(client, client.SentWorld);
 
@@ -479,7 +503,7 @@ namespace XFlow.Server
                     {
                         //SimRandomSend(compressed, client);
 
-                        _unreliableChannel.SendAsync(client.UserAddress, compressed);
+                        _unreliableChannel.SendAsync(client.UnreliableAddress, compressed);
                     }
 
                     client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
@@ -496,7 +520,7 @@ namespace XFlow.Server
                     
                     var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
                     var bytes = P2P.P2P.BuildRequest(compressed);
-                    _reliableChannel.SendAsync(client.UserAddress,bytes);
+                    _reliableChannel.SendAsync(client.ReliableAddress, bytes);
                     client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
                 }
 

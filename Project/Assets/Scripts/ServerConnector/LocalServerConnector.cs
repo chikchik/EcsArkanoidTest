@@ -19,7 +19,7 @@ namespace Game
 
         public async Task<ISocket> GetReliableConnection()
         {
-            var socket = new SocketImpl(SocketType.Stream, ProtocolType.Tcp);
+            var socket = new ReliableSocket();
             socket.Connect(IPAddress.Parse("127.0.0.1"), _tcpPort);
             socket.Run();
 
@@ -28,7 +28,7 @@ namespace Game
 
         public async Task<ISocket> GetUnreliableConnection()
         {
-            var socket = new SocketImpl(SocketType.Dgram, ProtocolType.Udp);
+            var socket = new UnreliableSocket();
             socket.Connect(IPAddress.Parse("127.0.0.1"), _udpPort);
             socket.Run();
 

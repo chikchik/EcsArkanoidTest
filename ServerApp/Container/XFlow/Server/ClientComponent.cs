@@ -1,7 +1,5 @@
-﻿using System.Net;
-using Gaming.ContainerManager.ImageContracts.V1;
+﻿using Gaming.ContainerManager.ImageContracts.V1;
 using XFlow.EcsLite;
-using XFlow.P2P;
 
 namespace XFlow.Server
 {
@@ -12,8 +10,8 @@ namespace XFlow.Server
         public int LastPingTick;
         public int LastClientTick;
         public int LastServerTick;
-        public EndPoint EndPoint;
-        public IUserAddress UserAddress;
+        public IUserAddress ReliableAddress;
+        public IUserAddress UnreliableAddress;
 
         public EcsWorld SentWorld;
         public EcsWorld SentWorldRelaible;

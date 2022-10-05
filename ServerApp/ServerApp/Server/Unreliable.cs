@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using Gaming.ContainerManager.ImageContracts.V1;
 using Gaming.ContainerManager.ImageContracts.V1.Channels;
+using XFlow.Utils;
 
 namespace ServerApp.Server
 {
@@ -15,10 +16,13 @@ namespace ServerApp.Server
 
         private readonly List<IUnreliableChannel.SubscribeDelegate> _subscribers;
 
+        private readonly Dictionary<IUserAddress, EndPoint> _connections;
+
         public Unreliable(Socket socket)
         {
             _socket = socket;
             _subscribers = new List<IUnreliableChannel.SubscribeDelegate>();
+            _connections = new Dictionary<IUserAddress, EndPoint>();
         }
 
         public async void Start()
@@ -26,6 +30,7 @@ namespace ServerApp.Server
             var rcvBytes = new byte[64000];
             var rcvBuffer = new ArraySegment<byte>(rcvBytes);
 
+            var reader = new HGlobalReader();
             try
             {
                 var endPoint = new IPEndPoint(IPAddress.Any, 0);
@@ -36,7 +41,19 @@ namespace ServerApp.Server
                     byte[] msgBytes = new byte[res.ReceivedBytes];
                     Array.Copy(rcvBuffer.Array, rcvBuffer.Offset, msgBytes, 0, res.ReceivedBytes);
 
-                    var arguments = new MessageReceivedArguments(null, msgBytes);
+                    reader.Init(msgBytes);
+                    var id = reader.ReadInt32().ToString();
+                    var data = msgBytes[reader.GetPosition()..];
+                    Console.WriteLine($"new udp message id={id}, sizeLeft ={data.Length}");
+
+                    var address = _connections.Keys.FirstOrDefault(address => address.UserId == id);
+                    if (address == null)
+                    {
+                        address = new UserAddress(id);
+                        _connections.Add(address, res.RemoteEndPoint);
+                    }
+
+                    var arguments = new MessageReceivedArguments(address, data);
                     var message = UnreliableChannelMessage.MessageReceived(arguments);
 
                     foreach (var subscriber in _subscribers)
@@ -58,9 +75,21 @@ namespace ServerApp.Server
         public async ValueTask<UnreliableChannelSendResult> SendAsync(IUserAddress userAddress,
             ReadOnlyMemory<byte> message)
         {
-            await _socket.SendToAsync(message.ToArray(), SocketFlags.None, IPEndPoint.Parse(userAddress.ConnectionId));
+            if (!_connections.ContainsKey(userAddress))
+                return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Unknown, $"Address not found");
 
-            return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Ok, null);
+            try
+            {
+                await _socket.SendToAsync(message.ToArray(), SocketFlags.None, _connections[userAddress]);
+
+                return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Ok, null);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Unknown, e.ToString());
+            }
         }
 
         public async ValueTask<IAsyncDisposable> SubscribeAsync(IUnreliableChannel.SubscribeDelegate subscriber)
