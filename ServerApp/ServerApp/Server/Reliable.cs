@@ -11,20 +11,25 @@ namespace ServerApp.Server
     public class Reliable : IReliableChannel
     {
         private readonly Socket _socket;
+        private bool _isDisposed;
 
         private readonly List<IReliableChannel.SubscribeDelegate> _subscribers;
 
         private readonly Dictionary<IUserAddress, Socket> _connections;
+        private readonly Dictionary<IUserAddress, bool> _disposedConnections;
 
         public Reliable(Socket socket)
         {
             _socket = socket;
             _connections = new Dictionary<IUserAddress, Socket>();
+            _disposedConnections = new Dictionary<IUserAddress, bool>();
             _subscribers = new List<IReliableChannel.SubscribeDelegate>();
         }
 
         public async ValueTask DisposeAsync()
         {
+            _isDisposed = true;
+
             foreach (var kvp in _connections)
             {
                 kvp.Value.Disconnect(false);
@@ -38,28 +43,41 @@ namespace ServerApp.Server
 
         public async void Start()
         {
-            while (true)
+            try
             {
-                var newSocket = await _socket.AcceptAsync();
-
-                var buffer = new ArraySegment<byte>(new byte[64000]);
-                var received = await newSocket.ReceiveAsync(buffer, SocketFlags.None);
-
-                if (received != sizeof(long) + sizeof(int))
+                while (true)
                 {
-                    Console.WriteLine($"<12");
-                    continue;
+                    var newSocket = await _socket.AcceptAsync();
+
+                    var buffer = new ArraySegment<byte>(new byte[64000]);
+                    var received = await newSocket.ReceiveAsync(buffer, SocketFlags.None);
+
+                    Console.WriteLine($"Receive id packet {received}");
+                    if (received != sizeof(long) + sizeof(int))
+                    {
+                        Console.WriteLine($"New connection receive wrong message");
+                        continue;
+                    }
+
+                    var id = BitConverter.ToInt32(buffer[sizeof(long)..]);
+
+                    var address = new UserAddress(id.ToString());
+                    _connections.Add(address, newSocket);
+                    _disposedConnections.Add(address, false);
+
+                    await NotifySubscribers(ReliableChannelMessage.UserConnected(new UserConnectedArguments(address)));
+
+                    StartReceiving(newSocket, address);
                 }
-
-                var id = BitConverter.ToInt32(buffer[sizeof(long)..]);
-                Console.WriteLine($"new connection {id}");
-
-                var address = new UserAddress(id.ToString());
-                _connections.Add(address, newSocket);
-
-                await SendMessage(ReliableChannelMessage.UserConnected(new UserConnectedArguments(address)));
-
-                StartReceiving(newSocket, address);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                await DisposeAsync();
             }
         }
 
@@ -82,11 +100,12 @@ namespace ServerApp.Server
 
                     if (receivedLength == 0)
                     {
-                        await SendMessage(
+                        await NotifySubscribers(
                             ReliableChannelMessage.UserDisconnected(new UserDisconnectedArguments(address)));
-                        await SendMessage(ReliableChannelMessage.ChannelClosed(new ChannelClosedArguments()));
+                        await NotifySubscribers(ReliableChannelMessage.ChannelClosed(new ChannelClosedArguments()));
 
                         socket.Dispose();
+                        _disposedConnections[address] = true;
                         _connections.Remove(address);
 
                         break;
@@ -123,7 +142,7 @@ namespace ServerApp.Server
                     foreach (var message in messages)
                     {
                         var arguments = new MessageReceivedArguments(address, message);
-                        await SendMessage(ReliableChannelMessage.MessageReceived(arguments));
+                        await NotifySubscribers(ReliableChannelMessage.MessageReceived(arguments));
                     }
 
                     messages.Clear();
@@ -139,30 +158,52 @@ namespace ServerApp.Server
         public async ValueTask<ReliableChannelSendResult> SendAsync(IUserAddress userAddress,
             ReadOnlyMemory<byte> message)
         {
+            if (userAddress == null)
+                return new ReliableChannelSendResult(ReliableChannelSendStatus.Unknown, "User address not specified");
+
+            if (_isDisposed)
+                return new ReliableChannelSendResult(ReliableChannelSendStatus.ChannelIsClosed, userAddress.ToString());
+
             try
             {
-                await _connections[userAddress].SendAsync(P2P.PackMessage(message.ToArray()), SocketFlags.None);
+                var packet = P2P.PackMessage(message.ToArray());
+
+                if (!_connections.ContainsKey(userAddress))
+                    return new ReliableChannelSendResult(ReliableChannelSendStatus.ClientNotFound,
+                        userAddress.ToString());
+
+                if (_disposedConnections[userAddress])
+                    return new ReliableChannelSendResult(ReliableChannelSendStatus.ChannelIsClosed,
+                        userAddress.ToString());
+
+                await _connections[userAddress].SendAsync(packet, SocketFlags.None);
 
                 return new ReliableChannelSendResult(ReliableChannelSendStatus.Ok, null);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                
+                await DisposeAsync();
+
+                return new ReliableChannelSendResult(ReliableChannelSendStatus.Unknown,
+                    $"{userAddress}\n{e}");
             }
         }
 
         public async ValueTask<IAsyncDisposable> SubscribeAsync(IReliableChannel.SubscribeDelegate subscriber)
         {
+            Console.WriteLine($"SubscribeAsync c={_subscribers.Count}");
             _subscribers.Add(subscriber);
 
             return new AnonymousDisposable(async () => _subscribers.Remove(subscriber));
         }
 
-        private async Task SendMessage(ReliableChannelMessage message)
+        private async Task NotifySubscribers(ReliableChannelMessage message)
         {
-            foreach (var subscriber in _subscribers)
-                await subscriber.Invoke(message);
+            Console.WriteLine($"Notify {message.Type} {_subscribers.Count}");
+            for (var i = 0; i < _subscribers.Count; i++)
+                await _subscribers[i].Invoke(message);
         }
     }
 }

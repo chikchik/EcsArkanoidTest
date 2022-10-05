@@ -14,7 +14,12 @@ namespace ServerApp.Server
 
         public bool Equals(IUserAddress other)
         {
-            return UserId.Equals(other.UserId);
+            return UserId.Equals(other?.UserId);
+        }
+
+        public override string ToString()
+        {
+            return $"{UserId} [{ConnectionId}]";
         }
     }
 }

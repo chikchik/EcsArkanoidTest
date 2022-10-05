@@ -270,7 +270,7 @@ namespace XFlow.Server
                 var step = 1.0 / _config.Tickrate;
                 while (_isRun)
                 {
-                    if (next > DateTime.UtcNow || !_worldInitialized) 
+                    if (next > DateTime.UtcNow || !_worldInitialized)
                         continue;
                     
                     next = next.AddSeconds(step);
@@ -361,10 +361,10 @@ namespace XFlow.Server
 
 
                 var data = P2P.P2P.BuildRequest(packet);
-                _logger.Log(LogLevel.Debug,$"Send hello, {data.Length}");
+                _logger.Log(LogLevel.Debug, $"Send hello, {data.Length}");
                 _reliableChannel.SendAsync(userAddress, data);
 
-                _logger.Log(LogLevel.Information,$"send initial world at tick {_mainWorld.GetTick()}");
+                _logger.Log(LogLevel.Information, $"send initial world at tick {_mainWorld.GetTick()}");
 
                 var entity = _mainWorld.NewEntity();
                 _poolClients.Add(entity) = client;
@@ -444,8 +444,8 @@ namespace XFlow.Server
                 //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
                 if (delay < 0)
                     time = currentTick;
-                
-                _logger.Log(LogLevel.Debug,$"GotInput1 t={type}");
+
+                _logger.Log(LogLevel.Debug, $"GotInput1 t={type}");
 
                 var r = client.SentWorld.GetUnique<TickComponent>();
                 var sentWorldTick = client.SentWorld.GetTick() - step.Value;
@@ -533,7 +533,7 @@ namespace XFlow.Server
 
             if (_mainWorld.GetTick() % 50 == 0)
             {
-                _logger.Log(LogLevel.Information,$"tick {_mainWorld.GetTick()}");
+                _logger.Log(LogLevel.Information, $"tick {_mainWorld.GetTick()}");
             }
         }
 

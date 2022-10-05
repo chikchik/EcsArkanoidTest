@@ -1,28 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Gaming.ContainerManager.Client.SocketContracts.V1;
 using XFlow.P2P;
 
-public class ReliableSocket : ISocket
+public class ReliableSocket : BaseSocket
 {
-    private readonly Socket _socket;
-
-    private readonly List<ISocket.SubscribeDelegate> _subscribers = new List<ISocket.SubscribeDelegate>();
-
     public ReliableSocket()
     {
-        _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     }
 
-    public void Connect(IPAddress address, int port)
-    {
-        _socket.Connect(new IPEndPoint(address, port));
-    }
-
-    public async Task Run()
+    public override async Task Run()
     {
         const int packetSizeHeader = sizeof(long);
 
@@ -35,11 +25,11 @@ public class ReliableSocket : ISocket
 
         while (true)
         {
-            var receivedLength = await _socket.ReceiveAsync(rcvBuffer, SocketFlags.None);
+            var receivedLength = await Socket.ReceiveAsync(rcvBuffer, SocketFlags.None);
 
             if (receivedLength == 0)
             {
-                _socket.Dispose();
+                Socket.Dispose();
 
                 break;
             }
@@ -74,7 +64,7 @@ public class ReliableSocket : ISocket
 
             foreach (var message in messages)
             {
-                foreach (var subscriber in _subscribers)
+                foreach (var subscriber in Subscribers)
                     await subscriber.Invoke(SocketMessage.Message(message));
             }
 
@@ -82,23 +72,20 @@ public class ReliableSocket : ISocket
         }
     }
 
-    public async ValueTask<SocketSendResult> SendAsync(ReadOnlyMemory<byte> message)
+    public override async ValueTask<SocketSendResult> SendAsync(ReadOnlyMemory<byte> message)
     {
-        await _socket.SendAsync(P2P.PackMessage(message.ToArray()), SocketFlags.None);
+        if (isDisposed)
+            return new SocketSendResult(SocketSendResultType.SocketClosed, null);
+        try
+        {
+            await Socket.SendAsync(P2P.PackMessage(message.ToArray()), SocketFlags.None);
 
-        return new SocketSendResult();
-    }
-
-    public async ValueTask<IAsyncDisposable> SubscribeAsync(ISocket.SubscribeDelegate subscriber)
-    {
-        _subscribers.Add(subscriber);
-
-        return new AnonymousDisposable(async () => _subscribers.Remove(subscriber));
-    }
-
-    public async ValueTask CloseAsync()
-    {
-        _socket.Disconnect(false);
-        _socket.Dispose();
+            return new SocketSendResult(SocketSendResultType.Ok, null);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);         
+            return new SocketSendResult(SocketSendResultType.Unknown, e.ToString());
+        }
     }
 }

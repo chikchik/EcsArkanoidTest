@@ -27,8 +27,7 @@ namespace ServerApp.Server
 
         public async void Start()
         {
-            var rcvBytes = new byte[64000];
-            var rcvBuffer = new ArraySegment<byte>(rcvBytes);
+            var buffer = new ArraySegment<byte>(new byte[64000]);
 
             var reader = new HGlobalReader();
             try
@@ -36,15 +35,14 @@ namespace ServerApp.Server
                 var endPoint = new IPEndPoint(IPAddress.Any, 0);
                 while (true)
                 {
-                    var res = await _socket.ReceiveMessageFromAsync(rcvBuffer, SocketFlags.None, endPoint);
+                    var res = await _socket.ReceiveMessageFromAsync(buffer, SocketFlags.None, endPoint);
 
-                    byte[] msgBytes = new byte[res.ReceivedBytes];
-                    Array.Copy(rcvBuffer.Array, rcvBuffer.Offset, msgBytes, 0, res.ReceivedBytes);
+                    var received = new byte[res.ReceivedBytes];
+                    Array.Copy(buffer.Array, buffer.Offset, received, 0, res.ReceivedBytes);
 
-                    reader.Init(msgBytes);
+                    reader.Init(received);
                     var id = reader.ReadInt32().ToString();
-                    var data = msgBytes[reader.GetPosition()..];
-                    Console.WriteLine($"new udp message id={id}, sizeLeft ={data.Length}");
+                    var data = received[reader.GetPosition()..];
 
                     var address = _connections.Keys.FirstOrDefault(address => address.UserId == id);
                     if (address == null)
@@ -62,7 +60,7 @@ namespace ServerApp.Server
             }
             finally
             {
-                DisposeAsync();
+                await DisposeAsync();
             }
         }
 
