@@ -9,13 +9,13 @@ public abstract class BaseSocket : ISocket
 {
     protected Socket Socket;
 
-    protected readonly string UserId;
+    protected readonly int UserId;
     
     protected bool isDisposed { get; private set; }
 
     protected readonly List<ISocket.SubscribeDelegate> Subscribers;
 
-    protected BaseSocket(string userId)
+    protected BaseSocket(int userId)
     {
         UserId = userId;
         Subscribers = new List<ISocket.SubscribeDelegate>();

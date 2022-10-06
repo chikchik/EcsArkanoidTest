@@ -58,11 +58,10 @@ namespace ServerApp.Server
                     Console.WriteLine($"Receive id packet {received}");
 
                     var receivedData = buffer[..received];
-                    var packetLength = BitConverter.ToInt32(receivedData[..sizeof(int)]);
-                    var id = Encoding.UTF8.GetString(receivedData[sizeof(int)..packetLength]);
+                    var id = BitConverter.ToInt32(receivedData[..sizeof(int)]);
                     Console.WriteLine($"New connection id={id}");
 
-                    var address = new UserAddress(id);
+                    var address = new UserAddress(id.ToString());
 
                     lock (_locker)
                     {
@@ -72,7 +71,7 @@ namespace ServerApp.Server
 
                     await NotifySubscribers(ReliableChannelMessage.UserConnected(new UserConnectedArguments(address)));
 
-                    StartReceiving(newSocket, address, receivedData[packetLength..].ToArray());
+                    StartReceiving(newSocket, address, receivedData[sizeof(int)..].ToArray());
                 }
             }
             catch (Exception e)

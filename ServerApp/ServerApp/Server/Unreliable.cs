@@ -44,9 +44,8 @@ namespace ServerApp.Server
                     Array.Copy(buffer.Array, buffer.Offset, received, 0, res.ReceivedBytes);
 
 
-                    var idLength = BitConverter.ToInt32(received[..sizeof(int)]);
-                    var id = Encoding.UTF8.GetString(received[sizeof(int)..idLength]);
-                    var data = received[idLength..];
+                    var id = BitConverter.ToInt32(received[..sizeof(int)]).ToString();
+                    var data = received[sizeof(int)..];
 
                     IUserAddress address;
                     lock (_locker)

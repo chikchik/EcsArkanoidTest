@@ -8,7 +8,7 @@ using XFlow.P2P;
 
 public class UnreliableSocket : BaseSocket
 {
-    public UnreliableSocket(string userId) : base(userId)
+    public UnreliableSocket(int userId) : base(userId)
     {
         Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
     }
@@ -37,10 +37,7 @@ public class UnreliableSocket : BaseSocket
 
         try
         {
-            var rawId = Encoding.UTF8.GetBytes(UserId, 0, UserId.Length);
-            var rawIdPacketSize = BitConverter.GetBytes(sizeof(int) + rawId.Length);
-            var packet = P2P.Combine(rawIdPacketSize, rawId);
-            packet = P2P.Combine(packet, message.ToArray());
+            var packet = P2P.Combine(BitConverter.GetBytes(UserId), message.ToArray());
 
             await Socket.SendToAsync(packet, SocketFlags.None, Socket.RemoteEndPoint);
 
