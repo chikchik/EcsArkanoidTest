@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Submodules\module-ecs-central\Contracts\Contracts.csproj" />
-    <ProjectReference Include="..\..\Submodules\module-ecs-container\Contracts\Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
