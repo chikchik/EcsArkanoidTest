@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using Gaming.ContainerManager.ImageContracts.V1;
 using Gaming.ContainerManager.ImageContracts.V1.Channels;
@@ -20,7 +21,7 @@ namespace ServerApp.Server
         private readonly Dictionary<IUserAddress, EndPoint> _connections;
 
         private readonly object _locker = new object();
-        
+
         public Unreliable(Socket socket)
         {
             _socket = socket;
@@ -32,7 +33,6 @@ namespace ServerApp.Server
         {
             var buffer = new ArraySegment<byte>(new byte[64000]);
 
-            var reader = new HGlobalReader();
             try
             {
                 var endPoint = new IPEndPoint(IPAddress.Any, 0);
@@ -43,9 +43,10 @@ namespace ServerApp.Server
                     var received = new byte[res.ReceivedBytes];
                     Array.Copy(buffer.Array, buffer.Offset, received, 0, res.ReceivedBytes);
 
-                    reader.Init(received);
-                    var id = reader.ReadInt32().ToString();
-                    var data = received[reader.GetPosition()..];
+
+                    var idLength = BitConverter.ToInt32(received[..sizeof(int)]);
+                    var id = Encoding.UTF8.GetString(received[sizeof(int)..idLength]);
+                    var data = received[idLength..];
 
                     IUserAddress address;
                     lock (_locker)

@@ -58,7 +58,7 @@ namespace XFlow.Server
 
         private EcsSystems _systems;
 
-        private List<IUserAddress> _missingClients = new List<IUserAddress>();
+        private List<string> _missingClients = new List<string>();
         private ApplyInputWorldService _inputService = new ApplyInputWorldService();
         private EntityDestroyedListener _destroyedListener = new EntityDestroyedListener();
         private CopyToDeadWorldListener _copyToDeadWorldListener;
@@ -307,7 +307,7 @@ namespace XFlow.Server
         {
             if (P2P.P2P.CheckError(msgBytes))
             {
-                var clientEntity = GetClientEntity(userAddress);
+                var clientEntity = GetClientEntity(userAddress.UserId);
                 if (clientEntity != -1)
                 {
                     var client = _poolClients.Get(clientEntity);
@@ -333,6 +333,7 @@ namespace XFlow.Server
             {
                 var client = new ClientComponent();
                 client.ID = packet.playerID;
+                client.UserAddressId = userAddress.UserId;
                 client.ReliableAddress = userAddress;
 
                 _logger.Log(LogLevel.Information, $"got hello from client {packet.playerID}");
@@ -386,25 +387,12 @@ namespace XFlow.Server
             }
         }
 
-        private int GetClientEntityById(int id)
+        private int GetClientEntity(string userAddressId)
         {
             foreach (var entity in _clientsFilter)
             {
                 var component = _poolClients.Get(entity);
-                if (component.ID == id)
-                    return entity;
-            }
-
-            return -1;
-        }
-
-        private int GetClientEntity(IUserAddress address)
-        {
-            foreach (var entity in _clientsFilter)
-            {
-                var component = _poolClients.Get(entity);
-                if (component.ReliableAddress == address
-                    || component.UnreliableAddress == address)
+                if (component.UserAddressId == userAddressId)
                     return entity;
             }
 
@@ -415,28 +403,22 @@ namespace XFlow.Server
         {
             try
             {
-                var clientEntity = GetClientEntity(address);
-
+                var clientEntity = GetClientEntity(address.UserId);
                 if (clientEntity == -1)
                 {
-                    clientEntity = GetClientEntityById(int.Parse(address.UserId));
-                    if (clientEntity != -1)
-                        _poolClients.GetRef(clientEntity).UnreliableAddress = address;
-                }
-
-                if (clientEntity == -1)
-                {
-                    if (!_missingClients.Contains(address))
+                    if (!_missingClients.Contains(address.UserId))
                     {
-                        _missingClients.Add(address);
+                        _missingClients.Add(address.UserId);
                         _logger.Log(LogLevel.Information, $"not found player {address}");
                     }
 
                     return;
                 }
-
+                
                 ref var client = ref _poolClients.GetRef(clientEntity);
 
+                client.UnreliableAddress ??= address;
+                
                 var inputTime = reader.ReadInt32();
                 var time = inputTime;
 
@@ -505,7 +487,7 @@ namespace XFlow.Server
             foreach (var clientEntity in _clientsFilter)
             {
                 ref var client = ref _poolClients.GetRef(clientEntity);
-                if (client.UnreliableAddress != null)
+                if (!string.IsNullOrEmpty(client.UserAddressId) && client.UnreliableAddress != null)
                 {
                     var compressed = BuildDiffBytes(client, client.SentWorld);
 

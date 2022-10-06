@@ -1,12 +1,14 @@
 using System;
 using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using Gaming.ContainerManager.Client.SocketContracts.V1;
+using XFlow.P2P;
 
 public class UnreliableSocket : BaseSocket
 {
-    public UnreliableSocket()
+    public UnreliableSocket(string userId) : base(userId)
     {
         Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
     }
@@ -35,7 +37,12 @@ public class UnreliableSocket : BaseSocket
 
         try
         {
-            await Socket.SendToAsync(message.ToArray(), SocketFlags.None, Socket.RemoteEndPoint);
+            var rawId = Encoding.UTF8.GetBytes(UserId, 0, UserId.Length);
+            var rawIdPacketSize = BitConverter.GetBytes(sizeof(int) + rawId.Length);
+            var packet = P2P.Combine(rawIdPacketSize, rawId);
+            packet = P2P.Combine(packet, message.ToArray());
+
+            await Socket.SendToAsync(packet, SocketFlags.None, Socket.RemoteEndPoint);
 
             return new SocketSendResult(SocketSendResultType.Ok, null);
         }

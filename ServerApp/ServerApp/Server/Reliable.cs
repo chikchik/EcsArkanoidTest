@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using Gaming.ContainerManager.ImageContracts.V1;
 using Gaming.ContainerManager.ImageContracts.V1.Channels;
@@ -51,20 +52,17 @@ namespace ServerApp.Server
                 {
                     var newSocket = await _socket.AcceptAsync();
 
-                    var buffer = new ArraySegment<byte>(new byte[64000]);
+                    var buffer = new ArraySegment<byte>(new byte[1024]);
                     var received = await newSocket.ReceiveAsync(buffer, SocketFlags.None);
 
                     Console.WriteLine($"Receive id packet {received}");
-                    if (received != sizeof(long) + sizeof(int))
-                    {
-                        Console.WriteLine($"New connection receive wrong message");
-                        continue;
-                    }
 
-                    var id = BitConverter.ToInt32(buffer[sizeof(long)..]);
+                    var receivedData = buffer[..received];
+                    var packetLength = BitConverter.ToInt32(receivedData[..sizeof(int)]);
+                    var id = Encoding.UTF8.GetString(receivedData[sizeof(int)..packetLength]);
                     Console.WriteLine($"New connection id={id}");
 
-                    var address = new UserAddress(id.ToString());
+                    var address = new UserAddress(id);
 
                     lock (_locker)
                     {
@@ -74,7 +72,7 @@ namespace ServerApp.Server
 
                     await NotifySubscribers(ReliableChannelMessage.UserConnected(new UserConnectedArguments(address)));
 
-                    StartReceiving(newSocket, address);
+                    StartReceiving(newSocket, address, receivedData[packetLength..].ToArray());
                 }
             }
             catch (Exception e)
@@ -88,13 +86,13 @@ namespace ServerApp.Server
             }
         }
 
-        private async void StartReceiving(Socket socket, IUserAddress address)
+        private async void StartReceiving(Socket socket, IUserAddress address, byte[] data)
         {
             try
             {
                 const int packetSizeHeader = sizeof(long);
 
-                var dataStream = new Queue<byte>();
+                var dataStream = new Queue<byte>(data);
                 var rcvBuffer = new ArraySegment<byte>(new byte[64000]);
 
                 var nextPacketSize = -1L;

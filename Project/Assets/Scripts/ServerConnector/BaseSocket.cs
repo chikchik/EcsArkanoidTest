@@ -9,16 +9,19 @@ public abstract class BaseSocket : ISocket
 {
     protected Socket Socket;
 
+    protected readonly string UserId;
+    
     protected bool isDisposed { get; private set; }
 
     protected readonly List<ISocket.SubscribeDelegate> Subscribers;
 
-    protected BaseSocket()
+    protected BaseSocket(string userId)
     {
+        UserId = userId;
         Subscribers = new List<ISocket.SubscribeDelegate>();
     }
 
-    public void Connect(IPAddress address, int port)
+    public virtual async  Task Connect(IPAddress address, int port)
     {
         Socket.Connect(new IPEndPoint(address, port));
     }

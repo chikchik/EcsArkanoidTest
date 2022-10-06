@@ -1,15 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using Gaming.ContainerManager.Client.SocketContracts.V1;
 using XFlow.P2P;
 
 public class ReliableSocket : BaseSocket
 {
-    public ReliableSocket()
+    public ReliableSocket(string userId) : base(userId)
     {
         Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+    }
+
+    public override async Task Connect(IPAddress address, int port)
+    {
+        await base.Connect(address, port);
+
+        var id = Encoding.UTF8.GetBytes(UserId, 0, UserId.Length);
+        var packet = P2P.Combine(BitConverter.GetBytes(sizeof(int) + id.Length), id);
+
+        await Socket.SendAsync(packet, SocketFlags.None);
     }
 
     public override async Task Run()
@@ -84,7 +96,7 @@ public class ReliableSocket : BaseSocket
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);         
+            Console.WriteLine(e);
             return new SocketSendResult(SocketSendResultType.Unknown, e.ToString());
         }
     }
