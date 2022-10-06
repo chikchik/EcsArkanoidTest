@@ -76,13 +76,13 @@ namespace Game.Ecs.ClientServer.Systems
                 var unitEntity = BaseServices.GetUnitEntityByPlayerId(_world, playerId);
                 if (!_world.IsEntityAliveInternal(unitEntity))
                 {
-                    Debug.LogError($"unit entity {unitEntity} is not alive");
+                    _world.LogError($"unit entity {unitEntity} is not alive");
                     continue;
                 }
 
                 if (!unitEntity.EntityHas<UnitComponent>(_world))
                 {
-                    Debug.LogError($"entity {unitEntity} is not unit");
+                    _world.LogError($"entity {unitEntity} is not unit");
                     continue;
                 }
                 

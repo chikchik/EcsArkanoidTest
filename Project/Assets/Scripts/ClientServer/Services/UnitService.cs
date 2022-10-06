@@ -1,6 +1,7 @@
 ﻿using Game.Ecs.ClientServer.Components;
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
+using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer;
 using XFlow.Modules.Box2D.ClientServer.Api;
@@ -39,7 +40,7 @@ namespace Game.ClientServer.Services
 
             entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();
 
-            UnityEngine.Debug.Log($"GenerateUnitEntity {entity}");
+            world.Log($"GenerateUnitEntity {entity}");
 
             return entity;
         }

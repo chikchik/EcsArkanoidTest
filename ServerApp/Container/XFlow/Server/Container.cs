@@ -211,7 +211,6 @@ namespace XFlow.Server
             _mainWorld.AddUnique(_config);
             _mainWorld.AddUnique<TickComponent>().Value = new Tick(0);
             _mainWorld.AddUnique(new TickDeltaComponent { Value = new TickDelta(_config.Tickrate) });
-            _mainWorld.AddUnique<PrimaryWorldComponent>();
 
             _systems.AddWorld(_deadWorld, EcsWorlds.Dead);
 
@@ -248,8 +247,8 @@ namespace XFlow.Server
                 _deadWorld = new EcsWorld(EcsWorlds.Dead);
                 _copyToDeadWorldListener = new CopyToDeadWorldListener(_deadWorld);
                 
-                
                 _mainWorld = new EcsWorld("serv");
+                _mainWorld.Flags |= EcsWorldFlags.PrimaryMainWorld;
                 _mainWorld.SetDefaultGen(InternalConfig.ServerWorldGenMin, InternalConfig.ServerWorldGenMax);
                 _systems = new EcsSystems(_mainWorld);
                 _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
