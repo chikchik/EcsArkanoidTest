@@ -71,7 +71,8 @@ namespace Game.Installers
             if (gameSettings.MultiPlayer)
             {
                 Container.Bind<IServerConnector>()
-                    .FromInstance(new LocalServerConnector(12121, 12345))
+                    .FromInstance(new FacadeServerConnector("d44854ec-9e15-4549-a2bf-fd12cf92a6bd"))
+                    // .FromInstance(new LocalServerConnector(12121, 12345))
                     .AsSingle();
                 
                 var comp = gameSettings.gameObject.AddComponent<UnityEcsClient>();

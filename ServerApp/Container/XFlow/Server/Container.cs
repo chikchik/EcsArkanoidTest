@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,7 +16,6 @@ using Game.ClientServer.Services;
 using Gaming.ContainerManager.ImageContracts.V1;
 using Gaming.ContainerManager.ImageContracts.V1.Channels;
 using Gaming.ContainerManager.Models.V1;
-using UnityEngine;
 using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
@@ -33,6 +33,7 @@ using XFlow.Net.ClientServer.Protocol;
 using XFlow.P2P;
 using XFlow.Utils;
 using Zenject;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace XFlow.Server
@@ -76,43 +77,72 @@ namespace XFlow.Server
         private EcsPool<ClientComponent> _poolClients;
 
         private bool _isRun;
+        private Thread _loopThread;
 
         public Container(ContainerStartingContext context)
         {
-            _context = context;
-            
-            Box2DServices.CheckNative();
-            
-            _components = new ComponentsCollection();
-            ComponentsCollectionUtils.AddComponentsFromAssembly(_components,
-                System.Reflection.Assembly.GetExecutingAssembly());
-            
-            _syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
-            WorldLoggerExt.logger = _syncDebug.CreateLogger();
+            try
+            {
+                _context = context;
+                
+                Debug.SetLogDelegate(log => { _logger.Log(LogLevel.Information, log); });
+
+                var sw = Stopwatch.StartNew();
+                Box2DServices.CheckNative();
+                _logger.Log(LogLevel.Debug, $"CheckNative {sw.ElapsedMilliseconds}");
+
+                sw.Restart();
+                _components = new ComponentsCollection();
+                ComponentsCollectionUtils.AddComponentsFromAssembly(_components,
+                    System.Reflection.Assembly.GetExecutingAssembly());
+                _logger.Log(LogLevel.Debug, $"AddComponentsFromAssembly {sw.ElapsedMilliseconds}");
+
+                _syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
+                WorldLoggerExt.logger = _syncDebug.CreateLogger();
+                
+                _logger.Log(LogLevel.Debug, $"Container constructor done");
+            }
+            catch (Exception e)
+            {
+                _logger.Log(LogLevel.Error, e);
+                throw;
+            }
         }
-        
+
         public async Task Start()
         {
-            _reliableChannel = await _context.Host.ChannelProvider.GetReliableChannelAsync();
-            _reliableChannelSubs = await _reliableChannel.SubscribeAsync(OnReliableMessageReceived);
+            try
+            {
+                _reliableChannel = await _context.Host.ChannelProvider.GetReliableChannelAsync();
+                _reliableChannelSubs = await _reliableChannel.SubscribeAsync(OnReliableMessageReceived);
 
-            _unreliableChannel = await _context.Host.ChannelProvider.GetUnreliableChannelAsync();
-            _unreliableChannelSubs = await _unreliableChannel.SubscribeAsync(OnUnreliableMessageReceived);
+                _unreliableChannel = await _context.Host.ChannelProvider.GetUnreliableChannelAsync();
+                _unreliableChannelSubs = await _unreliableChannel.SubscribeAsync(OnUnreliableMessageReceived);
 
-            InitWorld();
+                InitWorld();
 
-            _logger.Log(LogLevel.Information, "Start done");
+                _logger.Log(LogLevel.Information, "Start done");
 
-            _isRun = true;
-            Loop();
+                _isRun = true;
+
+                _loopThread = new Thread(Loop);
+                _loopThread.Start();
+            }
+            catch (Exception e)
+            {
+                _logger.Log(LogLevel.Error, e);
+                throw;
+            }
         }
 
         public async ValueTask StopAsync()
         {
             _logger.Log(LogLevel.Debug, "Container.Stop");
 
+            _loopThread.Abort();
+
             _isRun = false;
-            
+
             await _reliableChannel.DisposeAsync();
             await _reliableChannelSubs.DisposeAsync();
             await _unreliableChannel.DisposeAsync();
@@ -121,29 +151,33 @@ namespace XFlow.Server
 
         public async ValueTask<string> GetInfoAsync()
         {
-            var sb = new StringBuilder(512);
-            sb.AppendLine($"tick: {_mainWorld.GetTick()}");
-            sb.AppendLine($"tickrate: {_config.Tickrate}");
-            sb.AppendLine($"world entities: {_mainWorld.GetAliveEntitiesCount()}");
-            sb.AppendLine($"world size: {_mainWorld.GetAllocMemorySizeInBytes() / 1024} kb");
-
-            sb.AppendLine($"clients: {_clientsFilter.GetEntitiesCount()}");
-            foreach (var entity in _clientsFilter)
+            lock (_locker)
             {
-                var client = entity.EntityGet<ClientComponent>(_mainWorld);
-                sb.AppendLine($"  id: {client.ID}, lastTick: {client.LastClientTick}");
-            }
+                var sb = new StringBuilder(512);
+                sb.AppendLine($"tick: {_mainWorld.GetTick()}");
+                sb.AppendLine($"tickrate: {_config.Tickrate}");
+                sb.AppendLine($"world entities: {_mainWorld.GetAliveEntitiesCount()}");
+                sb.AppendLine($"world size: {_mainWorld.GetAllocMemorySizeInBytes() / 1024} kb");
 
-            return sb.ToString();
+                sb.AppendLine($"clients: {_clientsFilter.GetEntitiesCount()}");
+                foreach (var entity in _clientsFilter)
+                {
+                    var client = entity.EntityGet<ClientComponent>(_mainWorld);
+                    sb.AppendLine($"  id: {client.ID}, lastTick: {client.LastClientTick}");
+                }
+
+                return sb.ToString();
+            }
         }
-        
+
         public async ValueTask<ContainerState> GetStateAsync()
         {
             return ContainerState.Empty;
         }
-        
+
         private async ValueTask OnUnreliableMessageReceived(UnreliableChannelMessage message)
         {
+            _logger.Log(LogLevel.Debug,$"OnUnreliableMessageReceived {message.Type}");
             switch (message.Type)
             {
                 case UnreliableChannelMessageType.MessageReceived:
@@ -212,18 +246,20 @@ namespace XFlow.Server
 
             _clientsFilter = _mainWorld.Filter<ClientComponent>().End();
             _poolClients = _mainWorld.GetPool<ClientComponent>();
-        }   
-        
+            
+            _logger.Log(LogLevel.Information, "Init world done");
+        }
+
         private void StartSystems(byte[] initialWorld)
         {
             if (_worldInitialized)
                 return;
 
-            Debug.Log("StartSystems");
+            _logger.Log(LogLevel.Information, "StartSystems");
             WorldDiff dif = null;
             if (initialWorld?.Length > 0)
             {
-                Debug.Log($"FromByteArray {initialWorld.Length}");
+                _logger.Log(LogLevel.Debug, $"FromByteArray {initialWorld.Length}");
                 dif = WorldDiff.FromByteArray(_components, initialWorld);
             }
             else
@@ -270,7 +306,7 @@ namespace XFlow.Server
             _systemsFactory = new EcsSystemsFactory(container);
         }
 
-        private async Task Loop()
+        private void Loop()
         {
             try
             {
@@ -305,6 +341,8 @@ namespace XFlow.Server
 
         private void ProcessMessage(byte[] msgBytes, IUserAddress userAddress)
         {
+            _logger.Log(LogLevel.Debug, $"ProcessMessage id={userAddress.UserId} size={msgBytes.Length}");
+
             if (P2P.P2P.CheckError(msgBytes))
             {
                 var clientEntity = GetClientEntity(userAddress.UserId);
@@ -404,6 +442,7 @@ namespace XFlow.Server
             try
             {
                 var clientEntity = GetClientEntity(address.UserId);
+                _logger.Log(LogLevel.Debug,$"GotInput1 id={address.UserId} cId={clientEntity}");
                 if (clientEntity == -1)
                 {
                     if (!_missingClients.Contains(address.UserId))
@@ -478,6 +517,11 @@ namespace XFlow.Server
 
         private void Tick()
         {
+            if (_mainWorld.GetTick() % 50 == 0)
+            {
+                _logger.Log(LogLevel.Information, $"tick {_mainWorld.GetTick()}");
+            }
+            
             var time = _mainWorld.GetTick();
             SyncServices.FilterInputs(_inputWorld, time);
             //обновляем мир 1 раз
@@ -522,11 +566,6 @@ namespace XFlow.Server
                 {
                     _mainWorld.DelEntity(entity);
                 }
-            }
-
-            if (_mainWorld.GetTick() % 50 == 0)
-            {
-                _logger.Log(LogLevel.Information, $"tick {_mainWorld.GetTick()}");
             }
         }
 

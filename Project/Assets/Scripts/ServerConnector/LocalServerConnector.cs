@@ -17,7 +17,7 @@ namespace Game
             _tcpPort = tcpPort;
             _udpPort = udpPort;
 
-            _userId = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+            _userId = UnityEngine.Random.Range(1000, 9999);
         }
 
         public async Task<ISocket> GetReliableConnection()

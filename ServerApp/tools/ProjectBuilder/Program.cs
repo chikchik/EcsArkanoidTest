@@ -33,7 +33,7 @@ static async Task<bool> SendArchive(byte[] archive)
         Console.WriteLine);
 
     var name = new ContainerImageName("test-image");
-    var version = new Version(1, 0, 4);
+    var version = new Version(1, 0, 12);
     var image = new ContainerImage(name, version, archive);
     await GamingServices.V1
         .RegisterContainerImage(image)
@@ -100,50 +100,64 @@ static bool CreateArchive(string root, ICollection<string> paths)
 
 static List<string> GetFilesToAdding(string root)
 {
-    var expectedFiles = new[] {"libbox2d-unity", "Container"};
+    var expectedFiles = new[] { "libbox2d-unity", "Container" };
     var result = new List<string>();
 
     var files = Directory.GetFiles(root);
-    foreach (var fileName in files)
-    foreach (var expectedName in expectedFiles)
-        if (Path.GetFileNameWithoutExtension(fileName).Equals(expectedName))
-            result.Add(fileName);
+    // foreach (var fileName in files)
+    // foreach (var expectedName in expectedFiles)
+    //     if (Path.GetFileNameWithoutExtension(fileName).Equals(expectedName))
+    //         result.Add(fileName);
+    //
+    // return result;
 
-    return result;
+    return files.ToList();
 }
 
 static async Task<bool> BuildProject(string rootPath)
 {
-    var info = new ProcessStartInfo
+    try
     {
-        FileName = "dotnet",
-        UseShellExecute = false,
-        CreateNoWindow = true,
-        RedirectStandardOutput = true,
-        RedirectStandardError = true,
-    };
-    info.ArgumentList.Add("build");
-    info.ArgumentList.Add(rootPath);
-    info.ArgumentList.Add("--no-incremental");
+        var info = new ProcessStartInfo
+        {
+            FileName = "dotnet",
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+        };
+        info.ArgumentList.Add("build");
+        info.ArgumentList.Add(rootPath);
+        info.ArgumentList.Add("--no-incremental");
 
-    var process = Process.Start(info);
+        var process = Process.Start(info);
 
-    process.OutputDataReceived += (_, eventArgs) => Console.WriteLine(eventArgs.Data);
-    process.ErrorDataReceived += (_, eventArgs) => Console.WriteLine(eventArgs.Data);
-    process.Start();
+        process.OutputDataReceived += (_, eventArgs) => Console.WriteLine(eventArgs.Data);
+        process.ErrorDataReceived += (_, eventArgs) => Console.WriteLine(eventArgs.Data);
+        process.Start();
 
-    process.BeginOutputReadLine();
-    process.BeginErrorReadLine();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
 
-    await process.WaitForExitAsync();
+        await process.WaitForExitAsync();
 
-    if (process.ExitCode != 0)
+        var exitCode = process.ExitCode;
+        process.Dispose();
+
+        if (exitCode != 0)
+        {
+            Console.WriteLine("Build has errors");
+            return false;
+        }
+
+        Console.WriteLine("Build successful");
+    }
+    catch (Exception e)
     {
-        Console.WriteLine("Build has errors");
-        return false;
+        Console.WriteLine(e);
+        throw;
     }
 
-    Console.WriteLine("Build successful");
     return true;
 }
 
