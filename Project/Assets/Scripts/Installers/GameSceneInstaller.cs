@@ -52,7 +52,7 @@ namespace Game.Installers
             Container.Bind<Objectives>().AsSingle().NonLazy();
 
             //var world = new EcsWorld("main");
-            Container.Bind<EcsWorld>().FromInstance(new EcsWorld("main")).AsCached();
+            Container.Bind<EcsWorld>().FromInstance(new EcsWorld(EcsWorlds.Main)).AsCached();
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Input).FromInstance(new EcsWorld(EcsWorlds.Input)).AsCached();
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Event).FromInstance(new EcsWorld(EcsWorlds.Event)).AsCached();
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Dead).FromInstance(new EcsWorld(EcsWorlds.Dead)).AsCached();
