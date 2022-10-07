@@ -138,7 +138,7 @@ namespace ServerApp.Server
                         if (nextPacketSize - packetSizeHeader > dataStream.Count)
                             break;
 
-                        var message = new byte[nextPacketSize];
+                        var message = new byte[nextPacketSize - packetSizeHeader];
                         for (var i = 0; i < nextPacketSize - packetSizeHeader; i++)
                             message[i] = dataStream.Dequeue();
                         messages.Add(message);
