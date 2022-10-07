@@ -27,7 +27,7 @@ namespace Game
 
         private void Start()
         {
-            NetClientPanel.Create(_client);
+            NetClientPanel.Create(_client).Show();
             string initialWorldJson = null;
             if (true)
             {

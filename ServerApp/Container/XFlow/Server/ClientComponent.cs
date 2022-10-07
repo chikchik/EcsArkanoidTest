@@ -7,7 +7,11 @@ namespace XFlow.Server
     struct ClientComponent
     {
         public int ID;
+        
         public int Delay;
+        public int DelayMs;
+        
+        
         public int LastPingTick;
         public int LastClientTick;
         public int LastServerTick;

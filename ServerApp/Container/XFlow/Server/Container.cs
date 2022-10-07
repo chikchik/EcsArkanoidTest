@@ -73,6 +73,9 @@ namespace XFlow.Server
         private EcsFilter _clientsFilter;
         private EcsPool<ClientComponent> _poolClients;
 
+        
+        private DateTime _nextTickAt = DateTime.UtcNow;
+        
         public Container(IContainerConfig containerConfig, ILogger logger)
         {
             Debug.SetLogDelegate(logger.Log);
@@ -281,7 +284,6 @@ namespace XFlow.Server
 
 
                 Debug.Log("loop");
-                var next = DateTime.UtcNow;
                 var step = 1.0 / _config.Tickrate;
                 while (!_runCancellationTokenSource.IsCancellationRequested)
                 {
@@ -307,16 +309,16 @@ namespace XFlow.Server
                     }
                     
 
-                    if (next <= DateTime.UtcNow && _worldInitialized)
+                    if (_nextTickAt <= DateTime.UtcNow && _worldInitialized)
                     {
                         //Console.WriteLine($"tick {leo.GetCurrentTick(world)}");
-                        next = next.AddSeconds(step);
-                        if (next <= DateTime.UtcNow)
-                            next = DateTime.UtcNow.AddSeconds(step);
+                        _nextTickAt = _nextTickAt.AddSeconds(step);
+                        if (_nextTickAt <= DateTime.UtcNow)
+                            _nextTickAt = DateTime.UtcNow.AddSeconds(step);
                         Tick();
                     }
 
-                    Thread.Sleep(10);
+                    Thread.Sleep(1);
                 }
 
                 Debug.Log("Ended0");
@@ -494,6 +496,9 @@ namespace XFlow.Server
                 {
                     client.LastPingTick = inputTime;
                     client.Delay = delay;
+                    var ms = _nextTickAt - DateTime.UtcNow;
+                    client.DelayMs = ms.Milliseconds;
+                    Debug.Log(client.DelayMs);
                 }
                 else
                 {
@@ -582,6 +587,7 @@ namespace XFlow.Server
                 data.SrcTick = srcWorld.GetTick();
             data.Delay = client.Delay;
             data.Diff = dif;
+            data.TickDelayMs = client.DelayMs;
         }
 
         byte[] BuildDiffBytes(ClientComponent client, EcsWorld srcWorld)
