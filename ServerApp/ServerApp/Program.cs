@@ -36,6 +36,8 @@ namespace ServerApp2
             while (true)
             {
                 Thread.Sleep(100);
+                // var info = await container.GetInfoAsync();
+                // context.Host.LoggerFactory.System.Log(LogLevel.Debug, info);
             }
         }
     }

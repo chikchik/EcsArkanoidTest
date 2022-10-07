@@ -10,13 +10,9 @@ namespace XFlow.Server
         {
             var sw = Stopwatch.StartNew();
             var c = new Container(context);
-            context.Host.LoggerFactory.System.Log(LogLevel.Critical,$"Container initialization {sw.ElapsedMilliseconds}");
-            var sw2 = Stopwatch.StartNew();
             await c.Start();
-            context.Host.LoggerFactory.System.Log(LogLevel.Critical,$"Container Start {sw2.ElapsedMilliseconds}");
-            context.Host.LoggerFactory.System.Log(LogLevel.Critical,$"Container full start {sw.ElapsedMilliseconds}");
-            sw.Stop();
-            sw2.Stop();
+            context.Host.LoggerFactory.System.Log(LogLevel.Information,
+                $"Container started time={sw.ElapsedMilliseconds}ms");
             return c;
         }
     }

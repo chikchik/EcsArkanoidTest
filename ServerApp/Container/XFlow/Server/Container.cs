@@ -147,6 +147,9 @@ namespace XFlow.Server
         {
             lock (_locker)
             {
+                if (!_worldInitialized)
+                    return $"World not initialized";
+                
                 var sb = new StringBuilder(512);
                 sb.AppendLine($"tick: {_mainWorld.GetTick()}");
                 sb.AppendLine($"tickrate: {_config.Tickrate}");
