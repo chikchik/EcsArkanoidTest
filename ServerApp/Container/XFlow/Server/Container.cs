@@ -77,7 +77,7 @@ namespace XFlow.Server
         private EcsPool<ClientComponent> _poolClients;
 
         private bool _isRun;
-        private Thread _loopThread;
+        private CancellationTokenSource _token;
 
         public Container(ContainerStartingContext context)
         {
@@ -87,20 +87,14 @@ namespace XFlow.Server
                 
                 Debug.SetLogDelegate(log => { _logger.Log(LogLevel.Information, log); });
 
-                var sw = Stopwatch.StartNew();
                 Box2DServices.CheckNative();
-                _logger.Log(LogLevel.Debug, $"CheckNative {sw.ElapsedMilliseconds}");
 
-                sw.Restart();
                 _components = new ComponentsCollection();
                 ComponentsCollectionUtils.AddComponentsFromAssembly(_components,
                     System.Reflection.Assembly.GetExecutingAssembly());
-                _logger.Log(LogLevel.Debug, $"AddComponentsFromAssembly {sw.ElapsedMilliseconds}");
 
                 _syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
                 WorldLoggerExt.logger = _syncDebug.CreateLogger();
-                
-                _logger.Log(LogLevel.Debug, $"Container constructor done");
             }
             catch (Exception e)
             {
@@ -125,8 +119,8 @@ namespace XFlow.Server
 
                 _isRun = true;
 
-                _loopThread = new Thread(Loop);
-                _loopThread.Start();
+                _token = new CancellationTokenSource();
+                Task.Run(Loop, _token.Token);
             }
             catch (Exception e)
             {
@@ -139,7 +133,7 @@ namespace XFlow.Server
         {
             _logger.Log(LogLevel.Debug, "Container.Stop");
 
-            _loopThread.Abort();
+            _token.Cancel();
 
             _isRun = false;
 
@@ -328,6 +322,10 @@ namespace XFlow.Server
                 }
 
                 _logger.Log(LogLevel.Debug, "Ended0");
+            }
+            catch (OperationCanceledException e)
+            {
+                // not error
             }
             catch (Exception e)
             {
