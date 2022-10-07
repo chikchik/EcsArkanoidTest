@@ -4,7 +4,7 @@ using Gaming.ContainerManager.Contracts.V1.Models;
 using Gaming.Facade;
 using Gaming.Facade.Configuration;
 
-const string archiveName = "archive.zip";
+const string archiveName = "image.zip";
 
 const string token =
     "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzNWU5MWZjNC02YjllLTQ5MDMtYjYyYS1lZDIzZGE0NjU5Y2QiLCJhdXRoIjoiR3Vlc3QiLCJwcm06YWNjZXNzLW1hbmFnZXI6djI6Z2V0LXVzZXItcGVybWlzc2lvbnMiOiJzZWxmIiwicHJtOmFjY2Vzcy1tYW5hZ2VyOnYyOmdldC11c2VyLXJvbGUtbmFtZXMiOiJzZWxmIiwicHJtOmF0dHJpYnV0ZS1tYW5hZ2VyOnYyOmdldC11c2VyLWF0dHJpYnV0ZXMiOiJzZWxmIiwicHJtOmNvbnRhaW5lci1odWI6djE6Y29ubmVjdC1yZWxpYWJsZSI6InNlbGYiLCJwcm06Y29udGFpbmVyLWh1Yjp2MTpjb25uZWN0LXVucmVsaWFibGUiOiJzZWxmIiwicHJtOmZpbGUtc3RvcmFnZTp2MTpsaXN0Ijoic2VsZiIsInBybTpmaWxlLXN0b3JhZ2U6djE6dXBsb2FkIjoic2VsZiIsInBybTppZGVudGl0eS1wcm92aWRlcjp2Mjphc3NpZ24tYWNjb3VudCI6InNlbGYiLCJwcm06aWRlbnRpdHktcHJvdmlkZXI6djI6dW5hc3NpZ24tYWNjb3VudCI6InNlbGYiLCJwcm06c2NvcGUtbWFuYWdlcjp2MjpnZXQtdXNlci1zY29wZXMiOiJzZWxmIiwicHJtOmNvbnRhaW5lci1pbWFnZS1tYW5hZ2VyOnYxOmdldC1pbWFnZS1jb250ZW50IjoiIiwicHJtOmNvbnRhaW5lci1pbWFnZS1tYW5hZ2VyOnYxOmxpc3QtaW1hZ2VzIjoiIiwicHJtOmNvbnRhaW5lci1pbWFnZS1tYW5hZ2VyOnYxOnJlZ2lzdGVyLWltYWdlIjoiIiwicHJtOmNvbnRhaW5lci1pbnNwZWN0b3I6djE6Z2V0LWluZm8iOiIiLCJwcm06Y29udGFpbmVyLWluc3BlY3Rvcjp2MTpnZXQtbG9ncyI6IiIsInBybTpjb250YWluZXItaW5zcGVjdG9yOnYxOmdldC1zdGF0ZSI6IiIsInBybTpjb250YWluZXItbWFuYWdlcjp2MTpjcmVhdGUtY29udGFpbmVyIjoiIiwicHJtOmNvbnRhaW5lci1tYW5hZ2VyOnYxOmxpc3QtY29udGFpbmVycyI6IiIsInBybTpjb250YWluZXItbWFuYWdlcjp2MTpzdG9wLWNvbnRhaW5lciI6InNlbGYiLCJuYmYiOjAsImV4cCI6MjUzNDAyMzAwODAwLCJpYXQiOjE2NjQzNTc1OTgsImlzcyI6IkdhbWluZy5JZGVudGl0eVByb3ZpZGVyIiwiYXVkIjoiR2FtaW5nIn0.o3BdSaEabspqEn_LkCEGkQM7F6tKEOfdAaKHPlapteWbYftuf3g82dPp-VdYfT58QzvX8Wu_pxsCsJjXP_prfNkYem_CT4U26pOleX4Y5E0TxWgUD2Zm-l7xJ6mfm1FKdgcS6snBMcHD90H5Bp3CIiyPhm85gHoA2XxmnJzATiTtZ1fNOwiw-3-TuN55xUtDSLO1Baa3T2dd6xjTlFaH3c31-7XyIJ__nTOXJ8Gf26xQ4NqZDUXuhJa_PnqwCQ6ytiwb2pzkL2xsdW8khXdcScokGwogEa-jiJN2mutVZV_r5qJ29G5k_GqUviyh1H5dmMBjSNiroPEzn8AQxNfjXQ";
@@ -15,6 +15,9 @@ if (!await BuildProject(rootPath))
     return;
 
 var buildPath = Path.Combine(rootPath, "bin/Debug/netcoreapp3.1/");
+
+if(File.Exists(GetArchivePath(buildPath)))
+    File.Delete(GetArchivePath(buildPath));
 
 var files = GetFilesToAdding(buildPath);
 
@@ -33,7 +36,7 @@ static async Task<bool> SendArchive(byte[] archive)
         Console.WriteLine);
 
     var name = new ContainerImageName("test-image");
-    var version = new Version(1, 0, 12);
+    var version = new Version(1, 0, 16);
     var image = new ContainerImage(name, version, archive);
     await GamingServices.V1
         .RegisterContainerImage(image)
