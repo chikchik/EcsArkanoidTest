@@ -18,6 +18,10 @@ namespace Game.Ecs.Client.Systems
         private CharacterView _viewPrefab;
         private BulletView _bulletPrefab;
         private DiContainer _container;
+        
+        private EcsWorld world;
+        private EcsFilter filter;
+        
         public CreateViewSystem(CharacterView viewPrefab, BulletView bulletPrefab, DiContainer container)
         {
             _container = container;
@@ -25,8 +29,6 @@ namespace Game.Ecs.Client.Systems
             this._viewPrefab = viewPrefab;
         }
         
-        private EcsWorld world;
-        private EcsFilter filter;
         public void Init(EcsSystems systems)
         {
             world = systems.GetWorld();
@@ -49,7 +51,19 @@ namespace Game.Ecs.Client.Systems
                 go.SetActive(true);
 
 
-                entity.EntityAdd<TransformComponent>(world).Transform = go.transform;
+                if (entity.EntityTryGet(world, out PositionComponent pos))
+                {
+                    entity.EntityAdd<TransformComponent>(world).Transform = go.transform;
+                    go.transform.position = pos.value;
+                }
+                
+                
+                if (entity.EntityTryGet(world, out Rotation2DComponent rot))
+                {
+                    
+                    var angle = rot.Angle * -Mathf.Rad2Deg;
+                    go.transform.eulerAngles = go.transform.eulerAngles.WithY(angle);
+                }
 
                 if (entity.EntityHas<CollectableComponent>(world))
                 {
@@ -80,7 +94,7 @@ namespace Game.Ecs.Client.Systems
 
                 ref var component = ref entity.EntityAdd<TransformComponent>(world);
                 component.Transform = view.transform;
-                
+
                 ref var animatorComponent = ref entity.EntityAdd<AnimatorComponent>(world);
                 animatorComponent.animator = view.Animator;
 

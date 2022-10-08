@@ -5,6 +5,7 @@ using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Components;
+using XFlow.Utils;
 
 namespace Game.Ecs.View.Systems
 {
@@ -28,22 +29,13 @@ namespace Game.Ecs.View.Systems
             foreach (var entity in filter)
             {
                 var transform = poolTransform.Get(entity).Transform;
-                var angle = poolRotation.Get(entity).Angle;
-                
-                var eulerAngle = transform.eulerAngles;
-
-                var viewAngle = eulerAngle.y;
                 
                 var lerp = poolLerp.GetNullable(entity)?.value??1f;
-                viewAngle = Mathf.LerpAngle(viewAngle, Mathf.Rad2Deg * -angle, lerp);
-
-                //viewAngle = Mathf.Rad2Deg * -angle;
-
-                eulerAngle.y = viewAngle;//Mathf.Rad2Deg * -angle;
                 
-                //var ang = eulerAngle
+                var destAngle = poolRotation.Get(entity).Angle * -Mathf.Rad2Deg;
+                var angle = Mathf.LerpAngle(transform.eulerAngles.y, destAngle, lerp);
 
-                transform.eulerAngles = eulerAngle;   
+                transform.eulerAngles = transform.eulerAngles.WithY(angle);   
             }
         }
     }
