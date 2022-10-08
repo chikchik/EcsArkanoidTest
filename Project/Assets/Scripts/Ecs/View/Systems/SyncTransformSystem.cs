@@ -37,7 +37,7 @@ namespace Game.Ecs.View.Systems
             foreach (var entity in _filter)
             {
                 var transform = _poolTransform.Get(entity).Transform;
-                var targetPosition = _poolPosition.Get(entity).value;
+                var targetPosition = _poolPosition.Get(entity).Value;
 
                 transform.position = targetPosition;
             }
@@ -53,9 +53,9 @@ namespace Game.Ecs.View.Systems
             foreach (var entity in _filter)
             {
                 var transform = _poolTransform.Get(entity).Transform;
-                var targetPosition = _poolPosition.Get(entity).value;
+                var targetPosition = _poolPosition.Get(entity).Value;
                 
-                var lerp = _poolLerp.GetNullable(entity)?.value??1f;
+                var lerp = _poolLerp.GetNullable(entity)?.Value??1f;
                 
                 //transform.position = Vector3.Lerp(transform.position, targetPosition, lerp);
                 //transform.position = targetPosition;

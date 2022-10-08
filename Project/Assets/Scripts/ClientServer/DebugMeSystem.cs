@@ -38,7 +38,7 @@ namespace Game.ClientServer
                 str += $"{entity.e2name(_world, false, false)}-";
 
                 if (entity.EntityHas<PositionComponent>(_world))
-                    str += entity.EntityGet<PositionComponent>(_world).value;
+                    str += entity.EntityGet<PositionComponent>(_world).Value;
                 if (entity.EntityHas<Box2DLinearVelocityComponent>(_world))
                     str += entity.EntityGet<Box2DLinearVelocityComponent>(_world).Value;
 

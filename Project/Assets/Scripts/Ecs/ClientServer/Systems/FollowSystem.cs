@@ -33,7 +33,7 @@ namespace Game.Ecs.ClientServer.Systems
                     continue;
                 }
 
-                poolPosition.GetOrCreateRef(entity).value = poolPosition.Get(entityToFollow).value;
+                poolPosition.GetOrCreateRef(entity).Value = poolPosition.Get(entityToFollow).Value;
             }
         }
     }

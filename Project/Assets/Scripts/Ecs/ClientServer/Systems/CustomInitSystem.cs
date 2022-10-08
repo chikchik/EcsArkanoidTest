@@ -26,7 +26,7 @@ namespace Game.Ecs.ClientServer.Systems
         {
             var world = systems.GetWorld();
             var mechEntity = _mechService.CreateMechEntity(world);
-            mechEntity.EntityGetRef<PositionComponent>(world).value = new Vector3(5, 0, -15f);
+            mechEntity.EntityGetRef<PositionComponent>(world).Value = new Vector3(5, 0, -15f);
 
             mechEntity.EntityAdd<InteractableComponent>(world);
             

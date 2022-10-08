@@ -33,7 +33,7 @@ namespace Game.Ecs.ClientServer.Systems
                 var speedComponent = _speedPool.Get(entity);
                 
                 _poolLinearVelocity.GetRef(entity).Value =
-                    new Vector2(moveDirectionComponent.value.x, moveDirectionComponent.value.z).normalized *
+                    new Vector2(moveDirectionComponent.Value.x, moveDirectionComponent.Value.z).normalized *
                     speedComponent.Value;
                 
                 _movingPool.Replace(entity, new MovingComponent());

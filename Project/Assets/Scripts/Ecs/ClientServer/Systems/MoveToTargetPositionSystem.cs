@@ -55,7 +55,7 @@ namespace Game.Ecs.ClientServer.Systems
                 var targetPositionComponent = poolTargetPosition.Get(entity);
                 var positionComponent = poolPosition.Get(entity);
 
-                var directionToTarget = (targetPositionComponent.Value - positionComponent.value);
+                var directionToTarget = (targetPositionComponent.Value - positionComponent.Value);
                 var direction2D = new Vector2(directionToTarget.x, directionToTarget.z);
 
                 //too close to target

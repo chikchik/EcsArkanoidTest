@@ -25,7 +25,7 @@ namespace Game.ClientServer.Services
             }
             
             world.GetNearestEntities(unitEntity,
-                unitEntity.EntityGet<PositionComponent>(world).value,
+                unitEntity.EntityGet<PositionComponent>(world).Value,
                 1, ref _entities, entity=> entity.EntityHas<MechComponent>(world));
 
             if (_entities.Count == 0)

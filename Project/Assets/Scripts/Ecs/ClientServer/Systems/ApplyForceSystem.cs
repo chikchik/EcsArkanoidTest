@@ -32,7 +32,7 @@ namespace Game.Ecs.ClientServer.Systems
                 if (time > _world.GetTime())
                     continue;
                 
-                var pos = entity.EntityGet<PositionComponent>(_world).value;
+                var pos = entity.EntityGet<PositionComponent>(_world).Value;
                 var dir = _poolApplyForce.Get(entity).Direction;
                 
                 Box2DApiInternal.RaycastOutputReturnType ret = new Box2DApiInternal.RaycastOutputReturnType();

@@ -138,7 +138,7 @@ namespace Game.Ecs.ClientServer.Systems
             }
             
             _world.GetNearestEntities(unitEntity,
-                unitEntity.EntityGet<PositionComponent>(_world).value,
+                unitEntity.EntityGet<PositionComponent>(_world).Value,
                 1, ref _entities, entity=> entity.EntityHas<MechComponent>(_world));
 
             if (_entities.Count == 0)
@@ -152,7 +152,7 @@ namespace Game.Ecs.ClientServer.Systems
         public void Interract(EcsWorld world, int unitEntity)
         {
             world.GetNearestEntities(unitEntity,
-                unitEntity.EntityGet<PositionComponent>(world).value,
+                unitEntity.EntityGet<PositionComponent>(world).Value,
                 1, ref _entities, entity=> entity.EntityHas<InteractableComponent>(world));
 
             if (_entities.Count == 0)
@@ -283,7 +283,7 @@ namespace Game.Ecs.ClientServer.Systems
             if (dir.sqrMagnitude > 0.001f)
             {
                 entity.EntityDel<TargetPositionComponent>(_world);
-                entity.EntityGetOrCreateRef<MoveDirectionComponent>(_world).value = dir;
+                entity.EntityGetOrCreateRef<MoveDirectionComponent>(_world).Value = dir;
             }
             else
             {

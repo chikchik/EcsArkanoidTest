@@ -29,7 +29,7 @@ namespace Game.Ecs.Client.Systems
                 {
                     //replace потому что ClientPlayerComponent мог уже быть 
                     world.GetOrCreateUniqueRef<ClientPlayerComponent>().entity = entity;
-                    entity.EntityGetOrCreateRef<LerpComponent>(world).value = 1;
+                    entity.EntityGetOrCreateRef<LerpComponent>(world).Value = 1;
                     entity.EntityAdd<IsMainPlayerComponent>(world);
                 }
             }

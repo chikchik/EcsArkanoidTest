@@ -29,7 +29,7 @@ namespace Game.Ecs.View.Systems
                 if (Mathf.Approximately(lookDirection.magnitude, 0))
                     continue;
 
-                var lerp = poolLerp.GetNullable(entity)?.value??1f;
+                var lerp = poolLerp.GetNullable(entity)?.Value??1f;
                 
                 var quat = Quaternion.LookRotation(lookDirection);
                 transform.localRotation = Quaternion.Lerp(transform.localRotation, quat, lerp);

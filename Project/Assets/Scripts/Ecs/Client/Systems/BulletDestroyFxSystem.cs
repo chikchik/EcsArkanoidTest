@@ -38,7 +38,7 @@ namespace Game.Ecs.Client.Systems
                     continue;
                 }
 
-                transform.position = entity.EntityGet<PositionComponent>(_world).value;
+                transform.position = entity.EntityGet<PositionComponent>(_world).Value;
                 transform.DOScale(0.5f, 0.5f).OnComplete(() =>
                 {
                     GameObject.Destroy(transform.gameObject);  

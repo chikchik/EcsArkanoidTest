@@ -23,7 +23,7 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 ref var pathComponent = ref poolMovePath.GetRef(entity);
                 var dest = pathComponent.path[pathComponent.current];
-                var pos = poolPosition.Get(entity).value;
+                var pos = poolPosition.Get(entity).Value;
 
                 var dir = dest - pos;
                 if (dir.magnitude < 0.001f)

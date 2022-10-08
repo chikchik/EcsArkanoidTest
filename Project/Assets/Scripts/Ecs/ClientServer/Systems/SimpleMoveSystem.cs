@@ -47,17 +47,17 @@ namespace Game.Ecs.ClientServer.Systems
                     continue;
                 
                 var direction = poolMoveDirection.Get(entity).value;
-                var pos = poolPosition.Get(entity).value;
+                var pos = poolPosition.Get(entity).Value;
 
                 var ret = new Box2DApiInternal.RaycastOutputReturnType();
                 Box2DApiInternal.RayCast(b2world, pos, direction, ref ret, 10);
                 //if (ret == )
                     
-                var time = poolTime.Get(entity).time;
+                var time = poolTime.Get(entity).Value;
                 if (time > world.GetTime())
                 {
                     
-                    poolPosition.GetRef(entity).value += direction * deltaTime;
+                    poolPosition.GetRef(entity).Value += direction * deltaTime;
                 }
                 else
                 {

@@ -109,7 +109,7 @@ namespace Game.UI
             foreach (var entity in _filter)
             {
                 var view = _poolView.Get(entity).View;
-                var pos = _poolPosition.Get(entity).value;
+                var pos = _poolPosition.Get(entity).Value;
 
                 var screenPoint = _camera.WorldToScreenPoint(pos);
                 view.transform.position = screenPoint;

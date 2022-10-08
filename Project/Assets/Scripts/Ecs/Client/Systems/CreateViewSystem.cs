@@ -54,14 +54,14 @@ namespace Game.Ecs.Client.Systems
                 if (entity.EntityTryGet(world, out PositionComponent pos))
                 {
                     entity.EntityAdd<TransformComponent>(world).Transform = go.transform;
-                    go.transform.position = pos.value;
+                    go.transform.position = pos.Value;
                 }
                 
                 
                 if (entity.EntityTryGet(world, out Rotation2DComponent rot))
                 {
                     
-                    var angle = rot.Angle * -Mathf.Rad2Deg;
+                    var angle = rot.AngleRadians * -Mathf.Rad2Deg;
                     go.transform.eulerAngles = go.transform.eulerAngles.WithY(angle);
                 }
 
@@ -89,16 +89,16 @@ namespace Game.Ecs.Client.Systems
             foreach (var entity in filterUnits)
             {
                 var view = Object.Instantiate(_viewPrefab);
-                view.transform.position = entity.EntityGet<PositionComponent>(world).value;
+                view.transform.position = entity.EntityGet<PositionComponent>(world).Value;
                 view.Gun.gameObject.SetActive(false);
 
                 ref var component = ref entity.EntityAdd<TransformComponent>(world);
                 component.Transform = view.transform;
 
                 ref var animatorComponent = ref entity.EntityAdd<AnimatorComponent>(world);
-                animatorComponent.animator = view.Animator;
+                animatorComponent.Animator = view.Animator;
 
-                entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
+                entity.EntityGetOrCreateRef<LerpComponent>(world).Value = 0.5f;
             }
             
             var filterBullets = world.Filter<BulletComponent>()
@@ -108,7 +108,7 @@ namespace Game.Ecs.Client.Systems
             {
                 var viewGo = _container.InstantiatePrefab(_bulletPrefab);
                 var view = viewGo.GetComponent<BulletView>();
-                var pos = entity.EntityGet<PositionComponent>(world).value;
+                var pos = entity.EntityGet<PositionComponent>(world).Value;
                 view.transform.position = pos;
                 view.name = $"Bullet{entity.e2name(world)}-{N}";
                 //view.PackedEntity = world.PackEntity(entity);
@@ -116,7 +116,7 @@ namespace Game.Ecs.Client.Systems
                 ref var component = ref entity.EntityAdd<TransformComponent>(world);
                 component.Transform = view.transform;
 
-                entity.EntityGetOrCreateRef<LerpComponent>(world).value = 0.5f;
+                entity.EntityGetOrCreateRef<LerpComponent>(world).Value = 0.5f;
                 
                 world.Log($"create view '{view.name}'  {entity.e2name(world)} at {pos}");
 

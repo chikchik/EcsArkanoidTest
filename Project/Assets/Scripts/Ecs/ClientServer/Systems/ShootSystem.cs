@@ -51,10 +51,10 @@ namespace Game.Ecs.ClientServer.Systems
                     //var unitPos = entity.EntityGet<PositionComponent>(world).value;
                     var pos = shoot.Position;
                     var dir = entity.EntityGet<ShootingComponent>(world).Direction;
-                    bulletEntity.EntityAdd<PositionComponent>(world).value = pos;
+                    bulletEntity.EntityAdd<PositionComponent>(world).Value = pos;
                     bulletEntity.EntityAdd<Rotation2DComponent>(world);
 
-                    bulletEntity.EntityAdd<DebugNameComponent>(world).Name = "Bullet";
+                    bulletEntity.EntityAdd<DebugNameComponent>(world).Value = "Bullet";
 
                     //var customHash = (uint)Random.Range(1, 1111); // HashUtils.CustomHash(entity, world.GetTick());
                     var customHash = HashUtils.CustomHash(entity, world.GetTick());

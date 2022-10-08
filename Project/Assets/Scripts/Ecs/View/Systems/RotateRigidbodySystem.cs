@@ -30,9 +30,9 @@ namespace Game.Ecs.View.Systems
             {
                 var transform = poolTransform.Get(entity).Transform;
                 
-                var lerp = poolLerp.GetNullable(entity)?.value??1f;
+                var lerp = poolLerp.GetNullable(entity)?.Value??1f;
                 
-                var destAngle = poolRotation.Get(entity).Angle * -Mathf.Rad2Deg;
+                var destAngle = poolRotation.Get(entity).AngleRadians * -Mathf.Rad2Deg;
                 var angle = Mathf.LerpAngle(transform.eulerAngles.y, destAngle, lerp);
 
                 transform.eulerAngles = transform.eulerAngles.WithY(angle);   
