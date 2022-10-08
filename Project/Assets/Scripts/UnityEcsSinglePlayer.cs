@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-using Game.Ecs.View.Systems;
-
 using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components.Inventory;
 using Game.Utils;

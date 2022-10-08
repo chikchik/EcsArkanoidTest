@@ -1,12 +1,10 @@
-using Game.Ecs.Client.Components;
-
-using Game.ClientServer;
 using Game.ClientServer.Services;
+using Game.Ecs.Client.Components;
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.EcsLite;
 
-namespace Game.Ecs.View.Systems
+namespace Game.Ecs.Client.Systems
 {
     public class CameraFollowSystem : IEcsRunSystem
     {

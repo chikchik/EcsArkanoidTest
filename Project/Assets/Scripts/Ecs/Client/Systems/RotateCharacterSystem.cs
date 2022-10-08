@@ -1,10 +1,9 @@
 using Game.Ecs.ClientServer.Components;
-
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.EcsLite;
 
-namespace Game.Ecs.View.Systems
+namespace Game.Ecs.Client.Systems
 {
     public class RotateCharacterSystem : IEcsRunSystem
     {
