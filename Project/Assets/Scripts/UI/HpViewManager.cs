@@ -12,30 +12,34 @@ using Zenject;
 
 namespace Game.UI
 {
-    public class HpViewManager:
+    public class HpViewManager :
         EventsSystem<HpComponent>.IAnyComponentChangedListener,
         EventsSystem<HpComponent>.IAnyComponentRemovedListener,
-        EventsSystem<DeletedEntityComponent>.IAnyComponentChangedListener
+        EventsSystem<DeletedEntityComponent>.IAnyComponentChangedListener,
+        EventsSystem<DeletedEntityComponent>.IAnyComponentRemovedListener
     {
         private HpView _hpViewPrefab;
         private Canvas _canvas;
         private Camera _camera;
-        
+
         private EcsWorld _world;
         private EcsWorld _deadWorld;
         private AnyListener _listener;
-        
+
         private EcsPool<HpViewComponent> _poolView;
         //private EcsPool<HpViewComponent> _poolDeadView;
-        
+
         private EcsPool<PositionComponent> _poolPosition;
+
+        private EcsPool<HpComponent> _poolHp;
         private EcsPool<MaxHpComponent> _poolMaxHp;
-        
+
 
         private EcsFilter _filter;
         //private EcsPool<H>
 
-        public HpViewManager(EcsWorld world, [Inject(Id = EcsWorlds.Dead)] EcsWorld deadWorld, HpView hpViewPrefab, [Inject(Id = "HpViewCanvas")] Canvas canvas, Camera camera)
+        public HpViewManager(EcsWorld world, [Inject(Id = EcsWorlds.Dead)] EcsWorld deadWorld, HpView hpViewPrefab,
+            [Inject(Id = "HpViewCanvas")] Canvas canvas, Camera camera)
         {
             _hpViewPrefab = hpViewPrefab;
             _canvas = canvas;
@@ -46,6 +50,7 @@ namespace Game.UI
             _poolView = world.GetPool<HpViewComponent>();
             //_poolDeadView = deadWorld.GetPool<HpViewComponent>();
             _poolPosition = world.GetPool<PositionComponent>();
+            _poolHp = world.GetPool<HpComponent>();
             _poolMaxHp = world.GetPool<MaxHpComponent>();
             _filter = world.Filter<HpViewComponent>().End();
 
@@ -59,10 +64,13 @@ namespace Game.UI
 
         public void OnAnyComponentChanged(EcsWorld world, int entity, HpComponent data, bool added)
         {
+            UpdateHp(entity, data);
+        }
+
+        public void UpdateHp(int entity, in HpComponent data)
+        {
             HpView view;
-            
-            //Debug.Log($"update view {data.Value}");
-            
+
             if (_poolView.TryGet(entity, out HpViewComponent viewComponent))
             {
                 view = viewComponent.View;
@@ -78,8 +86,18 @@ namespace Game.UI
             var p = data.Value / max.Value;
             view.SetValue(p);
         }
+
+
+        public void OnAnyComponentRemoved(EcsWorld world, int entity, AlwaysNull<DeletedEntityComponent> alwaysNull)
+        {
+            if (!_poolHp.TryGet(entity, out HpComponent component))
+                return;
+            //если DeletedEntityComponent пропал, то значит это был некорректный prediction
+            //нужно вернуть Hp
+            UpdateHp(entity, component);
+        }
         
-        
+
         public void OnAnyComponentChanged(EcsWorld world, int entity, DeletedEntityComponent data, bool added)
         {
             //Debug.Log("DestroyView DestroyedEntityComponent");
@@ -92,10 +110,7 @@ namespace Game.UI
                 return;
             //Debug.Log("Destroy Hp View");
             var view = viewComponent.View;
-            view.transform.DOScaleY(0, 0.3f).OnComplete(() =>
-            {
-                GameObject.Destroy(view.gameObject);
-            });
+            view.transform.DOScaleY(0, 0.3f).OnComplete(() => { GameObject.Destroy(view.gameObject); });
             pool.Del(entity);
         }
 
@@ -119,13 +134,12 @@ namespace Game.UI
 
         public void OnEntityWillBeDestroyed(EcsWorld world, int entity)
         {
-           // DestroyView(_poolDeadView, entity);
+            // DestroyView(_poolDeadView, entity);
         }
 
         public bool IsCopyable()
         {
             throw new System.NotImplementedException();
         }
-
     }
 }

@@ -36,8 +36,8 @@ namespace Game.Ecs.ClientServer.Systems
             Box2DServices.AddCircleColliderToDefinition(world, mechEntity, 1.2f, new Vector2(-1.5f, 0));
             Box2DServices.AddCircleColliderToDefinition(world, mechEntity, 1.2f, new Vector2(1.5f, 0));
 
-            var botEntity = UnitService.CreateUnitEntity(world);
-            botEntity.EntityAdd<AIPlayerComponent>(world);
+            //var botEntity = UnitService.CreateUnitEntity(world);
+            //botEntity.EntityAdd<AIPlayerComponent>(world);
             /*
             var world = systems.GetWorld();
             var botEntity = UnitService.CreateUnitEntity(world);
