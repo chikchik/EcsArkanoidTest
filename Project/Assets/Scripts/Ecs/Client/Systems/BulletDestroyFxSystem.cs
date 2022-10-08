@@ -27,7 +27,6 @@ namespace Game.Ecs.Client.Systems
 
         public void Run(EcsSystems systems)
         {
-            return;
             foreach (var entity in _filter)
             {
                 var transform = entity.EntityGet<TransformComponent>(_world).Transform;
@@ -43,8 +42,6 @@ namespace Game.Ecs.Client.Systems
                 {
                     GameObject.Destroy(transform.gameObject);  
                 });
-                
-                
             }
         }
     }

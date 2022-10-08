@@ -4,6 +4,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.UI.Mono;
 using Game.View;
 using UnityEngine;
+using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
@@ -29,10 +30,9 @@ namespace Game.UI
         private EcsPool<HpViewComponent> _poolView;
         //private EcsPool<HpViewComponent> _poolDeadView;
 
-        private EcsPool<PositionComponent> _poolPosition;
-
         private EcsPool<HpComponent> _poolHp;
         private EcsPool<MaxHpComponent> _poolMaxHp;
+        private EcsPool<TransformComponent> _poolTransform;
 
 
         private EcsFilter _filter;
@@ -48,10 +48,9 @@ namespace Game.UI
             _deadWorld = deadWorld;
 
             _poolView = world.GetPool<HpViewComponent>();
-            //_poolDeadView = deadWorld.GetPool<HpViewComponent>();
-            _poolPosition = world.GetPool<PositionComponent>();
             _poolHp = world.GetPool<HpComponent>();
             _poolMaxHp = world.GetPool<MaxHpComponent>();
+            _poolTransform = world.GetPool<TransformComponent>();
             _filter = world.Filter<HpViewComponent>().End();
 
             _listener = world.CreateAnyListener();
@@ -124,7 +123,7 @@ namespace Game.UI
             foreach (var entity in _filter)
             {
                 var view = _poolView.Get(entity).View;
-                var pos = _poolPosition.Get(entity).Value;
+                var pos = _poolTransform.Get(entity).Transform.position;
 
                 var screenPoint = _camera.WorldToScreenPoint(pos);
                 view.transform.position = screenPoint;
