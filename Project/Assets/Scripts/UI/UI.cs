@@ -1,5 +1,4 @@
-﻿using Game.Ecs.Client.Components;
-using Game.Ecs.ClientServer.Components;
+﻿using Game.Ecs.ClientServer.Components;
 using Game.UI.Mono;
 
 
@@ -8,7 +7,6 @@ using Game.State;
 using XFlow.EcsLite;
 using XFlow.Modules.States;
 using XFlow.Modules.Tick.ClientServer.Components;
-using XFlow.Net.ClientServer;
 
 namespace Game.UI
 {
@@ -85,26 +83,12 @@ namespace Game.UI
             listener.SetAnyChangedListener<TickComponent>(this);
         }
 
-        private bool IsPlayerUnitEntity(int entity)
-        {
-            if (!_world.HasUnique<ClientPlayerComponent>())
-                return false;
-            
-            return _world.GetUnique<ClientPlayerComponent>().entity == entity;
-        }
         
-        private int GetPlayerUnitEntity()
-        {
-            if (!_world.HasUnique<ClientPlayerComponent>())
-                return -1;
-            
-            return _world.GetUnique<ClientPlayerComponent>().entity;
-        }
 
         
         public void OnAnyComponentChanged(EcsWorld _, int entity, FoodCollectedComponent data, bool added)
         {
-            if (!IsPlayerUnitEntity(entity))
+            if (!ClientBaseServices.IsControlledEntity(_world, entity))
                 return;
             
             View.FoodText.text = $"Food Collected {data.Value}";
@@ -112,7 +96,7 @@ namespace Game.UI
         
         public void OnAnyComponentChanged(EcsWorld world, int entity, AmmoCollectedComponent data, bool added)
         {
-            if (!IsPlayerUnitEntity(entity))
+            if (!ClientBaseServices.IsControlledEntity(_world, entity))
                 return;
 
             View.AmmoText.text = data.Value.ToString();
@@ -120,7 +104,7 @@ namespace Game.UI
 
         public void OnAnyComponentChanged(EcsWorld _, int entity, WeaponComponent data, bool added)
         {
-            if (!IsPlayerUnitEntity(entity))
+            if (!ClientBaseServices.IsControlledEntity(_world, entity))
                 return;
             
             //var transform = entity.EntityGet<TransformComponent>(world).Transform
@@ -133,12 +117,11 @@ namespace Game.UI
             //skip it
             if (tickEntity != 0)
                 return;
-
-            var unitEntity = GetPlayerUnitEntity();
-            if (unitEntity == -1)
+            
+            if (!ClientBaseServices.TryGetControlledEntity(_world, out int controlledEntity))
                 return;
 
-            var mechEntity = _clientServerServices.GetInteractionMechEntity(_world, unitEntity);
+            var mechEntity = _clientServerServices.GetInteractionMechEntity(_world, controlledEntity);
             View.MechButton.gameObject.SetActive(mechEntity != -1);
         }
     }

@@ -1,6 +1,8 @@
 ﻿
 using Game.Ecs.ClientServer.Components;
+using Game.UI;
 using Game.UIView;
+using UnityEngine;
 using XFlow.EcsLite;
 using XFlow.Modules.States;
 using XFlow.Net.ClientServer;
@@ -48,13 +50,15 @@ namespace Game.State
 
         protected override void DoEnter()
         {
+            Debug.LogError("not impl");
+            /*
             var playerId = _world.GetUnique<MainPlayerIdComponent>().value;
             _unitEntity = BaseServices.GetUnitEntityByPlayerId(_world, playerId);
             
             _unitEntity.AddChangedListener<ControlsMechComponent>(_world, this);
             _unitEntity.AddRemovedListener<ControlsMechComponent>(_world, this);
 
-            UpdateButtonState();
+            UpdateButtonState();*/
         }
 
         protected override void DoExit()

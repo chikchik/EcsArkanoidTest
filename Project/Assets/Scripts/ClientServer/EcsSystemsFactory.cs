@@ -101,6 +101,8 @@ namespace Game.ClientServer
             _container.Register<DeleteComponentHereSystem<ShootStartedComponent>>();//если ставить в конец, то на клиент этот компонент даже придет
             
             _container.Register<ApplyInputSystem>();
+            
+            //_container.Register<ApplyDragInputSystem>();
 
 
             _container.RegisterServer<FootprintSystem>();

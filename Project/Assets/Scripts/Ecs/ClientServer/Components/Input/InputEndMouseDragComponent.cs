@@ -5,6 +5,5 @@ namespace Game.Ecs.ClientServer.Components.Input
 {
     public struct InputEndMouseDragComponent : IInputComponent
     {
-        public EcsPackedEntity Entity;
     }
 }

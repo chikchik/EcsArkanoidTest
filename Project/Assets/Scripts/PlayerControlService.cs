@@ -3,6 +3,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.View;
 using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components.Input;
+using Game.UI;
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer;
@@ -35,7 +36,16 @@ namespace Game
         }
         
         private int playerId => _world.GetUnique<MainPlayerIdComponent>().value;
-        private int unitEntity => BaseServices.GetUnitEntityByPlayerId(_world, playerId);
+        private int unitEntity
+        {
+            get
+            {
+                int entity = -1;
+                ClientBaseServices.TryGetControlledEntity(_world, out entity);
+                return entity;
+            }
+        }
+
         private int tick => _world.GetTick();
         
         public void Shot()
@@ -149,8 +159,8 @@ namespace Game
             
             Apply(component);
         }
-        
         public void MoveToPoint(Vector3 pos)
+        
         {
             if (unitEntity == -1)
             {
@@ -165,17 +175,22 @@ namespace Game
 
         public void BeginDrag(int entity)
         {
-            
+            var component = new InputBeginMouseDragComponent();
+            component.Entity = _world.PackEntity(entity);
+            Apply(component);
         }
 
         public void UpdateDrag(Vector3 pos)
         {
-            
+            var component = new InputUpdateMouseDragComponent();
+            component.Position = pos;
+            Apply(component);
         }
         
         public void EndDrag()
         {
-            
+            var component = new InputEndMouseDragComponent();
+            Apply(component);
         }
 
         private void Apply(IInputComponent component)

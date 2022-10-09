@@ -1,4 +1,5 @@
 ﻿using Game.Ecs.ClientServer.Components.Inventory;
+using Game.UI;
 using UnityEngine;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.Client.Demo.Services;
@@ -38,9 +39,9 @@ namespace Game.State
                 Close();
             });
 
-            var playerId = _world.GetUnique<MainPlayerIdComponent>().value;
-            var unitEntity = BaseServices.GetUnitEntityByPlayerId(_world, playerId);
-
+            if (!ClientBaseServices.TryGetControlledEntity(_world, out int unitEntity))
+                return;
+            
             var poolInventoryLink = _world.GetPool<InventoryLinkComponent>();
             if (!poolInventoryLink.Has(unitEntity))
             {

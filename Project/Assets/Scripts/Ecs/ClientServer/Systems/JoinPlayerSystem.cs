@@ -1,5 +1,6 @@
 ﻿using Game.ClientServer;
 using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Inventory;
 using XFlow.Ecs.ClientServer;
 using XFlow.EcsLite;
@@ -30,18 +31,20 @@ namespace Game.Ecs.ClientServer.Systems
                 //context.WriteToConsole?.Invoke($"{ms} player {playerID}");
                 if (leave)
                 {
-                    var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerID);
-                    if (unitEntity != -1)
+                    if (BaseServices.TryGetControlledEntityByPlayerId(world, playerID, out int unitEntity))
                     {
                         world.MarkEntityAsDeleted(unitEntity);
-                        //unitEntity.EntityWithRef(world, (ref PlayerComponent data) => { data.id = -1; });
                     }
                 }
                 else
                 {
-                    var freeUnitEntity = UnitService.CreateUnitEntity(world);
-                    freeUnitEntity.EntityGetOrCreateRef<PlayerComponent>(world).id = playerID;
+                    var playerEntity = BaseServices.CreatePlayerEntity(world, playerID);
                     
+                    var freeUnitEntity = UnitService.CreateUnitEntity(world);
+
+                    playerEntity.EntityAdd<ControlledUnitEntityComponent>(world).Value =
+                        world.PackEntity(freeUnitEntity);
+                        
                     var inventory = world.NewEntity();
                     inventory.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 

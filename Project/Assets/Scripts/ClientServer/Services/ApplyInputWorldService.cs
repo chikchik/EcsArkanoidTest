@@ -35,7 +35,7 @@ namespace Game.ClientServer.Services
         public static void CreateInputEntity(EcsWorld inputWorld, int playerId, int tick, IInputComponent inp)
         {
             var inputEntity = inputWorld.NewEntity();
-            inputEntity.EntityAdd<InputComponent>(inputWorld);
+            inputEntity.EntityAdd<InputComponent>(inputWorld).Type = inp.GetType();
             inputEntity.EntityAdd<InputTickComponent>(inputWorld).Tick = tick;
             inputEntity.EntityAdd<InputPlayerComponent>(inputWorld).PlayerID = playerId;
             

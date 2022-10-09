@@ -3,9 +3,11 @@ using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components.Inventory;
+using Game.UI;
 using Game.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using XFlow.Ecs.ClientServer;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Net.Client;
@@ -19,12 +21,15 @@ namespace Game
     public class UnityEcsSinglePlayer: MonoBehaviour
     {
         [Inject] private EcsWorld _mainWorld;
+        [Inject(Id = EcsWorlds.Input)] private EcsWorld _inputWorld;
        
         [Inject]
         private SingleGame _game;
         
 
         private int _unitEntity = -1;
+        private int _playerEntity = -1;
+        
         private int _playerId = 1;
 
         public void Start()
@@ -32,22 +37,8 @@ namespace Game
             _game.PreInit();
             
             ClientServices.InitializeNewWorldFromScene(_mainWorld);
-            
-            _unitEntity = UnitService.CreateUnitEntity(_mainWorld);
-            _mainWorld.AddUnique(new ClientPlayerComponent{ entity = _unitEntity});
-            
-            _mainWorld.AddUnique(new MainPlayerIdComponent{value = _playerId});
-            _unitEntity.EntityAdd<PlayerComponent>(_mainWorld).id = _playerId;
-
-            var inventory = _mainWorld.NewEntity();
-            inventory.EntityAdd<InventoryComponent>(_mainWorld).SlotCapacity = 10;
-            
-            var trash = _mainWorld.NewEntity();
-            trash.EntityAdd<InventoryComponent>(_mainWorld).SlotCapacity = 10;
-
-            _unitEntity.EntityAdd<InventoryLinkComponent>(_mainWorld).Inventory = _mainWorld.PackEntity(inventory);
-            _unitEntity.EntityAdd<TrashLinkComponent>(_mainWorld).Trash = _mainWorld.PackEntity(trash);
-            
+            _mainWorld.AddUnique<MainPlayerIdComponent>().value = 1;
+            BaseServices.InputJoinPlayer(_inputWorld, 1);
             _game.Init();
         }
 

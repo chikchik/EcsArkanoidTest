@@ -162,6 +162,7 @@ namespace Game
                 moveInfoComponent.endPoint = view.EndPosition;
             });
 
+            /*
             ForEachObject<CharacterView>(view =>
             {
                 var characterEntity = GetOrCreateGameEntity(view.gameObject);
@@ -175,7 +176,7 @@ namespace Game
                 
                 ref var radiusComponent = ref characterEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
-            });
+            });*/
 
             ForEachObject<DestructibleView>(view =>
             {

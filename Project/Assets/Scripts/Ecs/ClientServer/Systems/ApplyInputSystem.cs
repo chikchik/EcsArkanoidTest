@@ -15,6 +15,7 @@ using XFlow.Modules.Grid.Other;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
+using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
 using XFlow.Utils;
 
@@ -44,11 +45,6 @@ namespace Game.Ecs.ClientServer.Systems
         
         public void Run(EcsSystems systems)
         {
-            var mainPlayerId = -1;
-            if (_world.HasUnique<MainPlayerIdComponent>())//если это мир на клиенте
-                mainPlayerId = _world.GetUnique<MainPlayerIdComponent>().value;
-           
-            
             var poolInputShot   = _inputWorld.GetPool<InputShotComponent>();
             var poolPlayer      = _inputWorld.GetPool<InputPlayerComponent>();
             var poolInputMoveDir= _inputWorld.GetPool<InputMoveDirectionComponent>();
@@ -59,6 +55,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolInputKick   = _inputWorld.GetPool<InputKickComponent>();
             var poolInputTick   = _inputWorld.GetPool<InputTickComponent>();
             
+            var poolInput  = _inputWorld.GetPool<InputComponent>();
             
             
 
@@ -68,17 +65,14 @@ namespace Game.Ecs.ClientServer.Systems
             {
                 if (poolInputTick.GetNullable(inputEntity)?.Tick != tick)
                     continue;
-                
-                var playerId = mainPlayerId;
-                if (poolPlayer.Has(inputEntity))
-                    playerId = poolPlayer.Get(inputEntity).PlayerID;
 
-                var unitEntity = BaseServices.GetUnitEntityByPlayerId(_world, playerId);
-                if (!_world.IsEntityAliveInternal(unitEntity))
-                {
-                    _world.LogError($"unit entity {unitEntity} is not alive");
+                var inputType = poolInput.Get(inputEntity).Type;
+                
+                
+                int playerId = poolPlayer.Get(inputEntity).PlayerID;
+                
+                if (!BaseServices.TryGetControlledEntityByPlayerId(_world, playerId, out int unitEntity))
                     continue;
-                }
 
                 if (!unitEntity.EntityHas<UnitComponent>(_world))
                 {
@@ -86,7 +80,7 @@ namespace Game.Ecs.ClientServer.Systems
                     continue;
                 }
                 
-                if (poolInputShot.Has(inputEntity))
+                if (inputType == typeof(InputShotComponent))
                 {
                     Shoot(unitEntity, poolInputShot.Get(inputEntity));
                 }
