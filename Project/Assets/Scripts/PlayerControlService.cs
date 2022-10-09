@@ -2,6 +2,7 @@
 using Game.Ecs.ClientServer.Components;
 using Game.View;
 using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components.Input;
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer;
@@ -11,7 +12,6 @@ using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
-using XFlow.Net.ClientServer.Ecs.Components.Input.proto;
 using XFlow.Utils;
 using Zenject;
 

@@ -4,6 +4,7 @@ using Fabros.EcsModules.Mech.ClientServer.Components;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Inventory;
 using UnityEngine;
 using XFlow.Ecs.ClientServer;
@@ -15,7 +16,6 @@ using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
-using XFlow.Net.ClientServer.Ecs.Components.Input.proto;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
