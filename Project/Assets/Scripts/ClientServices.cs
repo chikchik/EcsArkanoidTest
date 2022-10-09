@@ -9,6 +9,8 @@ using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.Client;
+using XFlow.Modules.Box2D.ClientServer;
+using XFlow.Modules.Box2D.ClientServer.Components;
 using XFlow.Modules.Box2D.ClientServer.Components.Joints;
 using XFlow.Modules.Fire.ClientServer.Components;
 using XFlow.Net.ClientServer.Ecs.Components;
@@ -185,11 +187,15 @@ namespace Game
                 ClientBox2DServices.AddRigidBodyDefinitionWithColliders(world, entity, body);
             });
 
-            ForEachObject<JointConnectView>(joint =>
+            ForEachObject<DistanceJointConnectView>(joint =>
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
-                var entityB = GetOrCreateGameEntity(joint.Connect);
-                entityA.EntityAdd<JointTestComponent>(world).Entity = entityB;
+                var entityB = GetOrCreateGameEntity(joint.Target);
+                
+                ref var definition =
+                    ref entityA.EntityAdd<Box2DJointDefinitionComponent>(world);
+                
+                Box2DServices.AddDistanceJointToDefinition(world, entityA, entityB);
             });
 
             ForEachObject<RevoluteJointView>(joint =>
