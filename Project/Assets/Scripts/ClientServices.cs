@@ -5,6 +5,7 @@ using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.View;
 using UnityEngine;
+using XFlow.Ecs.Client;
 using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
@@ -100,6 +101,10 @@ namespace Game
 
                 ref var radiusComponent = ref boxEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = view.transform.lossyScale.x / 2f;
+                
+                
+                view.LinkEntity(world, boxEntity);
+                
             });
 
             ForEachObject<ButtonView>(view =>
@@ -185,6 +190,12 @@ namespace Game
             {
                 var entity = GetOrCreateGameEntity(body.gameObject);
                 ClientBox2DServices.AddRigidBodyDefinitionWithColliders(world, entity, body);
+            });
+            
+            ForEachObject<Rigidbody>(body =>
+            {
+                var entity = GetOrCreateGameEntity(body.gameObject);
+                ClientBox2DServices3D.AddRigidBodyDefinitionWithColliders(world, entity, body);
             });
 
             ForEachObject<DistanceJointConnectView>(joint =>

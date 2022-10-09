@@ -163,6 +163,21 @@ namespace Game
             Apply(component);
         }
 
+        public void BeginDrag(int entity)
+        {
+            
+        }
+
+        public void UpdateDrag(Vector3 pos)
+        {
+            
+        }
+        
+        public void EndDrag()
+        {
+            
+        }
+
         private void Apply(IInputComponent component)
         {
             //reused on server
