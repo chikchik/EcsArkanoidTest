@@ -192,9 +192,6 @@ namespace Game
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
                 var entityB = GetOrCreateGameEntity(joint.Target);
                 
-                ref var definition =
-                    ref entityA.EntityAdd<Box2DJointDefinitionComponent>(world);
-                
                 Box2DServices.AddDistanceJointToDefinition(world, entityA, entityB);
             });
 
@@ -202,26 +199,28 @@ namespace Game
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
                 var entityB = GetOrCreateGameEntity(joint.ConnectedBody.gameObject);
-                ref var component = ref entityA.EntityAdd<Box2DRevoluteJointComponent>(world);
-                component.ConnectedBody = entityB;
+                
+                var data = new Box2DRevoluteJoint();
+                data.Entity = world.PackEntity(entityB);
 
                 if (joint.AutoCalculateOffsets)
                 {
-                    component.ConnectedJointOffset = Vector2.zero;
+                    data.ConnectedJointOffset = Vector2.zero;
                     var offset = Vector3.Scale(joint.transform.InverseTransformPoint(joint.ConnectedBody.transform.position), joint.transform.lossyScale);
-                    component.JointOffset = new Vector2(offset.x, offset.z);
+                    data.JointOffset = new Vector2(offset.x, offset.z);
                 }
                 else
                 {
-                    component.JointOffset = joint.JointOffset;
-                    component.ConnectedJointOffset = joint.ConnectedJointOffset;
+                    data.JointOffset = joint.JointOffset;
+                    data.ConnectedJointOffset = joint.ConnectedJointOffset;
                 }
 
-                component.EnableLimits = joint.EnableLimits;
-                component.LowerAngleLimit = joint.LowerAngleLimit * Mathf.Deg2Rad;
-                component.UpperAngleLimit = joint.UpperAngleLimit * Mathf.Deg2Rad;
-                component.CollideConnected = joint.CollideConnected;
+                data.EnableLimits = joint.EnableLimits;
+                data.LowerAngleLimit = joint.LowerAngleLimit * Mathf.Deg2Rad;
+                data.UpperAngleLimit = joint.UpperAngleLimit * Mathf.Deg2Rad;
+                data.CollideConnected = joint.CollideConnected;
 
+                Box2DServices.AddRevoluteJointToDefinition(world, entityA, data);
             });
             
             ForEachObject<SpawnGunView>(view =>
