@@ -31,9 +31,13 @@ namespace Game.Ecs.ClientServer.Systems
                 //context.WriteToConsole?.Invoke($"{ms} player {playerID}");
                 if (leave)
                 {
-                    if (PlayerService.TryGetControlledEntityByPlayerId(world, playerID, out int unitEntity))
+                    if (PlayerService.TryGetPlayerEntityByPlayerId(world, playerID, out int playerEntity))
                     {
-                        world.MarkEntityAsDeleted(unitEntity);
+                        var packedEntity = playerEntity.EntityGet<PrimaryUnitEntityComponent>(world).Value;
+                        if (packedEntity.Unpack(world, out int unitEntity))
+                        {
+                            world.MarkEntityAsDeleted(unitEntity);
+                        }
                     }
                 }
                 else
