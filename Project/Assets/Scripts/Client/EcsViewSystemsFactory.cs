@@ -26,8 +26,9 @@ namespace Game.Client
         {
             _container = new EcsSystemsContainer(di);
             
-            _container.Register<PlayerInputSystem>();
+            
             _container.Register<PlayerDragAndDropInputSystem>();
+            _container.Register<PlayerInputSystem>();
 
             _container.Register<InitSceneSystem>();
             
@@ -56,6 +57,8 @@ namespace Game.Client
             _container.Register<RotateCharacterSystem>();
             _container.Register<RotateRigidbodySystem>();
             _container.Register<CameraFollowSystem>();
+            
+            _container.Register<ResetMouseDownSystem>();
 
             _container.Register<EventsSystem<WeaponComponent>>();
             _container.Register<EventsSystem<ButtonPressedComponent>>();

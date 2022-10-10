@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Game.Ecs.Client.Components;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using XFlow.EcsLite;
@@ -12,6 +13,13 @@ namespace Game.Client
         [Inject]private Joystick joystick;
         [Inject]private PlayerControlService controlService;
 
+        private EcsWorld _world;
+        
+        public void Init(EcsSystems systems)
+        {
+            _world = systems.GetWorld();
+        }
+        
         void MoveDir(float hor, float ver)
         {
             var forward = -Vector3.Cross(Vector3.up,camera.transform.right) ;
@@ -29,9 +37,9 @@ namespace Game.Client
         
         public void Run(EcsSystems systems)
         {
-            if (Input.GetMouseButtonDown(0) && !IsPointerOverUIObject())
+            if (!_world.HasUnique<MouseDownHandledComponent>() && Input.GetMouseButtonDown(0) && !IsPointerOverUIObject())
             {
-                //EventSystem.current.
+                Debug.Log("MoveToPoint");
                 var ray = camera.ScreenPointToRay(Input.mousePosition);
                 var plane = new Plane(new Vector3(0, 1, 0), 0);
                 plane.Raycast(ray, out var dist);
@@ -59,9 +67,6 @@ namespace Game.Client
             }
         }
 
-        public void Init(EcsSystems systems)
-        {
-        }
         
         
         public static bool IsPointerOverUIObject()

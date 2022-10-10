@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Game.Ecs.Client.Components;
 using Game.View;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -15,8 +16,9 @@ namespace Game.Client
 
         private Transform _draggable;
         private EcsWorld _world;
-
         private EcsPackedEntity _entity;
+        
+        private List<RaycastResult> _raycastResults = new List<RaycastResult>();
         
         public void Init(EcsSystems systems)
         {
@@ -50,28 +52,26 @@ namespace Game.Client
             PointerEventData pointer = new PointerEventData(EventSystem.current);
             pointer.position = Input.mousePosition;
  
-            List<RaycastResult> raycastResults = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointer, raycastResults);
+            EventSystem.current.RaycastAll(pointer, _raycastResults);
 
-            if (raycastResults.Count > 0)
-            {
-                if (raycastResults[0].gameObject.GetComponentInParent<Canvas>() != null)
-                    return;
+            if (_raycastResults.Count == 0)
+                return;
 
-                var go = raycastResults[0].gameObject.GetComponentInParent<BoxView>();
-                if (go != null)
-                {
-                    if (go.transform.TryGetLinkedEntity(_world, out int entity))
-                    {
-                        _draggable = go.transform;
-                        _controlService.BeginDrag(entity);
-                    }
-                }
-            }
+            var go = _raycastResults[0];
+            //skip ui
+            if (go.gameObject.GetComponentInParent<Canvas>() != null)
+                return;
 
-            return;
-
+            var draggable = go.gameObject.GetComponentInParent<BoxView>();
+            if (draggable == null)
+                return;
+            
+            if (!draggable.transform.TryGetLinkedEntity(_world, out int entity))
+                return;
+            
+            _draggable = draggable.transform;
+            _controlService.BeginDrag(entity);
+            _world.GetOrCreateUniqueRef<MouseDownHandledComponent>();
         }
-
     }
 }
