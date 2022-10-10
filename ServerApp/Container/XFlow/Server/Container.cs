@@ -42,6 +42,8 @@ namespace XFlow.Server
 
         private ILogger _logger => _context.Host.LoggerFactory.System;
         
+        private readonly object _locker = new object();
+
         private SyncDebugService _syncDebug;
 
         private EcsWorld _mainWorld;
@@ -183,9 +185,7 @@ namespace XFlow.Server
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-        private object _locker = new object();
-
+        
         private async ValueTask OnReliableMessageReceived(ReliableChannelMessage message)
         {
             _logger.Log(LogLevel.Trace, $"OnReliableMessageReceived.{message.Type}");
@@ -193,12 +193,18 @@ namespace XFlow.Server
             {
                 case ReliableChannelMessageType.UserConnected:
                     var connectedArgs = message.GetUserConnectedArguments().Value;
-                    _logger.Log(LogLevel.Debug, $"Connected {connectedArgs.UserAddress}");
+                    _logger.Log(LogLevel.Debug, $"Connected {connectedArgs.UserAddress.UserId}");
                     break;
 
                 case ReliableChannelMessageType.UserDisconnected:
                     var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
-                    _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress}");
+                    _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress.UserId}");
+                    lock (_locker)
+                    {
+                        var user = GetClientEntity(disconnectedArgs.UserAddress.UserId);
+                        _mainWorld.DelEntity(user);
+                        BaseServices.InputLeavePlayer(_inputWorld, user);
+                    }
                     break;
 
                 case ReliableChannelMessageType.MessageReceived:
