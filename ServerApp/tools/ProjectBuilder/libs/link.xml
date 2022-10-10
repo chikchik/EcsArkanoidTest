@@ -1,14 +1,11 @@
 <linker>
     <assembly fullname="Newtonsoft.Json" />
-    <assembly fullname="System.IdentityModel.Tokens.Jwt">
-        <type fullname="System.IdentityModel.Tokens.Jwt.JwtHeader" preserve="all" />
-        <type fullname="System.IdentityModel.Tokens.Jwt.JwtPayload" preserve="all" />
-    </assembly>
     <assembly fullname="System.Core">
         <type fullname="System.Linq.Expressions.Interpreter.LightLambda" preserve = "all" />
     </assembly>
     <assembly fullname="Gaming.ClientUtilities" />
     <assembly fullname="Gaming.Collections" />
+    <assembly fullname="Gaming.ContainerManager.Client.SocketContracts" />
     <assembly fullname="Gaming.ContainerManager.Client" />
     <assembly fullname="Gaming.ContainerManager.Contracts" />
     <assembly fullname="Gaming.ContainerManager.ImageContracts" />
