@@ -27,6 +27,7 @@ namespace Game.Client
         {
             if (Input.GetMouseButtonUp(0) && _draggable != null)
             {
+                _draggable = null;
                 _controlService.EndDrag();
                 return;
             }
@@ -43,6 +44,9 @@ namespace Game.Client
                 return;
             }
             
+            if (!Input.GetMouseButton(0))
+                return;
+            
             PointerEventData pointer = new PointerEventData(EventSystem.current);
             pointer.position = Input.mousePosition;
  
@@ -57,9 +61,9 @@ namespace Game.Client
                 var go = raycastResults[0].gameObject.GetComponentInParent<BoxView>();
                 if (go != null)
                 {
-                    _draggable = go.transform;
-                    if (_draggable.TryGetLinkedEntity(_world, out int entity))
+                    if (go.transform.TryGetLinkedEntity(_world, out int entity))
                     {
+                        _draggable = go.transform;
                         _controlService.BeginDrag(entity);
                     }
                 }

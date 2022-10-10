@@ -159,7 +159,6 @@ namespace Game
             Apply(component);
         }
         public void MoveToPoint(Vector3 pos)
-        
         {
             if (unitEntity == -1)
             {
@@ -174,6 +173,7 @@ namespace Game
 
         public void BeginDrag(int entity)
         {
+            Debug.Log($"BeginDrag {entity}");
             var component = new InputBeginMouseDragComponent();
             component.Entity = _world.PackEntity(entity);
             Apply(component);
@@ -182,12 +182,13 @@ namespace Game
         public void UpdateDrag(Vector3 pos)
         {
             var component = new InputUpdateMouseDragComponent();
-            component.Position = pos;
+            component.Position = pos.ToVector2XZ();
             Apply(component);
         }
         
         public void EndDrag()
         {
+            Debug.Log($"EndDrag");
             var component = new InputEndMouseDragComponent();
             Apply(component);
         }

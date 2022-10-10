@@ -27,7 +27,7 @@ namespace Game.Client
             _container = new EcsSystemsContainer(di);
             
             _container.Register<PlayerInputSystem>();
-            //_container.Register<PlayerDragAndDropInputSystem>();
+            _container.Register<PlayerDragAndDropInputSystem>();
 
             _container.Register<InitSceneSystem>();
             

@@ -102,7 +102,7 @@ namespace Game.ClientServer
             
             _container.Register<ApplyInputSystem>();
             
-            //_container.Register<ApplyDragInputSystem>();
+            _container.Register<ApplyDragInputSystem>();
 
 
             _container.RegisterServer<FootprintSystem>();

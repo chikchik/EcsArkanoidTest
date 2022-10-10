@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Input;
 using XFlow.Ecs.ClientServer;
+using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
@@ -30,9 +32,9 @@ namespace Game.Ecs.ClientServer.Systems
         
         public void Run(EcsSystems systems)
         {
-            var poolInputTick   = _inputWorld.GetPool<InputTickComponent>();
-            var poolInputType  = _inputWorld.GetPool<InputTypeComponent>();
-            var poolPlayer      = _inputWorld.GetPool<InputPlayerComponent>();
+            var poolInputTick = _inputWorld.GetPool<InputTickComponent>();
+            var poolInputType = _inputWorld.GetPool<InputTypeComponent>();
+            var poolPlayer    = _inputWorld.GetPool<InputPlayerComponent>();
             
             var tick = _world.GetTick();
             
@@ -42,6 +44,9 @@ namespace Game.Ecs.ClientServer.Systems
                     continue;
                 
                 int playerId = poolPlayer.Get(inputEntity).PlayerID;
+                
+                if (!PlayerService.TryGetPlayerEntityByPlayerId(_world, playerId, out int playerEntity))
+                    continue;
                 
                 if (!PlayerService.TryGetControlledEntityByPlayerId(_world, playerId, out int unitEntity))
                     continue;
@@ -54,7 +59,7 @@ namespace Game.Ecs.ClientServer.Systems
                     var data = inputEntity.EntityGet<InputBeginMouseDragComponent>(_inputWorld);
                     if (data.Entity.Unpack(_world, out int entity))
                     {
-                        int iiii = 0;
+                        playerEntity.EntityAdd<DraggedEntityComponent>(_world).Value = data.Entity;
                     }
                     continue;
                 }
@@ -62,11 +67,20 @@ namespace Game.Ecs.ClientServer.Systems
                 if (inputType == typeof(InputUpdateMouseDragComponent))
                 {
                     var data = inputEntity.EntityGet<InputUpdateMouseDragComponent>(_inputWorld);
-                    /*
-                    if (data.Entity.Unpack(_world, out int entity))
+                    if (playerEntity.EntityTryGet<DraggedEntityComponent>(_world, out var component))
                     {
-                        int iiii = 0;
-                    }*/
+                        if (component.Value.Unpack(_world, out int entity))
+                        {
+                            ref var pos = ref entity.EntityGetRef<PositionComponent>(_world).Value;
+                            pos = data.Position.ToVector3XZ().WithY(pos.y);
+                        }
+                    }
+                    continue;
+                }
+
+                if (inputType == typeof(InputEndMouseDragComponent))
+                {
+                    playerEntity.EntityDel<DraggedEntityComponent>(_world);
                     continue;
                 }
             }
