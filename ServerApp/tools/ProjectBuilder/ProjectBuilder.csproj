@@ -9,158 +9,170 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="CSharpFunctionalExtensions, Version=2.34.0.0, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="CSharpFunctionalExtensions">
         <HintPath>libs\CSharpFunctionalExtensions.dll</HintPath>
       </Reference>
-      <Reference Include="FluentValidation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0">
+      <Reference Include="FluentValidation">
         <HintPath>libs\FluentValidation.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.ClientUtilities, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.ClientUtilities">
         <HintPath>libs\Gaming.ClientUtilities.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Collections, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Collections">
         <HintPath>libs\Gaming.Collections.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.ContainerManager.Client, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.ContainerManager.Client">
         <HintPath>libs\Gaming.ContainerManager.Client.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.ContainerManager.Contracts, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.ContainerManager.Client.SocketContracts">
+        <HintPath>libs\Gaming.ContainerManager.Client.SocketContracts.dll</HintPath>
+      </Reference>
+      <Reference Include="Gaming.ContainerManager.Contracts">
         <HintPath>libs\Gaming.ContainerManager.Contracts.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.ContainerManager.ImageContracts, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.ContainerManager.ImageContracts">
         <HintPath>libs\Gaming.ContainerManager.ImageContracts.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.ContainerManager.Models, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.ContainerManager.Models">
         <HintPath>libs\Gaming.ContainerManager.Models.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Contracts.Annotations, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Contracts.Annotations">
         <HintPath>libs\Gaming.Contracts.Annotations.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Facade, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Facade">
         <HintPath>libs\Gaming.Facade.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Facade.Containers, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Facade.Containers">
         <HintPath>libs\Gaming.Facade.Containers.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Facade.Modules.Containers.V1, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Facade.Modules.Containers.V1">
         <HintPath>libs\Gaming.Facade.Modules.Containers.V1.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Facade.Modules.FileSystem.V1, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Facade.Modules.FileSystem.V1">
         <HintPath>libs\Gaming.Facade.Modules.FileSystem.V1.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Facade.Modules.Http.V1, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Facade.Modules.Http.V1">
         <HintPath>libs\Gaming.Facade.Modules.Http.V1.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Facade.Modules.Identity.V1, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Facade.Modules.Identity.V1">
         <HintPath>libs\Gaming.Facade.Modules.Identity.V1.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.FunctionalExtensions, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.FunctionalExtensions">
         <HintPath>libs\Gaming.FunctionalExtensions.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.FunctionalExtensions.Serialization, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.FunctionalExtensions.Serialization">
         <HintPath>libs\Gaming.FunctionalExtensions.Serialization.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Http, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Http">
         <HintPath>libs\Gaming.Http.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Http.Abstractions, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Http.Abstractions">
         <HintPath>libs\Gaming.Http.Abstractions.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.IdentityProvider.Client, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.IdentityProvider.Client">
         <HintPath>libs\Gaming.IdentityProvider.Client.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.IdentityProvider.Contracts, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.IdentityProvider.Contracts">
         <HintPath>libs\Gaming.IdentityProvider.Contracts.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Messaging.Abstractions, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Messaging.Abstractions">
         <HintPath>libs\Gaming.Messaging.Abstractions.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.ServiceModel.Abstractions, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.ServiceModel.Abstractions">
         <HintPath>libs\Gaming.ServiceModel.Abstractions.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.ServiceModel.Authorization.Abstractions, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.ServiceModel.Authorization.Abstractions">
         <HintPath>libs\Gaming.ServiceModel.Authorization.Abstractions.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.ServiceModel.ErrorFlow, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.ServiceModel.ErrorFlow">
         <HintPath>libs\Gaming.ServiceModel.ErrorFlow.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.ServiceModel.ErrorFlow.Serialization, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.ServiceModel.ErrorFlow.Serialization">
         <HintPath>libs\Gaming.ServiceModel.ErrorFlow.Serialization.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.ServiceModel.Serialization, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.ServiceModel.Serialization">
         <HintPath>libs\Gaming.ServiceModel.Serialization.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.TokenExchange.Abstractions, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.TokenExchange.Abstractions">
         <HintPath>libs\Gaming.TokenExchange.Abstractions.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Tracing.Common.Abstractions, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Tracing.Common.Abstractions">
         <HintPath>libs\Gaming.Tracing.Common.Abstractions.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Tracing.WriteSide, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Tracing.WriteSide">
         <HintPath>libs\Gaming.Tracing.WriteSide.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Tracing.WriteSide.Abstractions, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Tracing.WriteSide.Abstractions">
         <HintPath>libs\Gaming.Tracing.WriteSide.Abstractions.dll</HintPath>
       </Reference>
-      <Reference Include="Gaming.Tracing.WriteSide.EndUser, Version=1.1.1.21959, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="Gaming.Tracing.WriteSide.EndUser">
         <HintPath>libs\Gaming.Tracing.WriteSide.EndUser.dll</HintPath>
       </Reference>
-      <Reference Include="Humanizer, Version=2.14.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e">
+      <Reference Include="Humanizer">
         <HintPath>libs\Humanizer.dll</HintPath>
       </Reference>
-      <Reference Include="JsonSubTypes, Version=1.9.0.0, Culture=neutral, PublicKeyToken=ee75fc290dbc1176">
+      <Reference Include="JsonSubTypes">
         <HintPath>libs\JsonSubTypes.dll</HintPath>
       </Reference>
-      <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-        <HintPath>libs\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.IdentityModel.Abstractions, Version=6.23.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-        <HintPath>libs\Microsoft.IdentityModel.Abstractions.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=6.23.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-        <HintPath>libs\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.IdentityModel.Logging, Version=6.23.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-        <HintPath>libs\Microsoft.IdentityModel.Logging.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.IdentityModel.Tokens, Version=6.23.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-        <HintPath>libs\Microsoft.IdentityModel.Tokens.dll</HintPath>
-      </Reference>
-      <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <Reference Include="Newtonsoft.Json">
         <HintPath>libs\Newtonsoft.Json.dll</HintPath>
       </Reference>
-      <Reference Include="Polly, Version=7.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc">
+      <Reference Include="Polly">
         <HintPath>libs\Polly.dll</HintPath>
       </Reference>
-      <Reference Include="Polly.Extensions.Http, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc">
+      <Reference Include="Polly.Extensions.Http">
         <HintPath>libs\Polly.Extensions.Http.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Buffers">
+        <HintPath>libs\System.Buffers.dll</HintPath>
       </Reference>
       <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
         <HintPath>libs\System.Buffers.dll</HintPath>
       </Reference>
+      <Reference Include="System.Collections.Immutable">
+        <HintPath>libs\System.Collections.Immutable.dll</HintPath>
+      </Reference>
       <Reference Include="System.Collections.Immutable, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
         <HintPath>libs\System.Collections.Immutable.dll</HintPath>
       </Reference>
-      <Reference Include="System.IdentityModel.Tokens.Jwt, Version=6.23.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-        <HintPath>libs\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <Reference Include="System.Dynamic.Runtime">
+        <HintPath>libs\System.Dynamic.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Linq.Expressions">
+        <HintPath>libs\System.Linq.Expressions.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Memory">
+        <HintPath>libs\System.Memory.dll</HintPath>
       </Reference>
       <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
         <HintPath>libs\System.Memory.dll</HintPath>
       </Reference>
+      <Reference Include="System.ObjectModel">
+        <HintPath>libs\System.ObjectModel.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Reflection.Emit">
+        <HintPath>libs\System.Reflection.Emit.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Reflection.Emit.ILGeneration">
+        <HintPath>libs\System.Reflection.Emit.ILGeneration.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Reflection.Emit.Lightweight">
+        <HintPath>libs\System.Reflection.Emit.Lightweight.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Reflection.TypeExtensions">
+        <HintPath>libs\System.Reflection.TypeExtensions.dll</HintPath>
+      </Reference>
       <Reference Include="System.Reflection.TypeExtensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
         <HintPath>libs\System.Reflection.TypeExtensions.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Runtime.CompilerServices.Unsafe">
+        <HintPath>libs\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
         <HintPath>libs\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       </Reference>
-      <Reference Include="System.Security.Cryptography.Cng, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-        <HintPath>libs\System.Security.Cryptography.Cng.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Text.Encodings.Web, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-        <HintPath>libs\System.Text.Encodings.Web.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Text.Json, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-        <HintPath>libs\System.Text.Json.dll</HintPath>
+      <Reference Include="System.Threading.Tasks.Extensions">
+        <HintPath>libs\System.Threading.Tasks.Extensions.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
         <HintPath>libs\System.Threading.Tasks.Extensions.dll</HintPath>
