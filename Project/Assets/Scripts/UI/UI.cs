@@ -1,4 +1,5 @@
-﻿using Game.Ecs.ClientServer.Components;
+﻿using Fabros.EcsModules.Mech.ClientServer.Components;
+using Game.Ecs.ClientServer.Components;
 using Game.UI.Mono;
 
 
@@ -7,6 +8,7 @@ using Game.State;
 using XFlow.EcsLite;
 using XFlow.Modules.States;
 using XFlow.Modules.Tick.ClientServer.Components;
+using XFlow.Utils;
 
 namespace Game.UI
 {
@@ -121,8 +123,15 @@ namespace Game.UI
             if (!ClientPlayerService.TryGetControlledEntity(_world, out int controlledEntity))
                 return;
 
-            var mechEntity = _clientServerServices.GetInteractionMechEntity(_world, controlledEntity);
-            View.MechButton.gameObject.SetActive(mechEntity != -1);
+            if (controlledEntity.EntityHas<MechComponent>(_world))
+            {
+                //leave mech
+                View.MechButton.gameObject.SetActive(true);
+                return;
+            }
+            
+            bool hasMech = _clientServerServices.TryGetInteractableMechEntity(_world, controlledEntity, out int mechEntity);
+            View.MechButton.gameObject.SetActive(hasMech);
         }
     }
 }

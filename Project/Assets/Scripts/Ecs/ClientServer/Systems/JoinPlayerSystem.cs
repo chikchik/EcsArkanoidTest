@@ -40,20 +40,23 @@ namespace Game.Ecs.ClientServer.Systems
                 {
                     var playerEntity = PlayerService.CreatePlayerEntity(world, playerID);
                     
-                    var freeUnitEntity = UnitService.CreateUnitEntity(world);
+                    var unitEntity = UnitService.CreateUnitEntity(world);
 
-                    playerEntity.EntityAdd<ControlledUnitEntityComponent>(world).Value =
-                        world.PackEntity(freeUnitEntity);
-                        
+                    playerEntity.EntityAdd<ControlledEntityComponent>(world).Value =
+                        world.PackEntity(unitEntity);
+                    
+                    playerEntity.EntityAdd<PrimaryUnitEntityComponent>(world).Value =
+                        world.PackEntity(unitEntity);
+
                     var inventory = world.NewEntity();
                     inventory.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 
                     var trash = world.NewEntity();
                     trash.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 
-                    freeUnitEntity.EntityAdd<InventoryLinkComponent>(world).Inventory =
+                    unitEntity.EntityAdd<InventoryLinkComponent>(world).Inventory =
                         world.PackEntity(inventory);
-                    freeUnitEntity.EntityAdd<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
+                    unitEntity.EntityAdd<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
                 }
             }
         }

@@ -16,35 +16,38 @@ namespace Game.Ecs.ClientServer.Systems
         private EcsWorld _world;
         private EcsWorld _inputWorld;
 
-        private MyInventoryService _inventoryService;
-        
-        private List<int> _entities = new List<int>();
-
-        public ApplyDragInputSystem(MyInventoryService myInventoryService)
+        public ApplyDragInputSystem()
         {
-            _inventoryService = myInventoryService;
+            
         }
         
         public void Init(EcsSystems systems)
         {
             _world = systems.GetWorld();
             _inputWorld = systems.GetWorld(EcsWorlds.Input);
-            _filter = _inputWorld.Filter<InputComponent>().End();
+            _filter = _inputWorld.Filter<InputTypeComponent>().Inc<InputTickComponent>().End();
         }
         
         public void Run(EcsSystems systems)
         {
             var poolInputTick   = _inputWorld.GetPool<InputTickComponent>();
-            var poolInput  = _inputWorld.GetPool<InputComponent>();
-
+            var poolInputType  = _inputWorld.GetPool<InputTypeComponent>();
+            var poolPlayer      = _inputWorld.GetPool<InputPlayerComponent>();
+            
             var tick = _world.GetTick();
             
             foreach (var inputEntity in _filter)
             {
-                if (poolInputTick.GetNullable(inputEntity)?.Tick != tick)
+                if (poolInputTick.Get(inputEntity).Tick != tick)
                     continue;
+                
+                int playerId = poolPlayer.Get(inputEntity).PlayerID;
+                
+                if (!PlayerService.TryGetControlledEntityByPlayerId(_world, playerId, out int unitEntity))
+                    continue;
+                
 
-                var inputType = poolInput.Get(inputEntity).Type;
+                var inputType = poolInputType.Get(inputEntity).Value;
 
                 if (inputType == typeof(InputBeginMouseDragComponent))
                 {

@@ -14,24 +14,20 @@ namespace Game.ClientServer.Services
     {
         List<int> _entities = new List<int>();
         
-        public int GetInteractionMechEntity(EcsWorld world, int unitEntity)
+        public bool TryGetInteractableMechEntity(EcsWorld world, int unitEntity, out int mechEntity)
         {
-            if (unitEntity.EntityHas<ControlsMechComponent>(world))
-            {
-                if (unitEntity.EntityGet<ControlsMechComponent>(world).PackedEntity.Unpack(world, out int entity))
-                    return entity;
-                
-                return -1;
-            }
+            mechEntity = -1;
+            if (unitEntity.EntityHas<MechComponent>(world))
+                return false;
             
             world.GetNearestEntities(unitEntity,
                 unitEntity.EntityGet<PositionComponent>(world).Value,
                 1, ref _entities, entity=> entity.EntityHas<MechComponent>(world));
 
             if (_entities.Count == 0)
-                return -1;
-            
-            return _entities[0];
+                return false;
+            mechEntity = _entities[0];
+            return true;
         }
     }
 }

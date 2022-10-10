@@ -149,9 +149,8 @@ namespace Game
                 return;
             }
 
-            var entity = ApplyInputWorldService.GetControlledEntity(_world, unitEntity);
             
-            if (!entity.EntityHas<MoveDirectionComponent>(_world))
+            if (!unitEntity.EntityHas<MoveDirectionComponent>(_world))
                 return;
             
             var component = new InputMoveDirectionComponent();

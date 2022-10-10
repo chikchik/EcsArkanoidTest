@@ -74,7 +74,7 @@ namespace Game.Client
             _container.Register<EventsSystem<ActiveInventoryCategoryComponent>>();
             _container.Register<EventsSystem<EntityRemoveEventComponent>>();
             _container.Register<EventsSystem<TickComponent>>();
-            _container.Register<EventsSystem<ControlsMechComponent>>();
+            _container.Register<EventsSystem<ControlledEntityComponent>>();
             _container.Register<EventsSystem<HpComponent>>();
             _container.Register<EventsSystem<DeletedEntityComponent>>();
             
