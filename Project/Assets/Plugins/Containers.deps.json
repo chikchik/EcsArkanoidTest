@@ -7,14 +7,14 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "Containers/1.1.1.25018": {
+      "Containers/1.1.1.27047": {
         "dependencies": {
-          "Containers.V1": "1.1.1.25018",
-          "Gaming.ContainerManager.ImageContracts": "1.1.1.25018",
-          "Gaming.Facade": "1.1.1.25018",
+          "Containers.V1": "1.1.1.27047",
+          "Gaming.ContainerManager.ImageContracts": "1.1.1.27047",
+          "Gaming.Facade": "1.1.1.27047",
           "Microsoft.CodeAnalysis.NetAnalyzers": "7.0.0-preview1.22403.2",
           "Roslynator.Analyzers": "4.1.1",
-          "SonarAnalyzer.CSharp": "8.45.0.54064"
+          "SonarAnalyzer.CSharp": "8.46.0.54807"
         },
         "runtime": {
           "Containers.dll": {}
@@ -55,67 +55,30 @@
           }
         }
       },
-      "Microsoft.Bcl.AsyncInterfaces/5.0.0": {
-        "runtime": {
-          "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          }
-        }
-      },
       "Microsoft.CodeAnalysis.NetAnalyzers/7.0.0-preview1.22403.2": {},
-      "Microsoft.CSharp/4.5.0": {
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.CSharp.dll": {
-            "assemblyVersion": "4.0.4.0",
-            "fileVersion": "4.6.26515.6"
-          }
-        }
-      },
-      "Microsoft.IdentityModel.Abstractions/6.23.1": {
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.dll": {
-            "assemblyVersion": "6.23.1.0",
-            "fileVersion": "6.23.1.30908"
-          }
-        }
-      },
-      "Microsoft.IdentityModel.JsonWebTokens/6.23.1": {
+      "Microsoft.CSharp/4.3.0": {
         "dependencies": {
-          "Microsoft.IdentityModel.Tokens": "6.23.1",
-          "System.Text.Encoding": "4.3.0",
-          "System.Text.Json": "5.0.2"
+          "System.Collections": "4.3.0",
+          "System.Diagnostics.Debug": "4.3.0",
+          "System.Dynamic.Runtime": "4.3.0",
+          "System.Globalization": "4.3.0",
+          "System.Linq": "4.3.0",
+          "System.Linq.Expressions": "4.3.0",
+          "System.ObjectModel": "4.3.0",
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Extensions": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0",
+          "System.Reflection.TypeExtensions": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Runtime.InteropServices": "4.3.0",
+          "System.Threading": "4.3.0"
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
-            "assemblyVersion": "6.23.1.0",
-            "fileVersion": "6.23.1.30908"
-          }
-        }
-      },
-      "Microsoft.IdentityModel.Logging/6.23.1": {
-        "dependencies": {
-          "Microsoft.IdentityModel.Abstractions": "6.23.1"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll": {
-            "assemblyVersion": "6.23.1.0",
-            "fileVersion": "6.23.1.30908"
-          }
-        }
-      },
-      "Microsoft.IdentityModel.Tokens/6.23.1": {
-        "dependencies": {
-          "Microsoft.CSharp": "4.5.0",
-          "Microsoft.IdentityModel.Logging": "6.23.1",
-          "System.Security.Cryptography.Cng": "4.5.0",
-          "System.Text.Encoding": "4.3.0",
-          "System.Text.Json": "5.0.2"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll": {
-            "assemblyVersion": "6.23.1.0",
-            "fileVersion": "6.23.1.30908"
+          "lib/netstandard1.3/Microsoft.CSharp.dll": {
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.6.24705.1"
           }
         }
       },
@@ -123,7 +86,7 @@
       "Microsoft.NETCore.Targets/1.1.0": {},
       "Newtonsoft.Json/10.0.3": {
         "dependencies": {
-          "Microsoft.CSharp": "4.5.0",
+          "Microsoft.CSharp": "4.3.0",
           "System.ComponentModel.TypeConverter": "4.3.0",
           "System.Runtime.Serialization.Formatters": "4.3.0",
           "System.Runtime.Serialization.Primitives": "4.3.0",
@@ -156,7 +119,7 @@
         }
       },
       "Roslynator.Analyzers/4.1.1": {},
-      "SonarAnalyzer.CSharp/8.45.0.54064": {},
+      "SonarAnalyzer.CSharp/8.46.0.54807": {},
       "System.Buffers/4.5.1": {
         "runtime": {
           "lib/netstandard2.0/System.Buffers.dll": {
@@ -273,6 +236,30 @@
           "System.Runtime": "4.3.0"
         }
       },
+      "System.Dynamic.Runtime/4.3.0": {
+        "dependencies": {
+          "System.Collections": "4.3.0",
+          "System.Diagnostics.Debug": "4.3.0",
+          "System.Linq": "4.3.0",
+          "System.Linq.Expressions": "4.3.0",
+          "System.ObjectModel": "4.3.0",
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Emit": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0",
+          "System.Reflection.TypeExtensions": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Threading": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.Dynamic.Runtime.dll": {
+            "assemblyVersion": "4.0.12.0",
+            "fileVersion": "4.6.24705.1"
+          }
+        }
+      },
       "System.Globalization/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0",
@@ -288,18 +275,6 @@
           "System.Runtime": "4.3.0",
           "System.Runtime.Extensions": "4.3.0",
           "System.Runtime.InteropServices": "4.3.0"
-        }
-      },
-      "System.IdentityModel.Tokens.Jwt/6.23.1": {
-        "dependencies": {
-          "Microsoft.IdentityModel.JsonWebTokens": "6.23.1",
-          "Microsoft.IdentityModel.Tokens": "6.23.1"
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll": {
-            "assemblyVersion": "6.23.1.0",
-            "fileVersion": "6.23.1.30908"
-          }
         }
       },
       "System.IO/4.3.0": {
@@ -349,10 +324,37 @@
           }
         }
       },
+      "System.Linq.Expressions/4.3.0": {
+        "dependencies": {
+          "System.Collections": "4.3.0",
+          "System.Diagnostics.Debug": "4.3.0",
+          "System.Globalization": "4.3.0",
+          "System.IO": "4.3.0",
+          "System.Linq": "4.3.0",
+          "System.ObjectModel": "4.3.0",
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Emit": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.3.0",
+          "System.Reflection.Emit.Lightweight": "4.3.0",
+          "System.Reflection.Extensions": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0",
+          "System.Reflection.TypeExtensions": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Threading": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.6/System.Linq.Expressions.dll": {
+            "assemblyVersion": "4.1.1.0",
+            "fileVersion": "4.6.24705.1"
+          }
+        }
+      },
       "System.Memory/4.5.5": {
         "dependencies": {
           "System.Buffers": "4.5.1",
-          "System.Numerics.Vectors": "4.5.0",
+          "System.Numerics.Vectors": "4.4.0",
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "runtime": {
@@ -362,11 +364,26 @@
           }
         }
       },
-      "System.Numerics.Vectors/4.5.0": {
+      "System.Numerics.Vectors/4.4.0": {
         "runtime": {
           "lib/netstandard2.0/System.Numerics.Vectors.dll": {
-            "assemblyVersion": "4.1.4.0",
-            "fileVersion": "4.6.26515.6"
+            "assemblyVersion": "4.1.3.0",
+            "fileVersion": "4.6.25519.3"
+          }
+        }
+      },
+      "System.ObjectModel/4.3.0": {
+        "dependencies": {
+          "System.Collections": "4.3.0",
+          "System.Diagnostics.Debug": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Threading": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.ObjectModel.dll": {
+            "assemblyVersion": "4.0.13.0",
+            "fileVersion": "4.6.24705.1"
           }
         }
       },
@@ -377,6 +394,48 @@
           "System.IO": "4.3.0",
           "System.Reflection.Primitives": "4.3.0",
           "System.Runtime": "4.3.0"
+        }
+      },
+      "System.Reflection.Emit/4.3.0": {
+        "dependencies": {
+          "System.IO": "4.3.0",
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0",
+          "System.Runtime": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.Reflection.Emit.dll": {
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.6.24705.1"
+          }
+        }
+      },
+      "System.Reflection.Emit.ILGeneration/4.3.0": {
+        "dependencies": {
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0",
+          "System.Runtime": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.Reflection.Emit.ILGeneration.dll": {
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.6.24705.1"
+          }
+        }
+      },
+      "System.Reflection.Emit.Lightweight/4.3.0": {
+        "dependencies": {
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0",
+          "System.Runtime": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.Reflection.Emit.Lightweight.dll": {
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.6.24705.1"
+          }
         }
       },
       "System.Reflection.Extensions/4.3.0": {
@@ -480,14 +539,6 @@
           }
         }
       },
-      "System.Security.Cryptography.Cng/4.5.0": {
-        "runtime": {
-          "lib/netstandard2.0/System.Security.Cryptography.Cng.dll": {
-            "assemblyVersion": "4.3.0.0",
-            "fileVersion": "4.6.26515.6"
-          }
-        }
-      },
       "System.Text.Encoding/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0",
@@ -501,31 +552,6 @@
           "Microsoft.NETCore.Targets": "1.1.0",
           "System.Runtime": "4.3.0",
           "System.Text.Encoding": "4.3.0"
-        }
-      },
-      "System.Text.Encodings.Web/5.0.1": {
-        "runtime": {
-          "lib/netstandard2.1/System.Text.Encodings.Web.dll": {
-            "assemblyVersion": "5.0.0.1",
-            "fileVersion": "5.0.421.11614"
-          }
-        }
-      },
-      "System.Text.Json/5.0.2": {
-        "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "5.0.0",
-          "System.Buffers": "4.5.1",
-          "System.Memory": "4.5.5",
-          "System.Numerics.Vectors": "4.5.0",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
-          "System.Text.Encodings.Web": "5.0.1",
-          "System.Threading.Tasks.Extensions": "4.5.4"
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Text.Json.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.521.16609"
-          }
         }
       },
       "System.Text.RegularExpressions/4.3.0": {
@@ -619,32 +645,32 @@
           }
         }
       },
-      "Containers.V1/1.1.1.25018": {
+      "Containers.V1/1.1.1.27047": {
         "dependencies": {
-          "Gaming.Collections": "1.1.1.25018",
-          "Gaming.ContainerManager.Client": "1.1.1.25018",
-          "Gaming.ContainerManager.Client.SocketContracts": "1.1.1.25018",
-          "Gaming.Facade": "1.1.1.25018",
-          "Identity.V1": "1.1.1.25018"
+          "Gaming.Collections": "1.1.1.27047",
+          "Gaming.ContainerManager.Client": "1.1.1.27047",
+          "Gaming.ContainerManager.Client.SocketContracts": "1.1.1.27047",
+          "Gaming.Facade": "1.1.1.27047",
+          "Identity.V1": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.Facade.Modules.Containers.V1.dll": {}
         }
       },
-      "FileSystem.V1/1.1.1.25018": {
+      "FileSystem.V1/1.1.1.27047": {
         "dependencies": {
-          "Gaming.Facade": "1.1.1.25018"
+          "Gaming.Facade": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.Facade.Modules.FileSystem.V1.dll": {}
         }
       },
-      "Gaming.ClientUtilities/1.1.1.25018": {
+      "Gaming.ClientUtilities/1.1.1.27047": {
         "dependencies": {
-          "Gaming.FunctionalExtensions": "1.1.1.25018",
-          "Gaming.FunctionalExtensions.Serialization": "1.1.1.25018",
-          "Gaming.ServiceModel.ErrorFlow.Serialization": "1.1.1.25018",
-          "Gaming.TokenExchange.Abstractions": "1.1.1.25018",
+          "Gaming.FunctionalExtensions": "1.1.1.27047",
+          "Gaming.FunctionalExtensions.Serialization": "1.1.1.27047",
+          "Gaming.ServiceModel.ErrorFlow.Serialization": "1.1.1.27047",
+          "Gaming.TokenExchange.Abstractions": "1.1.1.27047",
           "Humanizer.Core": "2.14.1",
           "Polly": "7.2.3"
         },
@@ -652,7 +678,7 @@
           "Gaming.ClientUtilities.dll": {}
         }
       },
-      "Gaming.Collections/1.1.1.25018": {
+      "Gaming.Collections/1.1.1.27047": {
         "dependencies": {
           "System.Buffers": "4.5.1",
           "System.Memory": "4.5.5"
@@ -661,28 +687,28 @@
           "Gaming.Collections.dll": {}
         }
       },
-      "Gaming.ContainerManager.Client/1.1.1.25018": {
+      "Gaming.ContainerManager.Client/1.1.1.27047": {
         "dependencies": {
-          "Gaming.ClientUtilities": "1.1.1.25018",
-          "Gaming.ContainerManager.Contracts": "1.1.1.25018",
-          "Gaming.IdentityProvider.Client": "1.1.1.25018"
+          "Gaming.ClientUtilities": "1.1.1.27047",
+          "Gaming.ContainerManager.Contracts": "1.1.1.27047",
+          "Gaming.IdentityProvider.Client": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.ContainerManager.Client.dll": {}
         }
       },
-      "Gaming.ContainerManager.Client.SocketContracts/1.1.1.25018": {
+      "Gaming.ContainerManager.Client.SocketContracts/1.1.1.27047": {
         "runtime": {
           "Gaming.ContainerManager.Client.SocketContracts.dll": {}
         }
       },
-      "Gaming.ContainerManager.Contracts/1.1.1.25018": {
+      "Gaming.ContainerManager.Contracts/1.1.1.27047": {
         "dependencies": {
-          "Gaming.ContainerManager.Models": "1.1.1.25018",
-          "Gaming.Contracts.Annotations": "1.1.1.25018",
-          "Gaming.FunctionalExtensions": "1.1.1.25018",
-          "Gaming.IdentityProvider.Contracts": "1.1.1.25018",
-          "Gaming.ServiceModel.ErrorFlow": "1.1.1.25018",
+          "Gaming.ContainerManager.Models": "1.1.1.27047",
+          "Gaming.Contracts.Annotations": "1.1.1.27047",
+          "Gaming.FunctionalExtensions": "1.1.1.27047",
+          "Gaming.IdentityProvider.Contracts": "1.1.1.27047",
+          "Gaming.ServiceModel.ErrorFlow": "1.1.1.27047",
           "Newtonsoft.Json": "10.0.3",
           "System.Threading.Tasks.Extensions": "4.5.4"
         },
@@ -690,15 +716,15 @@
           "Gaming.ContainerManager.Contracts.dll": {}
         }
       },
-      "Gaming.ContainerManager.ImageContracts/1.1.1.25018": {
+      "Gaming.ContainerManager.ImageContracts/1.1.1.27047": {
         "dependencies": {
-          "Gaming.ContainerManager.Models": "1.1.1.25018"
+          "Gaming.ContainerManager.Models": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.ContainerManager.ImageContracts.dll": {}
         }
       },
-      "Gaming.ContainerManager.Models/1.1.1.25018": {
+      "Gaming.ContainerManager.Models/1.1.1.27047": {
         "dependencies": {
           "Newtonsoft.Json": "10.0.3"
         },
@@ -706,31 +732,32 @@
           "Gaming.ContainerManager.Models.dll": {}
         }
       },
-      "Gaming.Contracts.Annotations/1.1.1.25018": {
+      "Gaming.Contracts.Annotations/1.1.1.27047": {
         "runtime": {
           "Gaming.Contracts.Annotations.dll": {}
         }
       },
-      "Gaming.Facade/1.1.1.25018": {
+      "Gaming.Facade/1.1.1.27047": {
         "dependencies": {
           "FluentValidation": "11.2.2",
-          "Gaming.Tracing.WriteSide": "1.1.1.25018",
+          "Gaming.ClientUtilities": "1.1.1.27047",
+          "Gaming.Tracing.WriteSide": "1.1.1.27047",
           "System.Collections.Immutable": "6.0.0"
         },
         "runtime": {
           "Gaming.Facade.dll": {}
         }
       },
-      "Gaming.FunctionalExtensions/1.1.1.25018": {
+      "Gaming.FunctionalExtensions/1.1.1.27047": {
         "dependencies": {
           "CSharpFunctionalExtensions": "2.34.3",
-          "Gaming.Collections": "1.1.1.25018"
+          "Gaming.Collections": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.FunctionalExtensions.dll": {}
         }
       },
-      "Gaming.FunctionalExtensions.Serialization/1.1.1.25018": {
+      "Gaming.FunctionalExtensions.Serialization/1.1.1.27047": {
         "dependencies": {
           "CSharpFunctionalExtensions": "2.34.3",
           "Newtonsoft.Json": "10.0.3"
@@ -739,9 +766,9 @@
           "Gaming.FunctionalExtensions.Serialization.dll": {}
         }
       },
-      "Gaming.Http/1.1.1.25018": {
+      "Gaming.Http/1.1.1.27047": {
         "dependencies": {
-          "Gaming.Http.Abstractions": "1.1.1.25018",
+          "Gaming.Http.Abstractions": "1.1.1.27047",
           "Polly": "7.2.3",
           "Polly.Extensions.Http": "3.0.0"
         },
@@ -749,81 +776,80 @@
           "Gaming.Http.dll": {}
         }
       },
-      "Gaming.Http.Abstractions/1.1.1.25018": {
+      "Gaming.Http.Abstractions/1.1.1.27047": {
         "dependencies": {
-          "System.Collections.Immutable": "6.0.0",
-          "System.Text.Json": "5.0.2"
+          "Newtonsoft.Json": "10.0.3",
+          "System.Collections.Immutable": "6.0.0"
         },
         "runtime": {
           "Gaming.Http.Abstractions.dll": {}
         }
       },
-      "Gaming.IdentityProvider.Client/1.1.1.25018": {
+      "Gaming.IdentityProvider.Client/1.1.1.27047": {
         "dependencies": {
-          "Gaming.ClientUtilities": "1.1.1.25018",
-          "Gaming.IdentityProvider.Contracts": "1.1.1.25018",
-          "Gaming.ServiceModel.Serialization": "1.1.1.25018",
-          "Gaming.TokenExchange.Abstractions": "1.1.1.25018",
-          "Gaming.Tracing.WriteSide.EndUser": "1.1.1.25018"
+          "Gaming.ClientUtilities": "1.1.1.27047",
+          "Gaming.IdentityProvider.Contracts": "1.1.1.27047",
+          "Gaming.ServiceModel.Serialization": "1.1.1.27047",
+          "Gaming.TokenExchange.Abstractions": "1.1.1.27047",
+          "Gaming.Tracing.WriteSide.EndUser": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.IdentityProvider.Client.dll": {}
         }
       },
-      "Gaming.IdentityProvider.Contracts/1.1.1.25018": {
+      "Gaming.IdentityProvider.Contracts/1.1.1.27047": {
         "dependencies": {
-          "Gaming.Contracts.Annotations": "1.1.1.25018",
-          "Gaming.FunctionalExtensions": "1.1.1.25018",
-          "Gaming.Messaging.Abstractions": "1.1.1.25018",
-          "Gaming.ServiceModel.Authorization.Abstractions": "1.1.1.25018",
-          "Gaming.ServiceModel.ErrorFlow": "1.1.1.25018",
-          "Microsoft.IdentityModel.Tokens": "6.23.1",
-          "Newtonsoft.Json": "10.0.3",
-          "System.IdentityModel.Tokens.Jwt": "6.23.1"
+          "Gaming.Contracts.Annotations": "1.1.1.27047",
+          "Gaming.FunctionalExtensions": "1.1.1.27047",
+          "Gaming.Messaging.Abstractions": "1.1.1.27047",
+          "Gaming.ServiceModel.Authorization.Abstractions": "1.1.1.27047",
+          "Gaming.ServiceModel.ErrorFlow": "1.1.1.27047",
+          "Newtonsoft.Json": "10.0.3"
         },
         "runtime": {
           "Gaming.IdentityProvider.Contracts.dll": {}
         }
       },
-      "Gaming.Messaging.Abstractions/1.1.1.25018": {
+      "Gaming.Messaging.Abstractions/1.1.1.27047": {
         "runtime": {
           "Gaming.Messaging.Abstractions.dll": {}
         }
       },
-      "Gaming.ServiceModel.Abstractions/1.1.1.25018": {
+      "Gaming.ServiceModel.Abstractions/1.1.1.27047": {
         "runtime": {
           "Gaming.ServiceModel.Abstractions.dll": {}
         }
       },
-      "Gaming.ServiceModel.Authorization.Abstractions/1.1.1.25018": {
+      "Gaming.ServiceModel.Authorization.Abstractions/1.1.1.27047": {
         "dependencies": {
-          "Gaming.ServiceModel.Abstractions": "1.1.1.25018"
+          "Gaming.Collections": "1.1.1.27047",
+          "Gaming.ServiceModel.Abstractions": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.ServiceModel.Authorization.Abstractions.dll": {}
         }
       },
-      "Gaming.ServiceModel.ErrorFlow/1.1.1.25018": {
+      "Gaming.ServiceModel.ErrorFlow/1.1.1.27047": {
         "dependencies": {
-          "Gaming.Collections": "1.1.1.25018",
-          "Gaming.ServiceModel.Serialization": "1.1.1.25018"
+          "Gaming.Collections": "1.1.1.27047",
+          "Gaming.ServiceModel.Serialization": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.ServiceModel.ErrorFlow.dll": {}
         }
       },
-      "Gaming.ServiceModel.ErrorFlow.Serialization/1.1.1.25018": {
+      "Gaming.ServiceModel.ErrorFlow.Serialization/1.1.1.27047": {
         "dependencies": {
-          "Gaming.ServiceModel.ErrorFlow": "1.1.1.25018",
+          "Gaming.ServiceModel.ErrorFlow": "1.1.1.27047",
           "Newtonsoft.Json": "10.0.3"
         },
         "runtime": {
           "Gaming.ServiceModel.ErrorFlow.Serialization.dll": {}
         }
       },
-      "Gaming.ServiceModel.Serialization/1.1.1.25018": {
+      "Gaming.ServiceModel.Serialization/1.1.1.27047": {
         "dependencies": {
-          "Gaming.ServiceModel.Abstractions": "1.1.1.25018",
+          "Gaming.ServiceModel.Abstractions": "1.1.1.27047",
           "JsonSubTypes": "1.9.0",
           "Newtonsoft.Json": "10.0.3"
         },
@@ -831,12 +857,12 @@
           "Gaming.ServiceModel.Serialization.dll": {}
         }
       },
-      "Gaming.TokenExchange.Abstractions/1.1.1.25018": {
+      "Gaming.TokenExchange.Abstractions/1.1.1.27047": {
         "runtime": {
           "Gaming.TokenExchange.Abstractions.dll": {}
         }
       },
-      "Gaming.Tracing.Common.Abstractions/1.1.1.25018": {
+      "Gaming.Tracing.Common.Abstractions/1.1.1.27047": {
         "dependencies": {
           "Newtonsoft.Json": "10.0.3"
         },
@@ -844,49 +870,49 @@
           "Gaming.Tracing.Common.Abstractions.dll": {}
         }
       },
-      "Gaming.Tracing.WriteSide/1.1.1.25018": {
+      "Gaming.Tracing.WriteSide/1.1.1.27047": {
         "dependencies": {
-          "Gaming.Tracing.WriteSide.Abstractions": "1.1.1.25018"
+          "Gaming.Tracing.WriteSide.Abstractions": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.Tracing.WriteSide.dll": {}
         }
       },
-      "Gaming.Tracing.WriteSide.Abstractions/1.1.1.25018": {
+      "Gaming.Tracing.WriteSide.Abstractions/1.1.1.27047": {
         "dependencies": {
-          "Gaming.Tracing.Common.Abstractions": "1.1.1.25018",
+          "Gaming.Tracing.Common.Abstractions": "1.1.1.27047",
           "Newtonsoft.Json": "10.0.3"
         },
         "runtime": {
           "Gaming.Tracing.WriteSide.Abstractions.dll": {}
         }
       },
-      "Gaming.Tracing.WriteSide.EndUser/1.1.1.25018": {
+      "Gaming.Tracing.WriteSide.EndUser/1.1.1.27047": {
         "dependencies": {
-          "Gaming.Tracing.WriteSide": "1.1.1.25018"
+          "Gaming.Tracing.WriteSide": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.Tracing.WriteSide.EndUser.dll": {}
         }
       },
-      "Http.V1/1.1.1.25018": {
+      "Http.V1/1.1.1.27047": {
         "dependencies": {
-          "Gaming.Facade": "1.1.1.25018",
-          "Gaming.Http": "1.1.1.25018",
-          "Gaming.Http.Abstractions": "1.1.1.25018",
+          "Gaming.Facade": "1.1.1.27047",
+          "Gaming.Http": "1.1.1.27047",
+          "Gaming.Http.Abstractions": "1.1.1.27047",
           "System.Collections.Immutable": "6.0.0"
         },
         "runtime": {
           "Gaming.Facade.Modules.Http.V1.dll": {}
         }
       },
-      "Identity.V1/1.1.1.25018": {
+      "Identity.V1/1.1.1.27047": {
         "dependencies": {
-          "FileSystem.V1": "1.1.1.25018",
-          "Gaming.Facade": "1.1.1.25018",
-          "Gaming.IdentityProvider.Client": "1.1.1.25018",
-          "Gaming.IdentityProvider.Contracts": "1.1.1.25018",
-          "Http.V1": "1.1.1.25018"
+          "FileSystem.V1": "1.1.1.27047",
+          "Gaming.Facade": "1.1.1.27047",
+          "Gaming.IdentityProvider.Client": "1.1.1.27047",
+          "Gaming.IdentityProvider.Contracts": "1.1.1.27047",
+          "Http.V1": "1.1.1.27047"
         },
         "runtime": {
           "Gaming.Facade.Modules.Identity.V1.dll": {}
@@ -895,7 +921,7 @@
     }
   },
   "libraries": {
-    "Containers/1.1.1.25018": {
+    "Containers/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -928,13 +954,6 @@
       "path": "jsonsubtypes/1.9.0",
       "hashPath": "jsonsubtypes.1.9.0.nupkg.sha512"
     },
-    "Microsoft.Bcl.AsyncInterfaces/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-W8DPQjkMScOMTtJbPwmPyj9c3zYSFGawDW3jwlBOOsnY+EzZFLgNQ/UMkK35JmkNOVPdCyPr2Tw7Vv9N+KA3ZQ==",
-      "path": "microsoft.bcl.asyncinterfaces/5.0.0",
-      "hashPath": "microsoft.bcl.asyncinterfaces.5.0.0.nupkg.sha512"
-    },
     "Microsoft.CodeAnalysis.NetAnalyzers/7.0.0-preview1.22403.2": {
       "type": "package",
       "serviceable": true,
@@ -942,40 +961,12 @@
       "path": "microsoft.codeanalysis.netanalyzers/7.0.0-preview1.22403.2",
       "hashPath": "microsoft.codeanalysis.netanalyzers.7.0.0-preview1.22403.2.nupkg.sha512"
     },
-    "Microsoft.CSharp/4.5.0": {
+    "Microsoft.CSharp/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ==",
-      "path": "microsoft.csharp/4.5.0",
-      "hashPath": "microsoft.csharp.4.5.0.nupkg.sha512"
-    },
-    "Microsoft.IdentityModel.Abstractions/6.23.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-LTUhLFzhzCEWUwhIgiYFAFAf8xxOg9VOZQgldiCiAHIejVfEiyG4a4sq00QVmwv9Wdig2uCHVQudaTSA3t+/7A==",
-      "path": "microsoft.identitymodel.abstractions/6.23.1",
-      "hashPath": "microsoft.identitymodel.abstractions.6.23.1.nupkg.sha512"
-    },
-    "Microsoft.IdentityModel.JsonWebTokens/6.23.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Tfa2g1b6wE9Ds3MG/LivoRjk9+FAiPE24kMpTK0vbUt03t44zfVNz9O1QU/yf6Ic5hfk+DrY9huPxg7EeTYBGg==",
-      "path": "microsoft.identitymodel.jsonwebtokens/6.23.1",
-      "hashPath": "microsoft.identitymodel.jsonwebtokens.6.23.1.nupkg.sha512"
-    },
-    "Microsoft.IdentityModel.Logging/6.23.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-SF+1itC0kQDMvfo8jzWYfQ1mkt5CZsC8/KYMjt6N9LAP7sCCKdZkkJHgvat+DxTfZATBtcvJ6tGyEaiVR1ASUg==",
-      "path": "microsoft.identitymodel.logging/6.23.1",
-      "hashPath": "microsoft.identitymodel.logging.6.23.1.nupkg.sha512"
-    },
-    "Microsoft.IdentityModel.Tokens/6.23.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-hPPOGGIZRFl8QxZfc4Saa56Q4RrpBoT7E+VgW9qdHoiRm/ieh1aSaeXhp3uNh8EBkO92skiav2I4AUxwtBDHgA==",
-      "path": "microsoft.identitymodel.tokens/6.23.1",
-      "hashPath": "microsoft.identitymodel.tokens.6.23.1.nupkg.sha512"
+      "sha512": "sha512-P+MBhIM0YX+JqROuf7i306ZLJEjQYA9uUyRDE+OqwUI5sh41e2ZbPQV3LfAPh+29cmceE1pUffXsGfR4eMY3KA==",
+      "path": "microsoft.csharp/4.3.0",
+      "hashPath": "microsoft.csharp.4.3.0.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
@@ -1019,12 +1010,12 @@
       "path": "roslynator.analyzers/4.1.1",
       "hashPath": "roslynator.analyzers.4.1.1.nupkg.sha512"
     },
-    "SonarAnalyzer.CSharp/8.45.0.54064": {
+    "SonarAnalyzer.CSharp/8.46.0.54807": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-TpLL/+BUEKzGYvXYc7rfndurRo2rAt1VuGrYg8h3gYe02+h6ffgWm9+Ak6s1k1RSCkMywjvzgUaY2X277gBbaw==",
-      "path": "sonaranalyzer.csharp/8.45.0.54064",
-      "hashPath": "sonaranalyzer.csharp.8.45.0.54064.nupkg.sha512"
+      "sha512": "sha512-fBPVe0f83VEzabzplC6aXdyht99ZJAEfD+NZzSPZ38oDkh7JoJVzAK+lJ8U8Lyfgw+F6qfdB0IOrgHvWDUa5gQ==",
+      "path": "sonaranalyzer.csharp/8.46.0.54807",
+      "hashPath": "sonaranalyzer.csharp.8.46.0.54807.nupkg.sha512"
     },
     "System.Buffers/4.5.1": {
       "type": "package",
@@ -1089,6 +1080,13 @@
       "path": "system.diagnostics.debug/4.3.0",
       "hashPath": "system.diagnostics.debug.4.3.0.nupkg.sha512"
     },
+    "System.Dynamic.Runtime/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SNVi1E/vfWUAs/WYKhE9+qlS6KqK0YVhnlT0HQtr8pMIA8YX3lwy3uPMownDwdYISBdmAF/2holEIldVp85Wag==",
+      "path": "system.dynamic.runtime/4.3.0",
+      "hashPath": "system.dynamic.runtime.4.3.0.nupkg.sha512"
+    },
     "System.Globalization/4.3.0": {
       "type": "package",
       "serviceable": true,
@@ -1102,13 +1100,6 @@
       "sha512": "sha512-FhKmdR6MPG+pxow6wGtNAWdZh7noIOpdD5TwQ3CprzgIE1bBBoim0vbR1+AWsWjQmU7zXHgQo4TWSP6lCeiWcQ==",
       "path": "system.globalization.extensions/4.3.0",
       "hashPath": "system.globalization.extensions.4.3.0.nupkg.sha512"
-    },
-    "System.IdentityModel.Tokens.Jwt/6.23.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-f/bzIDc2ie8jIMprqM6icfy0JGZqaFxhiENjoDS1lQur/jjanrfzwo2xTcod0ADoILPi9RywfE8hI6Wg8BHxkw==",
-      "path": "system.identitymodel.tokens.jwt/6.23.1",
-      "hashPath": "system.identitymodel.tokens.jwt.6.23.1.nupkg.sha512"
     },
     "System.IO/4.3.0": {
       "type": "package",
@@ -1138,6 +1129,13 @@
       "path": "system.linq/4.3.0",
       "hashPath": "system.linq.4.3.0.nupkg.sha512"
     },
+    "System.Linq.Expressions/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PGKkrd2khG4CnlyJwxwwaWWiSiWFNBGlgXvJpeO0xCXrZ89ODrQ6tjEWS/kOqZ8GwEOUATtKtzp1eRgmYNfclg==",
+      "path": "system.linq.expressions/4.3.0",
+      "hashPath": "system.linq.expressions.4.3.0.nupkg.sha512"
+    },
     "System.Memory/4.5.5": {
       "type": "package",
       "serviceable": true,
@@ -1145,12 +1143,19 @@
       "path": "system.memory/4.5.5",
       "hashPath": "system.memory.4.5.5.nupkg.sha512"
     },
-    "System.Numerics.Vectors/4.5.0": {
+    "System.Numerics.Vectors/4.4.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ==",
-      "path": "system.numerics.vectors/4.5.0",
-      "hashPath": "system.numerics.vectors.4.5.0.nupkg.sha512"
+      "sha512": "sha512-UiLzLW+Lw6HLed1Hcg+8jSRttrbuXv7DANVj0DkL9g6EnnzbL75EB7EWsw5uRbhxd/4YdG8li5XizGWepmG3PQ==",
+      "path": "system.numerics.vectors/4.4.0",
+      "hashPath": "system.numerics.vectors.4.4.0.nupkg.sha512"
+    },
+    "System.ObjectModel/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bdX+80eKv9bN6K4N+d77OankKHGn6CH711a6fcOpMQu2Fckp/Ft4L/kW9WznHpyR0NRAvJutzOMHNNlBGvxQzQ==",
+      "path": "system.objectmodel/4.3.0",
+      "hashPath": "system.objectmodel.4.3.0.nupkg.sha512"
     },
     "System.Reflection/4.3.0": {
       "type": "package",
@@ -1158,6 +1163,27 @@
       "sha512": "sha512-KMiAFoW7MfJGa9nDFNcfu+FpEdiHpWgTcS2HdMpDvt9saK3y/G4GwprPyzqjFH9NTaGPQeWNHU+iDlDILj96aQ==",
       "path": "system.reflection/4.3.0",
       "hashPath": "system.reflection.4.3.0.nupkg.sha512"
+    },
+    "System.Reflection.Emit/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-228FG0jLcIwTVJyz8CLFKueVqQK36ANazUManGaJHkO0icjiIypKW7YLWLIWahyIkdh5M7mV2dJepllLyA1SKg==",
+      "path": "system.reflection.emit/4.3.0",
+      "hashPath": "system.reflection.emit.4.3.0.nupkg.sha512"
+    },
+    "System.Reflection.Emit.ILGeneration/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-59tBslAk9733NXLrUJrwNZEzbMAcu8k344OYo+wfSVygcgZ9lgBdGIzH/nrg3LYhXceynyvTc8t5/GD4Ri0/ng==",
+      "path": "system.reflection.emit.ilgeneration/4.3.0",
+      "hashPath": "system.reflection.emit.ilgeneration.4.3.0.nupkg.sha512"
+    },
+    "System.Reflection.Emit.Lightweight/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oadVHGSMsTmZsAF864QYN1t1QzZjIcuKU3l2S9cZOwDdDueNTrqq1yRj7koFfIGEnKpt6NjpL3rOzRhs4ryOgA==",
+      "path": "system.reflection.emit.lightweight/4.3.0",
+      "hashPath": "system.reflection.emit.lightweight.4.3.0.nupkg.sha512"
     },
     "System.Reflection.Extensions/4.3.0": {
       "type": "package",
@@ -1236,13 +1262,6 @@
       "path": "system.runtime.serialization.primitives/4.3.0",
       "hashPath": "system.runtime.serialization.primitives.4.3.0.nupkg.sha512"
     },
-    "System.Security.Cryptography.Cng/4.5.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-WG3r7EyjUe9CMPFSs6bty5doUqT+q9pbI80hlNzo2SkPkZ4VTuZkGWjpp77JB8+uaL4DFPRdBsAY+DX3dBK92A==",
-      "path": "system.security.cryptography.cng/4.5.0",
-      "hashPath": "system.security.cryptography.cng.4.5.0.nupkg.sha512"
-    },
     "System.Text.Encoding/4.3.0": {
       "type": "package",
       "serviceable": true,
@@ -1256,20 +1275,6 @@
       "sha512": "sha512-YVMK0Bt/A43RmwizJoZ22ei2nmrhobgeiYwFzC4YAN+nue8RF6djXDMog0UCn+brerQoYVyaS+ghy9P/MUVcmw==",
       "path": "system.text.encoding.extensions/4.3.0",
       "hashPath": "system.text.encoding.extensions.4.3.0.nupkg.sha512"
-    },
-    "System.Text.Encodings.Web/5.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-KmJ+CJXizDofbq6mpqDoRRLcxgOd2z9X3XoFNULSbvbqVRZkFX3istvr+MUjL6Zw1RT+RNdoI4GYidIINtgvqQ==",
-      "path": "system.text.encodings.web/5.0.1",
-      "hashPath": "system.text.encodings.web.5.0.1.nupkg.sha512"
-    },
-    "System.Text.Json/5.0.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-I47dVIGiV6SfAyppphxqupertT/5oZkYLDCX6vC3HpOI4ZLjyoKAreUoem2ie6G0RbRuFrlqz/PcTQjfb2DOfQ==",
-      "path": "system.text.json/5.0.2",
-      "hashPath": "system.text.json.5.0.2.nupkg.sha512"
     },
     "System.Text.RegularExpressions/4.3.0": {
       "type": "package",
@@ -1313,152 +1318,152 @@
       "path": "system.xml.xmldocument/4.3.0",
       "hashPath": "system.xml.xmldocument.4.3.0.nupkg.sha512"
     },
-    "Containers.V1/1.1.1.25018": {
+    "Containers.V1/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "FileSystem.V1/1.1.1.25018": {
+    "FileSystem.V1/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ClientUtilities/1.1.1.25018": {
+    "Gaming.ClientUtilities/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.Collections/1.1.1.25018": {
+    "Gaming.Collections/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ContainerManager.Client/1.1.1.25018": {
+    "Gaming.ContainerManager.Client/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ContainerManager.Client.SocketContracts/1.1.1.25018": {
+    "Gaming.ContainerManager.Client.SocketContracts/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ContainerManager.Contracts/1.1.1.25018": {
+    "Gaming.ContainerManager.Contracts/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ContainerManager.ImageContracts/1.1.1.25018": {
+    "Gaming.ContainerManager.ImageContracts/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ContainerManager.Models/1.1.1.25018": {
+    "Gaming.ContainerManager.Models/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.Contracts.Annotations/1.1.1.25018": {
+    "Gaming.Contracts.Annotations/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.Facade/1.1.1.25018": {
+    "Gaming.Facade/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.FunctionalExtensions/1.1.1.25018": {
+    "Gaming.FunctionalExtensions/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.FunctionalExtensions.Serialization/1.1.1.25018": {
+    "Gaming.FunctionalExtensions.Serialization/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.Http/1.1.1.25018": {
+    "Gaming.Http/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.Http.Abstractions/1.1.1.25018": {
+    "Gaming.Http.Abstractions/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.IdentityProvider.Client/1.1.1.25018": {
+    "Gaming.IdentityProvider.Client/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.IdentityProvider.Contracts/1.1.1.25018": {
+    "Gaming.IdentityProvider.Contracts/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.Messaging.Abstractions/1.1.1.25018": {
+    "Gaming.Messaging.Abstractions/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ServiceModel.Abstractions/1.1.1.25018": {
+    "Gaming.ServiceModel.Abstractions/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ServiceModel.Authorization.Abstractions/1.1.1.25018": {
+    "Gaming.ServiceModel.Authorization.Abstractions/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ServiceModel.ErrorFlow/1.1.1.25018": {
+    "Gaming.ServiceModel.ErrorFlow/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ServiceModel.ErrorFlow.Serialization/1.1.1.25018": {
+    "Gaming.ServiceModel.ErrorFlow.Serialization/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.ServiceModel.Serialization/1.1.1.25018": {
+    "Gaming.ServiceModel.Serialization/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.TokenExchange.Abstractions/1.1.1.25018": {
+    "Gaming.TokenExchange.Abstractions/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.Tracing.Common.Abstractions/1.1.1.25018": {
+    "Gaming.Tracing.Common.Abstractions/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.Tracing.WriteSide/1.1.1.25018": {
+    "Gaming.Tracing.WriteSide/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.Tracing.WriteSide.Abstractions/1.1.1.25018": {
+    "Gaming.Tracing.WriteSide.Abstractions/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Gaming.Tracing.WriteSide.EndUser/1.1.1.25018": {
+    "Gaming.Tracing.WriteSide.EndUser/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Http.V1/1.1.1.25018": {
+    "Http.V1/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Identity.V1/1.1.1.25018": {
+    "Identity.V1/1.1.1.27047": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
