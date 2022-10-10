@@ -38,7 +38,7 @@ namespace Game
             
             ClientServices.InitializeNewWorldFromScene(_mainWorld);
             _mainWorld.AddUnique<MainPlayerIdComponent>().value = 1;
-            BaseServices.InputJoinPlayer(_inputWorld, 1);
+            PlayerService.InputJoinPlayer(_inputWorld, 1);
             _game.Init();
         }
 

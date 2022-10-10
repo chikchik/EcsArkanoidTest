@@ -27,7 +27,7 @@ namespace Game.Ecs.Client.Systems
             {
                 if (entity.EntityGet<PlayerComponent>(world).id == mainPlayerID)
                 {
-                    ClientBaseServices.SetPlayerEntity(world, entity);
+                    ClientPlayerService.SetPlayerEntity(world, entity);
                     int i = 0;
                     /*
                     //replace потому что ClientPlayerComponent мог уже быть 

@@ -342,9 +342,9 @@ namespace XFlow.Server
                 var clientEntity = GetClientEntity(Int32.Parse(errAddr));//  clients.FirstOrDefault(client => client.ID.ToString() == errAddr);
                 if (clientEntity != -1)
                 {
-                    _mainWorld.DelEntity(clientEntity);
+                    _mainWorld.MarkEntityAsDeleted(clientEntity);
                     Debug.Log($"removed client {errAddr}");
-                    BaseServices.InputLeavePlayer(_inputWorld, Int32.Parse(errAddr));
+                    PlayerService.InputLeavePlayer(_inputWorld, Int32.Parse(errAddr));
                 }
                 return;
             }
@@ -421,7 +421,7 @@ namespace XFlow.Server
                 var entity = _mainWorld.NewEntity();
                 _poolClients.Add(entity) = client;
 
-                var inputEntity = BaseServices.InputJoinPlayer(_inputWorld, client.ID);
+                var inputEntity = PlayerService.InputJoinPlayer(_inputWorld, client.ID);
                 inputEntity.EntityAdd<ClientComponent>(_inputWorld) = client;
             }
         }

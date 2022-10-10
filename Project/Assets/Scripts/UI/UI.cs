@@ -88,7 +88,7 @@ namespace Game.UI
         
         public void OnAnyComponentChanged(EcsWorld _, int entity, FoodCollectedComponent data, bool added)
         {
-            if (!ClientBaseServices.IsControlledEntity(_world, entity))
+            if (!ClientPlayerService.IsControlledEntity(_world, entity))
                 return;
             
             View.FoodText.text = $"Food Collected {data.Value}";
@@ -96,7 +96,7 @@ namespace Game.UI
         
         public void OnAnyComponentChanged(EcsWorld world, int entity, AmmoCollectedComponent data, bool added)
         {
-            if (!ClientBaseServices.IsControlledEntity(_world, entity))
+            if (!ClientPlayerService.IsControlledEntity(_world, entity))
                 return;
 
             View.AmmoText.text = data.Value.ToString();
@@ -104,7 +104,7 @@ namespace Game.UI
 
         public void OnAnyComponentChanged(EcsWorld _, int entity, WeaponComponent data, bool added)
         {
-            if (!ClientBaseServices.IsControlledEntity(_world, entity))
+            if (!ClientPlayerService.IsControlledEntity(_world, entity))
                 return;
             
             //var transform = entity.EntityGet<TransformComponent>(world).Transform
@@ -118,7 +118,7 @@ namespace Game.UI
             if (tickEntity != 0)
                 return;
             
-            if (!ClientBaseServices.TryGetControlledEntity(_world, out int controlledEntity))
+            if (!ClientPlayerService.TryGetControlledEntity(_world, out int controlledEntity))
                 return;
 
             var mechEntity = _clientServerServices.GetInteractionMechEntity(_world, controlledEntity);

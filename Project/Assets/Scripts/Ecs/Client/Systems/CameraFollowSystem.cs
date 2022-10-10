@@ -22,7 +22,7 @@ namespace Game.Ecs.Client.Systems
         {
             var world = systems.GetWorld();
             
-            if (!ClientBaseServices.TryGetControlledEntity(world, out int controlledEntity))
+            if (!ClientPlayerService.TryGetControlledEntity(world, out int controlledEntity))
                 return;
             
             var poolTransform = world.GetPool<TransformComponent>();

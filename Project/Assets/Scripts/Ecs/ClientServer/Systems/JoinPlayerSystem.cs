@@ -31,14 +31,14 @@ namespace Game.Ecs.ClientServer.Systems
                 //context.WriteToConsole?.Invoke($"{ms} player {playerID}");
                 if (leave)
                 {
-                    if (BaseServices.TryGetControlledEntityByPlayerId(world, playerID, out int unitEntity))
+                    if (PlayerService.TryGetControlledEntityByPlayerId(world, playerID, out int unitEntity))
                     {
                         world.MarkEntityAsDeleted(unitEntity);
                     }
                 }
                 else
                 {
-                    var playerEntity = BaseServices.CreatePlayerEntity(world, playerID);
+                    var playerEntity = PlayerService.CreatePlayerEntity(world, playerID);
                     
                     var freeUnitEntity = UnitService.CreateUnitEntity(world);
 

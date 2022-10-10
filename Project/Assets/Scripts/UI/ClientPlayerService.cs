@@ -4,7 +4,7 @@ using XFlow.Net.ClientServer;
 
 namespace Game.UI
 {
-    public static class ClientBaseServices
+    public static class ClientPlayerService
     {
         public static void SetPlayerEntity(EcsWorld world, int playerEntity)
         {
@@ -27,7 +27,7 @@ namespace Game.UI
             if (!TryGetPlayerEntity(world, out playerEntity))
                 return false; 
             
-            return BaseServices.TryGetControlledEntity(world, playerEntity, out controlledEntity);
+            return PlayerService.TryGetControlledEntity(world, playerEntity, out controlledEntity);
         }
 
         public static bool IsControlledEntity(EcsWorld world, int entity)

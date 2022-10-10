@@ -41,7 +41,7 @@ namespace Game
             get
             {
                 int entity = -1;
-                ClientBaseServices.TryGetControlledEntity(_world, out entity);
+                ClientPlayerService.TryGetControlledEntity(_world, out entity);
                 return entity;
             }
         }

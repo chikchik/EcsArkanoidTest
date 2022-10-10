@@ -39,7 +39,7 @@ namespace Game.State
                 Close();
             });
 
-            if (!ClientBaseServices.TryGetControlledEntity(_world, out int unitEntity))
+            if (!ClientPlayerService.TryGetControlledEntity(_world, out int unitEntity))
                 return;
             
             var poolInventoryLink = _world.GetPool<InventoryLinkComponent>();

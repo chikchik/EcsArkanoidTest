@@ -71,7 +71,7 @@ namespace Game.Ecs.ClientServer.Systems
                 
                 int playerId = poolPlayer.Get(inputEntity).PlayerID;
                 
-                if (!BaseServices.TryGetControlledEntityByPlayerId(_world, playerId, out int unitEntity))
+                if (!PlayerService.TryGetControlledEntityByPlayerId(_world, playerId, out int unitEntity))
                     continue;
 
                 if (!unitEntity.EntityHas<UnitComponent>(_world))
