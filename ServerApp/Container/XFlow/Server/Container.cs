@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Contracts.XFlow.Container;
-using Contracts.XFlow.Container.Host;
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.ClientServer.Services;
@@ -17,7 +12,6 @@ using Gaming.ContainerManager.ImageContracts.V1;
 using Gaming.ContainerManager.ImageContracts.V1.Channels;
 using Gaming.ContainerManager.Models.V1;
 using XFlow.Ecs.ClientServer;
-using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
@@ -30,11 +24,9 @@ using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
 using XFlow.Net.ClientServer.Protocol;
-using XFlow.P2P;
 using XFlow.Utils;
 using Zenject;
 using Debug = UnityEngine.Debug;
-using Random = UnityEngine.Random;
 
 namespace XFlow.Server
 {
@@ -174,7 +166,6 @@ namespace XFlow.Server
 
         private async ValueTask OnUnreliableMessageReceived(UnreliableChannelMessage message)
         {
-            _logger.Log(LogLevel.Debug,$"OnUnreliableMessageReceived {message.Type}");
             switch (message.Type)
             {
                 case UnreliableChannelMessageType.MessageReceived:
@@ -194,17 +185,20 @@ namespace XFlow.Server
         }
 
         private object _locker = new object();
-        
+
         private async ValueTask OnReliableMessageReceived(ReliableChannelMessage message)
         {
+            _logger.Log(LogLevel.Trace, $"OnReliableMessageReceived.{message.Type}");
             switch (message.Type)
             {
                 case ReliableChannelMessageType.UserConnected:
                     var connectedArgs = message.GetUserConnectedArguments().Value;
+                    _logger.Log(LogLevel.Debug, $"Connected {connectedArgs.UserAddress}");
                     break;
 
                 case ReliableChannelMessageType.UserDisconnected:
                     var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
+                    _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress}");
                     break;
 
                 case ReliableChannelMessageType.MessageReceived:
@@ -342,7 +336,8 @@ namespace XFlow.Server
 
         private void ProcessMessage(byte[] msgBytes, IUserAddress userAddress)
         {
-            _logger.Log(LogLevel.Debug, $"ProcessMessage id={userAddress.UserId} size={msgBytes.Length}");
+            _logger.Log(LogLevel.Debug,
+                $"ProcessMessage id={userAddress.UserId} hash={P2P.P2P.GetMessageHash(msgBytes)} size={msgBytes.Length}");
 
             if (P2P.P2P.CheckError(msgBytes))
             {
@@ -360,12 +355,11 @@ namespace XFlow.Server
 
             if (msgBytes[0] == 0xff && msgBytes[1] == 0 && msgBytes[2] == 0 && msgBytes[3] == 0)
             {
-                _logger.Log(LogLevel.Debug, $"receive input {msgBytes.Length}");
+                _logger.Log(LogLevel.Debug, $"receive input");
                 GotInput1(new HGlobalReader(msgBytes), userAddress);
                 return;
             }
 
-            _logger.Log(LogLevel.Debug, $"receive Packet {msgBytes.Length}");
             var packet = P2P.P2P.ParseResponse<Packet>(msgBytes);
 
             if (packet.hasHello)
@@ -443,7 +437,6 @@ namespace XFlow.Server
             try
             {
                 var clientEntity = GetClientEntity(address.UserId);
-                _logger.Log(LogLevel.Debug,$"GotInput1 id={address.UserId} cId={clientEntity}");
                 if (clientEntity == -1)
                 {
                     if (!_missingClients.Contains(address.UserId))
@@ -478,8 +471,6 @@ namespace XFlow.Server
                 //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
                 if (delay < 0)
                     time = currentTick;
-
-                _logger.Log(LogLevel.Debug, $"GotInput1 t={type}");
 
                 var sentWorldTick = client.SentWorld.GetTick() - step.Value;
 

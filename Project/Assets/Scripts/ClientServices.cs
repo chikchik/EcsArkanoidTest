@@ -22,10 +22,17 @@ namespace Game
     {
         private static void ForEachObject<T>(Action<T> fn) where T : Component//it is UNITY Mono Component
         {
-            var items = Object.FindObjectsOfType<T>();
-            foreach (var item in items)
+            try
             {
-                fn(item);
+                var items = Object.FindObjectsOfType<T>();
+                foreach (var item in items)
+                {
+                    fn(item);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
             }
         }
 
