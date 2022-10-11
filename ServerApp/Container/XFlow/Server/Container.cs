@@ -170,77 +170,59 @@ namespace XFlow.Server
 
         private async ValueTask OnUnreliableMessageReceived(UnreliableChannelMessage message)
         {
-            try
+            switch (message.Type)
             {
-                switch (message.Type)
-                {
-                    case UnreliableChannelMessageType.MessageReceived:
-                        var messageArgs = message.GetMessageReceivedArguments().Value;
-                        lock (_locker)
-                        {
-                            GotInput1(new HGlobalReader(messageArgs.Message.ToArray()), messageArgs.UserAddress);
-                        }
+                case UnreliableChannelMessageType.MessageReceived:
+                    var messageArgs = message.GetMessageReceivedArguments().Value;
+                    lock (_locker)
+                    {
+                        GotInput1(new HGlobalReader(messageArgs.Message.ToArray()), messageArgs.UserAddress);
+                    }
+                    break;
 
-                        break;
-
-                    case UnreliableChannelMessageType.ChannelClosed:
-                        var closedArgs = message.GetChannelClosedArguments().Value;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            catch (Exception e)
-            {            
-                _logger.Log(LogLevel.Error, e);
-                throw;
+                case UnreliableChannelMessageType.ChannelClosed:
+                    var closedArgs = message.GetChannelClosedArguments().Value;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
-
+        
         private async ValueTask OnReliableMessageReceived(ReliableChannelMessage message)
         {
             _logger.Log(LogLevel.Trace, $"OnReliableMessageReceived.{message.Type}");
-            try
+            switch (message.Type)
             {
-                switch (message.Type)
-                {
-                    case ReliableChannelMessageType.UserConnected:
-                        var connectedArgs = message.GetUserConnectedArguments().Value;
-                        _logger.Log(LogLevel.Debug, $"Connected {connectedArgs.UserAddress.UserId}");
-                        break;
+                case ReliableChannelMessageType.UserConnected:
+                    var connectedArgs = message.GetUserConnectedArguments().Value;
+                    _logger.Log(LogLevel.Debug, $"Connected {connectedArgs.UserAddress.UserId}");
+                    break;
 
-                    case ReliableChannelMessageType.UserDisconnected:
-                        var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
-                        _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress.UserId}");
-                        lock (_locker)
-                        {
-                            var user = GetClientEntity(disconnectedArgs.UserAddress.UserId);
-                            _mainWorld.MarkEntityAsDeleted(user);
-                            PlayerService.InputLeavePlayer(_inputWorld, user);
-                        }
+                case ReliableChannelMessageType.UserDisconnected:
+                    var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
+                    _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress.UserId}");
+                    lock (_locker)
+                    {
+                        var user = GetClientEntity(disconnectedArgs.UserAddress.UserId);
+                        _mainWorld.MarkEntityAsDeleted(user);
+                        PlayerService.InputLeavePlayer(_inputWorld, user);
+                    }
+                    break;
 
-                        break;
+                case ReliableChannelMessageType.MessageReceived:
+                    var messageArgs = message.GetMessageReceivedArguments().Value;
+                    lock (_locker)
+                    {
+                        ProcessMessage(messageArgs.Message.ToArray(), messageArgs.UserAddress);
+                    }
 
-                    case ReliableChannelMessageType.MessageReceived:
-                        var messageArgs = message.GetMessageReceivedArguments().Value;
-                        lock (_locker)
-                        {
-                            ProcessMessage(messageArgs.Message.ToArray(), messageArgs.UserAddress);
-                        }
+                    break;
 
-                        break;
+                case ReliableChannelMessageType.ChannelClosed:
+                    break;
 
-                    case ReliableChannelMessageType.ChannelClosed:
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.Log(LogLevel.Error, e);
-                throw;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
