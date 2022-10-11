@@ -538,6 +538,7 @@ namespace XFlow.Server
                     {
                         //SimRandomSend(compressed, client);
 
+                        _logger.Log(LogLevel.Debug,$"Send udp diff l={compressed.Length}, h={P2P.P2P.GetMessageHash(compressed)}");
                         _unreliableChannel.SendAsync(client.UnreliableAddress, compressed);
                     }
 
@@ -552,9 +553,10 @@ namespace XFlow.Server
                 foreach (var clientEntity in _clientsFilter)
                 {
                     ref var client = ref _poolClients.GetRef(clientEntity);
-                    
+
                     var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
                     var bytes = P2P.P2P.BuildRequest(compressed);
+                    _logger.Log(LogLevel.Debug,$"Send tcp diff l={bytes.Length}, h={P2P.P2P.GetMessageHash(bytes)}");
                     _reliableChannel.SendAsync(client.ReliableAddress, bytes);
                     client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
                 }
