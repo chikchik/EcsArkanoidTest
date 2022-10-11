@@ -15,28 +15,21 @@ namespace Game.Ecs.Client.Systems
         {
             var world = systems.GetWorld();
 
-            if (!world.HasUnique<MainPlayerIdComponent>())
+            if (!world.TryGetUnique<MainPlayerIdComponent>(out var comp))
                 return;
+            int mainPlayerID = comp.value;
 
             var filter = world
                 .Filter<PlayerComponent>().IncChanges<PlayerComponent>()
                 .End();
 
-            var mainPlayerID = world.GetUnique<MainPlayerIdComponent>().value;
             foreach (var entity in filter)
             {
-                if (entity.EntityGet<PlayerComponent>(world).id == mainPlayerID)
-                {
-                    ClientPlayerService.SetPlayerEntity(world, entity);
-                    int i = 0;
-                    /*
-                    //replace потому что ClientPlayerComponent мог уже быть 
-                    world.GetOrCreateUniqueRef<ClientPlayerEntityComponent>().Player = entity;
-                    world.GetOrCreateUniqueRef<ClientPlayerEntityComponent>().Unit = entity;
-                    
-                    entity.EntityGetOrCreateRef<LerpComponent>(world).Value = 1;
-                    entity.EntityAdd<IsMainPlayerComponent>(world);*/
-                }
+                if (entity.EntityGet<PlayerComponent>(world).id != mainPlayerID)
+                    continue;
+
+                ClientPlayerService.SetPlayerEntity(world, entity);
+                break;
             }
         }
     }

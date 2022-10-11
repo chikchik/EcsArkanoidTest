@@ -23,7 +23,7 @@ namespace Game.Ecs.Client.Systems
             foreach (var entity in filter)
             {
                 var transform = poolTransform.Get(entity).Transform;
-                var lookDirection = poolLookDirection.Get(entity).value;
+                var lookDirection = poolLookDirection.Get(entity).Value;
 
                 if (Mathf.Approximately(lookDirection.magnitude, 0))
                     continue;

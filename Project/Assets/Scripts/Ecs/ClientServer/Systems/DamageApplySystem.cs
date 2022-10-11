@@ -27,7 +27,7 @@ namespace Game.Ecs.ClientServer.Systems
             var tm = _world.GetTime();
 
             var poolBulletHit = _eventWorld.GetPool<BulletHitComponent>();
-            var poolFollow = _world.GetPool<FollowComponent>();
+            var poolFollow = _world.GetPool<FollowEntityComponent>();
             var poolDestructibleHealth = _world.GetPool<HpComponent>();
             var poolDestructibleDamaged = _world.GetPool<DestructibleDamagedComponent>();
             var poolDestroyAtTime = _world.GetPool<DestroyAtTimeComponent>();
@@ -49,12 +49,12 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if (destructibleHealth.Value > 0)
                 {
-                    destructibleHealth.Value -= bulletHit.Bullet.Damage;
+                    destructibleHealth.Value -= bulletHit.Bullet.Value;
                     if (destructibleHealth.Value <= 0)
                     {
                         var vfxEntity = _world.NewEntity();
-                        poolFollow.Add(vfxEntity).Entity = _world.PackEntity(entityHit);
-                        poolDestroyAtTime.Add(vfxEntity).Time = tm + _fireDuration;
+                        poolFollow.Add(vfxEntity).Value = _world.PackEntity(entityHit);
+                        poolDestroyAtTime.Add(vfxEntity).TimeValue = tm + _fireDuration;
                     }
                 }
             }

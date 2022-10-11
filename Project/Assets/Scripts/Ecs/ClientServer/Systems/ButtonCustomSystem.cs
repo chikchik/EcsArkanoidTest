@@ -29,7 +29,7 @@ namespace Game.Ecs.ClientServer.Systems
             var world = systems.GetWorld();
             
             var filter = world
-                .Filter<ButtonComponent>()
+                .Filter<ButtonStateComponent>()
                 .Inc<ButtonCustomComponent>()
                 .Inc<ButtonStateChangedComponent>()
                 .End();

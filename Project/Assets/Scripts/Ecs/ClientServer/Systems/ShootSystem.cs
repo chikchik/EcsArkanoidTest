@@ -46,7 +46,7 @@ namespace Game.Ecs.ClientServer.Systems
 
 
                     var bulletEntity = world.NewEntity();
-                    bulletEntity.EntityAdd<BulletComponent>(world).Damage = 1f;
+                    bulletEntity.EntityAdd<BulletDamageComponent>(world).Value = 1f;
 
                     //var unitPos = entity.EntityGet<PositionComponent>(world).value;
                     var pos = shoot.Position;
@@ -74,7 +74,7 @@ namespace Game.Ecs.ClientServer.Systems
                     //var bodyInfo = Box2DApi.GetBodyInfo(body);
 
                     //защита от бесконечного полета в пустоте
-                    bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).Time = tm + 1.5f;
+                    bulletEntity.EntityAdd<DestroyAtTimeComponent>(world).TimeValue = tm + 1.5f;
                     
                     
                     world.Log($"created bullet {bulletEntity.e2name(world)} at tick {world.GetTick()} , hash: {customHash}");

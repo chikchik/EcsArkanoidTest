@@ -2,6 +2,6 @@
 {
     public struct DestroyAtTimeComponent
     {
-        public float Time;
+        public float TimeValue;
     }
 }

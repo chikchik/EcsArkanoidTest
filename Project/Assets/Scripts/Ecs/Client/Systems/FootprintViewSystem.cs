@@ -54,7 +54,7 @@ namespace Game.Ecs.Client.Systems
 
         private void CreateView(EcsWorld world, int entity, FootprintComponent footprintComponent)
         {
-            var footprintPrefab = footprintComponent.isLeftHand ? _leftPrefab : _rightPrefab;
+            var footprintPrefab = footprintComponent.Left ? _leftPrefab : _rightPrefab;
 
             var view = GameObject.Instantiate(footprintPrefab);
             var transform = view.transform;
@@ -62,10 +62,10 @@ namespace Game.Ecs.Client.Systems
             ref var transformComponent = ref entity.EntityAdd<TransformComponent>(world);
             transformComponent.Transform = transform;
 
-            transform.name = $"footprint {footprintComponent.isLeftHand} - {entity}";
+            transform.name = $"footprint {footprintComponent.Left} - {entity}";
             transform.position = entity.EntityGet<PositionComponent>(world).Value;
-            if (footprintComponent.direction.magnitude > 0.9f)
-                transform.forward = footprintComponent.direction;
+            if (footprintComponent.Direction.magnitude > 0.9f)
+                transform.forward = footprintComponent.Direction;
         }
     }
 }

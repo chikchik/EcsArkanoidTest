@@ -72,16 +72,16 @@ namespace Game
                 bushEntity.EntityAdd<InteractableComponent>(world);
 
                 ref var radiusComponent = ref bushEntity.EntityAdd<RadiusComponent>(world);
-                radiusComponent.radius = view.transform.lossyScale.x / 2f;
+                radiusComponent.Value = view.transform.lossyScale.x / 2f;
 
                 ref var resourceComponent = ref bushEntity.EntityAdd<ResourceComponent>(world);
                 resourceComponent.count = 1;
 
                 ref var collectableComponent = ref bushEntity.EntityAdd<CollectableComponent>(world);
-                collectableComponent.isCollected = false;
+                collectableComponent.IsCollected = false;
 
                 ref var collectableTargetComponent = ref bushEntity.EntityAdd<CollectableTargetComponent>(world);
-                collectableTargetComponent.targetObject = view.Berries.gameObject;
+                collectableTargetComponent.GameObject = view.Berries.gameObject;
 
                 bushEntity.EntityAdd<FlammableComponent>(world).Power = 3;
             });
@@ -100,7 +100,7 @@ namespace Game
                 boxEntity.EntityAdd<InteractableComponent>(world);
 
                 ref var radiusComponent = ref boxEntity.EntityAdd<RadiusComponent>(world);
-                radiusComponent.radius = view.transform.lossyScale.x / 2f;
+                radiusComponent.Value = view.transform.lossyScale.x / 2f;
                 
                 
                 view.LinkEntity(world, boxEntity);
@@ -111,24 +111,24 @@ namespace Game
             {
                 var buttonEntity = GetOrCreateGameEntity(view.gameObject);
 
-                ref var buttonComponent = ref buttonEntity.EntityAdd<ButtonComponent>(world);
+                ref var buttonComponent = ref buttonEntity.EntityAdd<ButtonStateComponent>(world);
                 buttonComponent.isActivated = false;
                 
                 ref var positionComponent = ref buttonEntity.EntityAdd<PositionComponent>(world);
                 positionComponent.Value = view.transform.position;
 
                 ref var radiusComponent = ref buttonEntity.EntityAdd<RadiusComponent>(world);
-                radiusComponent.radius = view.transform.lossyScale.x / 2f;
+                radiusComponent.Value = view.transform.lossyScale.x / 2f;
 
                 buttonEntity.EntityAdd<InteractableComponent>(world);
                 
 
                 ref var progressComponent = ref buttonEntity.EntityAdd<ProgressComponent>(world);
-                progressComponent.progress = 0;
+                progressComponent.Value = 0;
 
                 ref var moveInfoComponent = ref buttonEntity.EntityAdd<MoveInfoComponent>(world);
-                moveInfoComponent.startPoint = view.StartPosition;
-                moveInfoComponent.endPoint = view.EndPosition;
+                moveInfoComponent.StartPosition = view.StartPosition;
+                moveInfoComponent.EndPosition = view.EndPosition;
                 
                 if (view.Spawner)
                     buttonEntity.EntityGetOrCreateRef<ButtonCustomComponent>(world).Spawn = true;
@@ -152,14 +152,14 @@ namespace Game
                 positionComponent.Value = view.transform.position;
 
                 ref var radiusComponent = ref gateEntity.EntityAdd<RadiusComponent>(world);
-                radiusComponent.radius = 1f;
+                radiusComponent.Value = 1f;
 
                 ref var progressComponent = ref gateEntity.EntityAdd<ProgressComponent>(world);
-                progressComponent.progress = 0;
+                progressComponent.Value = 0;
 
                 ref var moveInfoComponent = ref gateEntity.EntityAdd<MoveInfoComponent>(world);
-                moveInfoComponent.startPoint = view.StartPosition;
-                moveInfoComponent.endPoint = view.EndPosition;
+                moveInfoComponent.StartPosition = view.StartPosition;
+                moveInfoComponent.EndPosition = view.EndPosition;
             });
 
             /*
@@ -243,9 +243,9 @@ namespace Game
                 entity.EntityAdd<PositionComponent>(world).Value = view.transform.position;
                 
                 ref var collectableComponent = ref entity.EntityAdd<CollectableComponent>(world);
-                collectableComponent.isCollected = false;
+                collectableComponent.IsCollected = false;
                 
-                entity.EntityAdd<CollectableTargetComponent>(world).targetObject = view.gameObject;
+                entity.EntityAdd<CollectableTargetComponent>(world).GameObject = view.gameObject;
             });
             
             ForEachObject<AmmoView>(view =>
@@ -254,9 +254,9 @@ namespace Game
                 entity.EntityAdd<AmmoComponent>(world);
                 entity.EntityAdd<InteractableComponent>(world);
                 entity.EntityAdd<PositionComponent>(world).Value = view.transform.position;
-                entity.EntityAdd<CollectableComponent>(world).isCollected = false;;
-                entity.EntityAdd<CollectableTargetComponent>(world).targetObject = view.gameObject;
-                entity.EntityAdd<RadiusComponent>(world).radius = view.transform.lossyScale.x / 2f;
+                entity.EntityAdd<CollectableComponent>(world).IsCollected = false;;
+                entity.EntityAdd<CollectableTargetComponent>(world).GameObject = view.gameObject;
+                entity.EntityAdd<RadiusComponent>(world).Value = view.transform.lossyScale.x / 2f;
             });
                 
             var unit = Object.FindObjectOfType<Global>().CharacterPrefab;

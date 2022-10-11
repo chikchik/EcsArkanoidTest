@@ -15,15 +15,15 @@ namespace Game.Ecs.ClientServer.Systems
 
         public void Run(EcsSystems systems)
         {
-            var filterFollow = _world.Filter<FollowComponent>().End();
+            var filterFollow = _world.Filter<FollowEntityComponent>().End();
 
-            var poolFollow = _world.GetPool<FollowComponent>();
+            var poolFollow = _world.GetPool<FollowEntityComponent>();
             var poolPosition = _world.GetPool<PositionComponent>();
 
             foreach (var entity in filterFollow)
             {
                 var follow = poolFollow.Get(entity);
-                if (!follow.Entity.Unpack(_world, out var entityToFollow))
+                if (!follow.Value.Unpack(_world, out var entityToFollow))
                 {
                     continue;
                 }

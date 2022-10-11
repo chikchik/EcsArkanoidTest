@@ -3,8 +3,8 @@
 namespace Game.Ecs.ClientServer.Components.Objective
 {
     [Serializable]
-    public struct ObjectivePrevComponent
+    public struct ObjectivePrevEntityComponent
     {
-        public int objectiveEntity;
+        public int Value;
     }
 }

@@ -6,7 +6,7 @@ namespace Game.Ecs.ClientServer.Components
     [Serializable]
     public struct BulletHitComponent
     {
-        public BulletComponent Bullet;
+        public BulletDamageComponent Bullet;
         public EcsPackedEntity EntityHit;
     }
 }

@@ -60,7 +60,7 @@ namespace Game
             //view.
             
             var component = new InputShotComponent();
-            var lookDir = _world.EntityGet<LookDirectionComponent>(unitEntity).value;
+            var lookDir = _world.EntityGet<LookDirectionComponent>(unitEntity).Value;
             var dir = Quaternion.Euler(0, -0, 0) * lookDir;
             component.dir = dir;
             component.pos = view.BulletSpawnPos.transform.position; 
@@ -89,7 +89,7 @@ namespace Game
             }
             
             var component = new InputKickComponent();
-            component.dir = _world.EntityGet<LookDirectionComponent>(unitEntity).value;
+            component.dir = _world.EntityGet<LookDirectionComponent>(unitEntity).Value;
             
             Apply(component);
         }

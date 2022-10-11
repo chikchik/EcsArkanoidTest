@@ -35,7 +35,7 @@ namespace Game.UI
         {
             entity.EntityWith<UiObjectComponent>(world, data =>
             {
-                var go = data.gameObject;
+                var go = data.GameObject;
                 Object.Destroy(go);
                 entity.EntityDel<UiObjectComponent>(world);
             });
@@ -47,7 +47,7 @@ namespace Game.UI
             text.text = entity.EntityGet<ObjectiveDescriptionComponent>(world).text;
             text.gameObject.SetActive(true);
 
-            entity.EntityAdd<UiObjectComponent>(world).gameObject = text.gameObject;
+            entity.EntityAdd<UiObjectComponent>(world).GameObject = text.gameObject;
         }
     }
 }

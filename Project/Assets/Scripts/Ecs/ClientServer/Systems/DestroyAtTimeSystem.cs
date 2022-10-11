@@ -20,7 +20,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolDestroyAt = world.GetPool<DestroyAtTimeComponent>();
             foreach (var entity in filter)
             {
-                if (poolDestroyAt.Get(entity).Time > tm)
+                if (poolDestroyAt.Get(entity).TimeValue > tm)
                     continue;
                 world.Log($"entity time is out {entity.e2name(world)}");                             
                 world.MarkEntityAsDeleted(entity);

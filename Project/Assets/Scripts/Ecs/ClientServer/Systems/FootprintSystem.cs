@@ -35,18 +35,18 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if (!poolLastFootprint.Has(entity))
                 {
-                    poolLastFootprint.Add(entity).position = currentPosition;
+                    poolLastFootprint.Add(entity).Position = currentPosition;
                     continue;
                 }
 
-                if ((poolLastFootprint.Get(entity).position - currentPosition).magnitude > FootprintDelta)
+                if ((poolLastFootprint.Get(entity).Position - currentPosition).magnitude > FootprintDelta)
                 {
-                    var direction = poolLookDirection.Get(entity).value;
+                    var direction = poolLookDirection.Get(entity).Value;
                     ref var lastFootprint = ref poolLastFootprint.GetRef(entity);
 
-                    lastFootprint.position = currentPosition;
-                    lastFootprint.direction = direction;
-                    lastFootprint.isLeftHand = !lastFootprint.isLeftHand;
+                    lastFootprint.Position = currentPosition;
+                    lastFootprint.Direction = direction;
+                    lastFootprint.Left = !lastFootprint.Left;
 
                     CreateFootprintAtPosition(world, lastFootprint);
                 }
@@ -57,17 +57,17 @@ namespace Game.Ecs.ClientServer.Systems
         {
             var footPrintEntity = world.NewEntity();
             ref var footprintComponent = ref footPrintEntity.EntityAdd<FootprintComponent>(world);
-            footprintComponent.isLeftHand = lastFootprint.isLeftHand;
-            footprintComponent.direction = lastFootprint.direction;
+            footprintComponent.Left = lastFootprint.Left;
+            footprintComponent.Direction = lastFootprint.Direction;
 
             ref var positionComponent = ref footPrintEntity.EntityAdd<PositionComponent>(world);
-            positionComponent.Value = lastFootprint.position;
+            positionComponent.Value = lastFootprint.Position;
 
 
             ref var lifeTimeComponent = ref footPrintEntity.EntityAdd<LifeTimeComponent>(world);
             //lifeTimeComponent.lifeTime = FootprintLifeTime;
             var ticks = (int) (150f / world.GetDeltaSeconds());
-            lifeTimeComponent.destroyTick = world.GetUnique<TickComponent>().Value.Value + ticks;
+            lifeTimeComponent.DestroyAtTick = world.GetUnique<TickComponent>().Value.Value + ticks;
 
             footPrintEntity.EntityAdd<FlammableComponent>(world).Power = 1;
         }

@@ -2,7 +2,7 @@
 
 namespace Game.Ecs.Client.Components
 {
-    public struct ActiveVFX
+    public struct ActiveVFXComponent
     {
         public GameObject VFX;
     }

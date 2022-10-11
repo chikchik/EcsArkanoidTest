@@ -36,7 +36,7 @@ namespace Game.Utils
 //                    Debug.Log($"unit {entity} {pos}");
                 }
 
-                if (entity.EntityHas<BulletComponent>(world))
+                if (entity.EntityHas<BulletDamageComponent>(world))
                     rad = 0.02f;
 
 
@@ -51,7 +51,7 @@ namespace Game.Utils
                 entity.EntityWith<LookDirectionComponent>(world, data =>
                 {
                     Gizmos.color = Color.blue;
-                    Gizmos.DrawRay(pos.WithAddedToY(-0.02f), data.value);
+                    Gizmos.DrawRay(pos.WithAddedToY(-0.02f), data.Value);
                 });
 
                 entity.EntityWith<ApplyForceComponent>(world, data =>

@@ -4,6 +4,6 @@ namespace Game.Ecs.Client.Components
 {
     public struct UiObjectComponent
     {
-        public GameObject gameObject;
+        public GameObject GameObject;
     }
 }

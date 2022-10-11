@@ -26,7 +26,7 @@ namespace Game.Ecs.Client.Systems
             var filterDestructibleDamaged = _world.Filter<DestructibleDamagedComponent>().End();
 
             var poolDestructibleDamaged = _world.GetPool<DestructibleDamagedComponent>();
-            var poolActiveVFX = _world.GetPool<ActiveVFX>();
+            var poolActiveVFX = _world.GetPool<ActiveVFXComponent>();
             var poolTransform = _world.GetPool<TransformComponent>();
 
             foreach (var request in filterDestructibleDamaged)

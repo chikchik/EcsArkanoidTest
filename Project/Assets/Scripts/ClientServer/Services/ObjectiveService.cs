@@ -11,14 +11,14 @@ namespace Game.ClientServer.Services
         public static List<int> GetObjectivesByTarget(EcsWorld world, int targetEntity)
         {
             var entities = new List<int>();
-            var objectives = world.Filter<ObjectiveTargetComponent>().End();
-            var pool = world.GetPool<ObjectiveTargetComponent>();
+            var objectives = world.Filter<ObjectiveTargetEntityComponent>().End();
+            var pool = world.GetPool<ObjectiveTargetEntityComponent>();
             /*
              * найдем среди всех Objectives, те что завязаны на targetEntity
              */
             foreach (var entity in objectives)
             {
-                if (pool.Get(entity).entity != targetEntity)
+                if (pool.Get(entity).Value != targetEntity)
                     continue;
                 entities.Add(entity);
             }
@@ -29,15 +29,15 @@ namespace Game.ClientServer.Services
         public static List<int> GetNextObjectives(EcsWorld world, int prevObjectiveEntity)
         {
             var entities = new List<int>();
-            var objectives = world.Filter<ObjectivePrevComponent>().End();
-            var pool = world.GetPool<ObjectivePrevComponent>();
+            var objectives = world.Filter<ObjectivePrevEntityComponent>().End();
+            var pool = world.GetPool<ObjectivePrevEntityComponent>();
 
             /*
              * находим задания которые открываются после prevObjectiveEntity
              */
             foreach (var entity in objectives)
             {
-                if (pool.Get(entity).objectiveEntity != prevObjectiveEntity)
+                if (pool.Get(entity).Value != prevObjectiveEntity)
                     continue;
                 entities.Add(entity);
             }

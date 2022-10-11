@@ -2,8 +2,8 @@
 
 namespace Game.Ecs.ClientServer.Components
 {
-    public struct FollowComponent
+    public struct FollowEntityComponent
     {
-        public EcsPackedEntity Entity;
+        public EcsPackedEntity Value;
     }
 }

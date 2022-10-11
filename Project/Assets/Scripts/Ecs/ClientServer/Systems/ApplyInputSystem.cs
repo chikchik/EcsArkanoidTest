@@ -169,7 +169,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if (entity.EntityHas<CollectableComponent>(world))
                 {
-                    entity.EntityGetRef<CollectableComponent>(world).isCollected = true;
+                    entity.EntityGetRef<CollectableComponent>(world).IsCollected = true;
                 }
 
                 if (!unitEntity.EntityHas<InventoryLinkComponent>(world))
@@ -202,7 +202,7 @@ namespace Game.Ecs.ClientServer.Systems
         {
             if (entity.EntityHas<CollectableComponent>(_world))
             {
-                entity.EntityGetRef<CollectableComponent>(_world).isCollected = true;
+                entity.EntityGetRef<CollectableComponent>(_world).IsCollected = true;
             }
         }
         

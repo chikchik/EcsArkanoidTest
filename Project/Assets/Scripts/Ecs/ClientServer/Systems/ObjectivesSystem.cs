@@ -18,7 +18,7 @@ namespace Game.Ecs.ClientServer.Systems
 
             var bushes = world.GetPool<BushComponent>().GetEntities();
             var boxes = world.GetPool<BoxComponent>().GetEntities();
-            var buttons = world.GetPool<ButtonComponent>().GetEntities();
+            var buttons = world.GetPool<ButtonStateComponent>().GetEntities();
             var names = world.GetPool<GameObjectNameComponent>().GetEntities();
 
             int GetTargetEntityFrom(List<int> entities)
@@ -51,33 +51,33 @@ namespace Game.Ecs.ClientServer.Systems
             int objEntity, objEntityA;
             objEntity = world.NewEntity();
 
-            objEntity.EntityAdd<ObjectiveTargetComponent>(world).entity = chestWallEntity;
+            objEntity.EntityAdd<ObjectiveTargetEntityComponent>(world).Value = chestWallEntity;
             objEntity.EntityAdd<ObjectiveOpenedComponent>(world);
             objEntity.EntityAdd<ObjectiveDescriptionComponent>(world).text = "Remove Red Wall";
             objEntityA = objEntity;
 
 
             objEntity = world.NewEntity();
-            objEntity.EntityAdd<ObjectiveTargetComponent>(world).entity = GetTargetEntityFrom(boxes);
-            objEntity.EntityAdd<ObjectivePrevComponent>(world).objectiveEntity = objEntityA;
+            objEntity.EntityAdd<ObjectiveTargetEntityComponent>(world).Value = GetTargetEntityFrom(boxes);
+            objEntity.EntityAdd<ObjectivePrevEntityComponent>(world).Value = objEntityA;
             objEntity.EntityAdd<ObjectiveDescriptionComponent>(world).text = "loot box";
             objEntityA = objEntity;
 
             objEntity = world.NewEntity();
-            objEntity.EntityAdd<ObjectiveTargetComponent>(world).entity = GetTargetEntityByName("BushObj");
+            objEntity.EntityAdd<ObjectiveTargetEntityComponent>(world).Value = GetTargetEntityByName("BushObj");
             objEntity.EntityAdd<ObjectiveOpenedComponent>(world);
             objEntity.EntityAdd<ObjectiveDescriptionComponent>(world).text = "eat berries";
             objEntityA = objEntity;
             
             objEntity = world.NewEntity();
-            objEntity.EntityAdd<ObjectiveTargetComponent>(world).entity = GetTargetEntityByName("BushObj2");
-            objEntity.EntityAdd<ObjectivePrevComponent>(world).objectiveEntity = objEntityA;
+            objEntity.EntityAdd<ObjectiveTargetEntityComponent>(world).Value = GetTargetEntityByName("BushObj2");
+            objEntity.EntityAdd<ObjectivePrevEntityComponent>(world).Value = objEntityA;
             objEntity.EntityAdd<ObjectiveDescriptionComponent>(world).text = "eat berries 2";
             objEntityA = objEntity;
             
             objEntity = world.NewEntity();
-            objEntity.EntityAdd<ObjectiveTargetComponent>(world).entity = GetTargetEntityByName("BushObj3");
-            objEntity.EntityAdd<ObjectivePrevComponent>(world).objectiveEntity = objEntityA;
+            objEntity.EntityAdd<ObjectiveTargetEntityComponent>(world).Value = GetTargetEntityByName("BushObj3");
+            objEntity.EntityAdd<ObjectivePrevEntityComponent>(world).Value = objEntityA;
             objEntity.EntityAdd<ObjectiveDescriptionComponent>(world).text = "eat berries 3";
             objEntityA = objEntity;
 

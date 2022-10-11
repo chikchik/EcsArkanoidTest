@@ -5,6 +5,6 @@ namespace Game.Ecs.ClientServer.Components
     [Serializable]
     public struct ProgressComponent
     {
-        public float progress;
+        public float Value;
     }
 }

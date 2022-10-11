@@ -18,7 +18,7 @@ namespace Game.ClientServer.Services
             var entity = world.NewEntity();
             
             entity.EntityAdd<UnitComponent>(world);
-            entity.EntityAdd<LookDirectionComponent>(world).value = new Vector3(0,0,1);
+            entity.EntityAdd<LookDirectionComponent>(world).Value = new Vector3(0,0,1);
             entity.EntityAdd<PositionComponent>(world).Value = new Vector3(0, 0, 0);
             entity.EntityAdd<FoodCollectedComponent>(world).Value = 0;
             entity.EntityAdd<AmmoCollectedComponent>(world).Value = 0;
@@ -26,7 +26,7 @@ namespace Game.ClientServer.Services
 
 
             ref var radiusComponent = ref entity.EntityAdd<RadiusComponent>(world);
-            radiusComponent.radius = 0.4f;
+            radiusComponent.Value = 0.4f;
 
             /*
             ref var healthComponent = ref entity.EntityAdd<HpComponent>(world);

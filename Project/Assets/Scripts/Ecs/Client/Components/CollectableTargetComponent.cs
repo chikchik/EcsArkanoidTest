@@ -5,6 +5,6 @@ namespace Game.Ecs.Client.Components
 {
     public struct CollectableTargetComponent
     {
-        public GameObject targetObject;
+        public GameObject GameObject;
     }
 }

@@ -46,7 +46,7 @@ namespace Game.Ecs.ClientServer.Systems
                 if (startTime > world.GetTime())
                     continue;
                 
-                var direction = poolMoveDirection.Get(entity).value;
+                var direction = poolMoveDirection.Get(entity).Value;
                 var pos = poolPosition.Get(entity).Value;
 
                 var ret = new Box2DApiTypes.RaycastOutputReturnType();

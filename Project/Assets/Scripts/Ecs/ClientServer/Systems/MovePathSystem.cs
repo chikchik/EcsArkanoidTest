@@ -22,16 +22,16 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var entity in filter)
             {
                 ref var pathComponent = ref poolMovePath.GetRef(entity);
-                var dest = pathComponent.path[pathComponent.current];
+                var dest = pathComponent.Path[pathComponent.Current];
                 var pos = poolPosition.Get(entity).Value;
 
                 var dir = dest - pos;
                 if (dir.magnitude < 0.001f)
                 {
-                    pathComponent.current += 1;
-                    if (pathComponent.current > pathComponent.path.Length)
+                    pathComponent.Current += 1;
+                    if (pathComponent.Current > pathComponent.Path.Length)
                     {
-                        pathComponent.current = 0;
+                        pathComponent.Current = 0;
                     }
                 }
             }

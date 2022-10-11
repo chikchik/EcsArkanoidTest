@@ -22,7 +22,7 @@ namespace Game.Ecs.Client.Systems
                 var collectableComponent = poolCollectable.Get(entity);
                 var collectableTargetComponent = poolCollectableTarget.Get(entity);
 
-                collectableTargetComponent.targetObject.SetActive(!collectableComponent.isCollected);
+                collectableTargetComponent.GameObject.SetActive(!collectableComponent.IsCollected);
             }
         }
     }

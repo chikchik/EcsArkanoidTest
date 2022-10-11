@@ -39,7 +39,7 @@ namespace Game.Ecs.ClientServer.Systems
                 var progressComponent = poolProgress.Get(gateEntity);
                // var speedComponent = poolSpeed.Get(gateEntity);
 
-                var progress = progressComponent.progress + deltaTime;
+                var progress = progressComponent.Value + deltaTime;
 
                 if (progress >= 1f)
                 {
@@ -48,7 +48,7 @@ namespace Game.Ecs.ClientServer.Systems
                     if (bodyLink.HasValue) Box2DApiSafe.SetEnabled(bodyLink.Value.BodyReference, false);
                 }
 
-                poolProgress.ReplaceIfChanged(gateEntity, new ProgressComponent{progress = Math.Clamp(progress, 0, 1)});
+                poolProgress.ReplaceIfChanged(gateEntity, new ProgressComponent{Value = Math.Clamp(progress, 0, 1)});
             }
         }
 

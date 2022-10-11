@@ -5,6 +5,6 @@ namespace Game.Ecs.ClientServer.Components
 {
     public struct LookDirectionComponent
     {
-        public Vector3 value;
+        public Vector3 Value;
     }
 }

@@ -6,7 +6,7 @@ namespace Game.Ecs.ClientServer.Components
     [Serializable]
     public struct FootprintComponent
     {
-        public Vector3 direction;
-        public bool isLeftHand;
+        public Vector3 Direction;
+        public bool Left;
     }
 }

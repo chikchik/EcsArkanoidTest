@@ -72,13 +72,13 @@ namespace Game.Ecs.Client.Systems
                         var view = go.GetComponent<BushView>();
                         ref var collectableTargetComponent =
                             ref entity.EntityAdd<CollectableTargetComponent>(world);
-                        collectableTargetComponent.targetObject = view.Berries.gameObject;
+                        collectableTargetComponent.GameObject = view.Berries.gameObject;
                     }
                     else
                     {
                         ref var collectableTargetComponent =
                             ref entity.EntityAdd<CollectableTargetComponent>(world);
-                        collectableTargetComponent.targetObject = go;
+                        collectableTargetComponent.GameObject = go;
                     }
                 }
             }
@@ -101,7 +101,7 @@ namespace Game.Ecs.Client.Systems
                 entity.EntityGetOrCreateRef<LerpComponent>(world).Value = 0.5f;
             }
             
-            var filterBullets = world.Filter<BulletComponent>()
+            var filterBullets = world.Filter<BulletDamageComponent>()
                 .Exc<TransformComponent>().End();
 
             foreach (var entity in filterBullets)

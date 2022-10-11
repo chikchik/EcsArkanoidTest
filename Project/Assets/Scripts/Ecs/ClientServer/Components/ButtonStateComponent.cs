@@ -4,7 +4,7 @@ using System;
 namespace Game.Ecs.ClientServer.Components
 {
     [Serializable]
-    public struct ButtonComponent
+    public struct ButtonStateComponent
     {
         public bool isActivated;
     }

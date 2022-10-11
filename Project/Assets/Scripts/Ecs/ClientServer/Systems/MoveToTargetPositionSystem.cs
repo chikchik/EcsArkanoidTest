@@ -69,7 +69,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                 var speed = poolAverageSpeed.GetNullable(entity)?.Value ?? 1.0f;
                 poolLinearVelocity.GetRef(entity).Value = direction2D.normalized * speed;
-                poolLookDirection.GetOrCreateRef(entity).value = directionToTarget.normalized;
+                poolLookDirection.GetOrCreateRef(entity).Value = directionToTarget.normalized;
                 poolMoving.Replace(entity, new MovingComponent());
             }
         }

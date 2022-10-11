@@ -16,7 +16,7 @@ namespace Game.Ecs.ClientServer.Systems
         private EcsWorld _eventWorld;
         
         private EcsPool<HpComponent> _poolDestructibleHealth;
-        private EcsPool<BulletComponent> _poolBullet;
+        private EcsPool<BulletDamageComponent> _poolBullet;
         private EcsPool<BulletHitComponent> _poolBulletHits;
         private EcsPool<Box2DBeginContactComponent> _poolContacts;
         private EcsFilter _filter;
@@ -29,7 +29,7 @@ namespace Game.Ecs.ClientServer.Systems
             _poolBulletHits = _eventWorld.GetPool<BulletHitComponent>();
             
             _poolDestructibleHealth = _world.GetPool<HpComponent>();
-            _poolBullet = _world.GetPool<BulletComponent>();
+            _poolBullet = _world.GetPool<BulletDamageComponent>();
             _poolContacts = _eventWorld.GetPool<Box2DBeginContactComponent>();
             _filter = _eventWorld.Filter<Box2DBeginContactComponent>().End();
         }
@@ -67,7 +67,7 @@ namespace Game.Ecs.ClientServer.Systems
 
         private void Check(int entityA, int entityB)
         {
-            BulletComponent bulletComponent;
+            BulletDamageComponent bulletComponent;
             if (_poolBullet.TryGet(entityA, out bulletComponent))
             {
                 if (_poolDestructibleHealth.Has(entityB))

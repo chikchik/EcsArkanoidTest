@@ -20,7 +20,7 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var entity in filter)
             {
                 var lifeTimeComponent = poolLifeTime.Get(entity);
-                if (tick < lifeTimeComponent.destroyTick)
+                if (tick < lifeTimeComponent.DestroyAtTick)
                     continue;
 
                 world.MarkEntityAsDeleted(entity);

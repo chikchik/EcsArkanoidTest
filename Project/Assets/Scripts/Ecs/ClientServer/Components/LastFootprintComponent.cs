@@ -6,8 +6,8 @@ namespace Game.Ecs.ClientServer.Components
     [Serializable]
     public struct LastFootprintComponent
     {
-        public Vector3 position;
-        public Vector3 direction;
-        public bool isLeftHand;
+        public Vector3 Position;
+        public Vector3 Direction;
+        public bool Left;
     }
 }
