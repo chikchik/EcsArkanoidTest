@@ -5,7 +5,7 @@ namespace Game.Ecs.ClientServer.Components.Input
 {
     public struct InputShotComponent:IInputComponent
     {
-        public Vector3 dir;
-        public Vector3 pos;
+        public Vector3 Direction;
+        public Vector3 Position;
     }
 }

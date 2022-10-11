@@ -87,7 +87,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if (poolInputMoveDir.Has(inputEntity))
                 {
-                    Move(unitEntity, poolInputMoveDir.Get(inputEntity).Dir);
+                    Move(unitEntity, poolInputMoveDir.Get(inputEntity).Direction);
                 }
 
                 if (poolInputMoveTo.Has(inputEntity))
@@ -102,7 +102,7 @@ namespace Game.Ecs.ClientServer.Systems
                 
                 if (poolInputKick.Has(inputEntity))
                 {
-                    var dir = poolInputKick.Get(inputEntity).dir;
+                    var dir = poolInputKick.Get(inputEntity).Direction;
                     Kick(unitEntity, dir);
                 }
 
@@ -248,8 +248,8 @@ namespace Game.Ecs.ClientServer.Systems
             unitEntity.EntityAdd<ShootStartedComponent>(_world);
             unitEntity.EntityReplace(_world, new ShootingComponent
             {
-                Direction = shoot.dir,
-                Position = shoot.pos,
+                Direction = shoot.Direction,
+                Position = shoot.Position,
                 ShootAtTime = _world.GetTime() + 0.2f, 
                 TotalTime = _world.GetTime() + 0.5f
             });

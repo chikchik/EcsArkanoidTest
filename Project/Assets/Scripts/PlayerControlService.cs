@@ -62,8 +62,8 @@ namespace Game
             var component = new InputShotComponent();
             var lookDir = _world.EntityGet<LookDirectionComponent>(unitEntity).Value;
             var dir = Quaternion.Euler(0, -0, 0) * lookDir;
-            component.dir = dir;
-            component.pos = view.BulletSpawnPos.transform.position; 
+            component.Direction = dir;
+            component.Position = view.BulletSpawnPos.transform.position; 
             
             Apply(component);
         }
@@ -89,7 +89,7 @@ namespace Game
             }
             
             var component = new InputKickComponent();
-            component.dir = _world.EntityGet<LookDirectionComponent>(unitEntity).Value;
+            component.Direction = _world.EntityGet<LookDirectionComponent>(unitEntity).Value;
             
             Apply(component);
         }
@@ -136,7 +136,7 @@ namespace Game
             }
             
             var component = new InputMoveDirectionComponent();
-            component.Dir = dir;
+            component.Direction = dir;
             
             Apply(component);
         }
@@ -154,7 +154,7 @@ namespace Game
                 return;
             
             var component = new InputMoveDirectionComponent();
-            component.Dir = Vector3.zero;
+            component.Direction = Vector3.zero;
             
             Apply(component);
         }

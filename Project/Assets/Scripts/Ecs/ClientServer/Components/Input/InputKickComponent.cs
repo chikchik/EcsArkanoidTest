@@ -5,6 +5,6 @@ namespace Game.Ecs.ClientServer.Components.Input
 {
     public struct InputKickComponent: IInputComponent
     {
-        public Vector3 dir;
+        public Vector3 Direction;
     }
 }
