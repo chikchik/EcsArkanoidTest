@@ -35,7 +35,7 @@ namespace Game
             this._input = input;
         }
         
-        private int playerId => _world.GetUnique<MainPlayerIdComponent>().value;
+        private string playerId => _world.GetUnique<MainPlayerIdComponent>().Value;
         private int unitEntity
         {
             get
