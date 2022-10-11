@@ -23,6 +23,17 @@ namespace Game
                 Debug.Log);
         }
 
+        public async Task<string> GetUserId()
+        {
+            var userId = default(string);
+            await GamingServices.V1
+                .GetUserInfo()
+                .HandleResultAsync(async userInfo => userId = userInfo.UserId,
+                    exception => Task.CompletedTask);
+
+            return userId;
+        }
+
         public async Task<ISocket> GetReliableConnection()
         {
             ISocket channel = null;

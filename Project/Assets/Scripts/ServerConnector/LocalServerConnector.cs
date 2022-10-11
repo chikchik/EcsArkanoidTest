@@ -20,6 +20,11 @@ namespace Game
             _userId = UnityEngine.Random.Range(1000, 9999);
         }
 
+        public async Task<string> GetUserId()
+        {
+            return _userId.ToString();
+        }
+
         public async Task<ISocket> GetReliableConnection()
         {
             BaseSocket socket = new ReliableSocket(_userId);

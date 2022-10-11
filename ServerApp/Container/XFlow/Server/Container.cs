@@ -133,10 +133,10 @@ namespace XFlow.Server
 
             _isRun = false;
 
-            await _reliableChannel.DisposeAsync();
             await _reliableChannelSubs.DisposeAsync();
-            await _unreliableChannel.DisposeAsync();
+            await _reliableChannel.DisposeAsync();
             await _unreliableChannelSubs.DisposeAsync();
+            await _unreliableChannel.DisposeAsync();
         }
 
         public async ValueTask<string> GetInfoAsync()
@@ -170,59 +170,77 @@ namespace XFlow.Server
 
         private async ValueTask OnUnreliableMessageReceived(UnreliableChannelMessage message)
         {
-            switch (message.Type)
+            try
             {
-                case UnreliableChannelMessageType.MessageReceived:
-                    var messageArgs = message.GetMessageReceivedArguments().Value;
-                    lock (_locker)
-                    {
-                        GotInput1(new HGlobalReader(messageArgs.Message.ToArray()), messageArgs.UserAddress);
-                    }
-                    break;
+                switch (message.Type)
+                {
+                    case UnreliableChannelMessageType.MessageReceived:
+                        var messageArgs = message.GetMessageReceivedArguments().Value;
+                        lock (_locker)
+                        {
+                            GotInput1(new HGlobalReader(messageArgs.Message.ToArray()), messageArgs.UserAddress);
+                        }
 
-                case UnreliableChannelMessageType.ChannelClosed:
-                    var closedArgs = message.GetChannelClosedArguments().Value;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                        break;
+
+                    case UnreliableChannelMessageType.ChannelClosed:
+                        var closedArgs = message.GetChannelClosedArguments().Value;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception e)
+            {            
+                _logger.Log(LogLevel.Error, e);
+                throw;
             }
         }
-        
+
         private async ValueTask OnReliableMessageReceived(ReliableChannelMessage message)
         {
             _logger.Log(LogLevel.Trace, $"OnReliableMessageReceived.{message.Type}");
-            switch (message.Type)
+            try
             {
-                case ReliableChannelMessageType.UserConnected:
-                    var connectedArgs = message.GetUserConnectedArguments().Value;
-                    _logger.Log(LogLevel.Debug, $"Connected {connectedArgs.UserAddress.UserId}");
-                    break;
+                switch (message.Type)
+                {
+                    case ReliableChannelMessageType.UserConnected:
+                        var connectedArgs = message.GetUserConnectedArguments().Value;
+                        _logger.Log(LogLevel.Debug, $"Connected {connectedArgs.UserAddress.UserId}");
+                        break;
 
-                case ReliableChannelMessageType.UserDisconnected:
-                    var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
-                    _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress.UserId}");
-                    lock (_locker)
-                    {
-                        var user = GetClientEntity(disconnectedArgs.UserAddress.UserId);
-                        _mainWorld.MarkEntityAsDeleted(user);
-                        PlayerService.InputLeavePlayer(_inputWorld, user);
-                    }
-                    break;
+                    case ReliableChannelMessageType.UserDisconnected:
+                        var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
+                        _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress.UserId}");
+                        lock (_locker)
+                        {
+                            var user = GetClientEntity(disconnectedArgs.UserAddress.UserId);
+                            _mainWorld.MarkEntityAsDeleted(user);
+                            PlayerService.InputLeavePlayer(_inputWorld, user);
+                        }
 
-                case ReliableChannelMessageType.MessageReceived:
-                    var messageArgs = message.GetMessageReceivedArguments().Value;
-                    lock (_locker)
-                    {
-                        ProcessMessage(messageArgs.Message.ToArray(), messageArgs.UserAddress);
-                    }
+                        break;
 
-                    break;
+                    case ReliableChannelMessageType.MessageReceived:
+                        var messageArgs = message.GetMessageReceivedArguments().Value;
+                        lock (_locker)
+                        {
+                            ProcessMessage(messageArgs.Message.ToArray(), messageArgs.UserAddress);
+                        }
 
-                case ReliableChannelMessageType.ChannelClosed:
-                    break;
+                        break;
 
-                default:
-                    throw new ArgumentOutOfRangeException();
+                    case ReliableChannelMessageType.ChannelClosed:
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Log(LogLevel.Error, e);
+                throw;
             }
         }
 
