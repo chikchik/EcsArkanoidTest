@@ -22,7 +22,7 @@ namespace Game.Installers
 
         public sealed override void InstallBindings()
         {
-            Container.Bind<EcsWorld>().FromInstance(new EcsWorld("main")).AsCached();
+            Container.Bind<EcsWorld>().FromInstance(new EcsWorld(EcsWorlds.Main)).AsCached();
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Input).FromInstance(new EcsWorld(EcsWorlds.Input)).AsCached();
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Event).FromInstance(new EcsWorld(EcsWorlds.Event)).AsCached();
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Dead).FromInstance(new EcsWorld(EcsWorlds.Dead)).AsCached();

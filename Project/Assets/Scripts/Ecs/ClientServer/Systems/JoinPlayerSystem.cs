@@ -1,5 +1,6 @@
 ﻿using Game.ClientServer;
 using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Inventory;
 using XFlow.Ecs.ClientServer;
 using XFlow.EcsLite;
@@ -30,27 +31,36 @@ namespace Game.Ecs.ClientServer.Systems
                 //context.WriteToConsole?.Invoke($"{ms} player {playerID}");
                 if (leave)
                 {
-                    var unitEntity = BaseServices.GetUnitEntityByPlayerId(world, playerID);
-                    if (unitEntity != -1)
+                    if (PlayerService.TryGetPlayerEntityByPlayerId(world, playerID, out int playerEntity))
                     {
-                        world.MarkEntityAsDeleted(unitEntity);
-                        //unitEntity.EntityWithRef(world, (ref PlayerComponent data) => { data.id = -1; });
+                        var packedEntity = playerEntity.EntityGet<PrimaryUnitEntityComponent>(world).Value;
+                        if (packedEntity.Unpack(world, out int unitEntity))
+                        {
+                            world.MarkEntityAsDeleted(unitEntity);
+                        }
                     }
                 }
                 else
                 {
-                    var freeUnitEntity = UnitService.CreateUnitEntity(world);
-                    freeUnitEntity.EntityGetOrCreateRef<PlayerComponent>(world).id = playerID;
+                    var playerEntity = PlayerService.CreatePlayerEntity(world, playerID);
                     
+                    var unitEntity = UnitService.CreateUnitEntity(world);
+
+                    playerEntity.EntityAdd<ControlledEntityComponent>(world).Value =
+                        world.PackEntity(unitEntity);
+                    
+                    playerEntity.EntityAdd<PrimaryUnitEntityComponent>(world).Value =
+                        world.PackEntity(unitEntity);
+
                     var inventory = world.NewEntity();
                     inventory.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 
                     var trash = world.NewEntity();
                     trash.EntityAdd<InventoryComponent>(world).SlotCapacity = 10;
 
-                    freeUnitEntity.EntityAdd<InventoryLinkComponent>(world).Inventory =
+                    unitEntity.EntityAdd<InventoryLinkComponent>(world).Inventory =
                         world.PackEntity(inventory);
-                    freeUnitEntity.EntityAdd<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
+                    unitEntity.EntityAdd<TrashLinkComponent>(world).Trash = world.PackEntity(trash);
                 }
             }
         }

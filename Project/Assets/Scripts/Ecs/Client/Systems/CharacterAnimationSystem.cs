@@ -33,7 +33,7 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filter)
             {
-                var animator = poolAnimator.Get(entity).animator;
+                var animator = poolAnimator.Get(entity).Animator;
                 animator.CrossFadeInFixedTime("gather", 0.1f);
             }
             
@@ -42,7 +42,7 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filter)
             {
-                var animator = poolAnimator.Get(entity).animator;
+                var animator = poolAnimator.Get(entity).Animator;
                 ContinueAnimation(animator, "walking");
             }
             
@@ -50,26 +50,26 @@ namespace Game.Ecs.Client.Systems
 
             foreach (var entity in filter)
             {
-                var animator = poolAnimator.Get(entity).animator;
+                var animator = poolAnimator.Get(entity).Animator;
                 ContinueAnimation(animator, "walking");
             }
             
             filter = world.Filter<UnitComponent>().IncRemoved<MovingComponent>().End();
             foreach (var entity in filter)
             {
-                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("idle", 0.1f);
+                poolAnimator.Get(entity).Animator.CrossFadeInFixedTime("idle", 0.1f);
             }
 
             filter = world.Filter<UnitComponent>().IncAdded<PushingComponent>().End();
             foreach (var entity in filter)
             {
-                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("kicking", 0.05f);
+                poolAnimator.Get(entity).Animator.CrossFadeInFixedTime("kicking", 0.05f);
             }
             
             filter = world.Filter<UnitComponent>().Inc<ShootStartedComponent>().End();
             foreach (var entity in filter)
             {
-                poolAnimator.Get(entity).animator.CrossFadeInFixedTime("Shooting", 0.1f);
+                poolAnimator.Get(entity).Animator.CrossFadeInFixedTime("Shooting", 0.1f);
             }
         }
     }

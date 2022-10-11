@@ -26,18 +26,18 @@ namespace Game.Ecs.ClientServer.Systems
         {
             var world = systems.GetWorld();
             var mechEntity = _mechService.CreateMechEntity(world);
-            mechEntity.EntityGetRef<PositionComponent>(world).value = new Vector3(5, 0, -15f);
+            mechEntity.EntityGetRef<PositionComponent>(world).Value = new Vector3(5, 0, -15f);
 
             mechEntity.EntityAdd<InteractableComponent>(world);
             
             mechEntity.EntityAdd<AverageSpeedComponent>(world).Value = 8;
 
-            Box2DServices.AddRigidbodyDefinition(world, mechEntity, BodyType.Kinematic).SetFriction(0.3f).SetRestitutionThreshold(0.5f);
+            Box2DServices.AddRigidbodyDefinition(world, mechEntity, BodyType.Dynamic).SetDensity(1000).SetFriction(0.3f).SetRestitutionThreshold(0.5f);
             Box2DServices.AddCircleColliderToDefinition(world, mechEntity, 1.2f, new Vector2(-1.5f, 0));
             Box2DServices.AddCircleColliderToDefinition(world, mechEntity, 1.2f, new Vector2(1.5f, 0));
-
-            var botEntity = UnitService.CreateUnitEntity(world);
-            botEntity.EntityAdd<AIPlayerComponent>(world);
+            
+            //var botEntity = UnitService.CreateUnitEntity(world);
+            //botEntity.EntityAdd<AIPlayerComponent>(world);
             /*
             var world = systems.GetWorld();
             var botEntity = UnitService.CreateUnitEntity(world);

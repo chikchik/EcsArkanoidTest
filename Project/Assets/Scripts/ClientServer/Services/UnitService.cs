@@ -1,6 +1,7 @@
 ﻿using Game.Ecs.ClientServer.Components;
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
+using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer;
 using XFlow.Modules.Box2D.ClientServer.Api;
@@ -18,7 +19,7 @@ namespace Game.ClientServer.Services
             
             entity.EntityAdd<UnitComponent>(world);
             entity.EntityAdd<LookDirectionComponent>(world).value = new Vector3(0,0,1);
-            entity.EntityAdd<PositionComponent>(world).value = new Vector3(0, 0, 0);
+            entity.EntityAdd<PositionComponent>(world).Value = new Vector3(0, 0, 0);
             entity.EntityAdd<FoodCollectedComponent>(world).Value = 0;
             entity.EntityAdd<AmmoCollectedComponent>(world).Value = 0;
             entity.EntityAdd<Rotation2DComponent>(world);
@@ -39,7 +40,7 @@ namespace Game.ClientServer.Services
 
             entity.EntityAdd<AverageSpeedComponent>(world) = world.GetUnique<AverageSpeedComponent>();
 
-            UnityEngine.Debug.Log($"GenerateUnitEntity {entity}");
+            world.Log($"GenerateUnitEntity {entity}");
 
             return entity;
         }

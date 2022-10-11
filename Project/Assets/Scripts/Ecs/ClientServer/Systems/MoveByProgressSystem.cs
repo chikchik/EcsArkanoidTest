@@ -27,7 +27,7 @@ namespace Game.Ecs.ClientServer.Systems
                 var moveInfoComponent = poolMoveInfo.Get(entity);
                 var progressComponent = poolProgress.Get(entity);
 
-                poolPosition.ReplaceIfChanged(entity, new PositionComponent{value = Vector3.Lerp(
+                poolPosition.ReplaceIfChanged(entity, new PositionComponent{Value = Vector3.Lerp(
                     moveInfoComponent.startPoint,
                     moveInfoComponent.endPoint,
                     progressComponent.progress)});

@@ -1,6 +1,6 @@
 ﻿using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
-
+using Game.UI;
 using XFlow.Ecs.Client.Components;
 using XFlow.EcsLite;
 using XFlow.Net.ClientServer;
@@ -27,10 +27,15 @@ namespace Game.Ecs.Client.Systems
             {
                 if (entity.EntityGet<PlayerComponent>(world).id == mainPlayerID)
                 {
+                    ClientPlayerService.SetPlayerEntity(world, entity);
+                    int i = 0;
+                    /*
                     //replace потому что ClientPlayerComponent мог уже быть 
-                    world.GetOrCreateUniqueRef<ClientPlayerComponent>().entity = entity;
-                    entity.EntityGetOrCreateRef<LerpComponent>(world).value = 1;
-                    entity.EntityAdd<IsMainPlayerComponent>(world);
+                    world.GetOrCreateUniqueRef<ClientPlayerEntityComponent>().Player = entity;
+                    world.GetOrCreateUniqueRef<ClientPlayerEntityComponent>().Unit = entity;
+                    
+                    entity.EntityGetOrCreateRef<LerpComponent>(world).Value = 1;
+                    entity.EntityAdd<IsMainPlayerComponent>(world);*/
                 }
             }
         }

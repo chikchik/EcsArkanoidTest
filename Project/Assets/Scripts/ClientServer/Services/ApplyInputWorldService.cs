@@ -20,22 +20,11 @@ namespace Game.ClientServer.Services
             CreateInputEntity(inputWorld, playerId, tick, inp);
         }
         
-        public static int GetControlledEntity(EcsWorld world, int unitEntity)
-        {
-            if (unitEntity.EntityHas<ControlsMechComponent>(world))
-            {
-                int mechEntity;
-                if (unitEntity.EntityGet<ControlsMechComponent>(world).PackedEntity.Unpack(world, out mechEntity))
-                    return mechEntity;
-            }
-
-            return unitEntity;
-        }
-
         public static void CreateInputEntity(EcsWorld inputWorld, int playerId, int tick, IInputComponent inp)
         {
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAdd<InputComponent>(inputWorld);
+            inputEntity.EntityAdd<InputTypeComponent>(inputWorld).Value = inp.GetType();
             inputEntity.EntityAdd<InputTickComponent>(inputWorld).Tick = tick;
             inputEntity.EntityAdd<InputPlayerComponent>(inputWorld).PlayerID = playerId;
             

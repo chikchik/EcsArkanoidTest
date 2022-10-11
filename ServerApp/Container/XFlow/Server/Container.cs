@@ -71,7 +71,9 @@ namespace XFlow.Server
         private EcsPool<ClientComponent> _poolClients;
 
         private bool _isRun;
-        private CancellationTokenSource _token;
+        private CancellationTokenSource _token;  
+        
+        private DateTime _nextTickAt = DateTime.UtcNow;
 
         public Container(ContainerStartingContext context)
         {
@@ -202,8 +204,8 @@ namespace XFlow.Server
                     lock (_locker)
                     {
                         var user = GetClientEntity(disconnectedArgs.UserAddress.UserId);
-                        _mainWorld.DelEntity(user);
-                        BaseServices.InputLeavePlayer(_inputWorld, user);
+                        _mainWorld.MarkEntityAsDeleted(user);
+                        PlayerService.InputLeavePlayer(_inputWorld, user);
                     }
                     break;
 
@@ -232,6 +234,7 @@ namespace XFlow.Server
             _copyToDeadWorldListener = new CopyToDeadWorldListener(_deadWorld);
 
             _mainWorld = new EcsWorld("serv");
+            _mainWorld.Flags |= EcsWorldFlags.PrimaryMainWorld;
             _mainWorld.SetDefaultGen(InternalConfig.ServerWorldGenMin, InternalConfig.ServerWorldGenMax);
             _systems = new EcsSystems(_mainWorld);
             _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
@@ -275,7 +278,6 @@ namespace XFlow.Server
             _mainWorld.AddUnique(_config);
             _mainWorld.AddUnique<TickComponent>().Value = new Tick(0);
             _mainWorld.AddUnique(new TickDeltaComponent { Value = new TickDelta(_config.Tickrate) });
-            _mainWorld.AddUnique<PrimaryWorldComponent>();
 
             _systems.AddWorld(_deadWorld, EcsWorlds.Dead);
 
@@ -309,19 +311,26 @@ namespace XFlow.Server
             {
                 _logger.Log(LogLevel.Debug, "loop");
                 var next = DateTime.UtcNow;
+
                 var step = 1.0 / _config.Tickrate;
                 while (_isRun)
                 {
                     if (next > DateTime.UtcNow || !_worldInitialized)
                         continue;
                     
-                    next = next.AddSeconds(step);
-                    if (next <= DateTime.UtcNow)
-                        next = DateTime.UtcNow.AddSeconds(step);
-                    lock (_locker)
+                    if (_nextTickAt <= DateTime.UtcNow && _worldInitialized)
                     {
-                        Tick();
+                        //Console.WriteLine($"tick {leo.GetCurrentTick(world)}");
+                        _nextTickAt = _nextTickAt.AddSeconds(step);
+                        if (_nextTickAt <= DateTime.UtcNow)
+                            _nextTickAt = DateTime.UtcNow.AddSeconds(step);
+                        lock (_locker)
+                        {
+                            Tick();
+                        }
                     }
+
+                    Thread.Sleep(1);
                 }
 
                 _logger.Log(LogLevel.Debug, "Ended0");
@@ -351,9 +360,9 @@ namespace XFlow.Server
                 if (clientEntity != -1)
                 {
                     var client = _poolClients.Get(clientEntity);
-                    _mainWorld.DelEntity(clientEntity);
+                    _mainWorld.MarkEntityAsDeleted(clientEntity);
                     _logger.Log(LogLevel.Warning, $"removed client {userAddress}");
-                    BaseServices.InputLeavePlayer(_inputWorld, client.ID);
+                    PlayerService.InputLeavePlayer(_inputWorld, client.ID);
                 }
 
                 return;
@@ -421,7 +430,7 @@ namespace XFlow.Server
                 var entity = _mainWorld.NewEntity();
                 _poolClients.Add(entity) = client;
 
-                var inputEntity = BaseServices.InputJoinPlayer(_inputWorld, client.ID);
+                var inputEntity = PlayerService.InputJoinPlayer(_inputWorld, client.ID);
                 inputEntity.EntityAdd<ClientComponent>(_inputWorld) = client;
             }
         }
@@ -492,6 +501,9 @@ namespace XFlow.Server
                 {
                     client.LastPingTick = inputTime;
                     client.Delay = delay;
+                    var ms = _nextTickAt - DateTime.UtcNow;
+                    client.DelayMs = ms.Milliseconds;
+                    Debug.Log(client.DelayMs);
                 }
                 else
                 {
@@ -577,6 +589,7 @@ namespace XFlow.Server
                 data.SrcTick = srcWorld.GetTick();
             data.Delay = client.Delay;
             data.Diff = dif;
+            data.TickDelayMs = client.DelayMs;
         }
 
         byte[] BuildDiffBytes(ClientComponent client, EcsWorld srcWorld)

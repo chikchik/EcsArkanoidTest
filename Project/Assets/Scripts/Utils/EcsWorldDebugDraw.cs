@@ -18,7 +18,7 @@ namespace Game.Utils
 
             foreach (var entity in filter)
             {
-                var pos = poolPos.Get(entity).value;
+                var pos = poolPos.Get(entity).Value;
 
                 Gizmos.color = Color.red;
 
@@ -45,7 +45,7 @@ namespace Game.Utils
                 entity.EntityWith<MoveDirectionComponent>(world, data =>
                 {
                     Gizmos.color = Color.green;
-                    Gizmos.DrawRay(pos, data.value);
+                    Gizmos.DrawRay(pos, data.Value);
                 });
                 
                 entity.EntityWith<LookDirectionComponent>(world, data =>

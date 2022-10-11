@@ -1,21 +1,24 @@
 ﻿
+using Fabros.EcsModules.Mech.ClientServer.Components;
 using Game.Ecs.ClientServer.Components;
+using Game.UI;
 using Game.UIView;
+using UnityEngine;
 using XFlow.EcsLite;
 using XFlow.Modules.States;
 using XFlow.Net.ClientServer;
+using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
 
 namespace Game.State
 {
     public class MechInfoState : StateWithUI<MechInfoView>, 
-        EventsSystem<ControlsMechComponent>.IComponentChangedListener,
-        EventsSystem<ControlsMechComponent>.IComponentRemovedListener
+        EventsSystem<ControlledEntityComponent>.IComponentChangedListener
     {
         private EcsWorld _world;
         private PlayerControlService _playerControlService;
 
-        private int _unitEntity;
+        private EcsPackedEntity _playerEntity;
         
         public MechInfoState(
             States states,
@@ -48,36 +51,33 @@ namespace Game.State
 
         protected override void DoEnter()
         {
-            var playerId = _world.GetUnique<MainPlayerIdComponent>().value;
-            _unitEntity = BaseServices.GetUnitEntityByPlayerId(_world, playerId);
+            if (!ClientPlayerService.TryGetPlayerEntity(_world, out int playerEntity))
+                return;
+            playerEntity.AddChangedListener<ControlledEntityComponent>(_world, this);
             
-            _unitEntity.AddChangedListener<ControlsMechComponent>(_world, this);
-            _unitEntity.AddRemovedListener<ControlsMechComponent>(_world, this);
-
+            _playerEntity = _world.PackEntity(playerEntity);
             UpdateButtonState();
         }
 
         protected override void DoExit()
         {
-            _unitEntity.DelChangedListener<ControlsMechComponent>(_world, this);
-            _unitEntity.DelRemovedListener<ControlsMechComponent>(_world, this);
+            if (!_playerEntity.Unpack(_world, out int playerEntity))
+                return;
+            playerEntity.DelChangedListener<ControlledEntityComponent>(_world, this);
         }
 
 
         private void UpdateButtonState()
         {
-            var hasControl = _unitEntity.EntityHas<ControlsMechComponent>(_world);
+            if (!ClientPlayerService.TryGetControlledEntity(_world, out int controlledEntity))
+                return;
+            
+            var hasControl = controlledEntity.EntityHas<MechComponent>(_world);
             _view.ButtonJoinMech.gameObject.SetActive(!hasControl);
             _view.ButtonLeaveMech.gameObject.SetActive(hasControl);
         }
 
-        public void OnComponentChanged(EcsWorld world, int entity, ControlsMechComponent data, bool newComponent)
-        {
-            UpdateButtonState();
-            Close();
-        }
-
-        public void OnComponentRemoved(EcsWorld world, int entity, AlwaysNull<ControlsMechComponent> _)
+        public void OnComponentChanged(EcsWorld world, int entity, ControlledEntityComponent data, bool newComponent)
         {
             UpdateButtonState();
             Close();

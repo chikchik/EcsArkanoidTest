@@ -22,7 +22,7 @@ namespace Game.Ecs.Client.Systems.Inventory
             {
                 ref var inventorySlotComponent = ref poolInventorySlots.GetRef(entity);
                 ref var imageComponent = ref poolImage.GetRef(entity);
-                var slotImage = imageComponent.image;
+                var slotImage = imageComponent.Image;
 
                 if (inventorySlotComponent.hasItem && TryGetItemBySlotId(
                         inventorySlotComponent.slotId,

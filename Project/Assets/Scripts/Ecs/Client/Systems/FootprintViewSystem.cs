@@ -63,7 +63,7 @@ namespace Game.Ecs.Client.Systems
             transformComponent.Transform = transform;
 
             transform.name = $"footprint {footprintComponent.isLeftHand} - {entity}";
-            transform.position = entity.EntityGet<PositionComponent>(world).value;
+            transform.position = entity.EntityGet<PositionComponent>(world).Value;
             if (footprintComponent.direction.magnitude > 0.9f)
                 transform.forward = footprintComponent.direction;
         }

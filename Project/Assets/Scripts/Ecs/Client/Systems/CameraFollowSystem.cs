@@ -1,12 +1,14 @@
-using Game.Ecs.Client.Components;
-
-using Game.ClientServer;
+using Fabros.EcsModules.Mech.ClientServer.Components;
 using Game.ClientServer.Services;
+using Game.Ecs.Client.Components;
+using Game.UI;
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.EcsLite;
+using XFlow.Net.ClientServer;
+using XFlow.Utils;
 
-namespace Game.Ecs.View.Systems
+namespace Game.Ecs.Client.Systems
 {
     public class CameraFollowSystem : IEcsRunSystem
     {
@@ -21,18 +23,15 @@ namespace Game.Ecs.View.Systems
         public void Run(EcsSystems systems)
         {
             var world = systems.GetWorld();
-
-            if (!world.HasUnique<ClientPlayerComponent>()) return;
-
+            
+            if (!ClientPlayerService.TryGetControlledEntity(world, out int controlledEntity))
+                return;
+            
             var poolTransform = world.GetPool<TransformComponent>();
             var deltaTime = Time.deltaTime;
-
-            var clientPlayerComponent = world.GetUnique<ClientPlayerComponent>();
             
-
-            var controlledEntity = ApplyInputWorldService.GetControlledEntity(world, clientPlayerComponent.entity);
             var dist = 1f;
-            if (controlledEntity != clientPlayerComponent.entity)
+            if (controlledEntity.EntityHas<MechComponent>(world))
                 dist = 2.5f;
 
             var targetEntityTransform = poolTransform.Get(controlledEntity).Transform;

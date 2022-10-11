@@ -5,10 +5,13 @@ using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.View;
 using UnityEngine;
+using XFlow.Ecs.Client;
 using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.Client;
+using XFlow.Modules.Box2D.ClientServer;
+using XFlow.Modules.Box2D.ClientServer.Components;
 using XFlow.Modules.Box2D.ClientServer.Components.Joints;
 using XFlow.Modules.Fire.ClientServer.Components;
 using XFlow.Net.ClientServer.Ecs.Components;
@@ -49,7 +52,7 @@ namespace Game
                 //go.name = $"{go.name}[{entity}]";
                 
                 
-                entity.EntityAdd<DebugNameComponent>(world).Name = go.name;
+                entity.EntityAdd<DebugNameComponent>(world).Value = go.name;
                 
                 
                 ref var gameObjectNameComponent = ref entity.EntityAdd<GameObjectNameComponent>(world);
@@ -71,7 +74,7 @@ namespace Game
                 bushEntity.EntityAdd<BushComponent>(world);
 
                 ref var positionComponent = ref bushEntity.EntityAdd<PositionComponent>(world);
-                positionComponent.value = view.transform.position;
+                positionComponent.Value = view.transform.position;
 
                 bushEntity.EntityAdd<InteractableComponent>(world);
 
@@ -99,12 +102,16 @@ namespace Game
                 var position = view.transform.position + forward / 2;
 
                 ref var positionComponent = ref boxEntity.EntityAdd<PositionComponent>(world);
-                positionComponent.value = position;
+                positionComponent.Value = position;
 
                 boxEntity.EntityAdd<InteractableComponent>(world);
 
                 ref var radiusComponent = ref boxEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = view.transform.lossyScale.x / 2f;
+                
+                
+                view.LinkEntity(world, boxEntity);
+                
             });
 
             ForEachObject<ButtonView>(view =>
@@ -115,7 +122,7 @@ namespace Game
                 buttonComponent.isActivated = false;
                 
                 ref var positionComponent = ref buttonEntity.EntityAdd<PositionComponent>(world);
-                positionComponent.value = view.transform.position;
+                positionComponent.Value = view.transform.position;
 
                 ref var radiusComponent = ref buttonEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = view.transform.lossyScale.x / 2f;
@@ -149,7 +156,7 @@ namespace Game
                         buttonLinkComponent.Entities[i] = buttonEntity;
 
                 ref var positionComponent = ref gateEntity.EntityAdd<PositionComponent>(world);
-                positionComponent.value = view.transform.position;
+                positionComponent.Value = view.transform.position;
 
                 ref var radiusComponent = ref gateEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = 1f;
@@ -162,6 +169,7 @@ namespace Game
                 moveInfoComponent.endPoint = view.EndPosition;
             });
 
+            /*
             ForEachObject<CharacterView>(view =>
             {
                 var characterEntity = GetOrCreateGameEntity(view.gameObject);
@@ -175,7 +183,7 @@ namespace Game
                 
                 ref var radiusComponent = ref characterEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
-            });
+            });*/
 
             ForEachObject<DestructibleView>(view =>
             {
@@ -191,38 +199,47 @@ namespace Game
                 var entity = GetOrCreateGameEntity(body.gameObject);
                 ClientBox2DServices.AddRigidBodyDefinitionWithColliders(world, entity, body);
             });
+            
+            ForEachObject<Rigidbody>(body =>
+            {
+                var entity = GetOrCreateGameEntity(body.gameObject);
+                ClientBox2DServices3D.AddRigidBodyDefinitionWithColliders(world, entity, body);
+            });
 
-            ForEachObject<JointConnectView>(joint =>
+            ForEachObject<DistanceJointConnectView>(joint =>
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
-                var entityB = GetOrCreateGameEntity(joint.Connect);
-                entityA.EntityAdd<JointTestComponent>(world).Entity = entityB;
+                var entityB = GetOrCreateGameEntity(joint.Target);
+                
+                Box2DServices.AddDistanceJointToDefinition(world, entityA, entityB);
             });
 
             ForEachObject<RevoluteJointView>(joint =>
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
                 var entityB = GetOrCreateGameEntity(joint.ConnectedBody.gameObject);
-                ref var component = ref entityA.EntityAdd<Box2DRevoluteJointComponent>(world);
-                component.ConnectedBody = entityB;
+                
+                var data = new Box2DRevoluteJoint();
+                data.Entity = world.PackEntity(entityB);
 
                 if (joint.AutoCalculateOffsets)
                 {
-                    component.ConnectedJointOffset = Vector2.zero;
+                    data.ConnectedJointOffset = Vector2.zero;
                     var offset = Vector3.Scale(joint.transform.InverseTransformPoint(joint.ConnectedBody.transform.position), joint.transform.lossyScale);
-                    component.JointOffset = new Vector2(offset.x, offset.z);
+                    data.JointOffset = new Vector2(offset.x, offset.z);
                 }
                 else
                 {
-                    component.JointOffset = joint.JointOffset;
-                    component.ConnectedJointOffset = joint.ConnectedJointOffset;
+                    data.JointOffset = joint.JointOffset;
+                    data.ConnectedJointOffset = joint.ConnectedJointOffset;
                 }
 
-                component.EnableLimits = joint.EnableLimits;
-                component.LowerAngleLimit = joint.LowerAngleLimit * Mathf.Deg2Rad;
-                component.UpperAngleLimit = joint.UpperAngleLimit * Mathf.Deg2Rad;
-                component.CollideConnected = joint.CollideConnected;
+                data.EnableLimits = joint.EnableLimits;
+                data.LowerAngleLimit = joint.LowerAngleLimit * Mathf.Deg2Rad;
+                data.UpperAngleLimit = joint.UpperAngleLimit * Mathf.Deg2Rad;
+                data.CollideConnected = joint.CollideConnected;
 
+                Box2DServices.AddRevoluteJointToDefinition(world, entityA, data);
             });
             
             ForEachObject<SpawnGunView>(view =>
@@ -230,7 +247,7 @@ namespace Game
                 var entity = GetOrCreateGameEntity(view.gameObject);
                 entity.EntityAdd<SpawnGunComponent>(world);
                 entity.EntityAdd<InteractableComponent>(world);
-                entity.EntityAdd<PositionComponent>(world).value = view.transform.position;
+                entity.EntityAdd<PositionComponent>(world).Value = view.transform.position;
                 
                 ref var collectableComponent = ref entity.EntityAdd<CollectableComponent>(world);
                 collectableComponent.isCollected = false;
@@ -243,7 +260,7 @@ namespace Game
                 var entity = GetOrCreateGameEntity(view.gameObject);
                 entity.EntityAdd<AmmoComponent>(world);
                 entity.EntityAdd<InteractableComponent>(world);
-                entity.EntityAdd<PositionComponent>(world).value = view.transform.position;
+                entity.EntityAdd<PositionComponent>(world).Value = view.transform.position;
                 entity.EntityAdd<CollectableComponent>(world).isCollected = false;;
                 entity.EntityAdd<CollectableTargetComponent>(world).targetObject = view.gameObject;
                 entity.EntityAdd<RadiusComponent>(world).radius = view.transform.lossyScale.x / 2f;

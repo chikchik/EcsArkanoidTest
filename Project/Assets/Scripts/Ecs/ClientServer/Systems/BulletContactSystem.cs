@@ -2,6 +2,7 @@
 using UnityEngine;
 using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
+using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Components.Other;
 using XFlow.Net.ClientServer;
@@ -41,20 +42,20 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if (!contact.Data.EntityA.Unpack(_world, out var entityA))
                 {
-                    Debug.Log($"contact {entity} entityA dead {contact.Data.EntityA.ToString()}");
+                    _world.Log($"contact {entity} entityA dead {contact.Data.EntityA.ToString()}");
                     continue;
                 }
 
                 if (!contact.Data.EntityB.Unpack(_world, out var entityB))
                 {
-                    Debug.Log($"contact {entity} entityB dead {contact.Data.EntityA.ToString()}");
+                    _world.Log($"contact {entity} entityB dead {contact.Data.EntityA.ToString()}");
                     continue;
                 }
 
                 if (entityA == entityB)
                 {
                     //контакт сам с собой???
-                    Debug.LogError($"self contact wtf {entityA}");
+                    _world.LogError($"self contact wtf {entityA}");
                     continue;
                 }
 

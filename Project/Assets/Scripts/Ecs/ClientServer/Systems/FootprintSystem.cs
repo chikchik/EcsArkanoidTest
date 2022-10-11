@@ -31,7 +31,7 @@ namespace Game.Ecs.ClientServer.Systems
 
             foreach (var entity in filter)
             {
-                var currentPosition = poolPosition.Get(entity).value;
+                var currentPosition = poolPosition.Get(entity).Value;
 
                 if (!poolLastFootprint.Has(entity))
                 {
@@ -61,7 +61,7 @@ namespace Game.Ecs.ClientServer.Systems
             footprintComponent.direction = lastFootprint.direction;
 
             ref var positionComponent = ref footPrintEntity.EntityAdd<PositionComponent>(world);
-            positionComponent.value = lastFootprint.position;
+            positionComponent.Value = lastFootprint.position;
 
 
             ref var lifeTimeComponent = ref footPrintEntity.EntityAdd<LifeTimeComponent>(world);

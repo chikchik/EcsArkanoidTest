@@ -2,6 +2,8 @@
 using Game.Ecs.ClientServer.Components;
 using Game.View;
 using Game.ClientServer.Services;
+using Game.Ecs.ClientServer.Components.Input;
+using Game.UI;
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer;
@@ -11,7 +13,6 @@ using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
-using XFlow.Net.ClientServer.Ecs.Components.Input.proto;
 using XFlow.Utils;
 using Zenject;
 
@@ -35,7 +36,16 @@ namespace Game
         }
         
         private int playerId => _world.GetUnique<MainPlayerIdComponent>().value;
-        private int unitEntity => BaseServices.GetUnitEntityByPlayerId(_world, playerId);
+        private int unitEntity
+        {
+            get
+            {
+                int entity = -1;
+                ClientPlayerService.TryGetControlledEntity(_world, out entity);
+                return entity;
+            }
+        }
+
         private int tick => _world.GetTick();
         
         public void Shot()
@@ -139,9 +149,8 @@ namespace Game
                 return;
             }
 
-            var entity = ApplyInputWorldService.GetControlledEntity(_world, unitEntity);
             
-            if (!entity.EntityHas<MoveDirectionComponent>(_world))
+            if (!unitEntity.EntityHas<MoveDirectionComponent>(_world))
                 return;
             
             var component = new InputMoveDirectionComponent();
@@ -149,7 +158,6 @@ namespace Game
             
             Apply(component);
         }
-        
         public void MoveToPoint(Vector3 pos)
         {
             if (unitEntity == -1)
@@ -160,6 +168,28 @@ namespace Game
 
             var component = new InputMoveToPointComponent();
             component.Value = pos;
+            Apply(component);
+        }
+
+        public void BeginDrag(int entity)
+        {
+            Debug.Log($"BeginDrag {entity}");
+            var component = new InputBeginMouseDragComponent();
+            component.Entity = _world.PackEntity(entity);
+            Apply(component);
+        }
+
+        public void UpdateDrag(Vector3 pos)
+        {
+            var component = new InputUpdateMouseDragComponent();
+            component.Position = pos.ToVector2XZ();
+            Apply(component);
+        }
+        
+        public void EndDrag()
+        {
+            Debug.Log($"EndDrag");
+            var component = new InputEndMouseDragComponent();
             Apply(component);
         }
 

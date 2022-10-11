@@ -14,7 +14,7 @@ namespace Game.Ecs.Client.Systems
         {
             foreach (var entity in _filter)
             {
-                _poolLerp.Add(entity).value = 0.5f;
+                _poolLerp.Add(entity).Value = 0.5f;
             }
         }
 

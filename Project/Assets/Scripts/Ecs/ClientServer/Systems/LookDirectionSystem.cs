@@ -15,7 +15,7 @@ namespace Game.Ecs.ClientServer.Systems
             var poolLookDirection = world.GetPool<LookDirectionComponent>();
             foreach (var entity in filter)
             {
-                var dir = poolMoveDirection.Get(entity).value;
+                var dir = poolMoveDirection.Get(entity).Value;
                 if (dir.sqrMagnitude > 0.001f)
                 {
                     poolLookDirection.GetOrCreateRef(entity).value = dir.normalized;

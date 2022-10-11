@@ -4,6 +4,7 @@ using Fabros.EcsModules.Mech.ClientServer.Components;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components;
+using Game.Ecs.ClientServer.Components.Input;
 using Game.Ecs.ClientServer.Components.Inventory;
 using UnityEngine;
 using XFlow.Ecs.ClientServer;
@@ -14,8 +15,8 @@ using XFlow.Modules.Grid.Other;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
+using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
-using XFlow.Net.ClientServer.Ecs.Components.Input.proto;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
@@ -39,16 +40,11 @@ namespace Game.Ecs.ClientServer.Systems
         {
             _world = systems.GetWorld();
             _inputWorld = systems.GetWorld(EcsWorlds.Input);
-            _filter = _inputWorld.Filter<InputComponent>().End();
+            _filter = _inputWorld.Filter<InputTypeComponent>().Inc<InputTickComponent>().End();
         }
         
         public void Run(EcsSystems systems)
         {
-            var mainPlayerId = -1;
-            if (_world.HasUnique<MainPlayerIdComponent>())//если это мир на клиенте
-                mainPlayerId = _world.GetUnique<MainPlayerIdComponent>().value;
-           
-            
             var poolInputShot   = _inputWorld.GetPool<InputShotComponent>();
             var poolPlayer      = _inputWorld.GetPool<InputPlayerComponent>();
             var poolInputMoveDir= _inputWorld.GetPool<InputMoveDirectionComponent>();
@@ -58,35 +54,33 @@ namespace Game.Ecs.ClientServer.Systems
             var poolInputAction = _inputWorld.GetPool<InputActionComponent>();
             var poolInputKick   = _inputWorld.GetPool<InputKickComponent>();
             var poolInputTick   = _inputWorld.GetPool<InputTickComponent>();
-            
-            
-            
+            var poolInputType  = _inputWorld.GetPool<InputTypeComponent>();
 
             var tick = _world.GetTick();
             
             foreach (var inputEntity in _filter)
             {
-                if (poolInputTick.GetNullable(inputEntity)?.Tick != tick)
+                if (poolInputTick.Get(inputEntity).Tick != tick)
+                    continue;
+
+                int playerId = poolPlayer.Get(inputEntity).PlayerID;
+                
+                if (!PlayerService.TryGetPlayerEntityByPlayerId(_world, playerId, out int playerEntity))
                     continue;
                 
-                var playerId = mainPlayerId;
-                if (poolPlayer.Has(inputEntity))
-                    playerId = poolPlayer.Get(inputEntity).PlayerID;
-
-                var unitEntity = BaseServices.GetUnitEntityByPlayerId(_world, playerId);
-                if (!_world.IsEntityAliveInternal(unitEntity))
-                {
-                    Debug.LogError($"unit entity {unitEntity} is not alive");
+                if (!PlayerService.TryGetControlledEntityByPlayerId(_world, playerId, out int unitEntity))
                     continue;
-                }
-
+                
+                var inputType = poolInputType.Get(inputEntity).Value;
+                
+                /*
                 if (!unitEntity.EntityHas<UnitComponent>(_world))
                 {
-                    Debug.LogError($"entity {unitEntity} is not unit");
+                    _world.LogError($"entity {unitEntity} is not unit");
                     continue;
-                }
+                }*/
                 
-                if (poolInputShot.Has(inputEntity))
+                if (inputType == typeof(InputShotComponent))
                 {
                     Shoot(unitEntity, poolInputShot.Get(inputEntity));
                 }
@@ -114,7 +108,7 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if (inputEntity.EntityHas<InputMechEnterLeaveComponent>(_inputWorld))
                 {
-                    EnterLeaveMech(unitEntity);
+                    EnterLeaveMech(playerEntity, unitEntity);
                 }
 
                 if (inputEntity.EntityHas<MoveItemComponent>(_inputWorld))
@@ -129,30 +123,31 @@ namespace Game.Ecs.ClientServer.Systems
             }
         }
 
-        public void EnterLeaveMech(int unitEntity)
+        public void EnterLeaveMech(int playerEntity, int unitEntity)
         {
-            if (unitEntity.EntityHas<ControlsMechComponent>(_world))
+            if (unitEntity.EntityHas<MechComponent>(_world))
             {
-                unitEntity.EntityDel<ControlsMechComponent>(_world);
+                playerEntity.EntityGetRef<ControlledEntityComponent>(_world).Value =
+                    playerEntity.EntityGet<PrimaryUnitEntityComponent>(_world).Value;
+                
                 return;
             }
             
             _world.GetNearestEntities(unitEntity,
-                unitEntity.EntityGet<PositionComponent>(_world).value,
+                unitEntity.EntityGet<PositionComponent>(_world).Value,
                 1, ref _entities, entity=> entity.EntityHas<MechComponent>(_world));
 
             if (_entities.Count == 0)
                 return;
             
-            var entity = _entities[0];
-            ref var packedEntity = ref unitEntity.EntityAdd<ControlsMechComponent>(_world).PackedEntity;
-            packedEntity = _world.PackEntity(entity);
+            var mechEntity = _entities[0];
+            playerEntity.EntityGetRef<ControlledEntityComponent>(_world).Value = _world.PackEntity(mechEntity);
         }
         
         public void Interract(EcsWorld world, int unitEntity)
         {
             world.GetNearestEntities(unitEntity,
-                unitEntity.EntityGet<PositionComponent>(world).value,
+                unitEntity.EntityGet<PositionComponent>(world).Value,
                 1, ref _entities, entity=> entity.EntityHas<InteractableComponent>(world));
 
             if (_entities.Count == 0)
@@ -261,29 +256,16 @@ namespace Game.Ecs.ClientServer.Systems
         }
 
 
-        private int GetControlledEntity(int unitEntity)
-        {
-            if (unitEntity.EntityHas<ControlsMechComponent>(_world))
-            {
-                int mechEntity;
-                if (unitEntity.EntityGet<ControlsMechComponent>(_world).PackedEntity.Unpack(_world, out mechEntity))
-                    return mechEntity;
-            }
-
-            return unitEntity;
-        }
         
-        private void Move(int unitEntity, Vector3 dir)
+        private void Move(int entity, Vector3 dir)
         {
-            var entity = GetControlledEntity(unitEntity);
-
             if (entity.EntityHas<CantMoveComponent>(_world))
                 return;
                     
             if (dir.sqrMagnitude > 0.001f)
             {
                 entity.EntityDel<TargetPositionComponent>(_world);
-                entity.EntityGetOrCreateRef<MoveDirectionComponent>(_world).value = dir;
+                entity.EntityGetOrCreateRef<MoveDirectionComponent>(_world).Value = dir;
             }
             else
             {
@@ -295,13 +277,10 @@ namespace Game.Ecs.ClientServer.Systems
             }
         }
 
-        private void MoveToPoint(int unitEntity, Vector3 pos)
+        private void MoveToPoint(int entity, Vector3 pos)
         {
-            var entity = GetControlledEntity(unitEntity);
-            
             ref var targetPositionComponent = ref entity.EntityGetOrCreateRef<TargetPositionComponent>(_world);
             targetPositionComponent.Value = pos;
-            
         }
         
         private void MoveItem(MoveItemComponent data)

@@ -4,7 +4,6 @@ using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
 using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Objective;
-using Game.Ecs.View.Systems;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.Client.Systems;
@@ -27,8 +26,10 @@ namespace Game.Client
         {
             _container = new EcsSystemsContainer(di);
             
-            _container.Register<PlayerInputSystem>();
             
+            _container.Register<PlayerDragAndDropInputSystem>();
+            _container.Register<PlayerInputSystem>();
+
             _container.Register<InitSceneSystem>();
             
             _container.Register<DetectPlayerIdChangesSystem>();
@@ -56,6 +57,8 @@ namespace Game.Client
             _container.Register<RotateCharacterSystem>();
             _container.Register<RotateRigidbodySystem>();
             _container.Register<CameraFollowSystem>();
+            
+            _container.Register<ResetMouseDownSystem>();
 
             _container.Register<EventsSystem<WeaponComponent>>();
             _container.Register<EventsSystem<ButtonPressedComponent>>();
@@ -74,7 +77,7 @@ namespace Game.Client
             _container.Register<EventsSystem<ActiveInventoryCategoryComponent>>();
             _container.Register<EventsSystem<EntityRemoveEventComponent>>();
             _container.Register<EventsSystem<TickComponent>>();
-            _container.Register<EventsSystem<ControlsMechComponent>>();
+            _container.Register<EventsSystem<ControlledEntityComponent>>();
             _container.Register<EventsSystem<HpComponent>>();
             _container.Register<EventsSystem<DeletedEntityComponent>>();
             

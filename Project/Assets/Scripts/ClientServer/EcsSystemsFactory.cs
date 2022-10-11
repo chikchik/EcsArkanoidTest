@@ -101,6 +101,8 @@ namespace Game.ClientServer
             _container.Register<DeleteComponentHereSystem<ShootStartedComponent>>();//если ставить в конец, то на клиент этот компонент даже придет
             
             _container.Register<ApplyInputSystem>();
+            
+            _container.Register<ApplyDragInputSystem>();
 
 
             _container.RegisterServer<FootprintSystem>();
@@ -141,7 +143,10 @@ namespace Game.ClientServer
             _container.Register<Box2DUpdateInternalObjectsSystem>();
             _container.Register<Box2DUpdateSystem>();
             _container.Register<BulletContactSystem>();      
-            _container.Register<DestructibleDamageApplySystem>();
+            _container.Register<DamageApplySystem>();
+            
+            //уничтожение объектов сделаем серверным чтоб не было ошибок предсказания
+            _container.RegisterServer<DestroyDamagedSystem>();
 
             //container.Register<Box2DDeleteContactsSystem>();
 
