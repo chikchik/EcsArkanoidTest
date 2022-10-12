@@ -38,6 +38,11 @@ namespace Game.Ecs.ClientServer.Systems
                         {
                             world.MarkEntityAsDeleted(unitEntity);
                         }
+
+                        if (joinPlayerComponent.DeletePlayerEntity)
+                        {
+                            world.MarkEntityAsDeleted(playerEntity);
+                        }
                     }
                 }
                 else

@@ -203,7 +203,13 @@ namespace XFlow.Server
                     _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress.UserId}");
                     lock (_locker)
                     {
-                        PlayerService.InputLeavePlayer(_inputWorld, disconnectedArgs.UserAddress.UserId);
+                        if (PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, disconnectedArgs.UserAddress.UserId,
+                            out int playerEntity))
+                        {
+                            _poolClients.Del(playerEntity);
+                            //ref var client = ref _poolClients.GetRef(playerEntity);
+                            PlayerService.InputLeavePlayer(_inputWorld, disconnectedArgs.UserAddress.UserId, true);
+                        }
                     }
                     break;
 
