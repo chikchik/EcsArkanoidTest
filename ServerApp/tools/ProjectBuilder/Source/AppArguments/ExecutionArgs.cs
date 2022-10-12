@@ -32,6 +32,8 @@ public class ExecutionArgs
             .WithParsed<LastArgsRunOptions>(_ =>
             {
                 result = LoadSavedArgs();
+                if (result == null)
+                    return;
                 result.Version = new Version(result.Version.Major, result.Version.Minor, result.Version.Build + 1);
             })
             .WithNotParsed(e =>

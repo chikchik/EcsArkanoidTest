@@ -2,7 +2,7 @@
 
 namespace ProjectBuilder.AppArguments;
 
-[Verb("run", HelpText = "Run app with arguments")]
+[Verb("process", HelpText = "Run app with arguments")]
 public class RunOptions
 {
     [Option('p', "path", Required = true,
