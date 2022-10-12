@@ -15,12 +15,12 @@ namespace Game.ClientServer.Services
 
     public class ApplyInputWorldService: IInputService
     {
-        public void Input(EcsWorld inputWorld, int playerId, int tick, IInputComponent inp)
+        public void Input(EcsWorld inputWorld, string playerId, int tick, IInputComponent inp)
         {
             CreateInputEntity(inputWorld, playerId, tick, inp);
         }
         
-        public static void CreateInputEntity(EcsWorld inputWorld, int playerId, int tick, IInputComponent inp)
+        public static void CreateInputEntity(EcsWorld inputWorld, string playerId, int tick, IInputComponent inp)
         {
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAdd<InputComponent>(inputWorld);

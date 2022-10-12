@@ -63,7 +63,7 @@ namespace Game.Ecs.ClientServer.Systems
                 if (poolInputTick.Get(inputEntity).Tick != tick)
                     continue;
 
-                int playerId = poolPlayer.Get(inputEntity).PlayerID;
+                var playerId = poolPlayer.Get(inputEntity).PlayerID;
                 
                 if (!PlayerService.TryGetPlayerEntityByPlayerId(_world, playerId, out int playerEntity))
                     continue;

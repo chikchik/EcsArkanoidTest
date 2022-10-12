@@ -156,7 +156,7 @@ namespace XFlow.Server
                 foreach (var entity in _clientsFilter)
                 {
                     var client = entity.EntityGet<ClientComponent>(_mainWorld);
-                    sb.AppendLine($"  id: {client.ID}, lastTick: {client.LastClientTick}");
+                    sb.AppendLine($"  id: {client.UserAddressId}, lastTick: {client.LastClientTick}");
                 }
 
                 return sb.ToString();
@@ -170,77 +170,63 @@ namespace XFlow.Server
 
         private async ValueTask OnUnreliableMessageReceived(UnreliableChannelMessage message)
         {
-            try
+            switch (message.Type)
             {
-                switch (message.Type)
-                {
-                    case UnreliableChannelMessageType.MessageReceived:
-                        var messageArgs = message.GetMessageReceivedArguments().Value;
-                        lock (_locker)
-                        {
-                            GotInput1(new HGlobalReader(messageArgs.Message.ToArray()), messageArgs.UserAddress);
-                        }
+                case UnreliableChannelMessageType.MessageReceived:
+                    var messageArgs = message.GetMessageReceivedArguments().Value;
+                    lock (_locker)
+                    {
+                        GotInput1(new HGlobalReader(messageArgs.Message.ToArray()), messageArgs.UserAddress);
+                    }
+                    break;
 
-                        break;
-
-                    case UnreliableChannelMessageType.ChannelClosed:
-                        var closedArgs = message.GetChannelClosedArguments().Value;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            catch (Exception e)
-            {            
-                _logger.Log(LogLevel.Error, e);
-                throw;
+                case UnreliableChannelMessageType.ChannelClosed:
+                    var closedArgs = message.GetChannelClosedArguments().Value;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
-
+        
         private async ValueTask OnReliableMessageReceived(ReliableChannelMessage message)
         {
             _logger.Log(LogLevel.Trace, $"OnReliableMessageReceived.{message.Type}");
-            try
+            switch (message.Type)
             {
-                switch (message.Type)
-                {
-                    case ReliableChannelMessageType.UserConnected:
-                        var connectedArgs = message.GetUserConnectedArguments().Value;
-                        _logger.Log(LogLevel.Debug, $"Connected {connectedArgs.UserAddress.UserId}");
-                        break;
+                case ReliableChannelMessageType.UserConnected:
+                    var connectedArgs = message.GetUserConnectedArguments().Value;
+                    _logger.Log(LogLevel.Debug, $"Connected {connectedArgs.UserAddress.UserId}");
+                    break;
 
-                    case ReliableChannelMessageType.UserDisconnected:
-                        var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
-                        _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress.UserId}");
-                        lock (_locker)
+                case ReliableChannelMessageType.UserDisconnected:
+                    var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
+                    _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress.UserId}");
+                    lock (_locker)
+                    {
+                        if (PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, disconnectedArgs.UserAddress.UserId,
+                            out int playerEntity))
                         {
-                            var user = GetClientEntity(disconnectedArgs.UserAddress.UserId);
-                            _mainWorld.MarkEntityAsDeleted(user);
-                            PlayerService.InputLeavePlayer(_inputWorld, user);
+                            _poolClients.Del(playerEntity);
+                            //ref var client = ref _poolClients.GetRef(playerEntity);
+                            PlayerService.InputLeavePlayer(_inputWorld, disconnectedArgs.UserAddress.UserId, true);
                         }
+                    }
+                    break;
 
-                        break;
+                case ReliableChannelMessageType.MessageReceived:
+                    var messageArgs = message.GetMessageReceivedArguments().Value;
+                    lock (_locker)
+                    {
+                        ProcessMessage(messageArgs.Message.ToArray(), messageArgs.UserAddress);
+                    }
 
-                    case ReliableChannelMessageType.MessageReceived:
-                        var messageArgs = message.GetMessageReceivedArguments().Value;
-                        lock (_locker)
-                        {
-                            ProcessMessage(messageArgs.Message.ToArray(), messageArgs.UserAddress);
-                        }
+                    break;
 
-                        break;
+                case ReliableChannelMessageType.ChannelClosed:
+                    break;
 
-                    case ReliableChannelMessageType.ChannelClosed:
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.Log(LogLevel.Error, e);
-                throw;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -323,7 +309,7 @@ namespace XFlow.Server
             _systemsFactory = new EcsSystemsFactory(container);
         }
 
-        private void Loop()
+        private async void Loop()
         {
             try
             {
@@ -348,7 +334,7 @@ namespace XFlow.Server
                         }
                     }
 
-                    Thread.Sleep(1);
+                    await Task.Yield();
                 }
 
                 _logger.Log(LogLevel.Debug, "Ended0");
@@ -372,6 +358,7 @@ namespace XFlow.Server
             _logger.Log(LogLevel.Debug,
                 $"ProcessMessage id={userAddress.UserId} hash={P2P.P2P.GetMessageHash(msgBytes)} size={msgBytes.Length}");
 
+            /*
             if (P2P.P2P.CheckError(msgBytes))
             {
                 var clientEntity = GetClientEntity(userAddress.UserId);
@@ -380,11 +367,11 @@ namespace XFlow.Server
                     var client = _poolClients.Get(clientEntity);
                     _mainWorld.MarkEntityAsDeleted(clientEntity);
                     _logger.Log(LogLevel.Warning, $"removed client {userAddress}");
-                    PlayerService.InputLeavePlayer(_inputWorld, client.ID);
+                    PlayerService.InputLeavePlayer(_inputWorld, client.UserAddressId);
                 }
 
                 return;
-            }
+            }*/
 
             if (msgBytes[0] == 0xff && msgBytes[1] == 0 && msgBytes[2] == 0 && msgBytes[3] == 0)
             {
@@ -398,11 +385,10 @@ namespace XFlow.Server
             if (packet.hasHello)
             {
                 var client = new ClientComponent();
-                client.ID = packet.playerID;
                 client.UserAddressId = userAddress.UserId;
                 client.ReliableAddress = userAddress;
 
-                _logger.Log(LogLevel.Information, $"got hello from client {packet.playerID}");
+                _logger.Log(LogLevel.Information, $"got hello from client {userAddress.UserId}");
 
                 var hello = new Hello();
                 hello.Components = _components.Components.Select(component => component.GetComponentType().FullName)
@@ -445,45 +431,32 @@ namespace XFlow.Server
 
                 _logger.Log(LogLevel.Information, $"send initial world at tick {_mainWorld.GetTick()}");
 
-                var entity = _mainWorld.NewEntity();
-                _poolClients.Add(entity) = client;
-
-                var inputEntity = PlayerService.InputJoinPlayer(_inputWorld, client.ID);
-                inputEntity.EntityAdd<ClientComponent>(_inputWorld) = client;
+                var playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, userAddress.UserId);
+                playerEntity.EntityAdd<ClientComponent>(_mainWorld) = client;
+                PlayerService.InputJoinPlayer(_mainWorld, _inputWorld, userAddress.UserId, playerEntity);
             }
-        }
-
-        private int GetClientEntity(string userAddressId)
-        {
-            foreach (var entity in _clientsFilter)
-            {
-                var component = _poolClients.Get(entity);
-                if (component.UserAddressId == userAddressId)
-                    return entity;
-            }
-
-            return -1;
         }
 
         private void GotInput1(HGlobalReader reader, IUserAddress address)
         {
             try
             {
-                var clientEntity = GetClientEntity(address.UserId);
-                if (clientEntity == -1)
+                if (!PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, address.UserId, out int playerEntity))
                 {
+                    /*
                     if (!_missingClients.Contains(address.UserId))
                     {
                         _missingClients.Add(address.UserId);
-                        _logger.Log(LogLevel.Information, $"not found player {address}");
-                    }
+                    }*/
 
+                    _logger.Log(LogLevel.Information, $"not found player {address.UserId}");
+                    
                     return;
                 }
                 
-                ref var client = ref _poolClients.GetRef(clientEntity);
+                ref var clientComponent = ref _poolClients.GetRef(playerEntity);
 
-                client.UnreliableAddress ??= address;
+                clientComponent.UnreliableAddress = address;
                 
                 var inputTime = reader.ReadInt32();
                 var time = inputTime;
@@ -505,23 +478,23 @@ namespace XFlow.Server
                 if (delay < 0)
                     time = currentTick;
 
-                var sentWorldTick = client.SentWorld.GetTick() - step.Value;
+                var sentWorldTick = clientComponent.SentWorld.GetTick() - step.Value;
 
                 if (delay == 0 && sentWorldTick == time)
                     time = currentTick + step.Value;
 
-                client.LastClientTick = inputTime;
-                client.LastServerTick = currentTick;
+                clientComponent.LastClientTick = inputTime;
+                clientComponent.LastServerTick = currentTick;
 
                 var component = _components.GetComponent(type);
 
                 if (component.GetComponentType() == typeof(PingComponent)) //ping
                 {
-                    client.LastPingTick = inputTime;
-                    client.Delay = delay;
+                    clientComponent.LastPingTick = inputTime;
+                    clientComponent.Delay = delay;
                     var ms = _nextTickAt - DateTime.UtcNow;
-                    client.DelayMs = ms.Milliseconds;
-                    Debug.Log(client.DelayMs);
+                    clientComponent.DelayMs = ms.Milliseconds;
+                    Debug.Log(clientComponent.DelayMs);
                 }
                 else
                 {
@@ -532,9 +505,7 @@ namespace XFlow.Server
 
                     var componentData = component.ReadSingleComponent(reader) as IInputComponent;
 
-                    _inputService.Input(_inputWorld, client.ID, time, componentData);
-                    //leo.Inputs.Add(input);
-                    //world.GetUniqueRef<PendingInputComponent>().data = leo.Inputs.ToArray();
+                    _inputService.Input(_inputWorld, address.UserId, time, componentData);
                 }
             }
             finally
@@ -568,7 +539,7 @@ namespace XFlow.Server
                     {
                         //SimRandomSend(compressed, client);
 
-                        _logger.Log(LogLevel.Debug,$"Send udp diff l={compressed.Length}, h={P2P.P2P.GetMessageHash(compressed)}");
+                        //_logger.Log(LogLevel.Debug,$"Send udp diff l={compressed.Length}, h={P2P.P2P.GetMessageHash(compressed)}");
                         _unreliableChannel.SendAsync(client.UnreliableAddress, compressed);
                     }
 
@@ -586,7 +557,7 @@ namespace XFlow.Server
 
                     var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
                     var bytes = P2P.P2P.BuildRequest(compressed);
-                    _logger.Log(LogLevel.Debug,$"Send tcp diff l={bytes.Length}, h={P2P.P2P.GetMessageHash(bytes)}");
+                    //_logger.Log(LogLevel.Debug,$"Send tcp diff l={bytes.Length}, h={P2P.P2P.GetMessageHash(bytes)}");
                     _reliableChannel.SendAsync(client.ReliableAddress, bytes);
                     client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
                 }

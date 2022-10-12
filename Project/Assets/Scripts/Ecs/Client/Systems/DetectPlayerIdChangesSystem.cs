@@ -22,10 +22,10 @@ namespace Game.Ecs.Client.Systems
                 .Filter<PlayerComponent>().IncChanges<PlayerComponent>()
                 .End();
 
-            var mainPlayerID = world.GetUnique<MainPlayerIdComponent>().value;
+            var mainPlayerID = world.GetUnique<MainPlayerIdComponent>().Value;
             foreach (var entity in filter)
             {
-                if (entity.EntityGet<PlayerComponent>(world).id == mainPlayerID)
+                if (entity.EntityGet<PlayerComponent>(world).Value == mainPlayerID)
                 {
                     ClientPlayerService.SetPlayerEntity(world, entity);
                     int i = 0;
