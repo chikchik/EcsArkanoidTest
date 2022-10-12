@@ -1,2 +1,2 @@
 #!/bin/bash
-dotnet ProjectBuilder.dll last
+dotnet run -- last
