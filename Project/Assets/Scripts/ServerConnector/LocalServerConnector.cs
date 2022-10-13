@@ -30,7 +30,7 @@ namespace Game
             BaseSocket socket = new ReliableSocket(_userId);
 
             await socket.Connect(IPAddress.Parse("127.0.0.1"), _tcpPort);
-            socket.Run();
+            Task.Run(socket.Run);
 
             return socket;
         }
@@ -40,7 +40,7 @@ namespace Game
             BaseSocket socket = new UnreliableSocket(_userId);
 
             await socket.Connect(IPAddress.Parse("127.0.0.1"), _udpPort);
-            socket.Run();
+            Task.Run(socket.Run);
 
             return socket;
         }
