@@ -59,4 +59,4 @@ ServerApp/ServerApp/log.txt
 
 ServerApp/tools/ContainerBuilder/bin/
 ServerApp/tools/ContainerBuilder/obj/
-ServerApp/LastExecutionArgs.json
+ServerApp/tools/LastExecutionArgs.json
