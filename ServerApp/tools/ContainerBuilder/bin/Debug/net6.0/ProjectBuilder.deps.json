@@ -1,0 +1,573 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "ProjectBuilder/1.0.0": {
+        "dependencies": {
+          "CommandLineParser": "2.9.1",
+          "CSharpFunctionalExtensions": "2.34.3.0",
+          "FluentValidation": "11.0.0.0",
+          "Gaming.ClientUtilities": "1.1.1.27047",
+          "Gaming.Collections": "1.1.1.27047",
+          "Gaming.ContainerManager.Client": "1.1.1.27047",
+          "Gaming.ContainerManager.Client.SocketContracts": "1.1.1.27047",
+          "Gaming.ContainerManager.Contracts": "1.1.1.27047",
+          "Gaming.ContainerManager.ImageContracts": "1.1.1.27047",
+          "Gaming.ContainerManager.Models": "1.1.1.27047",
+          "Gaming.Contracts.Annotations": "1.1.1.27047",
+          "Gaming.Facade.Containers": "1.1.1.27047",
+          "Gaming.Facade": "1.1.1.27047",
+          "Gaming.Facade.Modules.Containers.V1": "1.1.1.27047",
+          "Gaming.Facade.Modules.FileSystem.V1": "1.1.1.27047",
+          "Gaming.Facade.Modules.Http.V1": "1.1.1.27047",
+          "Gaming.Facade.Modules.Identity.V1": "1.1.1.27047",
+          "Gaming.FunctionalExtensions": "1.1.1.27047",
+          "Gaming.FunctionalExtensions.Serialization": "1.1.1.27047",
+          "Gaming.Http.Abstractions": "1.1.1.27047",
+          "Gaming.Http": "1.1.1.27047",
+          "Gaming.IdentityProvider.Client": "1.1.1.27047",
+          "Gaming.IdentityProvider.Contracts": "1.1.1.27047",
+          "Gaming.Messaging.Abstractions": "1.1.1.27047",
+          "Gaming.ServiceModel.Abstractions": "1.1.1.27047",
+          "Gaming.ServiceModel.Authorization.Abstractions": "1.1.1.27047",
+          "Gaming.ServiceModel.ErrorFlow": "1.1.1.27047",
+          "Gaming.ServiceModel.ErrorFlow.Serialization": "1.1.1.27047",
+          "Gaming.ServiceModel.Serialization": "1.1.1.27047",
+          "Gaming.TokenExchange.Abstractions": "1.1.1.27047",
+          "Gaming.Tracing.Common.Abstractions": "1.1.1.27047",
+          "Gaming.Tracing.WriteSide.Abstractions": "1.1.1.27047",
+          "Gaming.Tracing.WriteSide": "1.1.1.27047",
+          "Gaming.Tracing.WriteSide.EndUser": "1.1.1.27047",
+          "Humanizer": "2.14.0.0",
+          "JsonSubTypes": "1.9.0.0",
+          "Newtonsoft.Json": "10.0.0.0",
+          "Polly": "7.0.0.0",
+          "Polly.Extensions.Http": "3.0.0.0"
+        },
+        "runtime": {
+          "ProjectBuilder.dll": {}
+        }
+      },
+      "CommandLineParser/2.9.1": {
+        "runtime": {
+          "lib/netstandard2.0/CommandLine.dll": {
+            "assemblyVersion": "2.9.1.0",
+            "fileVersion": "2.9.1.0"
+          }
+        }
+      },
+      "CSharpFunctionalExtensions/2.34.3.0": {
+        "runtime": {
+          "CSharpFunctionalExtensions.dll": {
+            "assemblyVersion": "2.34.3.0",
+            "fileVersion": "2.34.3.0"
+          }
+        }
+      },
+      "FluentValidation/11.0.0.0": {
+        "runtime": {
+          "FluentValidation.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.2.2.0"
+          }
+        }
+      },
+      "Gaming.ClientUtilities/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ClientUtilities.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Collections/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Collections.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.ContainerManager.Client/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ContainerManager.Client.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.ContainerManager.Client.SocketContracts/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ContainerManager.Client.SocketContracts.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.ContainerManager.Contracts/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ContainerManager.Contracts.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.ContainerManager.ImageContracts/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ContainerManager.ImageContracts.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.ContainerManager.Models/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ContainerManager.Models.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Contracts.Annotations/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Contracts.Annotations.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Facade.Containers/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Facade.Containers.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Facade/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Facade.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Facade.Modules.Containers.V1/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Facade.Modules.Containers.V1.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Facade.Modules.FileSystem.V1/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Facade.Modules.FileSystem.V1.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Facade.Modules.Http.V1/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Facade.Modules.Http.V1.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Facade.Modules.Identity.V1/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Facade.Modules.Identity.V1.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.FunctionalExtensions/1.1.1.27047": {
+        "runtime": {
+          "Gaming.FunctionalExtensions.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.FunctionalExtensions.Serialization/1.1.1.27047": {
+        "runtime": {
+          "Gaming.FunctionalExtensions.Serialization.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Http.Abstractions/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Http.Abstractions.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Http/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Http.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.IdentityProvider.Client/1.1.1.27047": {
+        "runtime": {
+          "Gaming.IdentityProvider.Client.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.IdentityProvider.Contracts/1.1.1.27047": {
+        "runtime": {
+          "Gaming.IdentityProvider.Contracts.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Messaging.Abstractions/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Messaging.Abstractions.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.ServiceModel.Abstractions/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ServiceModel.Abstractions.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.ServiceModel.Authorization.Abstractions/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ServiceModel.Authorization.Abstractions.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.ServiceModel.ErrorFlow/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ServiceModel.ErrorFlow.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.ServiceModel.ErrorFlow.Serialization/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ServiceModel.ErrorFlow.Serialization.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.ServiceModel.Serialization/1.1.1.27047": {
+        "runtime": {
+          "Gaming.ServiceModel.Serialization.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.TokenExchange.Abstractions/1.1.1.27047": {
+        "runtime": {
+          "Gaming.TokenExchange.Abstractions.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Tracing.Common.Abstractions/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Tracing.Common.Abstractions.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Tracing.WriteSide.Abstractions/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Tracing.WriteSide.Abstractions.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Tracing.WriteSide/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Tracing.WriteSide.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Gaming.Tracing.WriteSide.EndUser/1.1.1.27047": {
+        "runtime": {
+          "Gaming.Tracing.WriteSide.EndUser.dll": {
+            "assemblyVersion": "1.1.1.27047",
+            "fileVersion": "1.1.1.27047"
+          }
+        }
+      },
+      "Humanizer/2.14.0.0": {
+        "runtime": {
+          "Humanizer.dll": {
+            "assemblyVersion": "2.14.0.0",
+            "fileVersion": "2.14.1.48190"
+          }
+        }
+      },
+      "JsonSubTypes/1.9.0.0": {
+        "runtime": {
+          "JsonSubTypes.dll": {
+            "assemblyVersion": "1.9.0.0",
+            "fileVersion": "1.9.0.0"
+          }
+        }
+      },
+      "Newtonsoft.Json/10.0.0.0": {
+        "runtime": {
+          "Newtonsoft.Json.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.3.21018"
+          }
+        }
+      },
+      "Polly/7.0.0.0": {
+        "runtime": {
+          "Polly.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.2.3.0"
+          }
+        }
+      },
+      "Polly.Extensions.Http/3.0.0.0": {
+        "runtime": {
+          "Polly.Extensions.Http.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ProjectBuilder/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CommandLineParser/2.9.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-OE0sl1/sQ37bjVsPKKtwQlWDgqaxWgtme3xZz7JssWUzg5JpMIyHgCTY9MVMxOg48fJ1AgGT3tgdH5m/kQ5xhA==",
+      "path": "commandlineparser/2.9.1",
+      "hashPath": "commandlineparser.2.9.1.nupkg.sha512"
+    },
+    "CSharpFunctionalExtensions/2.34.3.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FluentValidation/11.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ClientUtilities/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Collections/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ContainerManager.Client/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ContainerManager.Client.SocketContracts/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ContainerManager.Contracts/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ContainerManager.ImageContracts/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ContainerManager.Models/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Contracts.Annotations/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Facade.Containers/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Facade/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Facade.Modules.Containers.V1/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Facade.Modules.FileSystem.V1/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Facade.Modules.Http.V1/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Facade.Modules.Identity.V1/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.FunctionalExtensions/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.FunctionalExtensions.Serialization/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Http.Abstractions/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Http/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.IdentityProvider.Client/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.IdentityProvider.Contracts/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Messaging.Abstractions/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ServiceModel.Abstractions/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ServiceModel.Authorization.Abstractions/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ServiceModel.ErrorFlow/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ServiceModel.ErrorFlow.Serialization/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.ServiceModel.Serialization/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.TokenExchange.Abstractions/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Tracing.Common.Abstractions/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Tracing.WriteSide.Abstractions/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Tracing.WriteSide/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Gaming.Tracing.WriteSide.EndUser/1.1.1.27047": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Humanizer/2.14.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "JsonSubTypes/1.9.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Newtonsoft.Json/10.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Polly/7.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Polly.Extensions.Http/3.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

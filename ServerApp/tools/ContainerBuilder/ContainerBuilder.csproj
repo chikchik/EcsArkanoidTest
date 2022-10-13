@@ -6,6 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>10</LangVersion>
+        <AssemblyName>ContainerBuilder</AssemblyName>
+        <RootNamespace>ContainerBuilder</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
