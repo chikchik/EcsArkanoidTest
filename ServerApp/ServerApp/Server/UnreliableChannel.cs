@@ -7,62 +7,73 @@ using System.Text;
 using System.Threading.Tasks;
 using Gaming.ContainerManager.ImageContracts.V1;
 using Gaming.ContainerManager.ImageContracts.V1.Channels;
+using UnityEngine;
 using XFlow.Utils;
 
 namespace ServerApp.Server
 {
-    public class Unreliable : IUnreliableChannel
+    public class UnreliableChannel : IUnreliableChannel
     {
         private readonly Socket _socket;
+        private readonly List<IUnreliableChannel.SubscribeDelegate> _subscribers;
+        private readonly Dictionary<EndPoint, UnreliableUserAddress> _addresses;
+        
         private bool _isDisposed;
 
-        private readonly List<IUnreliableChannel.SubscribeDelegate> _subscribers;
-
-        private readonly Dictionary<IUserAddress, EndPoint> _connections;
-
-        private readonly object _locker = new object();
-
-        public Unreliable(Socket socket)
+        public UnreliableChannel(Socket socket)
         {
             _socket = socket;
             _subscribers = new List<IUnreliableChannel.SubscribeDelegate>();
-            _connections = new Dictionary<IUserAddress, EndPoint>();
+            _addresses = new Dictionary<EndPoint, UnreliableUserAddress>();
         }
 
         public async void Start()
         {
-            var buffer = new ArraySegment<byte>(new byte[64000]);
+            var buffer = new ArraySegment<byte>(new byte[65000]);
 
             try
             {
-                var endPoint = new IPEndPoint(IPAddress.Any, 0);
+                var anyEndPoint = new IPEndPoint(IPAddress.Any, 0);
                 while (true)
                 {
-                    var res = await _socket.ReceiveMessageFromAsync(buffer, SocketFlags.None, endPoint);
+                    var res = await _socket.ReceiveMessageFromAsync(buffer, SocketFlags.None, anyEndPoint);
 
                     var received = new byte[res.ReceivedBytes];
                     Array.Copy(buffer.Array, buffer.Offset, received, 0, res.ReceivedBytes);
 
+                    
+                    var remoteEndPoint = res.RemoteEndPoint;
 
                     var id = BitConverter.ToInt32(received[..sizeof(int)]).ToString();
                     var data = received[sizeof(int)..];
 
-                    IUserAddress address;
-                    lock (_locker)
+                    UnreliableUserAddress address;
+                    lock (_addresses)
                     {
-                        address = _connections.Keys.FirstOrDefault(address => address.UserId == id);
-                        if (address == null)
+                        if (_addresses.TryGetValue(remoteEndPoint, out address))
                         {
-                            address = new UserAddress(id);
-                            _connections.Add(address, res.RemoteEndPoint);
+                        
+                        }
+                        else
+                        {
+                            address = new UnreliableUserAddress(id, $"{id}-udp", remoteEndPoint);
+                            _addresses.Add(remoteEndPoint, address);
                         }
                     }
 
                     var arguments = new MessageReceivedArguments(address, data);
                     var message = UnreliableChannelMessage.MessageReceived(arguments);
-                    foreach (var subscriber in _subscribers)
+                    IUnreliableChannel.SubscribeDelegate[] copy;
+                    lock (_subscribers)
+                        copy = _subscribers.ToArray();
+
+                    foreach (var subscriber in copy)
                         await subscriber.Invoke(message);
                 }
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError(exception);
             }
             finally
             {
@@ -73,10 +84,11 @@ namespace ServerApp.Server
         public async ValueTask DisposeAsync()
         {
             _isDisposed = true;
-            if (_socket.Connected)
-                _socket.Disconnect(false);
             _socket.Dispose();
-            _subscribers.Clear();
+            lock(_addresses)
+                _addresses.Clear();
+            lock (_subscribers)
+                _subscribers.Clear();
         }
 
         public async ValueTask<UnreliableChannelSendResult> SendAsync(IUserAddress userAddress,
@@ -85,12 +97,13 @@ namespace ServerApp.Server
             if (_isDisposed)
                 return new UnreliableChannelSendResult(UnreliableChannelSendStatus.ChannelIsClosed, null);
 
-            if (!_connections.ContainsKey(userAddress))
-                return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Unknown, $"Address not found");
+            if (!(userAddress is UnreliableUserAddress address))
+                return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Unknown, $"invalid address");
 
+            
             try
             {
-                await _socket.SendToAsync(message.ToArray(), SocketFlags.None, _connections[userAddress]);
+                await _socket.SendToAsync(message.ToArray(), SocketFlags.None, address.EndPoint);
 
                 return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Ok, null);
             }
@@ -104,9 +117,18 @@ namespace ServerApp.Server
 
         public async ValueTask<IAsyncDisposable> SubscribeAsync(IUnreliableChannel.SubscribeDelegate subscriber)
         {
-            _subscribers.Add(subscriber);
+            lock (_subscribers)
+            {
+                _subscribers.Add(subscriber);
+            }
 
-            return new AnonymousDisposable(async () => _subscribers.Remove(subscriber));
+            return new AnonymousDisposable(async () =>
+            {
+                lock (_subscribers)
+                {
+                    _subscribers.Remove(subscriber);
+                }
+            });
         }
     }
 }

@@ -29,7 +29,7 @@ namespace ServerApp.Server
 
         public async ValueTask<IUnreliableChannel> GetUnreliableChannelAsync()
         {
-            var channel = new Unreliable(_udpSocket);
+            var channel = new UnreliableChannel(_udpSocket);
             channel.Start();
             return channel;
         }

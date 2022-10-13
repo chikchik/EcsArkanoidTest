@@ -40,8 +40,8 @@ public abstract class BaseSocket : ISocket
     public async ValueTask CloseAsync()
     {
         isDisposed = true;
-        if (Socket.Connected)
-            Socket.Disconnect(false);
+        //if (Socket.Connected)
+        //    Socket.Disconnect(false);
         Socket.Dispose();
     }
 }
