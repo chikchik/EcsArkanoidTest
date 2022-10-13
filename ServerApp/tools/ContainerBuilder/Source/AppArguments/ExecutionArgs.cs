@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Nodes;
-using CommandLine;
+﻿using CommandLine;
+using Newtonsoft.Json;
 
 namespace ProjectBuilder.AppArguments;
 
@@ -65,26 +65,11 @@ public class ExecutionArgs
 
     private static ExecutionArgs ParseJson(string json)
     {
-        var parsed = JsonNode.Parse(json) as JsonObject;
-
-        return new ExecutionArgs(
-            (string)parsed[nameof(Path)],
-            (string)parsed[nameof(Name)],
-            Version.Parse((string)parsed[nameof(Version)]),
-            (string)parsed[nameof(Token)]
-        );
+        return JsonConvert.DeserializeObject<ExecutionArgs>(json);
     }
 
     private string ToJsonString()
     {
-        var obj = new JsonObject
-        {
-            { nameof(Path), Path },
-            { nameof(Name), Name },
-            { nameof(Version), Version.ToString() },
-            { nameof(Token), Token }
-        };
-
-        return obj.ToJsonString();
+        return JsonConvert.SerializeObject(this);
     }
 }

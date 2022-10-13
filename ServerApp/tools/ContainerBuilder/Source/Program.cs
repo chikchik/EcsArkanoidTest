@@ -141,7 +141,8 @@ static async Task<bool> BuildProject(string rootPath)
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
 
-        await process.WaitForExitAsync();
+        while (!process.HasExited)
+            await Task.Delay(10);
 
         var exitCode = process.ExitCode;
         process.Dispose();
