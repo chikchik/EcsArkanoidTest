@@ -57,7 +57,6 @@ ServerApp/tools/__pycache__/
 _tmp/
 ServerApp/ServerApp/log.txt
 
-ServerApp/tools/ProjectBuilder/bin
-ServerApp/tools/ProjectBuilder/bin/
-ServerApp/tools/ProjectBuilder/obj
-ServerApp/tools/ProjectBuilder/obj/
+ServerApp/tools/ContainerBuilder/bin/
+ServerApp/tools/ContainerBuilder/obj/
+ServerApp/LastExecutionArgs.json
