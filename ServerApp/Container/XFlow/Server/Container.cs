@@ -200,15 +200,17 @@ namespace XFlow.Server
 
                 case ReliableChannelMessageType.UserDisconnected:
                     var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
-                    _logger.Log(LogLevel.Debug, $"Disconnected {disconnectedArgs.UserAddress.UserId}");
+                    var userId = disconnectedArgs.UserAddress.UserId;
+                    _logger.Log(LogLevel.Debug, $"Disconnected {userId}");
                     lock (_locker)
                     {
-                        if (PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, disconnectedArgs.UserAddress.UserId,
+                        if (PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, userId,
                             out int playerEntity))
                         {
+                            Debug.Log($"leave player {playerEntity}, id={userId}");
                             _poolClients.Del(playerEntity);
                             //ref var client = ref _poolClients.GetRef(playerEntity);
-                            PlayerService.InputLeavePlayer(_inputWorld, disconnectedArgs.UserAddress.UserId, true);
+                            PlayerService.InputLeavePlayer(_inputWorld, userId, true);
                         }
                     }
                     break;
@@ -356,7 +358,7 @@ namespace XFlow.Server
         private void ProcessMessage(byte[] msgBytes, IUserAddress userAddress)
         {
             _logger.Log(LogLevel.Debug,
-                $"ProcessMessage id={userAddress.UserId} hash={P2P.P2P.GetMessageHash(msgBytes)} size={msgBytes.Length}");
+                $"ProcessMessage id={userAddress.UserId} size={msgBytes.Length}");
 
             /*
             if (P2P.P2P.CheckError(msgBytes))
@@ -434,6 +436,7 @@ namespace XFlow.Server
                 var playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, userAddress.UserId);
                 playerEntity.EntityAdd<ClientComponent>(_mainWorld) = client;
                 PlayerService.InputJoinPlayer(_mainWorld, _inputWorld, userAddress.UserId, playerEntity);
+                Debug.Log($"created player entity {playerEntity}, id={userAddress.UserId}");
             }
         }
 
@@ -494,7 +497,7 @@ namespace XFlow.Server
                     clientComponent.Delay = delay;
                     var ms = _nextTickAt - DateTime.UtcNow;
                     clientComponent.DelayMs = ms.Milliseconds;
-                    Debug.Log(clientComponent.DelayMs);
+                    //Debug.Log(clientComponent.DelayMs);
                 }
                 else
                 {
@@ -542,9 +545,13 @@ namespace XFlow.Server
                         //_logger.Log(LogLevel.Debug,$"Send udp diff l={compressed.Length}, h={P2P.P2P.GetMessageHash(compressed)}");
                         _unreliableChannel.SendAsync(client.UnreliableAddress, compressed);
                     }
-
-                    client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
-                    client.Delay = -999;
+                    
+                    //он может пропасть из пула если SendAsync по цепочке ошибок привел к удалению из пула внутри
+                    if (_poolClients.Has(clientEntity))
+                    {
+                        client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
+                        client.Delay = -999;
+                    }
                 }
             }
 
@@ -559,7 +566,11 @@ namespace XFlow.Server
                     var bytes = P2P.P2P.BuildRequest(compressed);
                     //_logger.Log(LogLevel.Debug,$"Send tcp diff l={bytes.Length}, h={P2P.P2P.GetMessageHash(bytes)}");
                     _reliableChannel.SendAsync(client.ReliableAddress, bytes);
-                    client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
+                    //он может пропасть из пула если SendAsync по цепочке ошибок привел к удалению из пула внутри
+                    if (_poolClients.Has(clientEntity))
+                    {
+                        client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
+                    }
                 }
 
                 var filter = _mainWorld.Filter<DeletedEntityComponent>(false).End();

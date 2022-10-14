@@ -1,6 +1,0 @@
-﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
-  &lt;Assembly Path="E:\Work\mecha_survival_ecs_demo\Submodules\module-ecs-container\Contracts\Gaming.ContainerManager.ImageContracts.dll" /&gt;&#xD;
-  &lt;PhysicalFolder Path="E:\Work\qwe" Loaded="True" /&gt;&#xD;
-&lt;/AssemblyExplorer&gt;</s:String>
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=8fb66350_002D0f5a_002D4e8a_002Db3ef_002D86c172b76b46_0023ProjectBuilder/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

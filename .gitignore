@@ -60,3 +60,4 @@ ServerApp/ServerApp/log.txt
 ServerApp/tools/ContainerBuilder/bin/
 ServerApp/tools/ContainerBuilder/obj/
 ServerApp/tools/LastExecutionArgs.json
+ServerApp/ServerApp.sln.DotSettings.user

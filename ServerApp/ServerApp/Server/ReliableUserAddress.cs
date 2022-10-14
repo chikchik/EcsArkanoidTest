@@ -1,15 +1,20 @@
-﻿using Gaming.ContainerManager.ImageContracts.V1;
+﻿using System.Net.Sockets;
+using Gaming.ContainerManager.ImageContracts.V1;
 
 namespace ServerApp.Server
 {
-    public class UserAddress : IUserAddress
+    public class ReliableUserAddress : IUserAddress
     {
         public string UserId { get; }
         public string ConnectionId { get; }
 
-        public UserAddress(string userId)
+        public Socket Socket;
+        
+        public ReliableUserAddress(string userId, string connectionId, Socket socket)
         {
             UserId = userId;
+            ConnectionId = connectionId;
+            Socket = socket;
         }
 
         public bool Equals(IUserAddress other)

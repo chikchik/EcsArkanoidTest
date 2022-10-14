@@ -29,55 +29,49 @@ namespace ServerApp.Server
 
         public async void Start()
         {
-            var buffer = new ArraySegment<byte>(new byte[65000]);
-
-            try
+            var buffer = new byte[0xffff];
+            
+            var anyEndPoint = new IPEndPoint(IPAddress.Any, 0);
+            while (true)
             {
-                var anyEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                while (true)
+                SocketReceiveMessageFromResult res;
+                try
                 {
-                    var res = await _socket.ReceiveMessageFromAsync(buffer, SocketFlags.None, anyEndPoint);
-
-                    var received = new byte[res.ReceivedBytes];
-                    Array.Copy(buffer.Array, buffer.Offset, received, 0, res.ReceivedBytes);
-
-                    
-                    var remoteEndPoint = res.RemoteEndPoint;
-
-                    var id = BitConverter.ToInt32(received[..sizeof(int)]).ToString();
-                    var data = received[sizeof(int)..];
-
-                    UnreliableUserAddress address;
-                    lock (_addresses)
-                    {
-                        if (_addresses.TryGetValue(remoteEndPoint, out address))
-                        {
-                        
-                        }
-                        else
-                        {
-                            address = new UnreliableUserAddress(id, $"{id}-udp", remoteEndPoint);
-                            _addresses.Add(remoteEndPoint, address);
-                        }
-                    }
-
-                    var arguments = new MessageReceivedArguments(address, data);
-                    var message = UnreliableChannelMessage.MessageReceived(arguments);
-                    IUnreliableChannel.SubscribeDelegate[] copy;
-                    lock (_subscribers)
-                        copy = _subscribers.ToArray();
-
-                    foreach (var subscriber in copy)
-                        await subscriber.Invoke(message);
+                    res = await _socket.ReceiveMessageFromAsync(buffer, SocketFlags.None, anyEndPoint);
                 }
-            }
-            catch (Exception exception)
-            {
-                Debug.LogError(exception);
-            }
-            finally
-            {
-                await DisposeAsync();
+                catch (Exception e)
+                {
+                    continue;
+                }
+                
+                var remoteEndPoint = res.RemoteEndPoint;
+
+                var id = BitConverter.ToInt32(buffer).ToString();
+
+                UnreliableUserAddress address;
+                lock (_addresses)
+                {
+                    if (_addresses.TryGetValue(remoteEndPoint, out address))
+                    {
+                    
+                    }
+                    else
+                    {
+                        address = new UnreliableUserAddress(id, $"{id}-udp", remoteEndPoint);
+                        _addresses.Add(remoteEndPoint, address);
+                    }
+                }
+
+                
+                var data = new ReadOnlyMemory<byte>(buffer, 4, res.ReceivedBytes - 4);
+                var arguments = new MessageReceivedArguments(address, data);
+                var message = UnreliableChannelMessage.MessageReceived(arguments);
+                IUnreliableChannel.SubscribeDelegate[] copy;
+                lock (_subscribers)
+                    copy = _subscribers.ToArray();
+
+                foreach (var subscriber in copy)
+                    await subscriber.Invoke(message);
             }
         }
 
@@ -109,7 +103,7 @@ namespace ServerApp.Server
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                //Console.WriteLine(e);
 
                 return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Unknown, e.ToString());
             }

@@ -21,7 +21,7 @@ namespace ServerApp.Server
 
         public async ValueTask<IReliableChannel> GetReliableChannelAsync()
         {
-            var channel = new Reliable(_tcpSocket);
+            var channel = new ReliableChannel(_tcpSocket);
             channel.Start();
             return channel;
         }
