@@ -1,4 +1,6 @@
-﻿using Gaming.ContainerManager.ImageContracts.V1.Channels;
+﻿using System.Linq;
+using Gaming.ContainerManager.ImageContracts.V1;
+using Gaming.ContainerManager.ImageContracts.V1.Channels;
 using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.Ecs.ClientServer.WorldDiff;
@@ -6,6 +8,7 @@ using XFlow.EcsLite;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
+using XFlow.Net.ClientServer.Protocol;
 using XFlow.Server.Components;
 using XFlow.Utils;
 
@@ -68,6 +71,41 @@ namespace XFlow.Server.Systems
             foreach (var clientEntity in _clientsFilter)
             {
                 ref var client = ref _poolClients.GetRef(clientEntity);
+                
+                if (client.SentWorld == null)
+                {
+                    //если клиент еще совсем ничего не получал
+                    
+                    
+                    client.SentWorld = new EcsWorld("sent");
+                    client.SentWorldReliable = new EcsWorld("rela");
+
+                    var dif = WorldDiff.BuildDiff(_components, client.SentWorldReliable, _mainWorld);
+                    client.SentWorldReliable.CopyFrom(_mainWorld, _components.ContainsCollection);
+                    client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
+
+                    
+                    var hello = new Hello();
+                    hello.Components = _components.Components.Select(component => component.GetComponentType().FullName)
+                        .ToArray();
+                    
+                    var packet = new Packet
+                    {
+                        hasWelcomeFromServer = true,
+                        hello = hello,
+                        hasHello = true,
+                        WorldUpdate = new WorldUpdateProto
+                        {
+                            difStr = dif.ToBase64String(),
+                            delay = 1
+                        }
+                    };
+
+
+                    var data = P2P.P2P.BuildRequest(packet);
+                    _reliableChannel.SendAsync(client.ReliableAddress, data);
+                }
+                
                 if (client.UnreliableAddress != null)
                 {
                     var compressed = BuildDiffBytes(client, client.SentWorld);
@@ -109,12 +147,12 @@ namespace XFlow.Server.Systems
                 }
             }
 
+            //теперь можно удалять Deleted сущности по настоящему, все клиенты ее получили гарантированно
             var filter = _mainWorld.Filter<DeletedEntityComponent>(false).End();
             foreach (var entity in filter)
             {
                 _mainWorld.DelEntity(entity);
             }
-            
         }
     }
 }

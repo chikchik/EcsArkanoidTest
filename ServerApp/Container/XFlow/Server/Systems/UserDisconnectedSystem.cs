@@ -23,13 +23,13 @@ namespace XFlow.Server.Systems
         {
             foreach (var entity in _filter)
             {
-                var userId = entity.EntityGet<UserAddressComponent>(_inputWorld).Address.UserId;
+                var address = entity.EntityGet<UserAddressComponent>(_inputWorld).Address;
                 
-                if (!PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, userId, out int playerEntity))
+                if (!PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, address.UserId, out int playerEntity))
                     continue;
                 
-                _mainWorld.Log($"leave player {playerEntity}, id={userId}");
-                PlayerService.InputLeavePlayer(_inputWorld, userId, true);
+                _mainWorld.Log($"leave player {playerEntity}, id={address}");
+                PlayerService.InputLeavePlayer(_inputWorld, address.UserId, true);
             }
         }
     }

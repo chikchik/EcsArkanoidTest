@@ -377,9 +377,6 @@ namespace XFlow.Server
             {
                 _logger.Log(LogLevel.Information, $"got hello from client {userAddress.UserId}");
 
-                var hello = new Hello();
-                hello.Components = _components.Components.Select(component => component.GetComponentType().FullName)
-                    .ToArray();
 
                 if (!_worldInitialized)
                 {
@@ -388,37 +385,8 @@ namespace XFlow.Server
                     if (!String.IsNullOrEmpty(state))
                         StartSystems(Convert.FromBase64String(state));
                 }
-
-                var client = new ClientComponent();
-                client.UserId = userAddress.UserId;
-                client.ReliableAddress = userAddress;
-                client.SentWorld = new EcsWorld("sent");
-                client.SentWorldReliable = new EcsWorld("rela");
-
-                var dif = WorldDiff.BuildDiff(_components, client.SentWorldReliable, _mainWorld);
-                client.SentWorldReliable.CopyFrom(_mainWorld, _components.ContainsCollection);
-                client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
-
-                packet = new Packet
-                {
-                    hasWelcomeFromServer = true,
-                    hello = hello,
-                    hasHello = true,
-                    WorldUpdate = new WorldUpdateProto
-                    {
-                        difStr = dif.ToBase64String(),
-                        delay = 1
-                    }
-                };
-
-
-                var data = P2P.P2P.BuildRequest(packet);
-                _logger.Log(LogLevel.Debug, $"Send hello, {data.Length}");
-                _reliableChannel.SendAsync(userAddress, data);
-
-                _logger.Log(LogLevel.Information, $"send initial world at tick {_mainWorld.GetTick()}");
-
-                UserService.InputUserConnected(_inputWorld, client);
+                
+                UserService.InputUserConnected(_inputWorld, userAddress);
             }
         }
 

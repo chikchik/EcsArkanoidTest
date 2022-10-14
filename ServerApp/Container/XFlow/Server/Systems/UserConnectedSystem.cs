@@ -16,14 +16,19 @@ namespace XFlow.Server.Systems
         {
             _mainWorld = systems.GetWorld();
             _inputWorld = systems.GetWorld(EcsWorlds.Input);
-            _filter = _inputWorld.Filter<UserConnectedInputComponent>().Inc<ClientComponent>().End();
+            _filter = _inputWorld.Filter<UserConnectedInputComponent>().End();
         }
         
         public void Run(EcsSystems systems)
         {
             foreach (var entity in _filter)
             {
-                var client = entity.EntityGet<ClientComponent>(_inputWorld);
+                var userAddress = entity.EntityGet<UserAddressComponent>(_inputWorld).Address;
+                
+                ref var client = ref entity.EntityAdd<ClientComponent>(_inputWorld);
+                client.UserId = userAddress.UserId;
+                client.ReliableAddress = userAddress;
+                
                 var playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, client.UserId);
                 playerEntity.EntityAdd<ClientComponent>(_mainWorld) = client;
                 PlayerService.InputJoinPlayer(_mainWorld, _inputWorld, client.UserId, playerEntity);

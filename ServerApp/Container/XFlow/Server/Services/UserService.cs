@@ -16,12 +16,12 @@ namespace XFlow.Server.Services
             inputEntity.EntityAdd<UserAddressComponent>(inputWorld).Address = userAddress;
         }
         
-        public static void InputUserConnected(EcsWorld inputWorld, in ClientComponent client)
+        public static void InputUserConnected(EcsWorld inputWorld, IUserAddress userAddress)
         {
             var inputEntity = inputWorld.NewEntity();
             inputEntity.EntityAdd<InputComponent>(inputWorld);
             inputEntity.EntityAdd<UserConnectedInputComponent>(inputWorld);
-            inputEntity.EntityAdd<ClientComponent>(inputWorld) = client;
+            inputEntity.EntityAdd<UserAddressComponent>(inputWorld).Address = userAddress;
         }
     }
 }
