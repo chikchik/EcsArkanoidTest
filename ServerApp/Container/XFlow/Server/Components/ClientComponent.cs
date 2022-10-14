@@ -3,7 +3,7 @@ using XFlow.EcsLite;
 
 namespace XFlow.Server
 {
-    struct ClientComponent
+    public struct ClientComponent
     {
         //public int ID;
         
@@ -19,6 +19,6 @@ namespace XFlow.Server
         public IUserAddress UnreliableAddress;
 
         public EcsWorld SentWorld;
-        public EcsWorld SentWorldRelaible;
+        public EcsWorld SentWorldReliable;
     }
 }

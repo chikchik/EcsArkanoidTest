@@ -25,6 +25,7 @@ using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
 using XFlow.Net.ClientServer.Protocol;
 using XFlow.Server.Components;
+using XFlow.Server.Services;
 using XFlow.Server.Systems;
 using XFlow.Utils;
 using Zenject;
@@ -59,8 +60,8 @@ namespace XFlow.Server
         private ApplyInputWorldService _inputService = new ApplyInputWorldService();
         private EntityDestroyedListener _destroyedListener = new EntityDestroyedListener();
         private CopyToDeadWorldListener _copyToDeadWorldListener;
+        
 
-        private HGlobalWriter _writer = new HGlobalWriter();
         private IEcsSystemsFactory _systemsFactory;
 
         private bool _worldInitialized;
@@ -93,6 +94,9 @@ namespace XFlow.Server
 
                 _syncDebug = new SyncDebugService(Config.TMP_HASHES_PATH);
                 WorldLoggerExt.logger = _syncDebug.CreateLogger();
+                
+                
+                _inputWorld = new EcsWorld(EcsWorlds.Input);
             }
             catch (Exception e)
             {
@@ -110,9 +114,9 @@ namespace XFlow.Server
 
                 _unreliableChannel = await _context.Host.ChannelProvider.GetUnreliableChannelAsync();
                 _unreliableChannelSubs = await _unreliableChannel.SubscribeAsync(OnUnreliableMessageReceived);
-
-                InitWorld();
-
+                
+                CreateSystems();
+                
                 _logger.Log(LogLevel.Information, "Start done");
 
                 _isRun = true;
@@ -206,10 +210,7 @@ namespace XFlow.Server
                     _logger.Log(LogLevel.Debug, $"Disconnected {userId}");
                     lock (_locker)
                     {
-                        var inputEntity = _inputWorld.NewEntity();
-                        inputEntity.EntityAdd<InputComponent>(_inputWorld);
-                        inputEntity.EntityAdd<UserDisconnectedInputComponent>(_inputWorld);
-                        inputEntity.EntityAdd<UserAddressComponent>(_inputWorld).Address = disconnectedArgs.UserAddress;
+                        UserService.InputUserDisconnected(_inputWorld, disconnectedArgs.UserAddress);
                     }
                     break;
 
@@ -230,7 +231,7 @@ namespace XFlow.Server
             }
         }
 
-        private void InitWorld()
+        private void CreateSystems()
         {
             CreateSystemsFactory();
 
@@ -251,6 +252,8 @@ namespace XFlow.Server
             _systems.Add(new TickSystem());
             _systems.Add(_systemsFactory.CreateSyncDebugSystem(false));
             _systems.Add(new DeleteDeadWorldEntitiesSystem());
+
+            _systems.Add(new SendDiffToClientsSystem(_components, _unreliableChannel, _reliableChannel));
 
             _clientsFilter = _mainWorld.Filter<ClientComponent>().End();
             _poolClients = _mainWorld.GetPool<ClientComponent>();
@@ -280,7 +283,6 @@ namespace XFlow.Server
             _mainWorld.EntityDestroyedListeners.Add(_copyToDeadWorldListener);
 
 
-            _inputWorld = new EcsWorld(EcsWorlds.Input);
             _systems.AddWorld(_inputWorld, EcsWorlds.Input);
 
             _mainWorld.AddUnique(_config);
@@ -391,10 +393,10 @@ namespace XFlow.Server
                 client.UserId = userAddress.UserId;
                 client.ReliableAddress = userAddress;
                 client.SentWorld = new EcsWorld("sent");
-                client.SentWorldRelaible = new EcsWorld("rela");
+                client.SentWorldReliable = new EcsWorld("rela");
 
-                var dif = WorldDiff.BuildDiff(_components, client.SentWorldRelaible, _mainWorld);
-                client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
+                var dif = WorldDiff.BuildDiff(_components, client.SentWorldReliable, _mainWorld);
+                client.SentWorldReliable.CopyFrom(_mainWorld, _components.ContainsCollection);
                 client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
 
                 packet = new Packet
@@ -416,10 +418,7 @@ namespace XFlow.Server
 
                 _logger.Log(LogLevel.Information, $"send initial world at tick {_mainWorld.GetTick()}");
 
-                var inputEntity = _inputWorld.NewEntity();
-                inputEntity.EntityAdd<InputComponent>(_inputWorld);
-                inputEntity.EntityAdd<UserConnectedInputComponent>(_inputWorld);
-                inputEntity.EntityAdd<ClientComponent>(_inputWorld) = client;
+                UserService.InputUserConnected(_inputWorld, client);
             }
         }
 
@@ -505,80 +504,6 @@ namespace XFlow.Server
             SyncServices.FilterInputs(_inputWorld, time);
             //обновляем мир 1 раз
             SyncServices.Tick(_systems, _inputWorld, _mainWorld);
-
-            //UDP send to clients
-            foreach (var clientEntity in _clientsFilter)
-            {
-                ref var client = ref _poolClients.GetRef(clientEntity);
-                if (!string.IsNullOrEmpty(client.UserId) && client.UnreliableAddress != null)
-                {
-                    var compressed = BuildDiffBytes(client, client.SentWorld);
-
-                    //if (Random.Range(0, 1) > 0.8f)//sim lost
-                    //if (false)
-                    {
-                        //SimRandomSend(compressed, client);
-
-                        //_logger.Log(LogLevel.Debug,$"Send udp diff l={compressed.Length}, h={P2P.P2P.GetMessageHash(compressed)}");
-                        _unreliableChannel.SendAsync(client.UnreliableAddress, compressed);
-                    }
-                    
-                    //он может пропасть из пула если SendAsync по цепочке ошибок привел к удалению из пула внутри
-                    if (_poolClients.Has(clientEntity))
-                    {
-                        client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
-                        client.Delay = -999;
-                    }
-                }
-            }
-
-            //TCP send to clients
-            if ((_mainWorld.GetTick() % 15) == 0)
-            {
-                foreach (var clientEntity in _clientsFilter)
-                {
-                    ref var client = ref _poolClients.GetRef(clientEntity);
-
-                    var compressed = BuildDiffBytes(client, client.SentWorldRelaible);
-                    var bytes = P2P.P2P.BuildRequest(compressed);
-                    //_logger.Log(LogLevel.Debug,$"Send tcp diff l={bytes.Length}, h={P2P.P2P.GetMessageHash(bytes)}");
-                    _reliableChannel.SendAsync(client.ReliableAddress, bytes);
-                    //он может пропасть из пула если SendAsync по цепочке ошибок привел к удалению из пула внутри
-                    if (_poolClients.Has(clientEntity))
-                    {
-                        client.SentWorldRelaible.CopyFrom(_mainWorld, _components.ContainsCollection);
-                    }
-                }
-
-                var filter = _mainWorld.Filter<DeletedEntityComponent>(false).End();
-                foreach (var entity in filter)
-                {
-                    _mainWorld.DelEntity(entity);
-                }
-            }
-        }
-
-        void BuildDiff(ClientComponent client, EcsWorld srcWorld, ref BinaryProtocol.DataWorldDiff data)
-        {
-            var dif = WorldDiff.BuildDiff(_components, srcWorld, _mainWorld);
-            data.DestTick = _mainWorld.GetTick();
-            if (srcWorld.HasUnique<TickComponent>())
-                data.SrcTick = srcWorld.GetTick();
-            data.Delay = client.Delay;
-            data.Diff = dif;
-            data.TickDelayMs = client.DelayMs;
-        }
-
-        byte[] BuildDiffBytes(ClientComponent client, EcsWorld srcWorld)
-        {
-            var data = new BinaryProtocol.DataWorldDiff();
-            BuildDiff(client, srcWorld, ref data);
-
-            _writer.Reset();
-            BinaryProtocol.WriteWorldDiff(_writer, data);
-
-            var compressed = P2P.P2P.Compress(_writer.ToByteArray());
-            return compressed;
         }
     }
 }
