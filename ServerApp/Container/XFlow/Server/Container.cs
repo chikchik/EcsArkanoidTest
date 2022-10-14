@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +23,6 @@ using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
 using XFlow.Net.ClientServer.Protocol;
-using XFlow.Server.Components;
 using XFlow.Server.Services;
 using XFlow.Server.Systems;
 using XFlow.Utils;
@@ -51,13 +49,13 @@ namespace XFlow.Server
 
         private EcsWorld _mainWorld;
         private EcsWorld _deadWorld;
-        private EcsWorld _inputWorld;
+        private readonly EcsWorld _inputWorld;
         private EcsWorld _eventWorld;
 
         private EcsSystems _systems;
 
-        private List<string> _missingClients = new List<string>();
         private ApplyInputWorldService _inputService = new ApplyInputWorldService();
+        private UserService _userService;
         private EntityDestroyedListener _destroyedListener = new EntityDestroyedListener();
         private CopyToDeadWorldListener _copyToDeadWorldListener;
         
@@ -71,7 +69,6 @@ namespace XFlow.Server
         private TickrateConfigComponent _config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1 };
 
         private EcsFilter _clientsFilter;
-        private EcsPool<ClientComponent> _poolClients;
 
         private bool _isRun;
         private CancellationTokenSource _token;  
@@ -97,6 +94,7 @@ namespace XFlow.Server
                 
                 
                 _inputWorld = new EcsWorld(EcsWorlds.Input);
+                _userService = new UserService(_inputService, _inputWorld, _components);
             }
             catch (Exception e)
             {
@@ -122,7 +120,7 @@ namespace XFlow.Server
                 _isRun = true;
 
                 _token = new CancellationTokenSource();
-                Task.Run(Loop, _token.Token);
+                _ = Task.Run(Loop, _token.Token);
             }
             catch (Exception e)
             {
@@ -154,7 +152,7 @@ namespace XFlow.Server
                 
                 var sb = new StringBuilder(512);
                 sb.AppendLine($"tick: {_mainWorld.GetTick()}");
-                sb.AppendLine($"tickrate: {_config.Tickrate}");
+                sb.AppendLine($"tick rate: {_config.Tickrate}");
                 sb.AppendLine($"world entities: {_mainWorld.GetAliveEntitiesCount()}");
                 sb.AppendLine($"world size: {_mainWorld.GetAllocMemorySizeInBytes() / 1024} kb");
 
@@ -179,15 +177,15 @@ namespace XFlow.Server
             switch (message.Type)
             {
                 case UnreliableChannelMessageType.MessageReceived:
-                    var messageArgs = message.GetMessageReceivedArguments().Value;
+                    var messageArgs = message.GetMessageReceivedArguments()!.Value;
                     lock (_locker)
                     {
-                        GotInput1(new HGlobalReader(messageArgs.Message.ToArray()), messageArgs.UserAddress);
+                        _userService.InputUserMessage(messageArgs.UserAddress, messageArgs.Message);
                     }
                     break;
 
                 case UnreliableChannelMessageType.ChannelClosed:
-                    var closedArgs = message.GetChannelClosedArguments().Value;
+                    var closedArgs = message.GetChannelClosedArguments()!.Value;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -197,28 +195,29 @@ namespace XFlow.Server
         private async ValueTask OnReliableMessageReceived(ReliableChannelMessage message)
         {
             _logger.Log(LogLevel.Trace, $"OnReliableMessageReceived.{message.Type}");
+            
             switch (message.Type)
             {
                 case ReliableChannelMessageType.UserConnected:
-                    var connectedArgs = message.GetUserConnectedArguments().Value;
+                    var connectedArgs = message.GetUserConnectedArguments()!.Value;
                     _logger.Log(LogLevel.Debug, $"Connected {connectedArgs.UserAddress.UserId}");
                     break;
 
                 case ReliableChannelMessageType.UserDisconnected:
-                    var disconnectedArgs = message.GetUserDisconnectedArguments().Value;
+                    var disconnectedArgs = message.GetUserDisconnectedArguments()!.Value;
                     var userId = disconnectedArgs.UserAddress.UserId;
                     _logger.Log(LogLevel.Debug, $"Disconnected {userId}");
                     lock (_locker)
                     {
-                        UserService.InputUserDisconnected(_inputWorld, disconnectedArgs.UserAddress);
+                        _userService.InputUserDisconnected(disconnectedArgs.UserAddress);
                     }
                     break;
 
                 case ReliableChannelMessageType.MessageReceived:
-                    var messageArgs = message.GetMessageReceivedArguments().Value;
+                    var messageArgs = message.GetMessageReceivedArguments()!.Value;
                     lock (_locker)
                     {
-                        ProcessMessage(messageArgs.Message.ToArray(), messageArgs.UserAddress);
+                        ProcessMessage(messageArgs.Message, messageArgs.UserAddress);
                     }
 
                     break;
@@ -242,6 +241,9 @@ namespace XFlow.Server
             _mainWorld.Flags |= EcsWorldFlags.PrimaryMainWorld;
             _mainWorld.SetDefaultGen(InternalConfig.ServerWorldGenMin, InternalConfig.ServerWorldGenMax);
             
+            //todo, надо избавиться от этого вызова
+            _userService.SetMainWorld(_mainWorld);
+            
             _systems = new EcsSystems(_mainWorld);
             _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
             _systems.Add(new UserConnectedSystem());
@@ -256,7 +258,6 @@ namespace XFlow.Server
             _systems.Add(new SendDiffToClientsSystem(_components, _unreliableChannel, _reliableChannel));
 
             _clientsFilter = _mainWorld.Filter<ClientComponent>().End();
-            _poolClients = _mainWorld.GetPool<ClientComponent>();
             
             _logger.Log(LogLevel.Information, "Init world done");
         }
@@ -359,15 +360,15 @@ namespace XFlow.Server
             }
         }
 
-        private void ProcessMessage(byte[] msgBytes, IUserAddress userAddress)
+        private void ProcessMessage(ReadOnlyMemory<byte> data, IUserAddress userAddress)
         {
-            _logger.Log(LogLevel.Debug,
-                $"ProcessMessage id={userAddress.UserId} size={msgBytes.Length}");
+            _logger.Log(LogLevel.Debug, $"ProcessMessage id={userAddress.UserId}");
 
+            var msgBytes = data.ToArray();
             if (msgBytes[0] == 0xff && msgBytes[1] == 0 && msgBytes[2] == 0 && msgBytes[3] == 0)
             {
                 _logger.Log(LogLevel.Debug, $"receive input");
-                GotInput1(new HGlobalReader(msgBytes), userAddress);
+                _userService.InputUserMessage(userAddress, msgBytes);
                 return;
             }
 
@@ -376,8 +377,7 @@ namespace XFlow.Server
             if (packet.hasHello)
             {
                 _logger.Log(LogLevel.Information, $"got hello from client {userAddress.UserId}");
-
-
+                
                 if (!_worldInitialized)
                 {
                     //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
@@ -386,80 +386,10 @@ namespace XFlow.Server
                         StartSystems(Convert.FromBase64String(state));
                 }
                 
-                UserService.InputUserConnected(_inputWorld, userAddress);
+                _userService.InputUserConnected(userAddress);
             }
         }
 
-        private void GotInput1(HGlobalReader reader, IUserAddress address)
-        {
-            try
-            {
-                if (!PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, address.UserId, out int playerEntity))
-                {
-                    _logger.Log(LogLevel.Information, $"not found player {address.UserId}");
-                    
-                    return;
-                }
-                
-                ref var clientComponent = ref _poolClients.GetRef(playerEntity);
-
-                clientComponent.UnreliableAddress = address;
-                
-                var inputTime = reader.ReadInt32();
-                var time = inputTime;
-
-                var type = reader.ReadInt32();
-
-                var currentTick = _mainWorld.GetTick();
-                var step = _mainWorld.GetUnique<TickDeltaComponent>().Value;
-                //на сколько тиков мы опередили сервер или отстали
-                var delay = time - currentTick;
-
-                /*
-                 * delay > 0 - клиент опережает сервер
-                 * delay == 0 - клиент идет оптимально с сервером
-                 * delay < 0 клиент опоздал и тик на сервере уже прошел
-                 */
-
-                //если ввод от клиента не успел прийти вовремя, то выполним его уже в текущем тике
-                if (delay < 0)
-                    time = currentTick;
-
-                var sentWorldTick = clientComponent.SentWorld.GetTick() - step.Value;
-
-                if (delay == 0 && sentWorldTick == time)
-                    time = currentTick + step.Value;
-
-                clientComponent.LastClientTick = inputTime;
-                clientComponent.LastServerTick = currentTick;
-
-                var component = _components.GetComponent(type);
-
-                if (component.GetComponentType() == typeof(PingComponent)) //ping
-                {
-                    clientComponent.LastPingTick = inputTime;
-                    clientComponent.Delay = delay;
-                    var ms = _nextTickAt - DateTime.UtcNow;
-                    clientComponent.DelayMs = ms.Milliseconds;
-                    //Debug.Log(clientComponent.DelayMs);
-                }
-                else
-                {
-                    //var cname = component.GetComponentType().Name;
-                    //cname = cname.Replace("Component", "C.");
-                    //var end = inputTime < currentTick ? "!!!" : "";
-                    //log($"got input {cname}:{inputTime} at {currentTick.Value} {end}");
-
-                    var componentData = component.ReadSingleComponent(reader) as IInputComponent;
-
-                    _inputService.Input(_inputWorld, address.UserId, time, componentData);
-                }
-            }
-            finally
-            {
-                reader.Dispose();
-            }
-        }
 
         private void Tick()
         {
