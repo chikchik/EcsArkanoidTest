@@ -75,6 +75,9 @@ namespace ServerApp.Server
             var id = BitConverter.ToInt32(tempBuffer);
             var clientAddress = new ReliableUserAddress(id.ToString(), $"{id}-tcp", socket);
         
+            lock(_openedConnections)
+                _openedConnections.Add(clientAddress);
+            
             await NotifySubscribersAsync(ReliableChannelMessage.UserConnected(new UserConnectedArguments(clientAddress)));
             await ClientAsync(clientAddress, pos, buffer, tempBuffer);
             await UserDisconnectedAsync(clientAddress);
