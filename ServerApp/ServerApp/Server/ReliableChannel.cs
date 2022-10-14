@@ -14,25 +14,21 @@ namespace ServerApp.Server
 {
     public class ReliableChannel : IReliableChannel
     {
-        private readonly Socket _socket;
         private bool _isDisposed;
-
-        private readonly object _locker = new object();
-
+        private readonly Socket _socket;
         private readonly List<IReliableChannel.SubscribeDelegate> _subscribers;
-
-        private readonly Dictionary<IUserAddress, bool> _disposedConnections;
         private readonly List<ReliableUserAddress> _openedConnections = new List<ReliableUserAddress>();
 
         public ReliableChannel(Socket socket)
         {
             _socket = socket;
-            _disposedConnections = new Dictionary<IUserAddress, bool>();
             _subscribers = new List<IReliableChannel.SubscribeDelegate>();
         }
 
         public async ValueTask DisposeAsync()
         {
+            _socket.Dispose();
+            
             _isDisposed = true;
             lock (_openedConnections)
             {
@@ -43,16 +39,8 @@ namespace ServerApp.Server
                 _openedConnections.Clear();
             }
 
-            /*
-            foreach (var kvp in _connections)
-            {
-                kvp.Value.Disconnect(false);
-                kvp.Value.Dispose();
-            }*/
-
-            _socket.Dispose();
-            _subscribers.Clear();
-            //_connections.Clear();
+            lock(_subscribers)
+                _subscribers.Clear();
         }
 
 
@@ -69,7 +57,7 @@ namespace ServerApp.Server
                 SocketUtils.GetSlice(buffer, ref pos, size, ref tempBuffer);
                 var readOnly = new ReadOnlyMemory<byte>(tempBuffer, 0, size);
                 var arguments = new MessageReceivedArguments(address, readOnly);
-                await NotifySubscribers(ReliableChannelMessage.MessageReceived(arguments));
+                await NotifySubscribersAsync(ReliableChannelMessage.MessageReceived(arguments));
                 
                 buffer.Clear();
                 pos = 0;
@@ -87,12 +75,12 @@ namespace ServerApp.Server
             var id = BitConverter.ToInt32(tempBuffer);
             var clientAddress = new ReliableUserAddress(id.ToString(), $"{id}-tcp", socket);
         
-            await NotifySubscribers(ReliableChannelMessage.UserConnected(new UserConnectedArguments(clientAddress)));
+            await NotifySubscribersAsync(ReliableChannelMessage.UserConnected(new UserConnectedArguments(clientAddress)));
             await ClientAsync(clientAddress, pos, buffer, tempBuffer);
-            await UserDisconnected(clientAddress);
+            await UserDisconnectedAsync(clientAddress);
         }
 
-        private async Task UserDisconnected(ReliableUserAddress address)
+        private async Task UserDisconnectedAsync(ReliableUserAddress address)
         {
             address.Socket.Dispose();
             address.Socket = null;
@@ -100,23 +88,15 @@ namespace ServerApp.Server
             {
                 _openedConnections.Remove(address);
             }
-            await NotifySubscribers(ReliableChannelMessage.UserDisconnected(new UserDisconnectedArguments(address)));
+            await NotifySubscribersAsync(ReliableChannelMessage.UserDisconnected(new UserDisconnectedArguments(address)));
         }
 
         public async void Start()
         {
             while (true)
             {
-                try
-                {
-                    var newSocket = await _socket.AcceptAsync();
-                    _ = Task.Run(async () => { await NewClientAsync(newSocket); });
-                }
-                catch (Exception e)
-                {
-                    //Console.WriteLine(e);
-                    //throw;
-                }
+                var newSocket = await _socket.AcceptAsync();
+                _ = Task.Run(async () => { await NewClientAsync(newSocket); });
             }
         }
 
@@ -139,7 +119,7 @@ namespace ServerApp.Server
             }
             catch (Exception e)
             {
-                await UserDisconnected(address);
+                await UserDisconnectedAsync(address);
                 return new ReliableChannelSendResult(ReliableChannelSendStatus.Unknown,
                     $"{address}\n{e}");
             }
@@ -147,15 +127,21 @@ namespace ServerApp.Server
 
         public async ValueTask<IAsyncDisposable> SubscribeAsync(IReliableChannel.SubscribeDelegate subscriber)
         {
-            _subscribers.Add(subscriber);
+            lock(_subscribers)
+                _subscribers.Add(subscriber);
 
             return new AnonymousDisposable(async () => _subscribers.Remove(subscriber));
         }
 
-        private async Task NotifySubscribers(ReliableChannelMessage message)
+        private async Task NotifySubscribersAsync(ReliableChannelMessage message)
         {
-            for (var i = 0; i < _subscribers.Count; i++)
-                await _subscribers[i].Invoke(message);
+            IReliableChannel.SubscribeDelegate[] copy;
+            lock (_subscribers)
+            {
+                copy = _subscribers.ToArray();
+            }
+            for (var i = 0; i < copy.Length; i++)
+                await copy[i].Invoke(message);
         }
     }
 }
