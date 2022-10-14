@@ -14,7 +14,7 @@ namespace XFlow.Server
         public int LastPingTick;
         public int LastClientTick;
         public int LastServerTick;
-        public string UserAddressId;
+        public string UserId;
         public IUserAddress ReliableAddress;
         public IUserAddress UnreliableAddress;
 

@@ -24,6 +24,8 @@ using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
 using XFlow.Net.ClientServer.Protocol;
+using XFlow.Server.Components;
+using XFlow.Server.Systems;
 using XFlow.Utils;
 using Zenject;
 using Debug = UnityEngine.Debug;
@@ -156,7 +158,7 @@ namespace XFlow.Server
                 foreach (var entity in _clientsFilter)
                 {
                     var client = entity.EntityGet<ClientComponent>(_mainWorld);
-                    sb.AppendLine($"  id: {client.UserAddressId}, lastTick: {client.LastClientTick}");
+                    sb.AppendLine($"  id: {client.UserId}, lastTick: {client.LastClientTick}");
                 }
 
                 return sb.ToString();
@@ -204,14 +206,10 @@ namespace XFlow.Server
                     _logger.Log(LogLevel.Debug, $"Disconnected {userId}");
                     lock (_locker)
                     {
-                        if (PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, userId,
-                            out int playerEntity))
-                        {
-                            Debug.Log($"leave player {playerEntity}, id={userId}");
-                            _poolClients.Del(playerEntity);
-                            //ref var client = ref _poolClients.GetRef(playerEntity);
-                            PlayerService.InputLeavePlayer(_inputWorld, userId, true);
-                        }
+                        var inputEntity = _inputWorld.NewEntity();
+                        inputEntity.EntityAdd<InputComponent>(_inputWorld);
+                        inputEntity.EntityAdd<UserDisconnectedInputComponent>(_inputWorld);
+                        inputEntity.EntityAdd<UserAddressComponent>(_inputWorld).Address = disconnectedArgs.UserAddress;
                     }
                     break;
 
@@ -242,8 +240,12 @@ namespace XFlow.Server
             _mainWorld = new EcsWorld("serv");
             _mainWorld.Flags |= EcsWorldFlags.PrimaryMainWorld;
             _mainWorld.SetDefaultGen(InternalConfig.ServerWorldGenMin, InternalConfig.ServerWorldGenMax);
+            
             _systems = new EcsSystems(_mainWorld);
             _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
+            _systems.Add(new UserConnectedSystem());
+            _systems.Add(new UserDisconnectedSystem());
+            
             _systemsFactory.AddNewSystems(_systems,
                 new IEcsSystemsFactory.Settings { AddServerSystems = true });
             _systems.Add(new TickSystem());
@@ -360,21 +362,6 @@ namespace XFlow.Server
             _logger.Log(LogLevel.Debug,
                 $"ProcessMessage id={userAddress.UserId} size={msgBytes.Length}");
 
-            /*
-            if (P2P.P2P.CheckError(msgBytes))
-            {
-                var clientEntity = GetClientEntity(userAddress.UserId);
-                if (clientEntity != -1)
-                {
-                    var client = _poolClients.Get(clientEntity);
-                    _mainWorld.MarkEntityAsDeleted(clientEntity);
-                    _logger.Log(LogLevel.Warning, $"removed client {userAddress}");
-                    PlayerService.InputLeavePlayer(_inputWorld, client.UserAddressId);
-                }
-
-                return;
-            }*/
-
             if (msgBytes[0] == 0xff && msgBytes[1] == 0 && msgBytes[2] == 0 && msgBytes[3] == 0)
             {
                 _logger.Log(LogLevel.Debug, $"receive input");
@@ -386,10 +373,6 @@ namespace XFlow.Server
 
             if (packet.hasHello)
             {
-                var client = new ClientComponent();
-                client.UserAddressId = userAddress.UserId;
-                client.ReliableAddress = userAddress;
-
                 _logger.Log(LogLevel.Information, $"got hello from client {userAddress.UserId}");
 
                 var hello = new Hello();
@@ -404,10 +387,10 @@ namespace XFlow.Server
                         StartSystems(Convert.FromBase64String(state));
                 }
 
-
+                var client = new ClientComponent();
+                client.UserId = userAddress.UserId;
+                client.ReliableAddress = userAddress;
                 client.SentWorld = new EcsWorld("sent");
-                // client.SentWorld.CopyFrom(world);
-
                 client.SentWorldRelaible = new EcsWorld("rela");
 
                 var dif = WorldDiff.BuildDiff(_components, client.SentWorldRelaible, _mainWorld);
@@ -433,10 +416,10 @@ namespace XFlow.Server
 
                 _logger.Log(LogLevel.Information, $"send initial world at tick {_mainWorld.GetTick()}");
 
-                var playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, userAddress.UserId);
-                playerEntity.EntityAdd<ClientComponent>(_mainWorld) = client;
-                PlayerService.InputJoinPlayer(_mainWorld, _inputWorld, userAddress.UserId, playerEntity);
-                Debug.Log($"created player entity {playerEntity}, id={userAddress.UserId}");
+                var inputEntity = _inputWorld.NewEntity();
+                inputEntity.EntityAdd<InputComponent>(_inputWorld);
+                inputEntity.EntityAdd<UserConnectedInputComponent>(_inputWorld);
+                inputEntity.EntityAdd<ClientComponent>(_inputWorld) = client;
             }
         }
 
@@ -446,12 +429,6 @@ namespace XFlow.Server
             {
                 if (!PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, address.UserId, out int playerEntity))
                 {
-                    /*
-                    if (!_missingClients.Contains(address.UserId))
-                    {
-                        _missingClients.Add(address.UserId);
-                    }*/
-
                     _logger.Log(LogLevel.Information, $"not found player {address.UserId}");
                     
                     return;
@@ -533,7 +510,7 @@ namespace XFlow.Server
             foreach (var clientEntity in _clientsFilter)
             {
                 ref var client = ref _poolClients.GetRef(clientEntity);
-                if (!string.IsNullOrEmpty(client.UserAddressId) && client.UnreliableAddress != null)
+                if (!string.IsNullOrEmpty(client.UserId) && client.UnreliableAddress != null)
                 {
                     var compressed = BuildDiffBytes(client, client.SentWorld);
 
