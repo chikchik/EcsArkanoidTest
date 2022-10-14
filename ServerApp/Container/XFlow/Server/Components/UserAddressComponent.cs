@@ -7,10 +7,4 @@ namespace XFlow.Server.Components
     {
         public IUserAddress Address;
     }
-    public struct UserConnectedInputComponent
-    {
-    }
-    public struct UserDisconnectedInputComponent
-    {
-    }
 }
