@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <RootNamespace></RootNamespace>
+	  
+	  <TargetFramework>netcoreapp3.1</TargetFramework>
 
 	  <XFlowEcsPackage>..\..\Submodules\module-ecs\Package</XFlowEcsPackage>
 	  <XFlowCentral>..\..\Submodules\module-ecs-central</XFlowCentral>
