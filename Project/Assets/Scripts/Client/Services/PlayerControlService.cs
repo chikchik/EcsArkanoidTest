@@ -1,24 +1,22 @@
-﻿using Game.ClientServer;
+﻿using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components;
-using Game.View;
-using Game.ClientServer.Services;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.UI;
+using Game.View;
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
-using XFlow.Modules.Inventory.ClientServer;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
 using Zenject;
 
-namespace Game
+namespace Game.Client.Services
 {
-    public class PlayerControlService : IInventoryInputService
+    public class PlayerControlService 
     {
         private EcsWorld _inputWorld;
         private EcsWorld _world;
@@ -105,27 +103,7 @@ namespace Game
             Apply(new InputMechEnterLeaveComponent());
         }
 
-        public void MoveItem(int inventory, int item, int amount)
-        {
-            var component = new MoveItemComponent
-            {
-                Inventory = _world.PackEntity(inventory),
-                Item = _world.PackEntity(item),
-                Amount = amount
-            };
-            
-            Apply(component);
-        }
-
-        public void ClearInventory(int inventory)
-        {
-            var component = new ClearInventoryComponent
-            {
-                Inventory = _world.PackEntity(inventory)
-            };
-
-            Apply(component);
-        }
+        
         
         public void MoveToDirection(Vector3 dir)
         {
@@ -193,7 +171,7 @@ namespace Game
             Apply(component);
         }
 
-        private void Apply(IInputComponent component)
+        public void Apply(IInputComponent component)
         {
             //reused on server
             ApplyInputWorldService.CreateInputEntity(_inputWorld, playerId, tick, component);

@@ -1,4 +1,5 @@
-﻿using Game.Ecs.ClientServer.Components.Inventory;
+﻿using Game.Client.Services;
+using Game.Ecs.ClientServer.Components.Inventory;
 using Game.UI;
 using UnityEngine;
 using XFlow.EcsLite;

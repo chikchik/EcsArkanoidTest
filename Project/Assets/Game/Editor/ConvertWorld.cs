@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Game;
+using Game.Client.Services;
 using Game.ClientServer;
 
 using UnityEditor;
@@ -19,7 +20,7 @@ public static class ConvertWorld
         //и создает для них entities, в GameObjectNameComponent добавляем имя
         //чтоб клиент уже нашел gameobject по имени и связал их между собой
         
-        ClientServices.InitializeNewWorldFromScene(world);
+        UnitySceneService.InitializeNewWorldFromScene(world);
         
         Debug.Log("saving world");
         

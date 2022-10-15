@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.View;
@@ -11,17 +10,14 @@ using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.Client;
 using XFlow.Modules.Box2D.ClientServer;
-using XFlow.Modules.Box2D.ClientServer.Components;
 using XFlow.Modules.Box2D.ClientServer.Components.Joints;
 using XFlow.Modules.Fire.ClientServer.Components;
-using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
 using Object = UnityEngine.Object;
-using Random = UnityEngine.Random;
 
-namespace Game
+namespace Game.Client.Services
 {
-    public class ClientServices
+    public class UnitySceneService
     {
         private static void ForEachObject<T>(Action<T> fn) where T : Component//it is UNITY Mono Component
         {

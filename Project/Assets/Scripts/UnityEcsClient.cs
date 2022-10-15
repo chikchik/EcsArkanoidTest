@@ -1,4 +1,5 @@
-﻿using Game.ClientServer;
+﻿using Game.Client.Services;
+using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Utils;
 using UnityEngine;
@@ -30,7 +31,7 @@ namespace Game
             if (true)
             {
                 var initialWorld = new EcsWorld("initial");
-                ClientServices.InitializeNewWorldFromScene(initialWorld);
+                UnitySceneService.InitializeNewWorldFromScene(initialWorld);
                 var dif = WorldDiff.BuildDiff(_components, new EcsWorld("save"), initialWorld);
                 initialWorldJson = dif.ToBase64String();
             }

@@ -1,4 +1,6 @@
-﻿using Fabros.EcsModules.Mech.ClientServer.Components;
+﻿using Fabros.EcsModules.Mech.ClientServer;
+using Fabros.EcsModules.Mech.ClientServer.Components;
+using Game.Client.Services;
 using Game.Ecs.ClientServer.Components;
 using Game.UI.Mono;
 
@@ -21,8 +23,7 @@ namespace Game.UI
         public MainUI View { get; private set; }
         private EcsWorld _world;
         
-        private PlayerControlService _controlService;
-        private ClientServerServices _clientServerServices;
+        private MechService _mechService;
         private HpViewManager _hpViewManager;
         
         public UI(
@@ -30,14 +31,13 @@ namespace Game.UI
             MainUI view, 
             States states,
             PlayerControlService controlService,
-            ClientServerServices clientServerServices,
-            HpViewManager hpViewManager
+            HpViewManager hpViewManager,
+            MechService mechService
             )
         {
-            this.View = view;
-            this._world = world;
-            this._controlService = controlService;
-            this._clientServerServices = clientServerServices;
+            View = view;
+            _world = world;
+            _mechService = mechService;
 
             view.OnLateUpdate = () =>
             {
@@ -130,7 +130,7 @@ namespace Game.UI
                 return;
             }
             
-            bool hasMech = _clientServerServices.TryGetInteractableMechEntity(_world, controlledEntity, out int mechEntity);
+            bool hasMech = _mechService.TryGetInteractableMechEntity(_world, controlledEntity, out int mechEntity);
             View.MechButton.gameObject.SetActive(hasMech);
         }
     }

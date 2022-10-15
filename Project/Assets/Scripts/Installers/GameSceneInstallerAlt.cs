@@ -1,5 +1,6 @@
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.Client;
+using Game.Client.Services;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Dev;
@@ -15,6 +16,7 @@ using XFlow.Modules.Inventory.Client.Demo.Interfaces;
 using XFlow.Modules.Inventory.Client.Demo.Services;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
+using XFlow.Net.ClientServer;
 
 namespace Game.Installers
 {
@@ -71,6 +73,10 @@ namespace Game.Installers
             
             Container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
             Container.Bind<MechService>().AsSingle();
+            
+            
+            Container.BindInterfacesAndSelfTo<InventoryInputService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
 
             Container.Bind<AssetInstantiator>().AsSingle();
             Container.BindInterfacesAndSelfTo<MyInventoryService>().AsSingle();
@@ -91,6 +97,10 @@ namespace Game.Installers
                 
                 var comp = gameSettings.gameObject.AddComponent<UnityEcsClient>();
                 Container.QueueForInject(comp);
+                
+
+                Container.Bind<IInputService>().To<ClientInputService>()
+                    .AsSingle().WhenInjectedInto<PlayerControlService>();
             }
             else
             {

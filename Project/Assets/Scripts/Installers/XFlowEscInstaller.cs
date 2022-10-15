@@ -1,7 +1,5 @@
 using System.Net;
 using System.Threading;
-using Game.ClientServer;
-using Game.ClientServer.Services;
 using UnityEngine;
 using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.WorldDiff;
@@ -27,9 +25,6 @@ namespace Game.Installers
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Event).FromInstance(new EcsWorld(EcsWorlds.Event)).AsCached();
             Container.Bind<EcsWorld>().WithId(EcsWorlds.Dead).FromInstance(new EcsWorld(EcsWorlds.Dead)).AsCached();
             
-            Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
-            Container.Bind<ClientServerServices>().AsSingle();
-
             _cancellationTokenSource = new CancellationTokenSource();
             Container.Bind<CancellationToken>().FromInstance(_cancellationTokenSource.Token).AsCached();
 
@@ -58,9 +53,6 @@ namespace Game.Installers
                 Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
 
                 Container.Bind<NetClient>().AsSingle();
-
-                Container.Bind<IInputService>().To<ClientInputService>()
-                    .AsSingle().WhenInjectedInto<PlayerControlService>();
             }
             else
             {

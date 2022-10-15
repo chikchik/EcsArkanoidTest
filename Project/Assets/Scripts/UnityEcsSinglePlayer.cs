@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Client.Services;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.ClientServer.Services;
@@ -27,16 +28,11 @@ namespace Game
         private SingleGame _game;
         
 
-        private int _unitEntity = -1;
-        private int _playerEntity = -1;
-        
-        private int _playerId = 1;
-
         public void Start()
         {
             _game.PreInit();
             
-            ClientServices.InitializeNewWorldFromScene(_mainWorld);
+            UnitySceneService.InitializeNewWorldFromScene(_mainWorld);
             _mainWorld.AddUnique<MainPlayerIdComponent>().Value = "1";
             var playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, "1");
             PlayerService.InputJoinPlayer(_mainWorld, _inputWorld, "1", playerEntity);
