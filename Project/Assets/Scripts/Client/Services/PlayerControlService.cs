@@ -9,6 +9,8 @@ using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Tick.Other;
+using XFlow.Net.Client;
+using XFlow.Net.Client.Services;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
@@ -21,19 +23,18 @@ namespace Game.Client.Services
         private EcsWorld _inputWorld;
         private EcsWorld _world;
 
-        private IInputService _input;
+        private IClientInputService _inputService;
         
         public PlayerControlService(
             [Inject(Id = EcsWorlds.Input)] EcsWorld inputWorld,
-            [InjectOptional] IInputService input,
+            [InjectOptional] IClientInputService inputService,
             EcsWorld world)
         {
             this._inputWorld = inputWorld;
             this._world = world;
-            this._input = input;
+            _inputService = inputService;
         }
         
-        private string playerId => _world.GetUnique<MainPlayerIdComponent>().Value;
         private int unitEntity
         {
             get
@@ -173,11 +174,7 @@ namespace Game.Client.Services
 
         public void Apply(IInputComponent component)
         {
-            //reused on server
-            ApplyInputWorldService.CreateInputEntity(_inputWorld, playerId, tick, component);
-            
-            //send player input to server
-            _input?.Input(_inputWorld, playerId, tick, component);
+            _inputService.Input(_world, _inputWorld, tick, component);
         }
     }
 }

@@ -3,6 +3,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.UI;
 using XFlow.Ecs.Client.Components;
 using XFlow.EcsLite;
+using XFlow.Net.Client.Ecs.Components;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;

@@ -8,6 +8,7 @@ using XFlow.EcsLite;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
+using XFlow.Net.ClientServer.Services;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
@@ -34,7 +35,7 @@ namespace Game.Ecs.ClientServer.Systems
         {
             var poolInputTick = _inputWorld.GetPool<InputTickComponent>();
             var poolInputType = _inputWorld.GetPool<InputTypeComponent>();
-            var poolPlayer    = _inputWorld.GetPool<InputPlayerComponent>();
+            var poolPlayer    = _inputWorld.GetPool<InputPlayerEntityComponent>();
             
             var tick = _world.GetTick();
             
@@ -43,12 +44,11 @@ namespace Game.Ecs.ClientServer.Systems
                 if (poolInputTick.Get(inputEntity).Tick != tick)
                     continue;
                 
-                string playerId = poolPlayer.Get(inputEntity).PlayerID;
-                
-                if (!PlayerService.TryGetPlayerEntityByPlayerId(_world, playerId, out int playerEntity))
+
+                if (!poolPlayer.Get(inputEntity).Value.Unpack(_world, out int playerEntity)) 
                     continue;
                 
-                if (!PlayerService.TryGetControlledEntityByPlayerId(_world, playerId, out int unitEntity))
+                if (!PlayerService.TryGetControlledEntity(_world, playerEntity, out int unitEntity))
                     continue;
                 
 

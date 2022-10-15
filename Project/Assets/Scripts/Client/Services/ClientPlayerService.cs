@@ -1,6 +1,9 @@
 ﻿using Game.Ecs.Client.Components;
 using XFlow.EcsLite;
+using XFlow.Net.Client;
+using XFlow.Net.Client.Ecs.Components;
 using XFlow.Net.ClientServer;
+using XFlow.Net.ClientServer.Services;
 
 namespace Game.UI
 {

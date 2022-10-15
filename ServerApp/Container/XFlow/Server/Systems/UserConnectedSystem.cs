@@ -2,6 +2,7 @@
 using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Net.ClientServer;
+using XFlow.Net.ClientServer.Services;
 using XFlow.Server.Components;
 using XFlow.Utils;
 

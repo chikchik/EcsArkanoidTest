@@ -22,7 +22,9 @@ using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
+using XFlow.Net.ClientServer.Internal;
 using XFlow.Net.ClientServer.Protocol;
+using XFlow.Net.ClientServer.Services;
 using XFlow.Server.Services;
 using XFlow.Server.Systems;
 using XFlow.Utils;
@@ -54,7 +56,6 @@ namespace XFlow.Server
 
         private EcsSystems _systems;
 
-        private ApplyInputWorldService _inputService = new ApplyInputWorldService();
         private UserService _userService;
         private EntityDestroyedListener _destroyedListener = new EntityDestroyedListener();
         private CopyToDeadWorldListener _copyToDeadWorldListener;
@@ -94,7 +95,7 @@ namespace XFlow.Server
                 
                 
                 _inputWorld = new EcsWorld(EcsWorlds.Input);
-                _userService = new UserService(_inputService, _inputWorld, _components);
+                _userService = new UserService(_inputWorld, _components);
             }
             catch (Exception e)
             {

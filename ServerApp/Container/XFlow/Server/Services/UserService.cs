@@ -7,6 +7,8 @@ using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
+using XFlow.Net.ClientServer.Ecs.Components.Input;
+using XFlow.Net.ClientServer.Services;
 using XFlow.Server.Components;
 using XFlow.Utils;
 
@@ -17,16 +19,14 @@ namespace XFlow.Server.Services
         private EcsWorld _mainWorld;
         private EcsWorld _inputWorld;
         private ComponentsCollection _components;
-        private IInputService _inputService;
         
         
         private EcsPool<ClientComponent> _poolClients;
         private HGlobalReader _reader = new HGlobalReader();
         
-        public UserService(IInputService inputService, EcsWorld inputWorld, 
+        public UserService(EcsWorld inputWorld, 
             ComponentsCollection components)
         {
-            _inputService = inputService;
             _inputWorld = inputWorld;
             _components = components;
             
@@ -109,15 +109,17 @@ namespace XFlow.Server.Services
             }
             else
             {
-                var componentData = component.ReadSingleComponent(_reader) as IInputComponent;
-                _inputService.Input(_inputWorld, userAddress.UserId, time, componentData);
+                var inputComponent = component.ReadSingleComponent(_reader) as IInputComponent;
+                
+                var inputEntity = _inputWorld.NewEntity();
+                inputEntity.EntityAdd<InputComponent>(_inputWorld);
+                inputEntity.EntityAdd<InputTypeComponent>(_inputWorld).Value = inputComponent.GetType();
+                inputEntity.EntityAdd<InputTickComponent>(_inputWorld).Tick = time;
+                inputEntity.EntityAdd<InputPlayerEntityComponent>(_inputWorld).Value = _mainWorld.PackEntity(playerEntity);
+
+                var pool = _inputWorld.GetOrCreatePoolByType(inputComponent.GetType());
+                pool.AddRaw(inputEntity, inputComponent);
             }
-            
-            /*
-            var inputEntity = _inputWorld.NewEntity();
-            inputEntity.EntityAdd<InputComponent>(_inputWorld);
-            //inputEntity.EntityAdd<UserConnectedInputComponent>(inputWorld);
-            inputEntity.EntityAdd<UserAddressComponent>(_inputWorld).Address = userAddress;*/
         }
     }
 }

@@ -8,6 +8,7 @@ using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
+using XFlow.Net.ClientServer.Services;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems

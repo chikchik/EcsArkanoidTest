@@ -16,6 +16,7 @@ using XFlow.Modules.Inventory.Client.Demo.Interfaces;
 using XFlow.Modules.Inventory.Client.Demo.Services;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
+using XFlow.Net.Client.Services;
 using XFlow.Net.ClientServer;
 
 namespace Game.Installers
@@ -84,6 +85,9 @@ namespace Game.Installers
             
             Container.BindInterfacesAndSelfTo<EntityDestroyedListener>().AsSingle();
 
+            
+            Container.BindInterfacesAndSelfTo<ClientInputService>().AsSingle();
+            
             if (gameSettings.MultiPlayer)
             {
                 if (gameSettings.IsLocalServer)
@@ -97,10 +101,6 @@ namespace Game.Installers
                 
                 var comp = gameSettings.gameObject.AddComponent<UnityEcsClient>();
                 Container.QueueForInject(comp);
-                
-
-                Container.Bind<IInputService>().To<ClientInputService>()
-                    .AsSingle().WhenInjectedInto<PlayerControlService>();
             }
             else
             {

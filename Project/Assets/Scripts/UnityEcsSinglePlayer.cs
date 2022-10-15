@@ -12,8 +12,10 @@ using XFlow.Ecs.ClientServer;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Net.Client;
+using XFlow.Net.Client.Ecs.Components;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
+using XFlow.Net.ClientServer.Services;
 using XFlow.Utils;
 using Zenject;
 
@@ -31,7 +33,6 @@ namespace Game
         public void Start()
         {
             _game.PreInit();
-            
             UnitySceneService.InitializeNewWorldFromScene(_mainWorld);
             _mainWorld.AddUnique<MainPlayerIdComponent>().Value = "1";
             var playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, "1");

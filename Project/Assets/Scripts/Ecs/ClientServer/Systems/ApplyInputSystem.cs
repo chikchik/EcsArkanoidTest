@@ -17,6 +17,7 @@ using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
+using XFlow.Net.ClientServer.Services;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
@@ -46,7 +47,7 @@ namespace Game.Ecs.ClientServer.Systems
         public void Run(EcsSystems systems)
         {
             var poolInputShot   = _inputWorld.GetPool<InputShotComponent>();
-            var poolPlayer      = _inputWorld.GetPool<InputPlayerComponent>();
+            var poolPlayer      = _inputWorld.GetPool<InputPlayerEntityComponent>();
             var poolInputMoveDir= _inputWorld.GetPool<InputMoveDirectionComponent>();
             var poolInputMoveTo = _inputWorld.GetPool<InputMoveToPointComponent>();
             var poolMoveItem = _inputWorld.GetPool<MoveItemComponent>();
@@ -63,23 +64,14 @@ namespace Game.Ecs.ClientServer.Systems
                 if (poolInputTick.Get(inputEntity).Tick != tick)
                     continue;
 
-                var playerId = poolPlayer.Get(inputEntity).PlayerID;
-                
-                if (!PlayerService.TryGetPlayerEntityByPlayerId(_world, playerId, out int playerEntity))
+                if (!poolPlayer.Get(inputEntity).Value.Unpack(_world, out int playerEntity)) 
                     continue;
                 
-                if (!PlayerService.TryGetControlledEntityByPlayerId(_world, playerId, out int unitEntity))
+                if (!PlayerService.TryGetControlledEntity(_world, playerEntity, out int unitEntity))
                     continue;
                 
                 var inputType = poolInputType.Get(inputEntity).Value;
-                
-                /*
-                if (!unitEntity.EntityHas<UnitComponent>(_world))
-                {
-                    _world.LogError($"entity {unitEntity} is not unit");
-                    continue;
-                }*/
-                
+
                 if (inputType == typeof(InputShotComponent))
                 {
                     Shoot(unitEntity, poolInputShot.Get(inputEntity));
