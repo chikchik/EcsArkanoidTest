@@ -342,7 +342,8 @@ namespace XFlow.Server
                         }
                     }
 
-                    await Task.Yield();
+                    await Task.Delay(5);
+                    //await Task.Yield();
                 }
 
                 _logger.Log(LogLevel.Debug, "Ended0");

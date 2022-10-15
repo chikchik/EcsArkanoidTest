@@ -1,4 +1,5 @@
-﻿using Game.Client.Services;
+﻿using Cysharp.Threading.Tasks;
+using Game.Client.Services;
 using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Utils;
@@ -27,6 +28,11 @@ namespace Game
         private void Start()
         {
             NetClientPanel.Create(_client).Show();
+            ConnectAsync().Forget();
+        }
+
+        private async UniTaskVoid ConnectAsync()
+        {
             string initialWorldJson = null;
             if (true)
             {
@@ -36,7 +42,7 @@ namespace Game
                 initialWorldJson = dif.ToBase64String();
             }
 
-            _client.Start(initialWorldJson);
+            await _client.Connect(initialWorldJson);
         }
 
         private void Update()

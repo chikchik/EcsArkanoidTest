@@ -97,8 +97,12 @@ namespace ServerApp.Server
             
             try
             {
-                await _socket.SendToAsync(message.ToArray(), SocketFlags.None, address.EndPoint);
+                var res = await _socket.SendToAsync(message.ToArray(), SocketFlags.None, address.EndPoint);
 
+                if (res <= 0)
+                {
+                    int q = 0;
+                }
                 return new UnreliableChannelSendResult(UnreliableChannelSendStatus.Ok, null);
             }
             catch (Exception e)
