@@ -62,21 +62,15 @@ namespace XFlow.Server
         
 
         private IEcsSystemsFactory _systemsFactory;
-
         private bool _worldInitialized;
-
         private ComponentsCollection _components;
-
         private TickrateConfigComponent _config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1 };
-
         private EcsFilter _clientsFilter;
-
-        private bool _isRun;
-        private CancellationTokenSource _token;  
-        
+        private CancellationTokenSource _token;
         private DateTime _nextTickAt = DateTime.UtcNow;
-        
         private BinaryProtocol.DataHelloRequest? _helloRequest;
+
+        protected bool _waitFirstPlayerState = true;
 
         public Container(ContainerStartingContext context)
         {
@@ -120,10 +114,8 @@ namespace XFlow.Server
                 
                 _logger.Log(LogLevel.Information, "Start done");
 
-                _isRun = true;
-
                 _token = new CancellationTokenSource();
-                _ = Task.Run(Loop, _token.Token);
+                _ = Task.Run(Loop);
             }
             catch (Exception e)
             {
@@ -137,8 +129,6 @@ namespace XFlow.Server
             _logger.Log(LogLevel.Debug, "Container.Stop");
 
             _token.Cancel();
-
-            _isRun = false;
 
             await _reliableChannelSubs.DisposeAsync();
             await _reliableChannel.DisposeAsync();
@@ -265,22 +255,9 @@ namespace XFlow.Server
             _logger.Log(LogLevel.Information, "Init world done");
         }
 
-        private void StartSystems(byte[] initialWorld)
+        private void StartSystems(WorldDiff dif)
         {
-            if (_worldInitialized)
-                return;
-
             _logger.Log(LogLevel.Information, "StartSystems");
-            WorldDiff dif = null;
-            if (initialWorld?.Length > 0)
-            {
-                _logger.Log(LogLevel.Debug, $"FromByteArray {initialWorld.Length}");
-                dif = WorldDiff.FromByteArray(_components, initialWorld);
-            }
-            else
-            {
-                dif = WorldDiff.FromJsonString(_components, File.ReadAllText("world.ecs.json"));
-            }
 
 
             _mainWorld.EntityDestroyedListeners.Add(_destroyedListener);
@@ -300,7 +277,7 @@ namespace XFlow.Server
 
             _systems.PreInit();
 
-            dif.ApplyChanges(_mainWorld);
+            dif?.ApplyChanges(_mainWorld);
 
             _systems.Init();
 
@@ -321,20 +298,42 @@ namespace XFlow.Server
         {
             _logger.Log(LogLevel.Debug, "loop");
 
+            if (!_waitFirstPlayerState)
+            {
+                var worldEcsJson = "world.ecs.json";
+                WorldDiff dif = null;
+                if (File.Exists(worldEcsJson))
+                    dif = WorldDiff.FromJsonString(_components, File.ReadAllText(worldEcsJson));
+                StartSystems(dif);
+            }
+
+            //если мир не создан то ждем 
             while (!_worldInitialized)
             {
                 await Task.Delay(10);
                 if (_helloRequest.HasValue)
                 {
                     //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
-                    StartSystems(_helloRequest.Value.WorldState);
+
+                    var initialWorld = _helloRequest.Value.WorldState;
+                    WorldDiff dif = null;
+                    if (initialWorld?.Length > 0)
+                    {
+                        _logger.Log(LogLevel.Debug, $"FromByteArray {initialWorld.Length}");
+                        dif = WorldDiff.FromByteArray(_components, initialWorld);
+                    }
+                    
+                    StartSystems(dif);
                     _helloRequest = null;
                     break;
                 }
+                if (_token.IsCancellationRequested)
+                    break;
             }
             
+            
             var step = 1.0 / _config.Tickrate;
-            while (_isRun)
+            while (!_token.IsCancellationRequested)
             {
                 var now = DateTime.UtcNow;
                 if (_nextTickAt <= now)
@@ -350,7 +349,8 @@ namespace XFlow.Server
                 }
 
                 var left = _nextTickAt - DateTime.UtcNow;
-                //если достаточно времени в запасе можно поспать, либо крутить цикл в холостую, чтоб не пропустить точный тайминг
+                //если достаточно времени в запасе можно поспать,
+                //если нет - крутим цикл в холостую, чтоб не пропустить точный тайминг
                 if (left.Milliseconds > 1)
                     await Task.Delay(left);
             }
