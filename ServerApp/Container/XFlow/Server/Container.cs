@@ -75,6 +75,8 @@ namespace XFlow.Server
         private CancellationTokenSource _token;  
         
         private DateTime _nextTickAt = DateTime.UtcNow;
+        
+        private BinaryProtocol.DataHelloRequest? _helloRequest;
 
         public Container(ContainerStartingContext context)
         {
@@ -302,8 +304,6 @@ namespace XFlow.Server
 
             _systems.Init();
 
-            //sentWorld = WorldUtils.CopyWorld(components, world);
-
             _worldInitialized = true;
         }
 
@@ -317,36 +317,51 @@ namespace XFlow.Server
             _systemsFactory = new EcsSystemsFactory(container);
         }
 
+        private async void Loop0()
+        {
+            _logger.Log(LogLevel.Debug, "loop");
+
+            while (!_worldInitialized)
+            {
+                await Task.Delay(10);
+                if (_helloRequest.HasValue)
+                {
+                    //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
+                    StartSystems(_helloRequest.Value.WorldState);
+                    _helloRequest = null;
+                    break;
+                }
+            }
+            
+            var step = 1.0 / _config.Tickrate;
+            while (_isRun)
+            {
+                var now = DateTime.UtcNow;
+                if (_nextTickAt <= now)
+                {
+                    //Console.WriteLine($"tick {leo.GetCurrentTick(world)}");
+                    _nextTickAt = _nextTickAt.AddSeconds(step);
+                    if (_nextTickAt <= now)
+                        _nextTickAt = now.AddSeconds(step);
+                    lock (_locker)
+                    {
+                        Tick();
+                    }
+                }
+
+                var left = _nextTickAt - DateTime.UtcNow;
+                //если достаточно времени в запасе можно поспать, либо крутить цикл в холостую, чтоб не пропустить точный тайминг
+                if (left.Milliseconds > 1)
+                    await Task.Delay(left);
+            }
+
+            _logger.Log(LogLevel.Debug, "Ended0");
+        }
         private async void Loop()
         {
             try
             {
-                _logger.Log(LogLevel.Debug, "loop");
-                var next = DateTime.UtcNow;
-
-                var step = 1.0 / _config.Tickrate;
-                while (_isRun)
-                {
-                    if (next > DateTime.UtcNow || !_worldInitialized)
-                        continue;
-                    
-                    if (_nextTickAt <= DateTime.UtcNow && _worldInitialized)
-                    {
-                        //Console.WriteLine($"tick {leo.GetCurrentTick(world)}");
-                        _nextTickAt = _nextTickAt.AddSeconds(step);
-                        if (_nextTickAt <= DateTime.UtcNow)
-                            _nextTickAt = DateTime.UtcNow.AddSeconds(step);
-                        lock (_locker)
-                        {
-                            Tick();
-                        }
-                    }
-
-                    await Task.Delay(5);
-                    //await Task.Yield();
-                }
-
-                _logger.Log(LogLevel.Debug, "Ended0");
+                Loop0();
             }
             catch (OperationCanceledException e)
             {
@@ -373,21 +388,17 @@ namespace XFlow.Server
                 _userService.InputUserMessage(userAddress, msgBytes);
                 return;
             }
-
-            var hello = new BinaryProtocol.DataHelloRequest();
-            var reader = HGlobalReader.Create(data);
-            BinaryProtocol.Read(reader, ref hello);
-            
-            _logger.Log(LogLevel.Information, $"got hello from client {userAddress.UserId}");
-            
-            if (!_worldInitialized)
-            {
-                //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
-                if (hello.WorldState != null)
-                    StartSystems(hello.WorldState);
-            }
             
             _userService.InputUserConnected(userAddress);
+            
+            if (_worldInitialized)
+                return;
+
+            var hello = new BinaryProtocol.DataHelloRequest();
+            BinaryProtocol.Read(HGlobalReader.Create(data), ref hello);
+
+            _helloRequest = hello;
+            _logger.Log(LogLevel.Information, $"got hello from client {userAddress.UserId}");
         }
 
 
