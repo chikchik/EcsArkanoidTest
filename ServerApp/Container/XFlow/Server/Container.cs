@@ -374,7 +374,7 @@ namespace XFlow.Server
                 return;
             }
 
-            var hello = new BinaryProtocol.DataClientHello();
+            var hello = new BinaryProtocol.DataHelloRequest();
             var reader = HGlobalReader.Create(data);
             BinaryProtocol.Read(reader, ref hello);
             

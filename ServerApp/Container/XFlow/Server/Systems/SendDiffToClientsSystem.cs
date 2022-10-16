@@ -88,7 +88,7 @@ namespace XFlow.Server.Systems
                     var Components = _components.Components.Select(component => component.GetComponentType().FullName)
                         .ToArray();
                     
-                    var data = new BinaryProtocol.DataServerHello{
+                    var data = new BinaryProtocol.DataHelloResponse{
                         WorldState = dif.ToByteArray(true),
                         Components = Components
                     };
