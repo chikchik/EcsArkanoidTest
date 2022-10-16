@@ -59,7 +59,7 @@ namespace XFlow.Server.Systems
             BuildDiff(client, srcWorld, ref data);
 
             _writer.Reset();
-            BinaryProtocol.WriteWorldDiff(_writer, data);
+            BinaryProtocol.Write(_writer, data);
 
             var compressed = P2P.P2P.Compress(_writer.ToByteArray());
             return compressed;
@@ -85,25 +85,18 @@ namespace XFlow.Server.Systems
                     client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
 
                     
-                    var hello = new Hello();
-                    hello.Components = _components.Components.Select(component => component.GetComponentType().FullName)
+                    var Components = _components.Components.Select(component => component.GetComponentType().FullName)
                         .ToArray();
                     
-                    var packet = new Packet
-                    {
-                        hasWelcomeFromServer = true,
-                        hello = hello,
-                        hasHello = true,
-                        WorldUpdate = new WorldUpdateProto
-                        {
-                            difStr = dif.ToBase64String(),
-                            delay = 1
-                        }
+                    var data = new BinaryProtocol.DataServerHello{
+                        WorldState = dif.ToByteArray(true),
+                        Components = Components
                     };
 
+                    var writer = new HGlobalWriter();
+                    BinaryProtocol.Write(writer, data);
 
-                    var data = P2P.P2P.BuildRequest(packet);
-                    _reliableChannel.SendAsync(client.ReliableAddress, data);
+                    _reliableChannel.SendAsync(client.ReliableAddress, writer.ToByteArray());
                 }
                 
                 if (client.UnreliableAddress != null)

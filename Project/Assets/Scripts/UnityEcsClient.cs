@@ -33,13 +33,13 @@ namespace Game
 
         private async UniTaskVoid ConnectAsync()
         {
-            string initialWorldJson = null;
+            byte[] initialWorldJson = null;
             if (true)
             {
                 var initialWorld = new EcsWorld("initial");
                 UnitySceneService.InitializeNewWorldFromScene(initialWorld);
                 var dif = WorldDiff.BuildDiff(_components, new EcsWorld("save"), initialWorld);
-                initialWorldJson = dif.ToBase64String();
+                initialWorldJson = dif.ToByteArray(true);
             }
 
             await _client.Connect(initialWorldJson);

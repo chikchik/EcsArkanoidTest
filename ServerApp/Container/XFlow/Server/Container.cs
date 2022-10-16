@@ -374,22 +374,20 @@ namespace XFlow.Server
                 return;
             }
 
-            var packet = P2P.P2P.ParseResponse<Packet>(msgBytes);
-
-            if (packet.hasHello)
+            var hello = new BinaryProtocol.DataClientHello();
+            var reader = HGlobalReader.Create(data);
+            BinaryProtocol.Read(reader, ref hello);
+            
+            _logger.Log(LogLevel.Information, $"got hello from client {userAddress.UserId}");
+            
+            if (!_worldInitialized)
             {
-                _logger.Log(LogLevel.Information, $"got hello from client {userAddress.UserId}");
-                
-                if (!_worldInitialized)
-                {
-                    //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
-                    var state = packet.hello.InitialWorld;
-                    if (!String.IsNullOrEmpty(state))
-                        StartSystems(Convert.FromBase64String(state));
-                }
-                
-                _userService.InputUserConnected(userAddress);
+                //первый игрок присылает игровой стейт на сервер и сервер стартует с ним
+                if (hello.WorldState != null)
+                    StartSystems(hello.WorldState);
             }
+            
+            _userService.InputUserConnected(userAddress);
         }
 
 
