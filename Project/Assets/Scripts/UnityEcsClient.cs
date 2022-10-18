@@ -1,4 +1,6 @@
-﻿using Game.ClientServer;
+﻿using Cysharp.Threading.Tasks;
+using Game.Client.Services;
+using Game.ClientServer;
 using Game.Ecs.Client.Components;
 using Game.Utils;
 using UnityEngine;
@@ -26,16 +28,21 @@ namespace Game
         private void Start()
         {
             NetClientPanel.Create(_client).Show();
-            string initialWorldJson = null;
+            ConnectAsync().Forget();
+        }
+
+        private async UniTaskVoid ConnectAsync()
+        {
+            byte[] initialWorldJson = null;
             if (true)
             {
                 var initialWorld = new EcsWorld("initial");
-                ClientServices.InitializeNewWorldFromScene(initialWorld);
+                UnitySceneService.InitializeNewWorldFromScene(initialWorld);
                 var dif = WorldDiff.BuildDiff(_components, new EcsWorld("save"), initialWorld);
-                initialWorldJson = dif.ToBase64String();
+                initialWorldJson = dif.ToByteArray(true);
             }
 
-            _client.Start(initialWorldJson);
+            await _client.Connect(initialWorldJson);
         }
 
         private void Update()

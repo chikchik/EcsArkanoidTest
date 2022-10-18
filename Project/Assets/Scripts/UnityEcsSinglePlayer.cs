@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Client.Services;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.ClientServer.Services;
@@ -11,8 +12,10 @@ using XFlow.Ecs.ClientServer;
 using XFlow.EcsLite;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Net.Client;
+using XFlow.Net.Client.Ecs.Components;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
+using XFlow.Net.ClientServer.Services;
 using XFlow.Utils;
 using Zenject;
 
@@ -27,18 +30,13 @@ namespace Game
         private SingleGame _game;
         
 
-        private int _unitEntity = -1;
-        private int _playerEntity = -1;
-        
-        private int _playerId = 1;
-
         public void Start()
         {
             _game.PreInit();
-            
-            ClientServices.InitializeNewWorldFromScene(_mainWorld);
-            _mainWorld.AddUnique<MainPlayerIdComponent>().value = 1;
-            PlayerService.InputJoinPlayer(_inputWorld, 1);
+            UnitySceneService.InitializeNewWorldFromScene(_mainWorld);
+            _mainWorld.AddUnique<MainPlayerIdComponent>().Value = "1";
+            var playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, "1");
+            PlayerService.InputJoinPlayer(_mainWorld, _inputWorld, "1", playerEntity);
             _game.Init();
         }
 

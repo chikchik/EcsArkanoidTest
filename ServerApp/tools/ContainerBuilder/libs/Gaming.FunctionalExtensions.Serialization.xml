@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Gaming.FunctionalExtensions.Serialization</name>
+    </assembly>
+    <members>
+        <!-- Badly formed XML comment ignored for member "M:Gaming.FunctionalExtensions.Serialization.Converters.ResultJsonConverter.Serialize``2(Newtonsoft.Json.JsonWriter,CSharpFunctionalExtensions.Result{``0,``1},Newtonsoft.Json.JsonSerializer)" -->
+    </members>
+</doc>

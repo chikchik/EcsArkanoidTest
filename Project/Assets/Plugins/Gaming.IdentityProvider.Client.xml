@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Gaming.IdentityProvider.Client</name>
+    </assembly>
+    <members>
+        <member name="T:Gaming.IdentityProvider.Client.V1.IdentityProviderClient">
+            <summary>
+            Client for Gaming IdentityProvider service.
+            </summary>
+        </member>
+        <member name="M:Gaming.IdentityProvider.Client.V1.IdentityProviderClient.#ctor(System.Uri)">
+            <summary>
+            Initializes new instance of <see cref="T:Gaming.IdentityProvider.Client.V1.IdentityProviderClient" />
+            </summary>
+            <param name="identityProviderUrl" example="https://mergeville-dev.xfin.net/">URL of IdentityProvider service.</param>
+        </member>
+        <member name="M:Gaming.IdentityProvider.Client.V1.IdentityProviderClient.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Gaming.IdentityProvider.Client.V1.IdentityProviderClient.AssignAccountAsync(System.String,System.String,System.String,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Gaming.IdentityProvider.Client.V1.IdentityProviderClient.AuthenticateAsync(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Gaming.IdentityProvider.Client.V1.IdentityProviderClient.DecodeIdTokenAsync(System.String)">
+            <summary>
+            Decodes Identity Token
+            </summary>
+            <param name="idToken">Identity Token</param>
+            <returns>Principal of the user associated with the Identity Token</returns>
+        </member>
+        <member name="M:Gaming.IdentityProvider.Client.V1.IdentityProviderClient.GetPublicKeyCspAsync">
+            <summary>
+            Returns public key data of the IdentityProvider service
+            </summary>
+            <returns>IdentityProvider public key CSP blob</returns>
+        </member>
+    </members>
+</doc>

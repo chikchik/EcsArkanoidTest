@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Client.Services;
 using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.Utils;
@@ -21,7 +22,7 @@ namespace Game.Ecs.Client.Systems
             var world = systems.GetWorld();
 
             var sceneWorld = new EcsWorld("fromScene");
-            ClientServices.InitializeNewWorldFromScene(sceneWorld);
+            UnitySceneService.InitializeNewWorldFromScene(sceneWorld);
 
             var poolSceneWorldObjects = sceneWorld.GetPool<TransformComponent>();
             var poolSceneWorldObjectNames = sceneWorld.GetPool<GameObjectNameComponent>();

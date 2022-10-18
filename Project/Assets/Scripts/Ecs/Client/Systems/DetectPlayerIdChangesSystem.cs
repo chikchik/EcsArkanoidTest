@@ -3,6 +3,7 @@ using Game.Ecs.ClientServer.Components;
 using Game.UI;
 using XFlow.Ecs.Client.Components;
 using XFlow.EcsLite;
+using XFlow.Net.Client.Ecs.Components;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
@@ -15,21 +16,28 @@ namespace Game.Ecs.Client.Systems
         {
             var world = systems.GetWorld();
 
-            if (!world.TryGetUnique<MainPlayerIdComponent>(out var comp))
+            if (!world.HasUnique<MainPlayerIdComponent>())
                 return;
-            int mainPlayerID = comp.value;
 
             var filter = world
                 .Filter<PlayerComponent>().IncChanges<PlayerComponent>()
                 .End();
 
+            var mainPlayerID = world.GetUnique<MainPlayerIdComponent>().Value;
             foreach (var entity in filter)
             {
-                if (entity.EntityGet<PlayerComponent>(world).id != mainPlayerID)
-                    continue;
-
-                ClientPlayerService.SetPlayerEntity(world, entity);
-                break;
+                if (entity.EntityGet<PlayerComponent>(world).Value == mainPlayerID)
+                {
+                    ClientPlayerService.SetPlayerEntity(world, entity);
+                    int i = 0;
+                    /*
+                    //replace потому что ClientPlayerComponent мог уже быть 
+                    world.GetOrCreateUniqueRef<ClientPlayerEntityComponent>().Player = entity;
+                    world.GetOrCreateUniqueRef<ClientPlayerEntityComponent>().Unit = entity;
+                    
+                    entity.EntityGetOrCreateRef<LerpComponent>(world).Value = 1;
+                    entity.EntityAdd<IsMainPlayerComponent>(world);*/
+                }
             }
         }
     }

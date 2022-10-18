@@ -1,5 +1,6 @@
 ﻿
 using Fabros.EcsModules.Mech.ClientServer.Components;
+using Game.Client.Services;
 using Game.Ecs.ClientServer.Components;
 using Game.UI;
 using Game.UIView;

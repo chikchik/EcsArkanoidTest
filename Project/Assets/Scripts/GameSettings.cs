@@ -20,5 +20,8 @@ namespace Game
         public UdpHost[] UdpHosts;
         [Range(0, 3)]
         public int SelectedUdpHostIndex;
+
+        public string ContainerId;
+        public bool IsLocalServer;
     }
 }

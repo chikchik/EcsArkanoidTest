@@ -31,7 +31,6 @@ namespace Game.ClientServer
     public class EcsSystemsFactory : IEcsSystemsFactory
     {
         private EcsSystemsContainer _container;
-        //private bool _singlePlayer;
         
         public EcsSystemsFactory(DiContainer di)
         {
@@ -168,6 +167,11 @@ namespace Game.ClientServer
         public IEcsSystem CreateSyncDebugSystem(bool pre)
         {
             return new DebugMeSystem(pre);
+        }
+
+        public EcsSystemsContainer GetContainer()
+        {
+            return _container;
         }
     }
 }

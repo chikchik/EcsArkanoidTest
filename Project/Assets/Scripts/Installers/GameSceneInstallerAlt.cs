@@ -1,5 +1,6 @@
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.Client;
+using Game.Client.Services;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Game.Dev;
@@ -15,6 +16,8 @@ using XFlow.Modules.Inventory.Client.Demo.Interfaces;
 using XFlow.Modules.Inventory.Client.Demo.Services;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
+using XFlow.Net.Client.Services;
+using XFlow.Net.ClientServer;
 
 namespace Game.Installers
 {
@@ -71,6 +74,10 @@ namespace Game.Installers
             
             Container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
             Container.Bind<MechService>().AsSingle();
+            
+            
+            Container.BindInterfacesAndSelfTo<InventoryInputService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
 
             Container.Bind<AssetInstantiator>().AsSingle();
             Container.BindInterfacesAndSelfTo<MyInventoryService>().AsSingle();
@@ -78,8 +85,20 @@ namespace Game.Installers
             
             Container.BindInterfacesAndSelfTo<EntityDestroyedListener>().AsSingle();
 
+            
+            Container.BindInterfacesAndSelfTo<ClientInputService>().AsSingle();
+            
             if (gameSettings.MultiPlayer)
             {
+                if (gameSettings.IsLocalServer)
+                    Container.Bind<IServerConnector>()
+                        .FromInstance(new LocalServerConnector(12121, 12345))
+                        .AsSingle();
+                else
+                    Container.Bind<IServerConnector>()
+                        .FromInstance(new FacadeServerConnector(gameSettings.ContainerId))
+                        .AsSingle();
+                
                 var comp = gameSettings.gameObject.AddComponent<UnityEcsClient>();
                 Container.QueueForInject(comp);
             }

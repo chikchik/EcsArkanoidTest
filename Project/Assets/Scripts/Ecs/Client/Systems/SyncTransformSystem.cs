@@ -44,8 +44,6 @@ namespace Game.Ecs.Client.Systems
         
         public void Run(EcsSystems systems)
         {
-            var poolMainPlayer = _world.GetPool<IsMainPlayerComponent>();
-            
             var dt = Time.deltaTime;
             var lerpScale = 12;
 

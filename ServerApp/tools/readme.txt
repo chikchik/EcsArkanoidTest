@@ -1,1 +1,1 @@
-pip install requests
+https://x-flow-ltd.atlassian.net/wiki/spaces/FE/pages/192086025/Room+Service+Ecs#ContainerBuilder

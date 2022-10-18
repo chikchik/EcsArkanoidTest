@@ -8,6 +8,7 @@ using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
+using XFlow.Net.ClientServer.Services;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
@@ -24,8 +25,8 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var inputEntity in filter)
             {
                 var joinPlayerComponent = inputEntity.EntityGet<InputJoinPlayerComponent>(inputWorld);
-                var playerID = joinPlayerComponent.playerID;
-                var leave = joinPlayerComponent.leave;
+                var playerID = joinPlayerComponent.PlayerId;
+                var leave = joinPlayerComponent.Leave;
 
                 var ms = leave ? "leave" : "join";
                 //context.WriteToConsole?.Invoke($"{ms} player {playerID}");
@@ -38,11 +39,18 @@ namespace Game.Ecs.ClientServer.Systems
                         {
                             world.MarkEntityAsDeleted(unitEntity);
                         }
+
+                        if (joinPlayerComponent.DeletePlayerEntity)
+                        {
+                            world.MarkEntityAsDeleted(playerEntity);
+                        }
                     }
                 }
                 else
                 {
-                    var playerEntity = PlayerService.CreatePlayerEntity(world, playerID);
+                    var packedPlayerEntity = joinPlayerComponent.PlayerEntity;
+
+                    packedPlayerEntity.Unpack(world, out int playerEntity);
                     
                     var unitEntity = UnitService.CreateUnitEntity(world);
 

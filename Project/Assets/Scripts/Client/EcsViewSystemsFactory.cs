@@ -11,6 +11,7 @@ using XFlow.Modules.Fire.Client.Systems;
 using XFlow.Modules.Fire.ClientServer.Components;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Components;
+using XFlow.Net.Client;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
