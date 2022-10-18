@@ -25,15 +25,25 @@ namespace XFlow.Server.Systems
             foreach (var entity in _filter)
             {
                 var userAddress = entity.EntityGet<UserAddressComponent>(_inputWorld).Address;
+
+                int playerEntity = -1;
+                if (PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, userAddress.UserId , out playerEntity))
+                {
+                    
+                }
+                else
+                {
+                    playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, userAddress.UserId);
+                    
+                    PlayerService.InputJoinPlayer(_mainWorld, _inputWorld, userAddress.UserId, playerEntity);
+                    _mainWorld.Log($"created player entity {playerEntity}, id={userAddress.UserId}");
+                }
                 
-                ref var client = ref entity.EntityAdd<ClientComponent>(_inputWorld);
+                ref var client = ref playerEntity.EntityGetOrCreateRef<ClientComponent>(_mainWorld);
                 client.UserId = userAddress.UserId;
                 client.ReliableAddress = userAddress;
-                
-                var playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, client.UserId);
-                playerEntity.EntityAdd<ClientComponent>(_mainWorld) = client;
-                PlayerService.InputJoinPlayer(_mainWorld, _inputWorld, client.UserId, playerEntity);
-                _mainWorld.Log($"created player entity {playerEntity}, id={client.UserId}");
+                //нужно ли обнулять udp ?
+                //client.UnreliableAddress = null;
             }
         }
     }

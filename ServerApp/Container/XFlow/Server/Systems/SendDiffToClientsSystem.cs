@@ -72,7 +72,7 @@ namespace XFlow.Server.Systems
             {
                 ref var client = ref _poolClients.GetRef(clientEntity);
                 
-                if (client.SentWorld == null)
+                if (client.SentWorld == null && client.ReliableAddress != null)
                 {
                     //если клиент еще совсем ничего не получал
                     
@@ -128,13 +128,16 @@ namespace XFlow.Server.Systems
             foreach (var clientEntity in _clientsFilter)
             {
                 ref var client = ref _poolClients.GetRef(clientEntity);
+                
+                if (client.SentWorldReliable == null)
+                    continue;
 
                 var compressed = BuildDiffBytes(client, client.SentWorldReliable);
                 var bytes = P2P.P2P.BuildRequest(compressed);
                 //_logger.Log(LogLevel.Debug,$"Send tcp diff l={bytes.Length}, h={P2P.P2P.GetMessageHash(bytes)}");
                 _reliableChannel.SendAsync(client.ReliableAddress, bytes);
                 //он может пропасть из пула если SendAsync по цепочке ошибок привел к удалению из пула внутри
-                if (_poolClients.Has(clientEntity))
+                if (_poolClients.Has(clientEntity) && client.SentWorldReliable != null)
                 {
                     client.SentWorldReliable.CopyFrom(_mainWorld, _components.ContainsCollection);
                 }
