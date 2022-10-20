@@ -344,7 +344,14 @@ namespace XFlow.Server
                         _nextTickAt = now.AddSeconds(step);
                     lock (_locker)
                     {
-                        Tick();
+                        try
+                        {
+                            Tick();
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError(e);
+                        }
                     }
                 }
 
