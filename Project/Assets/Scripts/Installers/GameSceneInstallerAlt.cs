@@ -23,7 +23,7 @@ namespace Game.Installers
 {
     public class GameSceneInstallerAlt : XFlowEscInstaller
     {
-        protected override void DoInstallBindings(GameSettings gameSettings)
+        protected override void DoInstallBindings(GameSettingsScriptable gameSettings)
         {
             /*
              * URP? Android exception workaround  2021.3.10f
@@ -87,7 +87,8 @@ namespace Game.Installers
 
             
             Container.BindInterfacesAndSelfTo<ClientInputService>().AsSingle();
-            
+
+            var starter = FindObjectOfType<GameStarter>().gameObject;
             if (gameSettings.MultiPlayer)
             {
                 if (gameSettings.IsLocalServer)
@@ -99,14 +100,14 @@ namespace Game.Installers
                         .FromInstance(new FacadeServerConnector(gameSettings.ContainerId))
                         .AsSingle();
                 
-                var comp = gameSettings.gameObject.AddComponent<UnityEcsClient>();
+                var comp = starter.AddComponent<UnityEcsClient>();
                 Container.QueueForInject(comp);
             }
             else
             {
                 Container.Bind<SingleGame>().AsSingle();
 
-                var comp = gameSettings.gameObject.AddComponent<UnityEcsSinglePlayer>();
+                var comp = starter.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);
             }
 

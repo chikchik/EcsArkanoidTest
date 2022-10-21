@@ -13,9 +13,6 @@ namespace Game.Installers
 {
     public class XFlowEscInstaller : MonoInstaller
     {
-        [SerializeField] 
-        private GameSettings settings;
-
         private CancellationTokenSource _cancellationTokenSource;
 
         public sealed override void InstallBindings()
@@ -31,8 +28,9 @@ namespace Game.Installers
             var collection = new ComponentsCollection();
             ComponentsCollectionUtils.AddComponents(collection);
             Container.Bind<ComponentsCollection>().FromInstance(collection).AsSingle();
-            
-            Container.Bind<GameSettings>().FromInstance(settings).AsSingle();
+
+            var settings =Resources.Load<GameSettingsScriptable>("GameSettings");
+            Container.Bind<GameSettingsScriptable>().FromInstance(settings).AsSingle();
 
             if (settings.MultiPlayer)
             {
@@ -61,7 +59,7 @@ namespace Game.Installers
             
             DoInstallBindings(settings);
         }
-        protected virtual void DoInstallBindings(GameSettings gameSettings) {}
+        protected virtual void DoInstallBindings(GameSettingsScriptable gameSettings) {}
         
         private void OnApplicationQuit()
         {
