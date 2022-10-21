@@ -22,21 +22,38 @@ public class GameSettingsEditor : Editor
 			EditorGUILayout.BeginHorizontal();
 			if (EditorGUILayout.Toggle(settings.SelectedUdpHostIndex == i, "radio", GUILayout.Width(20)))
 			{
-				settings.SelectedUdpHostIndex = i;
+				if (settings.SelectedUdpHostIndex != i)
+				{
+					settings.SelectedUdpHostIndex = i;
+					EditorUtility.SetDirty(settings);
+				}
 			}
 
 			EditorGUILayout.BeginVertical();
 
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label("address", GUILayout.Width(50));
-			settings.UdpHosts[i].Address = GUILayout.TextField(settings.UdpHosts[i].Address);
+			var address = GUILayout.TextField(settings.UdpHosts[i].Address);
+			if (settings.UdpHosts[i].Address != address)
+			{
+				settings.UdpHosts[i].Address = address;
+				EditorUtility.SetDirty(settings);
+			}
+
 			EditorGUILayout.EndHorizontal();
 
 			if (IPAddress.TryParse(settings.UdpHosts[i].Address, out _))
 			{
 				EditorGUILayout.BeginHorizontal();
 				GUILayout.Label("port", GUILayout.Width(50));
-				settings.UdpHosts[i].Port = EditorGUILayout.IntField(settings.UdpHosts[i].Port);
+				var port = EditorGUILayout.IntField(settings.UdpHosts[i].Port);
+				if (settings.UdpHosts[i].Port != port)
+				{
+					settings.UdpHosts[i].Port = port;
+					EditorUtility.SetDirty(settings);
+
+				}
+				 
 				EditorGUILayout.EndHorizontal();
 			}
 
@@ -47,6 +64,7 @@ public class GameSettingsEditor : Editor
 				List<GameSettingsScriptable.UdpHost> tmp = new List<GameSettingsScriptable.UdpHost>(settings.UdpHosts);
 				tmp.RemoveAt(i);
 				settings.UdpHosts = tmp.ToArray();
+				EditorUtility.SetDirty(settings);
 			}
 
 			EditorGUILayout.EndHorizontal();
@@ -55,8 +73,9 @@ public class GameSettingsEditor : Editor
 		if (GUILayout.Button("Add"))
 		{
 			Array.Resize(ref settings.UdpHosts, settings.UdpHosts.Length + 1);
+			EditorUtility.SetDirty(settings);
 		}
-
-		serializedObject.ApplyModifiedProperties();
+		
+		AssetDatabase.SaveAssetIfDirty(settings);
 	}
 }
