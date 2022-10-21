@@ -10,6 +10,14 @@ https://bitbucket.org/xflowltd/module-ecs/src/dev/readme.md
 https://x-flow-ltd.atlassian.net/wiki/spaces/FE/pages/147095630
 
 
+
+Репозитории, к которым нужен доступ изначально
+https://bitbucket.org/xflowltd/module-ecs
+https://bitbucket.org/xflowltd/module-ecs-box2d
+https://bitbucket.org/xflowltd/module-ecs-central
+https://bitbucket.org/xflowltd/module-ecs-container
+
+
 Telegram канал с обновлениями
 https://t.me/+657-8q-gHME0ZjIy
 
