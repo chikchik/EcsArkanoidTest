@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class GameSettingsEditor : Editor
 {
-	[MenuItem("Ecs/Game settings")]
+	[MenuItem("Ecs/Show settings")]
 	public static void ShowSettings()
 	{
 		var settings = Resources.Load("GameSettings");

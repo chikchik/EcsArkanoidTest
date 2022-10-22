@@ -24,4 +24,3 @@ MonoBehaviour:
     tcpPort: 0
     udpPort: 0
   SelectedUdpHostIndex: 0
-  IsLocalServer: 0
