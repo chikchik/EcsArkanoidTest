@@ -1,6 +1,4 @@
-﻿using Fabros.EcsModules.Mech.ClientServer;
-using Fabros.EcsModules.Mech.ClientServer.Components;
-using Game.Client.Services;
+﻿using Game.Client.Services;
 using Game.Ecs.ClientServer.Components;
 using Game.UI.Mono;
 
@@ -8,6 +6,8 @@ using Game.UI.Mono;
 using Game.ClientServer.Services;
 using Game.State;
 using XFlow.EcsLite;
+using XFlow.Modules.Mech.ClientServer;
+using XFlow.Modules.Mech.ClientServer.Components;
 using XFlow.Modules.States;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Utils;

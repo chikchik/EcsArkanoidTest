@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Fabros.EcsModules.Mech.ClientServer;
 using Game.ClientServer;
 using Game.ClientServer.Services;
 using Gaming.ContainerManager.ImageContracts.V1;
@@ -16,6 +15,7 @@ using XFlow.Ecs.ClientServer.WorldDiff;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer;
 using XFlow.Modules.Box2D.ClientServer.Systems;
+using XFlow.Modules.Mech.ClientServer;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Modules.Tick.ClientServer.Systems;
 using XFlow.Modules.Tick.Other;
@@ -65,7 +65,6 @@ namespace XFlow.Server
         private bool _worldInitialized;
         private ComponentsCollection _components;
         private TickrateConfigComponent _config = new TickrateConfigComponent { Tickrate = 30, ServerSyncStep = 1 };
-        private EcsFilter _clientsFilter;
         private CancellationTokenSource _token;
         private DateTime _nextTickAt = DateTime.UtcNow;
         private BinaryProtocol.DataHelloRequest? _helloRequest;
@@ -149,8 +148,10 @@ namespace XFlow.Server
                 sb.AppendLine($"world entities: {_mainWorld.GetAliveEntitiesCount()}");
                 sb.AppendLine($"world size: {_mainWorld.GetAllocMemorySizeInBytes() / 1024} kb");
 
-                sb.AppendLine($"clients: {_clientsFilter.GetEntitiesCount()}");
-                foreach (var entity in _clientsFilter)
+                
+                var clientsFilter = _mainWorld.Filter<ClientComponent>().End();
+                sb.AppendLine($"clients: {clientsFilter.GetEntitiesCount()}");
+                foreach (var entity in clientsFilter)
                 {
                     var client = entity.EntityGet<ClientComponent>(_mainWorld);
                     sb.AppendLine($"  id: {client.UserId}, lastTick: {client.LastClientTick}");
@@ -240,7 +241,7 @@ namespace XFlow.Server
             _systems = new EcsSystems(_mainWorld);
             _systems.Add(_systemsFactory.CreateSyncDebugSystem(true));
             _systems.Add(new UserConnectedSystem());
-            _systems.Add(new UserDisconnectedSystem());
+            _systems.Add(new UserDisconnectedSystem(true));
             
             _systemsFactory.AddNewSystems(_systems,
                 new IEcsSystemsFactory.Settings { AddServerSystems = true });
@@ -250,7 +251,6 @@ namespace XFlow.Server
 
             _systems.Add(new SendDiffToClientsSystem(_components, _unreliableChannel, _reliableChannel));
 
-            _clientsFilter = _mainWorld.Filter<ClientComponent>().End();
             
             _logger.Log(LogLevel.Information, "Init world done");
         }

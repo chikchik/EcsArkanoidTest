@@ -17,7 +17,6 @@ using XFlow.Net.ClientServer.Ecs.Systems;
 #if CLIENT
 using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
-using Fabros.EcsModules.Mech.Client.Systems;
 using XFlow.Modules.Box2D.Client.Systems;
 using XFlow.Modules.Fire.Client.Systems;
 using XFlow.Modules.Inventory.ClientServer.Components;
@@ -77,7 +76,7 @@ namespace Game.ClientServer
 #endif
             
             _container.RegisterServer<CustomInitSystem>();
-            _container.RegisterServer<JoinPlayerSystem>();
+            _container.RegisterServer<ManagePlayerSystem>();
            
            
             //_container.RegisterServer<AIPlayerSystem>();

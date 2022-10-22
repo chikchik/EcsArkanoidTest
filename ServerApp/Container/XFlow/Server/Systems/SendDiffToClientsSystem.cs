@@ -64,7 +64,11 @@ namespace XFlow.Server.Systems
             var compressed = P2P.P2P.Compress(_writer.ToByteArray());
             return compressed;
         }
-        
+
+        private async void SimRandomSend(ClientComponent client, byte[] data)
+        {
+            
+        }
         public void Run(EcsSystems systems)
         {
             //UDP send to clients
@@ -72,11 +76,10 @@ namespace XFlow.Server.Systems
             {
                 ref var client = ref _poolClients.GetRef(clientEntity);
                 
-                if (client.SentWorld == null && client.ReliableAddress != null)
+                if (client.SentWorld == null)
                 {
                     //если клиент еще совсем ничего не получал
-                    
-                    
+
                     client.SentWorld = new EcsWorld("sent");
                     client.SentWorldReliable = new EcsWorld("rela");
 
@@ -106,7 +109,7 @@ namespace XFlow.Server.Systems
                     //if (Random.Range(0, 1) > 0.8f)//sim lost
                     //if (false)
                     {
-                        //SimRandomSend(compressed, client);
+                        //SimRandomSend(compressed, compressed);
 
                         //_logger.Log(LogLevel.Debug,$"Send udp diff l={compressed.Length}, h={P2P.P2P.GetMessageHash(compressed)}");
                         _unreliableChannel.SendAsync(client.UnreliableAddress, compressed);

@@ -24,8 +24,6 @@ namespace Game
     public class UnityEcsSinglePlayer: MonoBehaviour
     {
         [Inject] private EcsWorld _mainWorld;
-        [Inject(Id = EcsWorlds.Input)] private EcsWorld _inputWorld;
-       
         [Inject]
         private SingleGame _game;
         
@@ -34,22 +32,16 @@ namespace Game
         {
             _game.PreInit();
             UnitySceneService.InitializeNewWorldFromScene(_mainWorld);
-            _mainWorld.AddUnique<MainPlayerIdComponent>().Value = "1";
-            var playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, "1");
-            PlayerService.InputJoinPlayer(_mainWorld, _inputWorld, "1", playerEntity);
+            ClientPlayerService.CreateSingleGamePlayer(_mainWorld);
             _game.Init();
         }
-
-        
         
         public void Update()
         {
             _game.Update();
         }
 
-
         
-
         public void FixedUpdate()
         {
             if (!Application.isPlaying)
