@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b0670ada89f8479f832acf66a174177, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  MultiPlayer: 0
-  OverrideDefaultServerRoom: 0
-  OverrideRoom: 
+  MultiPlayer: 1
   UdpHosts:
   - Address: 127.0.0.1
-    Port: 12345
+    tcpPort: 12121
+    udpPort: 12345
   - Address: 164.90.172.253
-    Port: 12345
+    tcpPort: 12121
+    udpPort: 12345
   - Address: 4d796f20-be3f-4aa9-ad25-6ab8cf6502cd
-    Port: 0
-  SelectedUdpHostIndex: 1
-  ContainerId: 
+    tcpPort: 0
+    udpPort: 0
+  SelectedUdpHostIndex: 0
   IsLocalServer: 0

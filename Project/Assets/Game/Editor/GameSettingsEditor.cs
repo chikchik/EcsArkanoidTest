@@ -5,18 +5,34 @@ using Game;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(GameSettingsScriptable))]
+[CustomEditor(typeof(GameSettings))]
 
 public class GameSettingsEditor : Editor
 {
+	[MenuItem("Ecs/Game settings")]
+	public static void ShowSettings()
+	{
+		var settings = Resources.Load("GameSettings");
+		Selection.activeObject = settings;
+		EditorGUIUtility.PingObject(settings);
+	}
+	
 	public override void OnInspectorGUI()
 	{
-		serializedObject.Update();
-		GameSettingsScriptable settings = target as GameSettingsScriptable;
+		EditorGUI.BeginDisabledGroup(true);
+		EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Script"));
+		EditorGUI.EndDisabledGroup();
 		
-		EditorGUILayout.PropertyField(serializedObject.FindProperty("MultiPlayer"));
-		EditorGUILayout.PropertyField(serializedObject.FindProperty("IsLocalServer"));
+		serializedObject.Update();
+		GameSettings settings = target as GameSettings;
 
+		var isMultiPlayer = EditorGUILayout.Toggle("Multi Player", settings.MultiPlayer);
+		if (isMultiPlayer != settings.MultiPlayer)
+		{
+			settings.MultiPlayer = isMultiPlayer;
+			EditorUtility.SetDirty(settings);
+		}
+		
 		for (int i = 0; i < settings.UdpHosts.Length; i++)
 		{
 			EditorGUILayout.BeginHorizontal();
@@ -45,15 +61,24 @@ public class GameSettingsEditor : Editor
 			if (IPAddress.TryParse(settings.UdpHosts[i].Address, out _))
 			{
 				EditorGUILayout.BeginHorizontal();
-				GUILayout.Label("port", GUILayout.Width(50));
-				var port = EditorGUILayout.IntField(settings.UdpHosts[i].Port);
-				if (settings.UdpHosts[i].Port != port)
+				GUILayout.Label("tcpPort", GUILayout.Width(50));
+				var ipPort = EditorGUILayout.IntField(settings.UdpHosts[i].tcpPort);
+				if (settings.UdpHosts[i].tcpPort != ipPort)
 				{
-					settings.UdpHosts[i].Port = port;
+					settings.UdpHosts[i].tcpPort = ipPort;
 					EditorUtility.SetDirty(settings);
 
 				}
-				 
+				EditorGUILayout.EndHorizontal();
+				
+				EditorGUILayout.BeginHorizontal();
+				GUILayout.Label("udpPort", GUILayout.Width(50));
+				var udpPort = EditorGUILayout.IntField(settings.UdpHosts[i].udpPort);
+				if (settings.UdpHosts[i].udpPort != udpPort)
+				{
+					settings.UdpHosts[i].udpPort = udpPort;
+					EditorUtility.SetDirty(settings);
+				}
 				EditorGUILayout.EndHorizontal();
 			}
 
@@ -61,7 +86,7 @@ public class GameSettingsEditor : Editor
 
 			if (GUILayout.Button("Del", GUILayout.Width(30)))
 			{
-				List<GameSettingsScriptable.UdpHost> tmp = new List<GameSettingsScriptable.UdpHost>(settings.UdpHosts);
+				List<GameSettings.ConnectionHost> tmp = new List<GameSettings.ConnectionHost>(settings.UdpHosts);
 				tmp.RemoveAt(i);
 				settings.UdpHosts = tmp.ToArray();
 				EditorUtility.SetDirty(settings);

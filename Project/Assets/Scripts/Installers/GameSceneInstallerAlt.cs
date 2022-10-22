@@ -1,3 +1,4 @@
+using System.Net;
 using Fabros.EcsModules.Mech.ClientServer;
 using Game.Client;
 using Game.Client.Services;
@@ -23,7 +24,7 @@ namespace Game.Installers
 {
     public class GameSceneInstallerAlt : XFlowEscInstaller
     {
-        protected override void DoInstallBindings(GameSettingsScriptable gameSettings)
+        protected override void DoInstallBindings(GameSettings gameSettings)
         {
             /*
              * URP? Android exception workaround  2021.3.10f
@@ -31,7 +32,6 @@ namespace Game.Installers
              * at UnityEngine.Rendering.DebugManager.UpdateActions () [0x00000] in <
             */
             DebugManager.instance.enableRuntimeUI = false;
-            
             
             
             Container.Bind<Camera>().FromComponentsOn(GameObject.Find("Main Camera")).AsSingle();
@@ -91,15 +91,27 @@ namespace Game.Installers
             var starter = FindObjectOfType<GameStarter>().gameObject;
             if (gameSettings.MultiPlayer)
             {
-                if (gameSettings.IsLocalServer)
-                    Container.Bind<IServerConnector>()
-                        .FromInstance(new LocalServerConnector(12121, 12345))
-                        .AsSingle();
-                else
-                    Container.Bind<IServerConnector>()
-                        .FromInstance(new FacadeServerConnector(gameSettings.ContainerId))
-                        .AsSingle();
+                Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();
+                Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
+                Container.Bind<NetClient>().AsSingle();
                 
+                var udpHost = gameSettings.UdpHosts[gameSettings.SelectedUdpHostIndex];
+                if (udpHost.IsIp)
+                {
+                    var ipEndPoint = new IPEndPoint(IPAddress.Parse(udpHost.Address), udpHost.udpPort);
+                    Container.Bind<IPEndPoint>().WithId("udp").FromInstance(ipEndPoint).AsCached();
+                   
+                    Container.Bind<IServerConnector>()
+                        .FromInstance(new IpServerConnector(udpHost.Address, udpHost.tcpPort, udpHost.udpPort))
+                        .AsSingle();
+                }
+                else
+                {
+                    Container.Bind<IServerConnector>()
+                        .FromInstance(new FacadeServerConnector(udpHost.Address))
+                        .AsSingle();
+                }
+
                 var comp = starter.AddComponent<UnityEcsClient>();
                 Container.QueueForInject(comp);
             }
@@ -110,7 +122,6 @@ namespace Game.Installers
                 var comp = starter.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);
             }
-
         }
     }
 }
