@@ -5,15 +5,18 @@ using XFlow.Net.Client;
 
 namespace Game
 {
-    public class LocalServerConnector : IServerConnector
+    public class IpServerConnector : IServerConnector
     {
+        private readonly IPAddress _ip;
         private readonly int _tcpPort;
         private readonly int _udpPort;
 
         private readonly int _userId;
 
-        public LocalServerConnector(int tcpPort, int udpPort)
+        public IpServerConnector(string ip, int tcpPort, int udpPort)
         {
+            _ip = IPAddress.Parse(ip);
+            
             _tcpPort = tcpPort;
             _udpPort = udpPort;
 
@@ -29,7 +32,7 @@ namespace Game
         {
             BaseSocket socket = new ReliableSocket(_userId);
 
-            await socket.Connect(IPAddress.Parse("127.0.0.1"), _tcpPort);
+            await socket.Connect(_ip, _tcpPort);
             Task.Run(socket.Run);
 
             return socket;
@@ -39,7 +42,7 @@ namespace Game
         {
             BaseSocket socket = new UnreliableSocket(_userId);
 
-            await socket.Connect(IPAddress.Parse("127.0.0.1"), _udpPort);
+            await socket.Connect(_ip, _udpPort);
             Task.Run(socket.Run);
 
             return socket;

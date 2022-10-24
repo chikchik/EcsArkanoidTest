@@ -33,7 +33,6 @@ namespace Game.Installers
             DebugManager.instance.enableRuntimeUI = false;
             
             
-            
             Container.Bind<Camera>().FromComponentsOn(GameObject.Find("Main Camera")).AsSingle();
             
             var global = GameObject.Find("Global").GetComponent<Global>();
@@ -87,29 +86,38 @@ namespace Game.Installers
 
             
             Container.BindInterfacesAndSelfTo<ClientInputService>().AsSingle();
-            
+
+            var starter = FindObjectOfType<GameStarter>().gameObject;
             if (gameSettings.MultiPlayer)
             {
-                if (gameSettings.IsLocalServer)
-                    Container.Bind<IServerConnector>()
-                        .FromInstance(new LocalServerConnector(12121, 12345))
-                        .AsSingle();
-                else
-                    Container.Bind<IServerConnector>()
-                        .FromInstance(new FacadeServerConnector(gameSettings.ContainerId))
-                        .AsSingle();
+                Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
+                Container.Bind<NetClient>().AsSingle();
                 
-                var comp = gameSettings.gameObject.AddComponent<UnityEcsClient>();
+                var udpHost = gameSettings.GetHostAddress();
+                if (udpHost.IsContainer)
+                {
+                    Container.Bind<IServerConnector>()
+                        .FromInstance(new FacadeServerConnector(udpHost.address))
+                        .AsSingle();
+                }
+                else
+                {
+                    var ipHost = udpHost as GameSettings.IpHostAddress;
+                    Container.Bind<IServerConnector>()
+                        .FromInstance(new IpServerConnector(ipHost.address, ipHost.tcpPort, ipHost.udpPort))
+                        .AsSingle();
+                }
+
+                var comp = starter.AddComponent<UnityEcsClient>();
                 Container.QueueForInject(comp);
             }
             else
             {
                 Container.Bind<SingleGame>().AsSingle();
 
-                var comp = gameSettings.gameObject.AddComponent<UnityEcsSinglePlayer>();
+                var comp = starter.AddComponent<UnityEcsSinglePlayer>();
                 Container.QueueForInject(comp);
             }
-
         }
     }
 }

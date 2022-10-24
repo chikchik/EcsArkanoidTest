@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b0670ada89f8479f832acf66a174177, type: 3}
+  m_Name: GameSettings
+  m_EditorClassIdentifier: 
+  MultiPlayer: 0
+  _containerHosts:
+  - address: 4d796f20-be3f-4aa9-ad25-6ab8cf6502cd
+  _ipHosts:
+  - address: 127.0.0.1
+    tcpPort: 12121
+    udpPort: 12345
+  - address: 164.90.172.253
+    tcpPort: 12121
+    udpPort: 12345
+  _savedHostIndex: 1
