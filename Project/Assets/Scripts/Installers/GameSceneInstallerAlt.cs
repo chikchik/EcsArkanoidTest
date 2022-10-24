@@ -91,24 +91,21 @@ namespace Game.Installers
             var starter = FindObjectOfType<GameStarter>().gameObject;
             if (gameSettings.MultiPlayer)
             {
-                Container.Bind<string>().WithId("serverUrl").FromInstance(Config.URL).AsCached();
                 Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
                 Container.Bind<NetClient>().AsSingle();
                 
-                var udpHost = gameSettings.UdpHosts[gameSettings.SelectedUdpHostIndex];
-                if (udpHost.IsIp)
+                var udpHost = gameSettings.GetHostAddress();
+                if (udpHost.IsContainer)
                 {
-                    var ipEndPoint = new IPEndPoint(IPAddress.Parse(udpHost.Address), udpHost.udpPort);
-                    Container.Bind<IPEndPoint>().WithId("udp").FromInstance(ipEndPoint).AsCached();
-                   
                     Container.Bind<IServerConnector>()
-                        .FromInstance(new IpServerConnector(udpHost.Address, udpHost.tcpPort, udpHost.udpPort))
+                        .FromInstance(new FacadeServerConnector(udpHost.address))
                         .AsSingle();
                 }
                 else
                 {
+                    var ipHost = udpHost as GameSettings.IpHostAddress;
                     Container.Bind<IServerConnector>()
-                        .FromInstance(new FacadeServerConnector(udpHost.Address))
+                        .FromInstance(new IpServerConnector(ipHost.address, ipHost.tcpPort, ipHost.udpPort))
                         .AsSingle();
                 }
 
