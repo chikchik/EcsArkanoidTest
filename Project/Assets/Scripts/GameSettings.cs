@@ -9,42 +9,40 @@ namespace Game
         [Serializable]
         public class HostAddress
         {
-            public string address;
+            public string Address;
 
-            public bool IsContainer {
-                get { return Guid.TryParse(address, out _); }
-            }
+            public bool IsContainer => Guid.TryParse(Address, out _);
         }
         
         [Serializable]
         public class IpHostAddress : HostAddress
         {
-            public int tcpPort;
-            public int udpPort;
+            public int TcpPort;
+            public int UdpPort;
         }
         
         public bool MultiPlayer = true;
 
         [SerializeField]
-        private List<HostAddress> _containerHosts;
+        private List<HostAddress> _containerHosts = new ();
         [SerializeField]
-        private List<IpHostAddress> _ipHosts;
+        private List<IpHostAddress> _ipHosts = new();
         [SerializeField]
         private int _savedHostIndex;
 
         public List<string> GetHostsNames()
         {
             List<string> names = new List<string>();
-            int index = 1;
+            int index = 0;
             for (int i = 0; i < _containerHosts.Count; i++)
             {
-                names.Add($"{index}: {_containerHosts[i].address}");
+                names.Add($"{index}: {_containerHosts[i].Address}");
                 index++;
             }
             
             for (int i = 0; i < _ipHosts.Count; i++)
             {
-                names.Add($"{index}: {_ipHosts[i].address}");
+                names.Add($"{index}: {_ipHosts[i].Address}");
                 index++;
             }
 

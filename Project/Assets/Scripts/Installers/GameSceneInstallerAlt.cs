@@ -98,14 +98,14 @@ namespace Game.Installers
                 if (udpHost.IsContainer)
                 {
                     Container.Bind<IServerConnector>()
-                        .FromInstance(new FacadeServerConnector(udpHost.address))
+                        .FromInstance(new FacadeServerConnector(udpHost.Address))
                         .AsSingle();
                 }
                 else
                 {
                     var ipHost = udpHost as GameSettings.IpHostAddress;
                     Container.Bind<IServerConnector>()
-                        .FromInstance(new IpServerConnector(ipHost.address, ipHost.tcpPort, ipHost.udpPort))
+                        .FromInstance(new IpServerConnector(ipHost.Address, ipHost.TcpPort, ipHost.UdpPort))
                         .AsSingle();
                 }
 

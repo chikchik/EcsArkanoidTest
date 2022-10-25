@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MultiPlayer: 0
   _containerHosts:
-  - address: 4d796f20-be3f-4aa9-ad25-6ab8cf6502cd
+  - Address: 4d796f20-be3f-4aa9-ad25-6ab8cf6502cd
   _ipHosts:
-  - address: 127.0.0.1
-    tcpPort: 12121
-    udpPort: 12345
-  - address: 164.90.172.253
-    tcpPort: 12121
-    udpPort: 12345
-  _savedHostIndex: 1
+  - Address: 127.0.0.1
+    TcpPort: 12121
+    UdpPort: 12345
+  - Address: 164.90.172.253
+    TcpPort: 12121
+    UdpPort: 12345
+  _savedHostIndex: 2
