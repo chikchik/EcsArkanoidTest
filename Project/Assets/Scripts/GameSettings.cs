@@ -23,12 +23,9 @@ namespace Game
         
         public bool MultiPlayer = true;
 
-        [SerializeField]
-        private List<HostAddress> _containerHosts = new ();
-        [SerializeField]
-        private List<IpHostAddress> _ipHosts = new();
-        [SerializeField]
-        private int _savedHostIndex;
+        [field: SerializeField] private List<HostAddress> _containerHosts = new ();
+        [field: SerializeField] private List<IpHostAddress> _ipHosts = new();
+        [field: SerializeField] [HideInInspector] private int _savedHostIndex;
 
         public List<string> GetHostsNames()
         {
