@@ -5,7 +5,7 @@ using UnityEngine;
 [CustomEditor(typeof(GameSettings))]
 public class GameSettingsEditor : Editor
 {
-	[MenuItem("Ecs/Show Settings")]
+	[MenuItem("XFlowEcs/Show Settings")]
 	public static void ShowSettings()
 	{
 		var settings = Resources.Load<GameSettings>("GameSettings");
