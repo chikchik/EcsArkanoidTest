@@ -22,6 +22,7 @@ namespace Game
         }
         
         public bool MultiPlayer = true;
+        public int HostIndex => _savedHostIndex;
 
         [field: SerializeField] private List<HostAddress> _containerHosts = new ();
         [field: SerializeField] private List<IpHostAddress> _ipHosts = new();

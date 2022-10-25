@@ -30,10 +30,9 @@ public class GameSettingsEditor : Editor
 		var settings = target as GameSettings;
 		
 		EditorGUILayout.LabelField("Selected host:", GUILayout.MaxWidth(80));
-		var savedHost = serializedObject.FindProperty("_savedHostIndex").intValue;
 		var hosts = settings.GetHostsNames();
-		var newIndex = EditorGUILayout.Popup(savedHost, hosts.ToArray());
-		if (newIndex != savedHost) {
+		var newIndex = EditorGUILayout.Popup(settings.HostIndex, hosts.ToArray());
+		if (newIndex != settings.HostIndex) {
 			settings.SaveHost(newIndex);
 		}
 		
