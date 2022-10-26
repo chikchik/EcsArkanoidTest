@@ -1,14 +1,14 @@
 [submodule "Submodules/module-ecs-central"]
 	path = Submodules/module-ecs-central
-	url = ../module-ecs-central
+	url=git@bitbucket.org:xflowltd/module-ecs-central.git
 [submodule "Submodules/module-ecs"]
 	path = Submodules/module-ecs
-	url = git@bitbucket.org:xflowltd/module-ecs
+	url = git@bitbucket.org:xflowltd/module-ecs.git
 	branch = dev
 [submodule "Submodules/module-ecs-box2d"]
 	path = Submodules/module-ecs-box2d
-	url = git@bitbucket.org:xflowltd/module-ecs-box2d
+	url = git@bitbucket.org:xflowltd/module-ecs-box2d.git
 [submodule "Submodules/module-ecs-container"]
 	path = Submodules/module-ecs-container
-	url = git@bitbucket.org:xflowltd/module-ecs-container
+	url = git@bitbucket.org:xflowltd/module-ecs-container.git
 	branch = dev
