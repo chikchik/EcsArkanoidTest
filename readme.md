@@ -1,12 +1,12 @@
-Вводная, начинать с нее
-https://docs.google.com/document/d/12cwab45YODC4_BvD84uAc8gblUUg3BT1NP0QhpSWiEg
+Описание проекта
+https://x-flow-ltd.atlassian.net/wiki/spaces/FE/pages/211484700/mecha+survival+ecs+demo
 
 
 Обязательно изучить
 https://bitbucket.org/xflowltd/module-ecs/src/dev/readme.md
 
 
-Документация
+Обязательно прочесть все!
 https://x-flow-ltd.atlassian.net/wiki/spaces/FE/pages/147095630
 
 
@@ -18,7 +18,7 @@ https://bitbucket.org/xflowltd/module-ecs-central
 https://bitbucket.org/xflowltd/module-ecs-container
 
 
-Telegram канал с обновлениями
+Telegram канал с обновлениями, подписаться
 https://t.me/+657-8q-gHME0ZjIy
 
 
