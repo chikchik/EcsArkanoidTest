@@ -1,5 +1,4 @@
-﻿using Fabros.EcsModules.Mech.Client.Systems;
-using Game.ClientServer;
+﻿using Game.ClientServer;
 using Game.Ecs.Client.Systems;
 using Game.Ecs.Client.Systems.Inventory;
 using Game.Ecs.ClientServer.Components;
@@ -10,6 +9,7 @@ using XFlow.Modules.Box2D.Client.Systems;
 using XFlow.Modules.Fire.Client.Systems;
 using XFlow.Modules.Fire.ClientServer.Components;
 using XFlow.Modules.Inventory.ClientServer.Components;
+using XFlow.Modules.Mech.Client.Systems;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Net.Client;
 using XFlow.Net.ClientServer;

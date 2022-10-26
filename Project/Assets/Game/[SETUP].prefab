@@ -1649,7 +1649,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3448083649790090370}
-  - component: {fileID: 3448083649790090375}
   - component: {fileID: 1356377918}
   m_Layer: 0
   m_Name: '[SETUP]'
@@ -1677,27 +1676,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 51.669, y: 151.777, z: 0.001}
---- !u!114 &3448083649790090375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3448083649790090397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 418edcff6ff32674a957080cdb9e61d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MultiPlayer: 0
-  OverrideDefaultServerRoom: 0
-  OverrideRoom: 5000
-  UdpHosts:
-  - Address: 127.0.0.1
-    Port: 12345
-  - Address: 164.90.172.253
-    Port: 12345
-  SelectedUdpHostIndex: 0
 --- !u!114 &1356377918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3201,7 +3179,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf22ebc1952e642e19fd7c5deca52efd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings: {fileID: 3448083649790090375}
 --- !u!1 &3448083651072882077
 GameObject:
   m_ObjectHideFlags: 0
@@ -4186,7 +4163,6 @@ MonoBehaviour:
   Connect: {fileID: 0}
   FoodText: {fileID: 3448083651184328197}
   AmmoText: {fileID: 777475214720069681}
-  DebugText: {fileID: 0}
   mechInfo: {fileID: 0}
   UIViews:
   - {fileID: 1902622042}

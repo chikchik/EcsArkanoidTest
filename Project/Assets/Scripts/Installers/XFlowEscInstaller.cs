@@ -29,7 +29,7 @@ namespace Game.Installers
             ComponentsCollectionUtils.AddComponents(collection);
             Container.Bind<ComponentsCollection>().FromInstance(collection).AsSingle();
 
-            var settings = Resources.Load<GameSettings>("GameSettings");
+            GameSettings settings = Resources.Load<GameSettings>("GameSettings");
             Container.Bind<GameSettings>().FromInstance(settings).AsSingle();
 
             DoInstallBindings(settings);

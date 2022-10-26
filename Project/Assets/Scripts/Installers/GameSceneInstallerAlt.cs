@@ -1,5 +1,3 @@
-using System.Net;
-using Fabros.EcsModules.Mech.ClientServer;
 using Game.Client;
 using Game.Client.Services;
 using Game.ClientServer;
@@ -15,6 +13,7 @@ using UnityEngine.Rendering;
 using XFlow.Modules.Box2D.ClientServer.Systems;
 using XFlow.Modules.Inventory.Client.Demo.Interfaces;
 using XFlow.Modules.Inventory.Client.Demo.Services;
+using XFlow.Modules.Mech.ClientServer;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
 using XFlow.Net.Client.Services;
@@ -103,13 +102,13 @@ namespace Game.Installers
                 else if (gameSettings.Host != null)
                 {
                     Container.Bind<IServerConnector>()
-                        .FromInstance(new IpServerConnector(gameSettings.Host.Address, gameSettings.Host.TcpPort,
+                        .FromInstance(new LocalServerConnector(gameSettings.Host.Address, gameSettings.Host.TcpPort,
                             gameSettings.Host.UdpPort))
                         .AsSingle();
-                }
 
-                var comp = starter.AddComponent<UnityEcsClient>();
-                Container.QueueForInject(comp);
+                    var comp = starter.AddComponent<UnityEcsClient>();
+                    Container.QueueForInject(comp);
+                }
             }
             else
             {

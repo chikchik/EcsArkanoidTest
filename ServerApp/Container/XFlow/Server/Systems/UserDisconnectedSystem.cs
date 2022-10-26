@@ -14,6 +14,13 @@ namespace XFlow.Server.Systems
         private EcsWorld _inputWorld;
         private EcsFilter _filter;
         private EcsPool<ClientComponent> _poolClient;
+        private bool _deleteDisconnected;
+
+        public UserDisconnectedSystem(bool deleteDisconnected)
+        {
+            _deleteDisconnected = deleteDisconnected;
+        }
+        
         public void Init(EcsSystems systems)
         {
             _mainWorld = systems.GetWorld();
@@ -24,21 +31,26 @@ namespace XFlow.Server.Systems
         
         public void Run(EcsSystems systems)
         {
-            foreach (var entity in _filter)
+            foreach (var inputEntity in _filter)
             {
-                var address = entity.EntityGet<UserAddressComponent>(_inputWorld).Address;
+                var userId = inputEntity.EntityGet<UserAddressComponent>(_inputWorld).Address.UserId;
                 
-                if (!PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, address.UserId, out int playerEntity))
+                if (!PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, userId, out int playerEntity))
                     continue;
                 
-                _mainWorld.Log($"leave player {playerEntity}, id={address}");
-                PlayerService.InputLeavePlayer(_inputWorld, address.UserId, true);
+                //_mainWorld.Log($"leave player {playerEntity}, id={userId}");
+                //PlayerService.InputLeavePlayer(_inputWorld, userId, true);
 
+                _poolClient.Del(playerEntity);
+                
+                if (_deleteDisconnected)
+                    PlayerService.DeletePlayerEntity(_mainWorld, playerEntity);
+                /*
                 ref var client = ref _poolClient.GetRef(playerEntity);
                 client.ReliableAddress = null;
                 client.UnreliableAddress = null;
                 client.SentWorld = null;
-                client.SentWorldReliable = null;
+                client.SentWorldReliable = null;*/
             }
         }
     }

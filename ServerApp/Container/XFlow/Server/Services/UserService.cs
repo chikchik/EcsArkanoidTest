@@ -64,9 +64,6 @@ namespace XFlow.Server.Services
             
             ref var clientComponent = ref _poolClients.GetRef(playerEntity);
             //если игрок еще не подключен по tcp то игнорим его ввод, это могут быть старые сообщение после переподключения
-            if (clientComponent.ReliableAddress == null)
-                return;
-            
             
             _reader.Init(data.ToArray());
             var inputTime = _reader.ReadInt32();

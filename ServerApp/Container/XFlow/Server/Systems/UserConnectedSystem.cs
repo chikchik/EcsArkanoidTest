@@ -27,19 +27,11 @@ namespace XFlow.Server.Systems
                 var userAddress = entity.EntityGet<UserAddressComponent>(_inputWorld).Address;
 
                 int playerEntity = -1;
-                if (PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, userAddress.UserId , out playerEntity))
-                {
-                    
-                }
-                else
-                {
+                if (!PlayerService.TryGetPlayerEntityByPlayerId(_mainWorld, userAddress.UserId , out playerEntity))
                     playerEntity = PlayerService.CreatePlayerEntity(_mainWorld, userAddress.UserId);
-                    
-                    PlayerService.InputJoinPlayer(_mainWorld, _inputWorld, userAddress.UserId, playerEntity);
-                    _mainWorld.Log($"created player entity {playerEntity}, id={userAddress.UserId}");
-                }
                 
-                ref var client = ref playerEntity.EntityGetOrCreateRef<ClientComponent>(_mainWorld);
+                
+                ref var client = ref playerEntity.EntityAdd<ClientComponent>(_mainWorld);
                 client.UserId = userAddress.UserId;
                 client.ReliableAddress = userAddress;
                 //нужно ли обнулять udp ?

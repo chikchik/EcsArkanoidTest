@@ -9,6 +9,12 @@ namespace Game.UI
 {
     public static class ClientPlayerService
     {
+        public static void CreateSingleGamePlayer(EcsWorld world)
+        {
+            world.AddUnique<MainPlayerIdComponent>().Value = "1";
+            PlayerService.CreatePlayerEntity(world, "1");
+        }
+        
         public static void SetPlayerEntity(EcsWorld world, int playerEntity)
         {
             world.GetOrCreateUniqueRef<ClientPlayerEntityComponent>().Value = world.PackEntity(playerEntity);

@@ -5,18 +5,17 @@ using XFlow.Net.Client;
 
 namespace Game
 {
-    public class IpServerConnector : IServerConnector
+    public class LocalServerConnector : IServerConnector
     {
-        private readonly IPAddress _ip;
         private readonly int _tcpPort;
         private readonly int _udpPort;
 
         private readonly int _userId;
+        private readonly IPAddress _ip;
 
-        public IpServerConnector(string ip, int tcpPort, int udpPort)
+        public LocalServerConnector(string ip, int tcpPort, int udpPort)
         {
-            _ip = IPAddress.Parse(ip);
-            
+            _ip = IPAddress.Parse("127.0.0.1");
             _tcpPort = tcpPort;
             _udpPort = udpPort;
 

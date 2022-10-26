@@ -1,7 +1,6 @@
-﻿using Fabros.EcsModules.Mech.ClientServer.Components;
-
-using Game.Ecs.ClientServer.Components;
+﻿using Game.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
+using XFlow.Modules.Mech.ClientServer.Components;
 using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems

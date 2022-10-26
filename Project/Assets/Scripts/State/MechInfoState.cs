@@ -1,11 +1,10 @@
-﻿
-using Fabros.EcsModules.Mech.ClientServer.Components;
-using Game.Client.Services;
+﻿using Game.Client.Services;
 using Game.Ecs.ClientServer.Components;
 using Game.UI;
 using Game.UIView;
 using UnityEngine;
 using XFlow.EcsLite;
+using XFlow.Modules.Mech.ClientServer.Components;
 using XFlow.Modules.States;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;

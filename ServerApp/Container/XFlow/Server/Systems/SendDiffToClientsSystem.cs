@@ -64,7 +64,11 @@ namespace XFlow.Server.Systems
             var compressed = P2P.P2P.Compress(_writer.ToByteArray());
             return compressed;
         }
-        
+
+        private async void SimRandomSend(ClientComponent client, byte[] data)
+        {
+            
+        }
         public void Run(EcsSystems systems)
         {
             //UDP send to clients
@@ -72,17 +76,17 @@ namespace XFlow.Server.Systems
             {
                 ref var client = ref _poolClients.GetRef(clientEntity);
                 
-                if (client.SentWorld == null && client.ReliableAddress != null)
+                if (client.SentWorld == null)
                 {
                     //если клиент еще совсем ничего не получал
-                    
-                    
+
                     client.SentWorld = new EcsWorld("sent");
                     client.SentWorldReliable = new EcsWorld("rela");
 
                     var dif = WorldDiff.BuildDiff(_components, client.SentWorldReliable, _mainWorld);
-                    client.SentWorldReliable.CopyFrom(_mainWorld, _components.ContainsCollection);
-                    client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
+                    
+                    CopyWorldService.CopyWithInnerWorlds(_mainWorld, client.SentWorldReliable, _components);
+                    CopyWorldService.CopyWithInnerWorlds(_mainWorld, client.SentWorld, _components);
 
                     
                     var Components = _components.Components.Select(component => component.GetComponentType().FullName)
@@ -106,7 +110,7 @@ namespace XFlow.Server.Systems
                     //if (Random.Range(0, 1) > 0.8f)//sim lost
                     //if (false)
                     {
-                        //SimRandomSend(compressed, client);
+                        //SimRandomSend(compressed, compressed);
 
                         //_logger.Log(LogLevel.Debug,$"Send udp diff l={compressed.Length}, h={P2P.P2P.GetMessageHash(compressed)}");
                         _unreliableChannel.SendAsync(client.UnreliableAddress, compressed);
@@ -115,7 +119,7 @@ namespace XFlow.Server.Systems
                     //он может пропасть из пула если SendAsync по цепочке ошибок привел к удалению из пула внутри
                     if (_poolClients.Has(clientEntity))
                     {
-                        client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
+                        CopyWorldService.CopyWithInnerWorlds(_mainWorld, client.SentWorld, _components);
                         client.Delay = -999;
                     }
                 }
@@ -138,8 +142,8 @@ namespace XFlow.Server.Systems
                 _reliableChannel.SendAsync(client.ReliableAddress, bytes);
                 //он может пропасть из пула если SendAsync по цепочке ошибок привел к удалению из пула внутри
                 if (_poolClients.Has(clientEntity) && client.SentWorldReliable != null)
-                {
-                    client.SentWorldReliable.CopyFrom(_mainWorld, _components.ContainsCollection);
+                {  
+                    CopyWorldService.CopyWithInnerWorlds(_mainWorld, client.SentWorldReliable, _components);
                 }
             }
 

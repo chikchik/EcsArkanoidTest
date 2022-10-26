@@ -74,11 +74,17 @@ namespace Game
         {
             if (index < _containerAddresses.Count)
             {
+                if (_containerAddresses[index].Id == 0) {
+                    _containerAddresses[index].Id = Random.Range(int.MinValue, int.MaxValue);
+                }
                 _savedId = _containerAddresses[index].Id;
             }
             else
             {
                 index -= _containerAddresses.Count;
+                if (_hostAddresses[index].Id == 0) {
+                    _hostAddresses[index].Id = Random.Range(int.MinValue, int.MaxValue);
+                }
                 _savedId = _hostAddresses[index].Id;
             }
         }
