@@ -84,8 +84,9 @@ namespace XFlow.Server.Systems
                     client.SentWorldReliable = new EcsWorld("rela");
 
                     var dif = WorldDiff.BuildDiff(_components, client.SentWorldReliable, _mainWorld);
-                    client.SentWorldReliable.CopyFrom(_mainWorld, _components.ContainsCollection);
-                    client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
+                    
+                    CopyWorldService.CopyWithInnerWorlds(_mainWorld, client.SentWorldReliable, _components);
+                    CopyWorldService.CopyWithInnerWorlds(_mainWorld, client.SentWorld, _components);
 
                     
                     var Components = _components.Components.Select(component => component.GetComponentType().FullName)
@@ -118,7 +119,7 @@ namespace XFlow.Server.Systems
                     //он может пропасть из пула если SendAsync по цепочке ошибок привел к удалению из пула внутри
                     if (_poolClients.Has(clientEntity))
                     {
-                        client.SentWorld.CopyFrom(_mainWorld, _components.ContainsCollection);
+                        CopyWorldService.CopyWithInnerWorlds(_mainWorld, client.SentWorld, _components);
                         client.Delay = -999;
                     }
                 }
@@ -141,8 +142,8 @@ namespace XFlow.Server.Systems
                 _reliableChannel.SendAsync(client.ReliableAddress, bytes);
                 //он может пропасть из пула если SendAsync по цепочке ошибок привел к удалению из пула внутри
                 if (_poolClients.Has(clientEntity) && client.SentWorldReliable != null)
-                {
-                    client.SentWorldReliable.CopyFrom(_mainWorld, _components.ContainsCollection);
+                {  
+                    CopyWorldService.CopyWithInnerWorlds(_mainWorld, client.SentWorldReliable, _components);
                 }
             }
 
