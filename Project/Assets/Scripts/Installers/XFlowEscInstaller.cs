@@ -29,12 +29,12 @@ namespace Game.Installers
             ComponentsCollectionUtils.AddComponents(collection);
             Container.Bind<ComponentsCollection>().FromInstance(collection).AsSingle();
 
-            GameSettings settings = Resources.Load<GameSettings>("GameSettings");
-            Container.Bind<GameSettings>().FromInstance(settings).AsSingle();
+            CommonEcsGameSettings settings = Resources.Load<CommonEcsGameSettings>("CommonEcsGameSettings");
+            Container.Bind<CommonEcsGameSettings>().FromInstance(settings).AsSingle();
 
             DoInstallBindings(settings);
         }
-        protected virtual void DoInstallBindings(GameSettings gameSettings) {}
+        protected virtual void DoInstallBindings(CommonEcsGameSettings gameSettings) {}
         
         private void OnApplicationQuit()
         {

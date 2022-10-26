@@ -14,11 +14,11 @@ namespace ServerApp2
         static async Task Main(string[] _)
         {
             var tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            tcpSocket.Bind(new IPEndPoint(IPAddress.Any, 12121));
+            tcpSocket.Bind(new IPEndPoint(IPAddress.Any, 12001));
             tcpSocket.Listen(10);
 
             var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            udpSocket.Bind(new IPEndPoint(IPAddress.Any, 12345));
+            udpSocket.Bind(new IPEndPoint(IPAddress.Any, 12002));
 
             var provider = new ChannelProvider();
             provider.SetReliableSocket(tcpSocket);

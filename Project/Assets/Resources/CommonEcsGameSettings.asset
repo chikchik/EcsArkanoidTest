@@ -10,19 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 418edcff6ff32674a957080cdb9e61d4, type: 3}
-  m_Name: GameSettings
+  m_Name: CommonEcsGameSettings
   m_EditorClassIdentifier: 
   MultiPlayer: 0
-  _containerAddresses:
-  - Address: 4d796f20-be3f-4aa9-ad25-6ab8cf6502cd
-    Id: -1613620713
-  _hostAddresses:
-  - Address: 127.0.0.1
-    TcpPort: 12121
-    UdpPort: 12345
-    Id: 924059770
-  - Address: 164.90.172.253
-    TcpPort: 12121
-    UdpPort: 12345
-    Id: 134807047
-  _savedId: 924059770
+  _containers: []
+  _hosts:
+  - Hostname: 127.0.0.1
+    TcpPort: 12001
+    UdpPort: 12002
+    Id: 0
+  _selectedId: 0

@@ -13,7 +13,7 @@ namespace Game
     public class DevPanel
     {
         private bool simLags;
-        public DevPanel(DevPanelController dev, GameSettings settings, DiContainer container)
+        public DevPanel(DevPanelController dev, CommonEcsGameSettings settings, DiContainer container)
         {
             var root = dev.root;
             root.init();
