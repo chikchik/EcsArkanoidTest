@@ -13,13 +13,16 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   MultiPlayer: 0
-  _containerHosts:
+  _containerAddresses:
   - Address: 4d796f20-be3f-4aa9-ad25-6ab8cf6502cd
-  _ipHosts:
+    Id: -1050479965
+  _hostAddresses:
   - Address: 127.0.0.1
     TcpPort: 12121
     UdpPort: 12345
+    Id: -430883135
   - Address: 164.90.172.253
     TcpPort: 12121
     UdpPort: 12345
-  _savedHostIndex: 2
+    Id: 1668066934
+  _savedId: 1668066934

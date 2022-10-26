@@ -94,18 +94,17 @@ namespace Game.Installers
                 Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
                 Container.Bind<NetClient>().AsSingle();
                 
-                var udpHost = gameSettings.GetHostAddress();
-                if (udpHost.IsContainer)
+                if (gameSettings.Container != null)
                 {
                     Container.Bind<IServerConnector>()
-                        .FromInstance(new FacadeServerConnector(udpHost.Address))
+                        .FromInstance(new FacadeServerConnector(gameSettings.Container.Address))
                         .AsSingle();
                 }
-                else
+                else if (gameSettings.Host != null)
                 {
-                    var ipHost = udpHost as GameSettings.IpHostAddress;
                     Container.Bind<IServerConnector>()
-                        .FromInstance(new IpServerConnector(ipHost.Address, ipHost.TcpPort, ipHost.UdpPort))
+                        .FromInstance(new IpServerConnector(gameSettings.Host.Address, gameSettings.Host.TcpPort,
+                            gameSettings.Host.UdpPort))
                         .AsSingle();
                 }
 
