@@ -21,11 +21,6 @@ public abstract class BaseSocket : ISocket
         Subscribers = new List<ISocket.SubscribeDelegate>();
     }
 
-    public virtual async  Task Connect(IPAddress address, int port)
-    {
-        Socket.Connect(new IPEndPoint(address, port));
-    }
-
     public abstract Task Run();
 
     public abstract ValueTask<SocketSendResult> SendAsync(ReadOnlyMemory<byte> message);

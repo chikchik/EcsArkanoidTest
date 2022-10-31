@@ -29,7 +29,7 @@ namespace Game
 
         public async Task<ISocket> GetReliableConnection()
         {
-            BaseSocket socket = new ReliableSocket(_userId);
+            var socket = new ReliableSocket(_userId);
 
             await socket.Connect(_ip, _tcpPort);
             Task.Run(socket.Run);
@@ -39,9 +39,11 @@ namespace Game
 
         public async Task<ISocket> GetUnreliableConnection()
         {
-            BaseSocket socket = new UnreliableSocket(_userId);
+            var addr = new IPEndPoint(_ip, _udpPort);
+            var socket = new UnreliableSocket(addr, _userId);
 
-            await socket.Connect(_ip, _udpPort);
+            await socket.Connect();
+            //await Task.Delay(200);
             Task.Run(socket.Run);
 
             return socket;

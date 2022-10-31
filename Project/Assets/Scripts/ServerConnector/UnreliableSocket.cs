@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,11 +9,18 @@ using XFlow.P2P;
 
 public class UnreliableSocket : BaseSocket
 {
-    public UnreliableSocket(int userId) : base(userId)
+    private IPEndPoint _endPoint;
+    public UnreliableSocket(IPEndPoint endPoint, int userId) : base(userId)
     {
+        _endPoint = endPoint;
         Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
     }
-
+    
+    public async  Task Connect()
+    {
+        
+    }
+    
     public override async Task Run()
     {
         var rcvBytes = new byte[64000];
@@ -20,9 +28,10 @@ public class UnreliableSocket : BaseSocket
 
         while (true)
         {
-            var rcvResult = await Socket.ReceiveAsync(rcvBuffer, SocketFlags.None);
+            var rcvResult = await Socket.ReceiveFromAsync(rcvBuffer, SocketFlags.None, _endPoint);
+            var size = rcvResult.ReceivedBytes;
 
-            var msgBytes = rcvBuffer.Skip(rcvBuffer.Offset).Take(rcvResult).ToArray();
+            var msgBytes = rcvBuffer.Skip(rcvBuffer.Offset).Take(size).ToArray();
             var message = SocketMessage.Message(msgBytes);
 
             foreach (var subscriber in Subscribers)
@@ -39,7 +48,7 @@ public class UnreliableSocket : BaseSocket
         {
             var packet = P2P.Combine(BitConverter.GetBytes(UserId), message.ToArray());
 
-            await Socket.SendToAsync(packet, SocketFlags.None, Socket.RemoteEndPoint);
+            await Socket.SendToAsync(packet, SocketFlags.None, _endPoint);
 
             return new SocketSendResult(SocketSendResultType.Ok, null);
         }

@@ -16,10 +16,9 @@ public class ReliableSocket : BaseSocket
         Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     }
 
-    public override async Task Connect(IPAddress address, int port)
+    public async Task Connect(IPAddress address, int port)
     {
-        await base.Connect(address, port);
-
+        Socket.Connect(new IPEndPoint(address, port));
         await Socket.SendAsync(BitConverter.GetBytes(UserId), SocketFlags.None);
     }
 
