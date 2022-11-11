@@ -1,11 +1,8 @@
-﻿using Game.Ecs.Client.Components;
-using Game.Ecs.ClientServer.Components;
+﻿using Game.Ecs.ClientServer.Components;
 using Game.View;
-
 using UnityEngine;
 using XFlow.Ecs.Client.Components;
 using XFlow.Ecs.ClientServer.Components;
-using XFlow.Ecs.ClientServer.Utils;
 using XFlow.EcsLite;
 using XFlow.Utils;
 using Zenject;
@@ -14,113 +11,103 @@ namespace Game.Ecs.Client.Systems
 {
     public class CreateViewSystem : IEcsInitSystem, IEcsRunSystem
     {
-        private static int N = 0;
-        private CharacterView _viewPrefab;
-        private BulletView _bulletPrefab;
-        private DiContainer _container;
-        
-        private EcsWorld world;
-        private EcsFilter filter;
-        
-        public CreateViewSystem(CharacterView viewPrefab, BulletView bulletPrefab, DiContainer container)
-        {
-            _container = container;
-            this._bulletPrefab = bulletPrefab;
-            this._viewPrefab = viewPrefab;
-        }
-        
+        [Inject] private PlatformView _platformPrefab;
+        [Inject] private BrickView _brickPrefab;
+        [Inject] private BallView _ballPrefab;
+        [Inject] private BonusView _bonusView;
+
+        private EcsWorld _world;
+        private EcsFilter _filterGameObjectName;
+        private EcsFilter _filterUnits;
+        private EcsFilter _filterBricks;
+        private EcsFilter _filterBalls;
+        private EcsFilter _filterBonuses;
+
         public void Init(EcsSystems systems)
         {
-            world = systems.GetWorld();
-            filter = world.Filter<GameObjectNameComponent>()
+            _world = systems.GetWorld();
+            _filterGameObjectName = _world.Filter<GameObjectNameComponent>()
+                .Exc<TransformComponent>().End();
+
+            _filterUnits = _world.Filter<UnitComponent>()
+                .Exc<TransformComponent>().End();
+
+            _filterBricks = _world.Filter<BrickComponent>()
+                .Exc<TransformComponent>().End();
+
+            _filterBalls = _world.Filter<BallComponent>()
+                .Exc<TransformComponent>().End();
+
+            _filterBonuses = _world.Filter<BonusComponent>()
+                .Inc<PickupableComponent>()
                 .Exc<TransformComponent>().End();
         }
-        
+
         public void Run(EcsSystems systems)
         {
-
-            foreach (var entity in filter)
+            foreach (var entity in _filterGameObjectName)
             {
-                var name = entity.EntityGet<GameObjectNameComponent>(world).Name.ToString();
+                var name = entity.EntityGet<GameObjectNameComponent>(_world).Name.ToString();
                 var go = GameObject.Find(name);
                 if (go == null)
                 {
-                    Debug.LogError($"not found gameobject {name} for entity {entity.e2name(world)}");
+                    Debug.LogError($"not found gameobject {name} for entity {entity.e2name(_world)}");
                     continue;
                 }
                 go.SetActive(true);
 
-
-                if (entity.EntityTryGet(world, out PositionComponent pos))
+                if (entity.EntityTryGet(_world, out PositionComponent pos))
                 {
-                    entity.EntityAdd<TransformComponent>(world).Transform = go.transform;
+                    entity.EntityAdd<TransformComponent>(_world).Transform = go.transform;
                     go.transform.position = pos.Value;
                 }
-                
-                
-                if (entity.EntityTryGet(world, out Rotation2DComponent rot))
+
+                if (entity.EntityTryGet(_world, out Rotation2DComponent rot))
                 {
-                    
                     var angle = rot.AngleRadians * -Mathf.Rad2Deg;
                     go.transform.eulerAngles = go.transform.eulerAngles.WithY(angle);
                 }
+            }
 
-                if (entity.EntityHas<CollectableComponent>(world))
+            foreach (var entity in _filterUnits)
+            {
+                var view = Object.Instantiate(_platformPrefab);
+                view.transform.position = entity.EntityGet<PositionComponent>(_world).Value;
+
+                entity.EntityAdd<TransformComponent>(_world).Transform = view.transform;
+                entity.EntityGetOrCreateRef<LerpComponent>(_world).Value = 0.5f;
+
+                if (entity.EntityGet<UnitComponent>(_world).PlayerEntity.Unpack(_world, out int playerEntity) &&
+                    playerEntity.EntityTryGet(_world, out NicknameComponent nicknameComponent))
                 {
-                    if (entity.EntityHas<BushComponent>(world))
-                    {
-                        var view = go.GetComponent<BushView>();
-                        ref var collectableTargetComponent =
-                            ref entity.EntityAdd<CollectableTargetComponent>(world);
-                        collectableTargetComponent.GameObject = view.Berries.gameObject;
-                    }
-                    else
-                    {
-                        ref var collectableTargetComponent =
-                            ref entity.EntityAdd<CollectableTargetComponent>(world);
-                        collectableTargetComponent.GameObject = go;
-                    }
+                    view.Nickname.gameObject.SetActive(true);
+                    view.Nickname.text = nicknameComponent.Value;
                 }
             }
 
-            var filterUnits = world.Filter<UnitComponent>()
-                .Exc<TransformComponent>().End();
-
-            foreach (var entity in filterUnits)
+            foreach (var entity in _filterBricks)
             {
-                var view = Object.Instantiate(_viewPrefab);
-                view.transform.position = entity.EntityGet<PositionComponent>(world).Value;
-                view.Gun.gameObject.SetActive(false);
+                var view = Object.Instantiate(_brickPrefab);
+                view.transform.position = entity.EntityGet<PositionComponent>(_world).Value;
 
-                ref var component = ref entity.EntityAdd<TransformComponent>(world);
-                component.Transform = view.transform;
-
-                ref var animatorComponent = ref entity.EntityAdd<AnimatorComponent>(world);
-                animatorComponent.Animator = view.Animator;
-
-                entity.EntityGetOrCreateRef<LerpComponent>(world).Value = 0.5f;
+                entity.EntityAdd<TransformComponent>(_world).Transform = view.transform;
             }
-            
-            var filterBullets = world.Filter<BulletDamageComponent>()
-                .Exc<TransformComponent>().End();
 
-            foreach (var entity in filterBullets)
+
+            foreach (var entity in _filterBalls)
             {
-                var viewGo = _container.InstantiatePrefab(_bulletPrefab);
-                var view = viewGo.GetComponent<BulletView>();
-                var pos = entity.EntityGet<PositionComponent>(world).Value;
-                view.transform.position = pos;
-                view.name = $"Bullet{entity.e2name(world)}-{N}";
-                //view.PackedEntity = world.PackEntity(entity);
+                var view = Object.Instantiate(_ballPrefab);
+                view.transform.position = entity.EntityGet<PositionComponent>(_world).Value;
 
-                ref var component = ref entity.EntityAdd<TransformComponent>(world);
-                component.Transform = view.transform;
+                entity.EntityAdd<TransformComponent>(_world).Transform = view.transform;
+            }
 
-                entity.EntityGetOrCreateRef<LerpComponent>(world).Value = 0.5f;
-                
-                world.Log($"create view '{view.name}'  {entity.e2name(world)} at {pos}");
+            foreach (var entity in _filterBonuses)
+            {
+                var view = Object.Instantiate(_bonusView);
+                view.transform.position = entity.EntityGet<PositionComponent>(_world).Value;
 
-                ++N;
+                entity.EntityAdd<TransformComponent>(_world).Transform = view.transform;
             }
         }
     }

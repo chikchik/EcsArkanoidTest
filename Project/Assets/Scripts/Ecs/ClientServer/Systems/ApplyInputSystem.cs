@@ -14,7 +14,6 @@ using XFlow.Modules.Grid.Other;
 using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Mech.ClientServer.Components;
 using XFlow.Modules.Tick.Other;
-using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Components.Input;
 using XFlow.Net.ClientServer.Services;
@@ -46,6 +45,7 @@ namespace Game.Ecs.ClientServer.Systems
         
         public void Run(EcsSystems systems)
         {
+            var poolInputLogin   = _inputWorld.GetPool<InputLoginComponent>();
             var poolInputShot   = _inputWorld.GetPool<InputShotComponent>();
             var poolPlayer      = _inputWorld.GetPool<InputPlayerEntityComponent>();
             var poolInputMoveDir= _inputWorld.GetPool<InputMoveDirectionComponent>();
@@ -66,6 +66,11 @@ namespace Game.Ecs.ClientServer.Systems
 
                 if (!poolPlayer.Get(inputEntity).Value.Unpack(_world, out int playerEntity)) 
                     continue;
+
+                if (poolInputLogin.Has(inputEntity))
+                {
+                    Login(playerEntity, poolInputLogin.Get(inputEntity).Nickname);
+                }
                 
                 if (!PlayerService.TryGetControlledEntity(_world, playerEntity, out int unitEntity))
                     continue;
@@ -197,6 +202,12 @@ namespace Game.Ecs.ClientServer.Systems
                 entity.EntityGetRef<CollectableComponent>(_world).IsCollected = true;
             }
         }
+
+        private void Login(int entity, string nickname)
+        {
+            ref var nicknameComponent = ref entity.EntityAdd<NicknameComponent>(_world);
+            nicknameComponent.Value = nickname;
+        }
         
         public void Kick(int unitEntity, Vector3 dir)
         {
@@ -246,9 +257,7 @@ namespace Game.Ecs.ClientServer.Systems
                 TotalTime = _world.GetTime() + 0.5f
             });
         }
-
-
-        
+       
         private void Move(int entity, Vector3 dir)
         {
             if (entity.EntityHas<CantMoveComponent>(_world))

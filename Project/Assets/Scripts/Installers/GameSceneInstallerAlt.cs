@@ -17,7 +17,6 @@ using XFlow.Modules.Mech.ClientServer;
 using XFlow.Modules.States;
 using XFlow.Net.Client;
 using XFlow.Net.Client.Services;
-using XFlow.Net.ClientServer;
 
 namespace Game.Installers
 {
@@ -31,18 +30,20 @@ namespace Game.Installers
              * at UnityEngine.Rendering.DebugManager.UpdateActions () [0x00000] in <
             */
             DebugManager.instance.enableRuntimeUI = false;
-            
-            
+
             Container.Bind<Camera>().FromComponentsOn(GameObject.Find("Main Camera")).AsSingle();
-            
+
             var global = GameObject.Find("Global").GetComponent<Global>();
             Container.Bind<Global>().FromInstance(global).AsSingle();
 
-            Container.Bind<CharacterView>().FromInstance(global.CharacterPrefab).AsSingle();
+            Container.Bind<PlatformView>().FromInstance(global.PlatformPrefab).AsSingle();
+            Container.Bind<BrickView>().FromInstance(global.BrickPrefab).AsSingle();
+            Container.Bind<BallView>().FromInstance(global.BallPrefab).AsSingle();
+            Container.Bind<BonusView>().FromInstance(global.BonusPrefab).AsSingle();
             Container.Bind<BulletView>().FromInstance(global.BulletPrefab).AsSingle();
             Container.Bind<ParticleSystem>().FromInstance(global.FireParticles).AsSingle();
             Container.Bind<IInventoryStaticData>().FromInstance(global.InventoryStaticData).AsSingle();
-            
+
             Container.Bind<FootprintView>().WithId("left").FromInstance(global.LeftFootprintPrefab).AsCached();
             Container.Bind<FootprintView>().WithId("right").FromInstance(global.RightFootprintPrefab).AsCached();
 
@@ -59,40 +60,42 @@ namespace Game.Installers
 
             //register states and view
             Container.Bind<MechInfoView>().FromInstance(global.MechInfoView).AsSingle();
-             
+            Container.Bind<LoginUIView>().FromInstance(global.LoginUIView).AsSingle();
+
             Container.Bind<States>().AsSingle();
             Container.Bind<RootState>().AsSingle();
             Container.Bind<MechInfoState>().AsSingle();
             Container.Bind<InventoryOpenedState>().AsSingle();
+            Container.Bind<LoginUIState>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<EcsSystemsFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<EcsViewSystemsFactory>().AsSingle();
 
             Container.Bind<DevPanelController>().FromComponentInNewPrefabResource("DEV/DevPanel").AsSingle();
             Container.Bind<DevPanel>().AsSingle().NonLazy();
-            
+
             Container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
             Container.Bind<MechService>().AsSingle();
-            
-            
+
             Container.BindInterfacesAndSelfTo<InventoryInputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerControlService>().AsSingle();
 
             Container.Bind<AssetInstantiator>().AsSingle();
             Container.BindInterfacesAndSelfTo<MyInventoryService>().AsSingle();
             Container.Bind<InventoryFactory>().AsSingle();
-            
+
             Container.BindInterfacesAndSelfTo<EntityDestroyedListener>().AsSingle();
 
-            
             Container.BindInterfacesAndSelfTo<ClientInputService>().AsSingle();
+
+            Container.Bind<GameEntityFactory>().AsSingle();
 
             var starter = FindObjectOfType<GameStarter>().gameObject;
             if (gameSettings.MultiPlayer)
             {
                 Container.Bind<string>().WithId("tmpHashesPath").FromInstance(Config.TMP_HASHES_PATH).AsCached();
                 Container.Bind<NetClient>().AsSingle();
-                
+
                 if (gameSettings.SelectedContainer != null)
                 {
                     Container.Bind<IServerConnector>()
@@ -106,7 +109,7 @@ namespace Game.Installers
                             gameSettings.SelectedHost.UdpPort))
                         .AsSingle();
                 }
-                
+
                 var comp = starter.AddComponent<UnityEcsClient>();
                 Container.QueueForInject(comp);
             }

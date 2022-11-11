@@ -1,5 +1,4 @@
-﻿using Game.ClientServer.Services;
-using Game.Ecs.ClientServer.Components;
+﻿using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Components.Input;
 using Game.UI;
 using Game.View;
@@ -9,22 +8,20 @@ using XFlow.Ecs.ClientServer;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Tick.Other;
-using XFlow.Net.Client;
 using XFlow.Net.Client.Services;
-using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Utils;
 using Zenject;
 
 namespace Game.Client.Services
 {
-    public class PlayerControlService 
+    public class PlayerControlService
     {
         private EcsWorld _inputWorld;
         private EcsWorld _world;
 
         private IClientInputService _inputService;
-        
+
         public PlayerControlService(
             [Inject(Id = EcsWorlds.Input)] EcsWorld inputWorld,
             [InjectOptional] IClientInputService inputService,
@@ -34,19 +31,25 @@ namespace Game.Client.Services
             this._world = world;
             _inputService = inputService;
         }
-        
-        private int unitEntity
-        {
-            get
-            {
-                int entity = -1;
-                ClientPlayerService.TryGetControlledEntity(_world, out entity);
-                return entity;
-            }
-        }
+
+        private int playerEntity => ClientPlayerService.TryGetPlayerEntity(_world, out int entity) ? entity : -1;
+
+        private int unitEntity => ClientPlayerService.TryGetControlledEntity(_world, out int entity) ? entity : -1;
 
         private int tick => _world.GetTick();
-        
+
+        public void Login(string nickname)
+        {
+            if (playerEntity == -1)
+            {
+                Debug.LogWarning("playerEntity == -1");
+                return;
+            }
+
+            var component = new InputLoginComponent() { Nickname = nickname };
+            Apply(component);
+        }
+
         public void Shot()
         {
             if (unitEntity == -1)
@@ -57,16 +60,16 @@ namespace Game.Client.Services
 
             var view = unitEntity.EntityGet<TransformComponent>(_world).Transform.GetComponent<CharacterView>();
             //view.
-            
+
             var component = new InputShotComponent();
             var lookDir = _world.EntityGet<LookDirectionComponent>(unitEntity).Value;
             var dir = Quaternion.Euler(0, -0, 0) * lookDir;
             component.Direction = dir;
-            component.Position = view.BulletSpawnPos.transform.position; 
-            
+            component.Position = view.BulletSpawnPos.transform.position;
+
             Apply(component);
         }
-        
+
         public void Interact()
         {
             if (unitEntity == -1)
@@ -74,11 +77,11 @@ namespace Game.Client.Services
                 Debug.LogWarning("unitEntity == -1");
                 return;
             }
-            
+
             var component = new InputActionComponent();
             Apply(component);
         }
-        
+
         public void Kick()
         {
             if (unitEntity == -1)
@@ -86,13 +89,13 @@ namespace Game.Client.Services
                 Debug.LogWarning("unitEntity == -1");
                 return;
             }
-            
+
             var component = new InputKickComponent();
             component.Direction = _world.EntityGet<LookDirectionComponent>(unitEntity).Value;
-            
+
             Apply(component);
         }
-        
+
         public void MechEnterLeave()
         {
             if (unitEntity == -1)
@@ -104,8 +107,6 @@ namespace Game.Client.Services
             Apply(new InputMechEnterLeaveComponent());
         }
 
-        
-        
         public void MoveToDirection(Vector3 dir)
         {
             if (unitEntity == -1)
@@ -113,13 +114,13 @@ namespace Game.Client.Services
                 Debug.LogWarning("unitEntity == -1");
                 return;
             }
-            
+
             var component = new InputMoveDirectionComponent();
             component.Direction = dir;
-            
+
             Apply(component);
         }
-        
+
         public void StopMoveToDirection()
         {
             if (unitEntity == -1)
@@ -128,15 +129,15 @@ namespace Game.Client.Services
                 return;
             }
 
-            
             if (!unitEntity.EntityHas<MoveDirectionComponent>(_world))
                 return;
-            
+
             var component = new InputMoveDirectionComponent();
             component.Direction = Vector3.zero;
-            
+
             Apply(component);
         }
+
         public void MoveToPoint(Vector3 pos)
         {
             if (unitEntity == -1)
@@ -164,7 +165,7 @@ namespace Game.Client.Services
             component.Position = pos.ToVector2XZ();
             Apply(component);
         }
-        
+
         public void EndDrag()
         {
             Debug.Log($"EndDrag");

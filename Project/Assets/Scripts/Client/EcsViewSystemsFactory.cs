@@ -12,6 +12,7 @@ using XFlow.Modules.Inventory.ClientServer.Components;
 using XFlow.Modules.Mech.Client.Systems;
 using XFlow.Modules.Tick.ClientServer.Components;
 using XFlow.Net.Client;
+using XFlow.Net.Client.Ecs.Components;
 using XFlow.Net.ClientServer;
 using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
@@ -36,20 +37,20 @@ namespace Game.Client
             _container.Register<DetectPlayerIdChangesSystem>();
 
             _container.Register<CreateViewSystem>();
-            _container.Register<FireViewSystem>();
-            _container.Register<InventoryImageSystem>();
-            _container.Register<CreateMechViewSystem>();
-            _container.Register<MechAnimationSystem>();
+            //_container.Register<FireViewSystem>();
+            //_container.Register<InventoryImageSystem>();
+            //_container.Register<CreateMechViewSystem>();
+            //_container.Register<MechAnimationSystem>();
 
-            _container.Register<CharacterAnimationSystem>();
+            //_container.Register<CharacterAnimationSystem>();
             
-            _container.Register<FootprintViewSystem>();
-            _container.Register<HighlightInteractableSystem>();
+            //_container.Register<FootprintViewSystem>();
+            //_container.Register<HighlightInteractableSystem>();
             _container.Register<VFXCreationSystem>();
             
             
             _container.Register<CollectableSystem>();
-            _container.Register<WeaponEquipSystem>();
+            //_container.Register<WeaponEquipSystem>();
             
             
             _container.Register<AddLerpSystem>();
@@ -57,10 +58,12 @@ namespace Game.Client
             _container.Register<SyncTransformSystem>();
             _container.Register<RotateCharacterSystem>();
             _container.Register<RotateRigidbodySystem>();
-            _container.Register<CameraFollowSystem>();
+            //_container.Register<CameraFollowSystem>();
             
             _container.Register<ResetMouseDownSystem>();
 
+            _container.Register<EventsSystem<ClientPlayerEntityComponent>>();
+            _container.Register<EventsSystem<NicknameComponent>>();
             _container.Register<EventsSystem<WeaponComponent>>();
             _container.Register<EventsSystem<ButtonPressedComponent>>();
             _container.Register<EventsSystem<PlayerComponent>>();

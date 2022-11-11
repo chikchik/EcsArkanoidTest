@@ -1,12 +1,9 @@
-using Game.ClientServer;
 using Game.Ecs.ClientServer.Components;
 
 using UnityEngine;
 using XFlow.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Components;
-using XFlow.Modules.Tick.Other;
-using XFlow.Utils;
 
 namespace Game.Ecs.ClientServer.Systems
 {
@@ -39,10 +36,9 @@ namespace Game.Ecs.ClientServer.Systems
         {
             var filter = world
                 .Filter<TargetPositionComponent>()
-                .Inc<PositionComponent>().Inc<Box2DBodyComponent>()
+                .Inc<PositionComponent>()
+                .Inc<Box2DBodyComponent>()
                 .End();
-
-            var deltaTime = world.GetDeltaSeconds();
 
             foreach (var entity in filter)
             {
@@ -69,10 +65,9 @@ namespace Game.Ecs.ClientServer.Systems
 
                 var speed = poolAverageSpeed.GetNullable(entity)?.Value ?? 1.0f;
                 poolLinearVelocity.GetRef(entity).Value = direction2D.normalized * speed;
-                poolLookDirection.GetOrCreateRef(entity).Value = directionToTarget.normalized;
+                //poolLookDirection.GetOrCreateRef(entity).Value = directionToTarget.normalized;
                 poolMoving.Replace(entity, new MovingComponent());
             }
         }
-
     }
 }

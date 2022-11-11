@@ -75,22 +75,24 @@ namespace Game.ClientServer
             _container.Register<CreateGameSystem>();
 #endif
             
-            _container.RegisterServer<CustomInitSystem>();
+            //_container.RegisterServer<CustomInitSystem>();
+            _container.RegisterServer<GameStateSystem>();
+            _container.RegisterServer<GameSpawnSystem>();
             _container.RegisterServer<ManagePlayerSystem>();
            
            
             //_container.RegisterServer<AIPlayerSystem>();
-            _container.Register<AIPlayerSystem>();
+            //_container.Register<AIPlayerSystem>();
 
             _container.Register<MoveToTargetPositionSystem>();
             _container.Register<MoveSystem>();
-            _container.Register<LookDirectionSystem>();
+            //_container.Register<LookDirectionSystem>();
             _container.Register<SimpleMoveSystem>();
             _container.Register<UnitMoveSystem>();
             _container.Register<FollowSystem>();
             _container.Register<PushingSystem>();
 
-            _container.Register<MechAdapterSystem>();
+            //_container.Register<MechAdapterSystem>();
             
             _container.Register<EntitiesLifeTimeSystem>();
             
@@ -103,7 +105,7 @@ namespace Game.ClientServer
             _container.Register<ApplyDragInputSystem>();
 
 
-            _container.RegisterServer<FootprintSystem>();
+            //_container.RegisterServer<FootprintSystem>();
 
 
             // gates and buttons
@@ -112,7 +114,7 @@ namespace Game.ClientServer
             _container.Register<GateSystem>();
             _container.Register<MoveByProgressSystem>();
 
-            _container.Register<FireSystem>();
+            //_container.Register<FireSystem>();
 
             _container.Register<ApplyForceSystem>();
             
@@ -142,9 +144,15 @@ namespace Game.ClientServer
             _container.Register<Box2DUpdateSystem>();
             _container.Register<BulletContactSystem>();      
             _container.Register<DamageApplySystem>();
+            _container.Register<BallContactSystem>();
+            _container.Register<PickupSystem>();
+
+            _container.RegisterServer<BoardBoundTrackingSystem>();
+            _container.RegisterServer<BonusSpawnSystem>();
+            _container.RegisterServer<BonusApplySystem>();
             
             //уничтожение объектов сделаем серверным чтоб не было ошибок предсказания
-            _container.RegisterServer<DestroyDamagedSystem>();
+            //_container.RegisterServer<DestroyDamagedSystem>();
 
             //container.Register<Box2DDeleteContactsSystem>();
 
@@ -156,6 +164,10 @@ namespace Game.ClientServer
             
             //write final Box2d transforms to components
             _container.Register<Box2DWriteBodiesToComponentsSystem>();
+
+            _container.Register<EventsSystem<GameStateComponent>>();
+            _container.Register<EventsSystem<DestroyComponent>>();
+            _container.Register<EventsSystem<PickupedComponent>>();
         }
         
         public void AddNewSystems(EcsSystems systems, IEcsSystemsFactory.Settings settings)

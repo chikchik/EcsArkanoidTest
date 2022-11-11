@@ -1,61 +1,50 @@
 ﻿using Game.Client.Services;
 using Game.Ecs.ClientServer.Components;
-using Game.UI.Mono;
-
-
-using Game.ClientServer.Services;
 using Game.State;
+using Game.UI.Mono;
 using XFlow.EcsLite;
 using XFlow.Modules.Mech.ClientServer;
 using XFlow.Modules.Mech.ClientServer.Components;
 using XFlow.Modules.States;
 using XFlow.Modules.Tick.ClientServer.Components;
+using XFlow.Net.Client.Ecs.Components;
 using XFlow.Utils;
 
 namespace Game.UI
 {
-    public class UI: 
+    public class UI :
         EventsSystem<FoodCollectedComponent>.IAnyComponentChangedListener,
         EventsSystem<AmmoCollectedComponent>.IAnyComponentChangedListener,
         EventsSystem<WeaponComponent>.IAnyComponentChangedListener,
-        EventsSystem<TickComponent>.IAnyComponentChangedListener
+        EventsSystem<TickComponent>.IAnyComponentChangedListener,
+        EventsSystem<ClientPlayerEntityComponent>.IAnyComponentChangedListener
     {
+        private readonly EcsWorld _world;
+        private readonly States _states;
+
         public MainUI View { get; private set; }
-        private EcsWorld _world;
-        
-        private MechService _mechService;
-        private HpViewManager _hpViewManager;
-        
+
         public UI(
-            EcsWorld world, 
-            MainUI view, 
+            EcsWorld world,
+            MainUI view,
             States states,
-            PlayerControlService controlService,
-            HpViewManager hpViewManager,
-            MechService mechService
+            PlayerControlService controlService
             )
         {
             View = view;
             _world = world;
-            _mechService = mechService;
-
-            view.OnLateUpdate = () =>
-            {
-                _hpViewManager.LateUpdate();
-            };
-
-            _hpViewManager = hpViewManager;
+            _states = states;
 
             view.InteractionButton.onClick.AddListener(() =>
             {
                 controlService.Interact();
             });
-            
+
             view.KickButton.onClick.AddListener(() =>
             {
                 controlService.Kick();
             });
-            
+
             view.MechButton.onClick.AddListener(() =>
             {
                 states.Push<MechInfoState>();
@@ -83,19 +72,17 @@ namespace Game.UI
             listener.SetAnyChangedListener<FoodCollectedComponent>(this);
             listener.SetAnyChangedListener<AmmoCollectedComponent>(this);
             listener.SetAnyChangedListener<TickComponent>(this);
+            listener.SetAnyChangedListener<ClientPlayerEntityComponent>(this);
         }
 
-        
-
-        
         public void OnAnyComponentChanged(EcsWorld _, int entity, FoodCollectedComponent data, bool added)
         {
             if (!ClientPlayerService.IsControlledEntity(_world, entity))
                 return;
-            
+
             View.FoodText.text = $"Food Collected {data.Value}";
         }
-        
+
         public void OnAnyComponentChanged(EcsWorld world, int entity, AmmoCollectedComponent data, bool added)
         {
             if (!ClientPlayerService.IsControlledEntity(_world, entity))
@@ -108,7 +95,7 @@ namespace Game.UI
         {
             if (!ClientPlayerService.IsControlledEntity(_world, entity))
                 return;
-            
+
             //var transform = entity.EntityGet<TransformComponent>(world).Transform
             View.ShotButton.gameObject.SetActive(true);
         }
@@ -119,7 +106,7 @@ namespace Game.UI
             //skip it
             if (tickEntity != 0)
                 return;
-            
+
             if (!ClientPlayerService.TryGetControlledEntity(_world, out int controlledEntity))
                 return;
 
@@ -127,11 +114,12 @@ namespace Game.UI
             {
                 //leave mech
                 View.MechButton.gameObject.SetActive(true);
-                return;
             }
-            
-            bool hasMech = _mechService.TryGetInteractableMechEntity(_world, controlledEntity, out int mechEntity);
-            View.MechButton.gameObject.SetActive(hasMech);
+        }
+
+        public void OnAnyComponentChanged(EcsWorld _, int tickEntity, ClientPlayerEntityComponent data, bool added)
+        {
+            _states.Push<LoginUIState>();
         }
     }
 }

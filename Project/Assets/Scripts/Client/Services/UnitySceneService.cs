@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Game.Ecs.Client.Components;
 using Game.Ecs.ClientServer.Components;
 using Game.View;
 using UnityEngine;
@@ -11,7 +10,6 @@ using XFlow.EcsLite;
 using XFlow.Modules.Box2D.Client;
 using XFlow.Modules.Box2D.ClientServer;
 using XFlow.Modules.Box2D.ClientServer.Components.Joints;
-using XFlow.Modules.Fire.ClientServer.Components;
 using XFlow.Utils;
 using Object = UnityEngine.Object;
 
@@ -46,11 +44,9 @@ namespace Game.Client.Services
 
                 entity = world.NewEntity();
                 //go.name = $"{go.name}[{entity}]";
-                
-                
+
                 entity.EntityAdd<DebugNameComponent>(world).Value = go.name;
-                
-                
+
                 ref var gameObjectNameComponent = ref entity.EntityAdd<GameObjectNameComponent>(world);
                 gameObjectNameComponent.Name = go.name;
                 //NameId++;
@@ -62,32 +58,6 @@ namespace Game.Client.Services
 
                 return entity;
             }
-
-
-            ForEachObject<BushView>(view =>
-            {
-                var bushEntity = GetOrCreateGameEntity(view.gameObject);
-                bushEntity.EntityAdd<BushComponent>(world);
-
-                ref var positionComponent = ref bushEntity.EntityAdd<PositionComponent>(world);
-                positionComponent.Value = view.transform.position;
-
-                bushEntity.EntityAdd<InteractableComponent>(world);
-
-                ref var radiusComponent = ref bushEntity.EntityAdd<RadiusComponent>(world);
-                radiusComponent.Value = view.transform.lossyScale.x / 2f;
-
-                ref var resourceComponent = ref bushEntity.EntityAdd<ResourceComponent>(world);
-                resourceComponent.count = 1;
-
-                ref var collectableComponent = ref bushEntity.EntityAdd<CollectableComponent>(world);
-                collectableComponent.IsCollected = false;
-
-                ref var collectableTargetComponent = ref bushEntity.EntityAdd<CollectableTargetComponent>(world);
-                collectableTargetComponent.GameObject = view.Berries.gameObject;
-
-                bushEntity.EntityAdd<FlammableComponent>(world).Power = 3;
-            });
 
             ForEachObject<BoxView>(view =>
             {
@@ -104,65 +74,8 @@ namespace Game.Client.Services
 
                 ref var radiusComponent = ref boxEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.Value = view.transform.lossyScale.x / 2f;
-                
-                
+
                 view.LinkEntity(world, boxEntity);
-                
-            });
-
-            ForEachObject<ButtonView>(view =>
-            {
-                var buttonEntity = GetOrCreateGameEntity(view.gameObject);
-
-                ref var buttonComponent = ref buttonEntity.EntityAdd<ButtonStateComponent>(world);
-                buttonComponent.isActivated = false;
-                
-                ref var positionComponent = ref buttonEntity.EntityAdd<PositionComponent>(world);
-                positionComponent.Value = view.transform.position;
-
-                ref var radiusComponent = ref buttonEntity.EntityAdd<RadiusComponent>(world);
-                radiusComponent.Value = view.transform.lossyScale.x / 2f;
-
-                buttonEntity.EntityAdd<InteractableComponent>(world);
-                
-
-                ref var progressComponent = ref buttonEntity.EntityAdd<ProgressComponent>(world);
-                progressComponent.Value = 0;
-
-                ref var moveInfoComponent = ref buttonEntity.EntityAdd<MoveInfoComponent>(world);
-                moveInfoComponent.StartPosition = view.StartPosition;
-                moveInfoComponent.EndPosition = view.EndPosition;
-                
-                if (view.Spawner)
-                    buttonEntity.EntityGetOrCreateRef<ButtonCustomComponent>(world).Spawn = true;
-                if (view.Shake)
-                    buttonEntity.EntityGetOrCreateRef<ButtonCustomComponent>(world).Shake = true;
-            });
-
-            ForEachObject<GateView>(view =>
-            {
-                var gateEntity = GetOrCreateGameEntity(view.gameObject);
-                ref var gateComponent = ref gateEntity.EntityAdd<GateComponent>(world);
-
-                ref var buttonLinkComponent = ref gateEntity.EntityAdd<ButtonLinkComponent>(world);
-                buttonLinkComponent.Entities = new int[view.OpenedBy.Count];
-
-                for (var i = 0; i < view.OpenedBy.Count; i++)
-                    if (entities.TryGetValue(view.OpenedBy[i], out var buttonEntity))
-                        buttonLinkComponent.Entities[i] = buttonEntity;
-
-                ref var positionComponent = ref gateEntity.EntityAdd<PositionComponent>(world);
-                positionComponent.Value = view.transform.position;
-
-                ref var radiusComponent = ref gateEntity.EntityAdd<RadiusComponent>(world);
-                radiusComponent.Value = 1f;
-
-                ref var progressComponent = ref gateEntity.EntityAdd<ProgressComponent>(world);
-                progressComponent.Value = 0;
-
-                ref var moveInfoComponent = ref gateEntity.EntityAdd<MoveInfoComponent>(world);
-                moveInfoComponent.StartPosition = view.StartPosition;
-                moveInfoComponent.EndPosition = view.EndPosition;
             });
 
             /*
@@ -176,7 +89,7 @@ namespace Game.Client.Services
 
                 characterEntity.EntityAdd<MoveDirectionComponent>(world);
                 characterEntity.EntityAdd<PositionComponent>(world);
-                
+
                 ref var radiusComponent = ref characterEntity.EntityAdd<RadiusComponent>(world);
                 radiusComponent.radius = 0.4f;
             });*/
@@ -184,18 +97,17 @@ namespace Game.Client.Services
             ForEachObject<DestructibleView>(view =>
             {
                 var entity = GetOrCreateGameEntity(view.gameObject);
-                
+
                 entity.EntityAdd<HpComponent>(world).Value = 2;
                 entity.EntityAdd<MaxHpComponent>(world).Value = 10;
             });
 
-            
             ForEachObject<Rigidbody2D>(body =>
             {
                 var entity = GetOrCreateGameEntity(body.gameObject);
                 ClientBox2DServices.AddRigidBodyDefinitionWithColliders(world, entity, body);
             });
-            
+
             ForEachObject<Rigidbody>(body =>
             {
                 var entity = GetOrCreateGameEntity(body.gameObject);
@@ -206,7 +118,7 @@ namespace Game.Client.Services
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
                 var entityB = GetOrCreateGameEntity(joint.Target);
-                
+
                 Box2DServices.AddDistanceJointToDefinition(world, entityA, entityB);
             });
 
@@ -214,7 +126,7 @@ namespace Game.Client.Services
             {
                 var entityA = GetOrCreateGameEntity(joint.gameObject);
                 var entityB = GetOrCreateGameEntity(joint.ConnectedBody.gameObject);
-                
+
                 var data = new Box2DRevoluteJoint();
                 data.Entity = world.PackEntity(entityB);
 
@@ -237,37 +149,6 @@ namespace Game.Client.Services
 
                 Box2DServices.AddRevoluteJointToDefinition(world, entityA, data);
             });
-            
-            ForEachObject<SpawnGunView>(view =>
-            {
-                var entity = GetOrCreateGameEntity(view.gameObject);
-                entity.EntityAdd<SpawnGunComponent>(world);
-                entity.EntityAdd<InteractableComponent>(world);
-                entity.EntityAdd<PositionComponent>(world).Value = view.transform.position;
-                
-                ref var collectableComponent = ref entity.EntityAdd<CollectableComponent>(world);
-                collectableComponent.IsCollected = false;
-                
-                entity.EntityAdd<CollectableTargetComponent>(world).GameObject = view.gameObject;
-            });
-            
-            ForEachObject<AmmoView>(view =>
-            {
-                var entity = GetOrCreateGameEntity(view.gameObject);
-                entity.EntityAdd<AmmoComponent>(world);
-                entity.EntityAdd<InteractableComponent>(world);
-                entity.EntityAdd<PositionComponent>(world).Value = view.transform.position;
-                entity.EntityAdd<CollectableComponent>(world).IsCollected = false;;
-                entity.EntityAdd<CollectableTargetComponent>(world).GameObject = view.gameObject;
-                entity.EntityAdd<RadiusComponent>(world).Value = view.transform.lossyScale.x / 2f;
-            });
-                
-            var unit = Object.FindObjectOfType<Global>().CharacterPrefab;
-            var clips = unit.Animator.runtimeAnimatorController.animationClips;
-            //var clip = clips.First(clip => clip.name == "Walking");
-            //todo calculate exact speed
-
-            world.AddUnique<AverageSpeedComponent>().Value = 1.72f; //clip.averageSpeed;
         }
     }
 }

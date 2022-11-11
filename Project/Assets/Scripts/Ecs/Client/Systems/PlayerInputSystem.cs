@@ -38,31 +38,13 @@ namespace Game.Client
         
         public void Run(EcsSystems systems)
         {
-            if (!_world.HasUnique<MouseDownHandledComponent>() && Input.GetMouseButtonDown(0) && !IsPointerOverUIObject())
-            {
-                Debug.Log("MoveToPoint");
-                var ray = camera.ScreenPointToRay(Input.mousePosition);
-                var plane = new Plane(new Vector3(0, 1, 0), 0);
-                plane.Raycast(ray, out var dist);
-
-                var point = ray.GetPoint(dist);
-                
-                controlService.MoveToPoint(point);
-                return;
-            }
-
             var hor = Input.GetAxis("Horizontal");
-            var ver = Input.GetAxis("Vertical");
-            //Debug.Log(joystick.Direction);
             
-            if (Mathf.Abs(hor) > 0.01f || Mathf.Abs(ver) > 0.01f)
+            if (Mathf.Abs(hor) > 0.01f)
             {
-                MoveDir(hor, ver);
-            }
-            else if (joystick.Direction.magnitude > 0.01f)
-            {
-                MoveDir(joystick.Direction.x, joystick.Direction.y);
-            }else
+                MoveDir(hor, 0f);
+            } 
+            else
             {
                 controlService.StopMoveToDirection();
             }

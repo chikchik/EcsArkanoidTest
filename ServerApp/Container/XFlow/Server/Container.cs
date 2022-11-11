@@ -290,6 +290,7 @@ namespace XFlow.Server
             container.Bind<Box2DUpdateSystem.Options>().FromInstance(new Box2DUpdateSystem.Options());
             container.Bind<MechService>().AsSingle();
             container.Bind<MyInventoryService>().AsSingle();
+            container.Bind<GameEntityFactory>().AsSingle();
             container.Bind<ComponentsCollection>().FromInstance(_components).AsSingle();
             _systemsFactory = new EcsSystemsFactory(container);
         }

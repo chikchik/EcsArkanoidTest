@@ -1,0 +1,67 @@
+{
+    "RemovedEntities": [],
+    "CreatedEntities": [
+        1,
+        2,
+        3
+    ],
+    "CreatedEntitiesGen": [
+        1,
+        1,
+        1
+    ],
+    "Groups": [
+        {
+            "FullComponentName": "Game.Ecs.ClientServer.Components.GameObjectNameComponent",
+            "Json": "{\"v\":[{\"Name\":\"Wall Top\"},{\"Name\":\"Wall Right\"},{\"Name\":\"Wall Left\"}]}",
+            "ChangedEntities": [
+                1,
+                2,
+                3
+            ],
+            "RemovedFromEntities": []
+        },
+        {
+            "FullComponentName": "XFlow.Ecs.ClientServer.Components.DebugNameComponent",
+            "Json": "{\"v\":[{\"Value\":\"Wall Top\"},{\"Value\":\"Wall Right\"},{\"Value\":\"Wall Left\"}]}",
+            "ChangedEntities": [
+                1,
+                2,
+                3
+            ],
+            "RemovedFromEntities": []
+        },
+        {
+            "FullComponentName": "XFlow.Ecs.ClientServer.Components.PositionComponent",
+            "Json": "{\"v\":[{\"Value\":{\"x\":0.0,\"y\":0.0,\"z\":10.5}},{\"Value\":{\"x\":10.5,\"y\":0.0,\"z\":0.0}},{\"Value\":{\"x\":-10.5,\"y\":0.0,\"z\":0.0}}]}",
+            "ChangedEntities": [
+                1,
+                2,
+                3
+            ],
+            "RemovedFromEntities": []
+        },
+        {
+            "FullComponentName": "XFlow.Ecs.ClientServer.Components.Rotation2DComponent",
+            "Json": "{\"v\":[{\"AngleRadians\":0.0},{\"AngleRadians\":0.0},{\"AngleRadians\":0.0}]}",
+            "ChangedEntities": [
+                1,
+                2,
+                3
+            ],
+            "RemovedFromEntities": []
+        },
+        {
+            "FullComponentName": "XFlow.Modules.Box2D.ClientServer.Components.Box2DRigidbodyDefinitionComponent",
+            "Json": "{\"v\":[{\"Properties\":{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false,\"IsFreezeRotation\":false,\"Bullet\":false,\"SleepingAllowed\":true},\"BoxColliders\":[{\"Size\":{\"x\":20.0,\"y\":1.0},\"Pos\":{\"x\":0.0,\"y\":0.0},\"Angle\":0.0}],\"CircleColliders\":[],\"PolygonColliders\":[]},{\"Properties\":{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false,\"IsFreezeRotation\":false,\"Bullet\":false,\"SleepingAllowed\":true},\"BoxColliders\":[{\"Size\":{\"x\":1.0,\"y\":20.0},\"Pos\":{\"x\":0.0,\"y\":0.0},\"Angle\":0.0}],\"CircleColliders\":[],\"PolygonColliders\":[]},{\"Properties\":{\"BodyType\":0,\"Density\":1.0,\"Friction\":0.0,\"Restitution\":0.0,\"RestitutionThreshold\":0.5,\"LinearDamping\":1.0,\"AngularDamping\":1.0,\"CategoryBits\":1,\"MaskBits\":1,\"GroupIndex\":0,\"IsTrigger\":false,\"IsFreezeRotation\":false,\"Bullet\":false,\"SleepingAllowed\":true},\"BoxColliders\":[{\"Size\":{\"x\":1.0,\"y\":20.0},\"Pos\":{\"x\":0.0,\"y\":0.0},\"Angle\":0.0}],\"CircleColliders\":[],\"PolygonColliders\":[]}]}",
+            "ChangedEntities": [
+                1,
+                2,
+                3
+            ],
+            "RemovedFromEntities": []
+        }
+    ],
+    "InnerWorldEntity": 0,
+    "InnerWorldsDiff": []
+}
