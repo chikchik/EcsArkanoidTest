@@ -19,10 +19,10 @@ namespace Game.Ecs.ClientServer.Systems
         }
 
         private readonly GameEntityFactory _gameEntityFactory;
-        private readonly Vector3 platformSpawnPosition = new Vector3(0f, 0.5f, -8f);
-        private readonly Vector3 ballSpawnPosition = new Vector3(0f, 0f, 0f);
-        private readonly Vector2Int gridSize = new Vector2Int(10, 6);
-        private readonly Vector3 gridTopLeftCorner = new Vector3(-9f, 0.5f, 9.5f);
+        private readonly Vector3 _platformSpawnPosition = new Vector3(0f, 0.5f, -8f);
+        private readonly Vector3 _ballSpawnPosition = new Vector3(0f, 0f, 0f);
+        private readonly Vector2Int _gridSize = new Vector2Int(10, 6);
+        private readonly Vector3 _gridTopLeftCorner = new Vector3(-9f, 0.5f, 9.5f);
 
         private EcsWorld _world;
         private EcsFilter _filterNewReadyPlayers;
@@ -30,8 +30,10 @@ namespace Game.Ecs.ClientServer.Systems
         private EcsFilter _filterBricks;
         private EcsFilter _filterBalls;
         private EcsFilter _filterAutoCleanable;
-        private EcsFilter _filterGameState;
-        private EcsFilter _filterGameStateChanges;
+        private EcsFilter _filterGamePlaying;
+        private EcsFilter _filterGameWaitingStart;
+        private EcsFilter _filterGamePlayingStart;
+        private EcsFilter _filterGameOverStart;
 
         private readonly Random _random = new Random(System.Environment.TickCount);
 
@@ -49,12 +51,13 @@ namespace Game.Ecs.ClientServer.Systems
                 .Inc<NicknameComponent>().End();
 
             _filterGamePlayers = _world.Filter<PlayerComponent>().Inc<NicknameComponent>().End();
-
             _filterBricks = _world.Filter<BrickComponent>().End();
             _filterBalls = _world.Filter<BallComponent>().End();
             _filterAutoCleanable = _world.Filter<AutoCleanableComponent>().End();
-            _filterGameState = _world.Filter<GameStateComponent>().End();
-            _filterGameStateChanges = _world.Filter<GameStateComponent>().IncChanges<GameStateComponent>().End();
+            _filterGamePlaying = _world.Filter<GamePlayingComponent>().End();
+            _filterGameWaitingStart = _world.Filter<GameWaitingComponent>().IncAdded<GameWaitingComponent>().End();
+            _filterGamePlayingStart = _world.Filter<GamePlayingComponent>().IncAdded<GamePlayingComponent>().End();
+            _filterGameOverStart = _world.Filter<GameOverComponent>().IncAdded<GameOverComponent>().End();
         }
 
         public void Run(EcsSystems systems)
@@ -62,39 +65,32 @@ namespace Game.Ecs.ClientServer.Systems
             foreach (var playerEntity in _filterNewReadyPlayers)
             {
                 int unitEntity = _gameEntityFactory.CreatePlatform(_world, playerEntity);
-                unitEntity.EntityGetRef<PositionComponent>(_world).Value = platformSpawnPosition;
+                unitEntity.EntityGetRef<PositionComponent>(_world).Value = _platformSpawnPosition;
 
                 playerEntity.EntityDel<NewPlayerComponent>(_world);
 
-                foreach (int gameEntity in _filterGameState)
+                foreach (int _ in _filterGamePlaying)
                 {
-                    var gameState = gameEntity.EntityGet<GameStateComponent>(_world).Value;
-                    SetEnablePlayerMove(playerEntity, gameState == GameState.Play);
+                    SetEnablePlayerMove(playerEntity, true);
                 }
             }
 
-            foreach (int entity in _filterGameStateChanges)
+            foreach (int _ in _filterGameWaitingStart)
             {
-                var gameState = entity.EntityGet<GameStateComponent>(_world).Value;
-                if (gameState == GameState.None)
-                {
-                    ClearBoard();
-                }
-                else if (gameState == GameState.Init)
-                {
-                    var array = Enum.GetValues(typeof(BrickSpawnFigure));
-                    RespawnBricks((BrickSpawnFigure)array.GetValue(_random.Next(array.Length)));
-                }
-                else if (gameState == GameState.Play)
-                {
-                    RespawnBall();
-                }
-                else if (gameState == GameState.End)
-                {
-                    ClearBoard();
-                }
+                ClearBoard();
+            }
 
-                SetEnablePlayersMove(gameState == GameState.Play);
+            foreach (int _ in _filterGamePlayingStart)
+            {
+                var array = Enum.GetValues(typeof(BrickSpawnFigure));
+                RespawnBricks((BrickSpawnFigure)array.GetValue(_random.Next(array.Length)));
+                RespawnBall();
+                SetEnablePlayersMove(true);
+            }
+
+            foreach (int _ in _filterGameOverStart)
+            {
+                SetEnablePlayersMove(false);
             }
         }
 
@@ -151,9 +147,9 @@ namespace Game.Ecs.ClientServer.Systems
 
             if (figure == BrickSpawnFigure.Full)
             {
-                for (int x = 0; x < gridSize.x; x++)
+                for (int x = 0; x < _gridSize.x; x++)
                 {
-                    for (int y = 0; y < gridSize.y; y++)
+                    for (int y = 0; y < _gridSize.y; y++)
                     {
                         _gameEntityFactory.CreateBrick(_world, GridCellPosition(x, y), 1f);
                     }
@@ -161,9 +157,9 @@ namespace Game.Ecs.ClientServer.Systems
             }
             else if (figure == BrickSpawnFigure.Chessboard)
             {
-                for (int x = 0; x < gridSize.x; x++)
+                for (int x = 0; x < _gridSize.x; x++)
                 {
-                    for (int y = 0; y < gridSize.y; y++)
+                    for (int y = 0; y < _gridSize.y; y++)
                     {
                         if (x % 2 == y % 2)
                         {
@@ -179,12 +175,12 @@ namespace Game.Ecs.ClientServer.Systems
             ClearBalls();
 
             var dir = new Vector2(_random.Range(-1, 1), _random.Range(-1, 1)).normalized;
-            _gameEntityFactory.CreateBall(_world, ballSpawnPosition, dir * 200f);
+            _gameEntityFactory.CreateBall(_world, _ballSpawnPosition, dir * 200f);
         }
 
         private Vector3 GridCellPosition(int x, int y) => new Vector3(
-            gridTopLeftCorner.x + _gameEntityFactory.BrickSize.x * x,
-            gridTopLeftCorner.y,
-            gridTopLeftCorner.z - _gameEntityFactory.BrickSize.y * y);
+            _gridTopLeftCorner.x + _gameEntityFactory.BrickSize.x * x,
+            _gridTopLeftCorner.y,
+            _gridTopLeftCorner.z - _gameEntityFactory.BrickSize.y * y);
     }
 }

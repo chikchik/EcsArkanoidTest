@@ -1,10 +1,8 @@
-﻿using System;
-using Game.UIView;
+﻿using Game.UIView;
 using Game.View;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using XFlow.Modules.States;
 
 namespace Game.UI.Mono
 {
@@ -15,6 +13,7 @@ namespace Game.UI.Mono
         public Button InventoryButton;
         public Button KickButton;
         public Button MechButton;
+
         //public FixedJoystick Joystick;
         public FloatingJoystick Joystick;
 
@@ -23,15 +22,9 @@ namespace Game.UI.Mono
         public ConnectView Connect;
         public TMP_Text FoodText;
         public TMP_Text AmmoText;
+        public TMP_Text ScoreText;
+        public GameObject GameOver;
 
         public MechInfoView mechInfo;
-        public BaseUIView[] UIViews;
-
-        public Action OnLateUpdate;
-
-        public void LateUpdate()
-        {
-            OnLateUpdate?.Invoke();
-        }
     }
 }

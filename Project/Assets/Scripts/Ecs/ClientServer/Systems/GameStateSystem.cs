@@ -1,5 +1,4 @@
-﻿using System;
-using Game.Ecs.ClientServer.Components;
+﻿using Game.Ecs.ClientServer.Components;
 using XFlow.EcsLite;
 using XFlow.Modules.Tick.Other;
 using XFlow.Net.ClientServer.Ecs.Components;
@@ -10,74 +9,65 @@ namespace Game.Ecs.ClientServer.Systems
     public class GameStateSystem : IEcsInitSystem, IEcsRunSystem
     {
         private EcsWorld _world;
-        private EcsFilter _filterReadyPlayers;
-        private EcsFilter _filterBricks;
-        private EcsFilter _filterBalls;
-        private EcsFilter _filterGameState;
+        private EcsFilter _filterReadyPlayer;
+        private EcsFilter _filterBrick;
+        private EcsFilter _filterBall;
+        private EcsFilter _filterGameWaiting;
+        private EcsFilter _filterGamePlaying;
+        private EcsFilter _filterGameOver;
 
         public void Init(EcsSystems systems)
         {
             _world = systems.GetWorld();
             var gameEntity = _world.NewEntity();
-            gameEntity.EntityAdd<GameStateComponent>(_world);
-            gameEntity.EntityAdd<GameTimeComponent>(_world);
+            gameEntity.EntityAdd<GameComponent>(_world);
+            gameEntity.EntityAdd<ScoreComponent>(_world);
+            gameEntity.EntityAdd<GameWaitingComponent>(_world);
 
-            _filterReadyPlayers = _world.Filter<PlayerComponent>().Inc<NicknameComponent>().End();
-            _filterBricks = _world.Filter<BrickComponent>().End();
-            _filterBalls = _world.Filter<BallComponent>().End();
-            _filterGameState = _world.Filter<GameStateComponent>().End();
+            _filterReadyPlayer = _world.Filter<PlayerComponent>().Inc<NicknameComponent>().End();
+            _filterBrick = _world.Filter<BrickComponent>().End();
+            _filterBall = _world.Filter<BallComponent>().End();
+            _filterGameWaiting = _world.Filter<GameWaitingComponent>().End();
+            _filterGamePlaying = _world.Filter<GamePlayingComponent>().End();
+            _filterGameOver = _world.Filter<GameOverComponent>().End();
         }
 
         public void Run(EcsSystems systems)
         {
-            foreach (var entity in _filterGameState)
+            foreach (var entity in _filterGameOver)
             {
-                var currentGameState = entity.EntityGet<GameStateComponent>(_world).Value;
-                switch (currentGameState)
+                if (_world.GetTime() - entity.EntityGet<GameTimeComponent>(_world).StartTime >= 2f)
                 {
-                    case GameState.None:
-                        if (_filterReadyPlayers.GetEntitiesCount() > 0)
-                        {
-                            ChangeGameState(entity, GameState.Init);
-                        }
-                        break;
-
-                    case GameState.Init:
-                        if (_world.GetTime() - entity.EntityGet<GameTimeComponent>(_world).StartTime >= 1f)
-                        {
-                            ChangeGameState(entity, GameState.Play);
-                        }
-                        break;
-
-                    case GameState.Play:
-                        if (_filterReadyPlayers.GetEntitiesCount() == 0)
-                        {
-                            ChangeGameState(entity, GameState.None);
-                        }
-                        else if (_filterBricks.GetEntitiesCount() == 0 ||
-                                 _filterBalls.GetEntitiesCount() == 0)
-                        {
-                            ChangeGameState(entity, GameState.End);
-                        }
-                        break;
-
-                    case GameState.End:
-                        if (_world.GetTime() - entity.EntityGet<GameTimeComponent>(_world).StartTime >= 3f)
-                        {
-                            ChangeGameState(entity, GameState.None);
-                        }
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    entity.EntityDel<GameTimeComponent>(_world);
+                    entity.EntityDel<GameOverComponent>(_world);
+                    entity.EntityAdd<GameWaitingComponent>(_world);
                 }
             }
-        }
 
-        private void ChangeGameState(int entity, GameState newGameState)
-        {
-            entity.EntityGetRef<GameStateComponent>(_world).Value = newGameState;
-            entity.EntityGetRef<GameTimeComponent>(_world).StartTime = _world.GetTime();
+            foreach (var entity in _filterGamePlaying)
+            {
+                if (_filterReadyPlayer.GetEntitiesCount() == 0)
+                {
+                    entity.EntityDel<GamePlayingComponent>(_world);
+                    entity.EntityAdd<GameWaitingComponent>(_world);
+                }
+                else if (_filterBrick.GetEntitiesCount() == 0 ||
+                         _filterBall.GetEntitiesCount() == 0)
+                {
+                    entity.EntityDel<GamePlayingComponent>(_world);
+                    entity.EntityAdd<GameTimeComponent>(_world).StartTime = _world.GetTime();
+                    entity.EntityAdd<GameOverComponent>(_world);
+                }
+            }
+
+            foreach (var entity in _filterGameWaiting)
+            {
+                if (_filterReadyPlayer.GetEntitiesCount() > 0)
+                {
+                    entity.EntityDel<GameWaitingComponent>(_world);
+                    entity.EntityAdd<GamePlayingComponent>(_world);
+                }
+            }
         }
     }
 }

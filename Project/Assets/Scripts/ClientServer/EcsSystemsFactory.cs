@@ -1,17 +1,12 @@
-﻿using Game.ClientServer.Services;
-using Game.Ecs.ClientServer.Components;
-using Game.Ecs.ClientServer.Components.Objective;
+﻿using Game.Ecs.ClientServer.Components;
 using Game.Ecs.ClientServer.Systems;
-using XFlow.Ecs.ClientServer.Components;
 using XFlow.Ecs.ClientServer.Systems;
 using XFlow.EcsLite;
 using XFlow.Modules.Box2D.ClientServer.Systems;
-using XFlow.Modules.Fire.ClientServer.Components;
 using XFlow.Modules.Fire.ClientServer.Systems;
 using XFlow.Modules.Grid.Systems;
 using XFlow.Modules.Inventory.ClientServer.Systems;
 using XFlow.Net.ClientServer;
-using XFlow.Net.ClientServer.Ecs.Components;
 using XFlow.Net.ClientServer.Ecs.Systems;
 
 #if CLIENT
@@ -150,6 +145,7 @@ namespace Game.ClientServer
             _container.RegisterServer<BoardBoundTrackingSystem>();
             _container.RegisterServer<BonusSpawnSystem>();
             _container.RegisterServer<BonusApplySystem>();
+            _container.RegisterServer<GameScoreSystem>();
             
             //уничтожение объектов сделаем серверным чтоб не было ошибок предсказания
             //_container.RegisterServer<DestroyDamagedSystem>();
@@ -165,7 +161,9 @@ namespace Game.ClientServer
             //write final Box2d transforms to components
             _container.Register<Box2DWriteBodiesToComponentsSystem>();
 
-            _container.Register<EventsSystem<GameStateComponent>>();
+            _container.Register<EventsSystem<GamePlayingComponent>>();
+            _container.Register<EventsSystem<GameOverComponent>>();
+            _container.Register<EventsSystem<ScoreComponent>>();
             _container.Register<EventsSystem<DestroyComponent>>();
             _container.Register<EventsSystem<PickupedComponent>>();
         }

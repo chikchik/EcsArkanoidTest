@@ -3,7 +3,6 @@ using Game.Ecs.ClientServer.Components;
 using Game.State;
 using Game.UI.Mono;
 using XFlow.EcsLite;
-using XFlow.Modules.Mech.ClientServer;
 using XFlow.Modules.Mech.ClientServer.Components;
 using XFlow.Modules.States;
 using XFlow.Modules.Tick.ClientServer.Components;
@@ -17,7 +16,10 @@ namespace Game.UI
         EventsSystem<AmmoCollectedComponent>.IAnyComponentChangedListener,
         EventsSystem<WeaponComponent>.IAnyComponentChangedListener,
         EventsSystem<TickComponent>.IAnyComponentChangedListener,
-        EventsSystem<ClientPlayerEntityComponent>.IAnyComponentChangedListener
+        EventsSystem<ClientPlayerEntityComponent>.IAnyComponentChangedListener,
+        EventsSystem<ScoreComponent>.IAnyComponentChangedListener,
+        EventsSystem<GameOverComponent>.IAnyComponentChangedListener,
+        EventsSystem<GameOverComponent>.IAnyComponentRemovedListener
     {
         private readonly EcsWorld _world;
         private readonly States _states;
@@ -66,6 +68,7 @@ namespace Game.UI
             view.FoodText.text = "";
             view.AmmoText.text = "0";
             view.ShotButton.gameObject.SetActive(false);
+            view.GameOver.SetActive(false);
 
             var listener = world.CreateAnyListener();
             listener.SetAnyChangedListener<WeaponComponent>(this);
@@ -73,6 +76,9 @@ namespace Game.UI
             listener.SetAnyChangedListener<AmmoCollectedComponent>(this);
             listener.SetAnyChangedListener<TickComponent>(this);
             listener.SetAnyChangedListener<ClientPlayerEntityComponent>(this);
+            listener.SetAnyChangedListener<ScoreComponent>(this);
+            listener.SetAnyChangedListener<GameOverComponent>(this);
+            listener.SetAnyRemovedListener<GameOverComponent>(this);
         }
 
         public void OnAnyComponentChanged(EcsWorld _, int entity, FoodCollectedComponent data, bool added)
@@ -120,6 +126,24 @@ namespace Game.UI
         public void OnAnyComponentChanged(EcsWorld _, int tickEntity, ClientPlayerEntityComponent data, bool added)
         {
             _states.Push<LoginUIState>();
+        }
+
+        public void OnAnyComponentChanged(EcsWorld _, int gameEntity, ScoreComponent data, bool added)
+        {
+            View.ScoreText.text = $"Score: {data.Value}";
+        }
+
+        public void OnAnyComponentChanged(EcsWorld _, int gameEntity, GameOverComponent data, bool added)
+        {
+            if (added)
+            {
+                View.GameOver.SetActive(true);
+            }
+        }
+
+        public void OnAnyComponentRemoved(EcsWorld world, int entity, AlwaysNull<GameOverComponent> alwaysNull)
+        {
+            View.GameOver.SetActive(false);
         }
     }
 }
